@@ -3,7 +3,7 @@
 const ASSETS = {
     // UK / England
     england_1600: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Speed_Kingdom_of_Great_Britaine_and_Ireland_1610.jpg/1280px-Speed_Kingdom_of_Great_Britaine_and_Ireland_1610.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/The_Kingdome_of_Great_Britaine_and_Ireland_-_Performed_by_John_Speede_%3B_Graved_by_I._Hondius_-_btv1b53225465b_%282_of_3%29.jpg/1024px-The_Kingdome_of_Great_Britaine_and_Ireland_-_Performed_by_John_Speede_%3B_Graved_by_I._Hondius_-_btv1b53225465b_%282_of_3%29.jpg",
         alt: "John Speed's Map of Great Britain (1610)",
         caption: "The World of 17th Century England",
         style: { filter: "sepia(30%) contrast(110%)" }
@@ -19,7 +19,7 @@ const ASSETS = {
 
     // Connecticut
     ct_1700: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/1766_Park_Map_of_Connecticut_-_Geographicus_-_Connecticut-park-1766.jpg/1280px-1766_Park_Map_of_Connecticut_-_Geographicus_-_Connecticut-park-1766.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Plan_of_the_Colony_of_Connecticut,_Moses_Park,_1766.jpg/1024px-Plan_of_the_Colony_of_Connecticut,_Moses_Park,_1766.jpg",
         alt: "Map of the Colony of Connecticut (1766)",
         caption: "The Connecticut Colony Era",
         style: { filter: "contrast(105%)" }
