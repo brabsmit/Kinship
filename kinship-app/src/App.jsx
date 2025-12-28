@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, Logout } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
