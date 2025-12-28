@@ -1,7 +1,17 @@
 
 import familyData from './family_data.json';
-import React, { useState, useMemo } from 'react';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown } from 'lucide-react';
+import React, { useState, useMemo, useCallback } from 'react';
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  MarkerType
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+import dagre from 'dagre';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -160,6 +170,131 @@ const getFamilyLinks = (person, allData) => {
     });
 
     return { parents: parent ? [parent] : [], children, spouses: [] };
+};
+
+// --- GRAPH HELPERS ---
+const nodeWidth = 200;
+const nodeHeight = 60;
+
+const buildGenealogyGraph = (data) => {
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+  dagreGraph.setGraph({ rankdir: 'TB', ranksep: 80, nodesep: 50 });
+
+  const nodes = [];
+  const edges = [];
+  const processedEdges = new Set();
+
+  data.forEach((person) => {
+    const bornYear = person.vital_stats.born_date?.match(/\d{4}/)?.[0] || '????';
+
+    dagreGraph.setNode(person.id, { width: nodeWidth, height: nodeHeight });
+    nodes.push({
+      id: person.id,
+      data: { label: person.name, year: bornYear },
+      type: 'default', // Using default for now, can be custom
+      position: { x: 0, y: 0 }, // Placeholder
+      style: {
+        background: '#fff',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        padding: '10px',
+        textAlign: 'center',
+        width: nodeWidth,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+      },
+    });
+
+    // We override the default label in node display, but here we set data
+    // ReactFlow default node expects 'label' in data to render text.
+    nodes[nodes.length - 1].data.label = (
+        <div>
+            <div className="font-bold text-sm text-gray-800 truncate">{person.name}</div>
+            <div className="text-xs text-gray-500">b. {bornYear}</div>
+        </div>
+    );
+
+    const links = getFamilyLinks(person, data);
+
+    // Parent -> Child
+    links.children.forEach(child => {
+        const edgeId = `${person.id}-${child.id}`;
+        if (!processedEdges.has(edgeId)) {
+            dagreGraph.setEdge(person.id, child.id);
+            edges.push({
+                id: edgeId,
+                source: person.id,
+                target: child.id,
+                type: 'smoothstep',
+                markerEnd: { type: MarkerType.ArrowClosed },
+                style: { stroke: '#2C3E50' }
+            });
+            processedEdges.add(edgeId);
+        }
+    });
+
+    // Spouses
+    links.spouses.forEach(spouse => {
+        const [s, t] = [person.id, spouse.id].sort();
+        const edgeId = `spouse-${s}-${t}`;
+        if (!processedEdges.has(edgeId)) {
+             edges.push({
+                id: edgeId,
+                source: person.id,
+                target: spouse.id,
+                type: 'straight',
+                style: { strokeDasharray: '5,5', stroke: '#E67E22' },
+                animated: false,
+            });
+            processedEdges.add(edgeId);
+        }
+    });
+  });
+
+  dagre.layout(dagreGraph);
+
+  const layoutedNodes = nodes.map((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    return {
+      ...node,
+      targetPosition: 'top',
+      sourcePosition: 'bottom',
+      position: {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      },
+    };
+  });
+
+  return { nodes: layoutedNodes, edges };
+};
+
+const GraphView = ({ data, onNodeClick }) => {
+    const { nodes: initialNodes, edges: initialEdges } = useMemo(() => buildGenealogyGraph(data), [data]);
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    return (
+        <div className="w-full h-full bg-gray-50">
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onNodeClick={(_, node) => {
+                    const person = data.find(p => p.id === node.id);
+                    if (person) onNodeClick(person);
+                }}
+                fitView
+                attributionPosition="bottom-right"
+            >
+                <Controls />
+                <MiniMap style={{ height: 120 }} zoomable pannable />
+                <Background variant="dots" gap={12} size={1} />
+            </ReactFlow>
+        </div>
+    );
 };
 
 // --- COMPONENTS ---
@@ -388,6 +523,7 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
 export default function App() {
   const [selectedAncestor, setSelectedAncestor] = useState(null);
   const [searchText, setSearchText] = useState('');
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
 
   // Group data by Generation
   const groupedData = useMemo(() => {
@@ -410,70 +546,109 @@ export default function App() {
       
       {/* --- LEFT NAVIGATION --- */}
       <div className={`
-        flex flex-col border-r border-gray-200 bg-white h-full z-10
-        ${selectedAncestor ? 'hidden md:flex md:w-[350px] shrink-0' : 'w-full md:w-[350px] shrink-0'}
+        flex flex-col border-r border-gray-200 bg-white h-full z-10 transition-all duration-300
+        ${selectedAncestor ? 'hidden md:flex' : 'w-full'}
+        ${viewMode === 'graph'
+            ? 'md:flex-1 max-w-full' // Graph Mode: takes available space (flex-1), but max-w-full
+            : 'md:w-[350px] shrink-0' // List Mode: fixed width
+        }
       `}>
-        <div className="p-6 border-b border-gray-100">
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-white z-20">
           <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
             <User size={24} className="text-[#E67E22]" /> Ancestry
           </h1>
+          <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+             <button
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                title="List View"
+             >
+                <ListIcon size={18} />
+             </button>
+             <button
+                onClick={() => setViewMode('graph')}
+                className={`p-1.5 rounded-md transition-all ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                title="Graph View"
+             >
+                <Network size={18} />
+             </button>
+          </div>
         </div>
 
-        <div className="p-4">
-            <div className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
-                <Search size={18} className="text-gray-400" />
-                <input 
-                  type="text"
-                  className="ml-3 flex-1 bg-transparent outline-none text-sm"
-                  placeholder="Find an ancestor..."
-                  value={searchText}
-                  onChange={e => setSearchText(e.target.value)}
-                />
-            </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
-            {Object.entries(groupedData).map(([generation, items]) => (
-                <div key={generation} className="mb-2">
-                    {/* Sticky Header for Generation */}
-                    <div className="sticky top-0 bg-gray-100/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between">
-                        {generation}
-                        <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
-                    </div>
-                    
-                    <div className="px-4 py-2">
-                        {items.map(item => (
-                            <div 
-                                key={item.id}
-                                onClick={() => setSelectedAncestor(item)}
-                                className={`
-                                    group p-4 mb-2 rounded-lg cursor-pointer border transition-all
-                                    ${selectedAncestor?.id === item.id 
-                                        ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md' 
-                                        : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
-                                    }
-                                `}
-                            >
-                                <div className="flex justify-between items-start">
-                                    <h3 className={`font-bold text-sm ${selectedAncestor?.id === item.id ? 'text-white' : 'text-gray-800'}`}>
-                                        {item.name}
-                                    </h3>
-                                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                                        selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                                    }`}>
-                                        {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+        {viewMode === 'list' ? (
+            <>
+                <div className="p-4">
+                    <div className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                        <Search size={18} className="text-gray-400" />
+                        <input
+                          type="text"
+                          className="ml-3 flex-1 bg-transparent outline-none text-sm"
+                          placeholder="Find an ancestor..."
+                          value={searchText}
+                          onChange={e => setSearchText(e.target.value)}
+                        />
                     </div>
                 </div>
-            ))}
-        </div>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                    {Object.entries(groupedData).map(([generation, items]) => (
+                        <div key={generation} className="mb-2">
+                            {/* Sticky Header for Generation */}
+                            <div className="sticky top-0 bg-gray-100/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between">
+                                {generation}
+                                <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
+                            </div>
+
+                            <div className="px-4 py-2">
+                                {items.map(item => (
+                                    <div
+                                        key={item.id}
+                                        onClick={() => setSelectedAncestor(item)}
+                                        className={`
+                                            group p-4 mb-2 rounded-lg cursor-pointer border transition-all
+                                            ${selectedAncestor?.id === item.id
+                                                ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
+                                                : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
+                                            }
+                                        `}
+                                    >
+                                        <div className="flex justify-between items-start">
+                                            <h3 className={`font-bold text-sm ${selectedAncestor?.id === item.id ? 'text-white' : 'text-gray-800'}`}>
+                                                {item.name}
+                                            </h3>
+                                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
+                                                selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                                            }`}>
+                                                {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </>
+        ) : (
+            <div className="flex-1 overflow-hidden relative border-t border-gray-100">
+                <GraphView
+                    data={familyData}
+                    onNodeClick={(person) => {
+                        setSelectedAncestor(person);
+                    }}
+                />
+            </div>
+        )}
       </div>
 
       {/* --- RIGHT PANEL --- */}
-      <div className="flex-1 bg-[#F9F5F0] relative">
+      <div className={`
+        bg-[#F9F5F0] relative transition-all duration-300
+        ${selectedAncestor
+            ? 'flex-1 block'
+            : (viewMode === 'graph' ? 'hidden' : 'flex-1 hidden md:block')
+        }
+      `}>
           {selectedAncestor ? (
              <ImmersiveProfile 
                 item={selectedAncestor} 
