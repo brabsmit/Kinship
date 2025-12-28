@@ -110,7 +110,64 @@ class GenealogyTextPipeline:
 
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
 
+    def link_family_members(self):
+        print("--- Linking Family Members ---")
+        id_map = {p['id']: p for p in self.family_data}
+
+        for p in self.family_data:
+            pid = p['id']
+            # Initialize if not present (although we are modifying the dicts in the list)
+            if 'relations' not in p:
+                 p['relations'] = {
+                    "parents": [],
+                    "children": [],
+                    "spouses": []
+                }
+
+            # 1. Parent/Child Linking (by ID hierarchy)
+            # Logic: In this dataset (Ahnentafel-like), 1.1.1 is the PARENT of 1.1.
+            # Longer ID = Ancestor. Shorter ID = Descendant.
+            if '.' in pid:
+                child_id = pid.rsplit('.', 1)[0]
+                if child_id in id_map:
+                    # Current person (pid) is a PARENT of child_id.
+                    if child_id not in p['relations']['children']:
+                        p['relations']['children'].append(child_id)
+
+                    # Add current person (pid) as parent to child
+                    child_p = id_map[child_id]
+                    if 'relations' not in child_p:
+                        child_p['relations'] = {"parents": [], "children": [], "spouses": []}
+                    if pid not in child_p['relations']['parents']:
+                        child_p['relations']['parents'].append(pid)
+
+            # 2. Spouse Linking (by ID Adjacency/Pattern)
+            # Pattern A: Dotted IDs ending in .1 and .2 (e.g., 1.1.1 and 1.1.2)
+            spouse_candidate = None
+            if '.' in pid:
+                if pid.endswith('.1'):
+                    spouse_candidate = pid[:-1] + '2'
+                elif pid.endswith('.2'):
+                    spouse_candidate = pid[:-1] + '1'
+            # Pattern B: Top-level Integer IDs (e.g., 1 and 2, 3 and 4)
+            else:
+                try:
+                    nid = int(pid)
+                    if nid % 2 != 0: # Odd (1, 3, 5) -> Spouse is Next Even
+                        spouse_candidate = str(nid + 1)
+                    else: # Even (2, 4, 6) -> Spouse is Prev Odd
+                        spouse_candidate = str(nid - 1)
+                except ValueError:
+                    pass
+
+            if spouse_candidate and spouse_candidate in id_map:
+                if spouse_candidate not in p['relations']['spouses']:
+                    p['relations']['spouses'].append(spouse_candidate)
+
     def clean_and_save(self):
+        # Run linking before saving
+        self.link_family_members()
+
         final_list = []
         
         for p in self.family_data:
@@ -122,6 +179,7 @@ class GenealogyTextPipeline:
                 "story": {
                     "notes": p["story"]["notes"],
                 },
+                "relations": p.get("relations", {}),
                 "metadata": {
                     "source_ref": p["metadata"]["source_id"],
                     "location_in_doc": f"Paragraph #{p['metadata']['doc_paragraph_index']}"
