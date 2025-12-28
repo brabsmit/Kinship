@@ -1,6 +1,9 @@
 import re
 import json
 import os
+import requests
+import time
+import hashlib
 from docx import Document
 from collections import defaultdict
 
@@ -8,6 +11,112 @@ class GenealogyTextPipeline:
     def __init__(self, docx_path):
         self.docx_path = docx_path
         self.family_data = []
+        self.image_cache = self.load_cache()
+        self.cache_updated = False
+
+    def load_cache(self):
+        cache_file = "wikimedia_cache.json"
+        if os.path.exists(cache_file):
+            with open(cache_file, "r") as f:
+                try:
+                    return json.load(f)
+                except json.JSONDecodeError:
+                    return {}
+        return {}
+
+    def save_cache(self):
+        if self.cache_updated:
+            with open("wikimedia_cache.json", "w") as f:
+                json.dump(self.image_cache, f, indent=4)
+            print("Wikimedia cache saved.")
+
+    def fetch_wikimedia_image(self, location, year):
+        if not location or location.lower() == "unknown":
+            return None
+
+        # Determine Century
+        century = ""
+        if year:
+            c_val = (year // 100) + 1
+            century = f"{c_val}th century"
+        else:
+            century = "historical"
+
+        # Create a cache key
+        cache_key = f"{location}|{century}"
+        if cache_key in self.image_cache:
+            return self.image_cache[cache_key]
+
+        # Construct Search Queries
+        queries = [
+            f"{location} {century} map",
+            f"{location} historical"
+        ]
+
+        # Clean up location for search (remove detailed parts if too long?)
+        # For now, use as is.
+
+        api_url = "https://commons.wikimedia.org/w/api.php"
+
+        for q in queries:
+            # Check if we need to save cache incrementally
+            if self.cache_updated and len(self.image_cache) % 5 == 0:
+                self.save_cache()
+                self.cache_updated = False
+
+            params = {
+                "action": "query",
+                "generator": "search",
+                "gsrnamespace": "6", # File namespace
+                "gsrsearch": q,
+                "gsrlimit": "1",
+                "prop": "imageinfo",
+                "iiprop": "url|extmetadata",
+                "iiurlwidth": "1024",
+                "format": "json"
+            }
+
+            try:
+                # Be polite
+                time.sleep(0.1)
+                response = requests.get(api_url, params=params, headers={"User-Agent": "GenealogyApp/1.0 (contact@example.com)"}, timeout=5)
+                data = response.json()
+
+                if "query" in data and "pages" in data["query"]:
+                    # Get first result
+                    page_id = list(data["query"]["pages"].keys())[0]
+                    page = data["query"]["pages"][page_id]
+
+                    if "imageinfo" in page:
+                        info = page["imageinfo"][0]
+                        thumb_url = info.get("thumburl", info.get("url"))
+
+                        metadata = info.get("extmetadata", {})
+                        description = metadata.get("ImageDescription", {}).get("value", q)
+                        # Clean HTML from description if needed, or keep it simple
+                        # Simple regex to strip HTML tags
+                        description = re.sub(r'<[^>]+>', '', description)[:150] + "..."
+
+                        result = {
+                            "src": thumb_url,
+                            "alt": f"Historical image of {location}",
+                            "caption": description,
+                            "style": { "filter": "sepia(20%) contrast(110%)" } # Default vintage style
+                        }
+
+                        self.image_cache[cache_key] = result
+                        self.cache_updated = True
+                        print(f"   [Wikimedia] Found image for '{q}'")
+                        return result
+
+            except Exception as e:
+                print(f"   [Wikimedia] Error fetching for '{q}': {e}")
+                continue
+
+        # Cache miss (None) to avoid re-searching
+        self.image_cache[cache_key] = None
+        self.cache_updated = True
+        return None
 
     def _normalize_date(self, raw_date_string):
         """
@@ -425,9 +534,16 @@ class GenealogyTextPipeline:
         self.link_family_members()
         self._find_mentions()
 
+        print("--- Fetching Hero Images from Wikimedia ---")
         final_list = []
         
         for p in self.family_data:
+            # Fetch Image
+            born_loc = p["vital_stats"]["born_location"]
+            born_year = p["vital_stats"].get("born_year_int")
+
+            hero_image = self.fetch_wikimedia_image(born_loc, born_year)
+
             final_profile = {
                 "id": p["id"],
                 "name": p["name"],
@@ -437,6 +553,7 @@ class GenealogyTextPipeline:
                     "notes": p["story"]["notes"],
                     "life_events": p["story"].get("life_events", [])
                 },
+                "hero_image": hero_image,
                 "relations": p.get("relations", {}),
                 "related_links": p.get("related_links", []),
                 "metadata": {
@@ -445,6 +562,9 @@ class GenealogyTextPipeline:
                 }
             }
             final_list.append(final_profile)
+
+        # Save Cache
+        self.save_cache()
 
         output_filename = "kinship-app/src/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:

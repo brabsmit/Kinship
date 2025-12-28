@@ -875,8 +875,9 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
     </div>
 );
 
-const HeroImage = ({ location, year }) => {
-    const asset = getHeroImage(location, year);
+const HeroImage = ({ location, year, heroImage }) => {
+    // Priority: heroImage prop > getHeroImage logic
+    const asset = heroImage || getHeroImage(location, year);
     const [imgSrc, setImgSrc] = useState(asset.src);
     const [hasError, setHasError] = useState(false);
 
@@ -964,7 +965,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
 
                 {/* HERO HEADER */}
                 <div className="relative">
-                    <HeroImage location={bornLoc} year={bornYear} />
+                    <HeroImage location={bornLoc} year={bornYear} heroImage={item.hero_image} />
                     
                     <div className="absolute bottom-0 left-0 right-0 px-8 pb-12 pt-24 bg-gradient-to-t from-[#fdfbf7] to-transparent z-20 flex flex-col items-center text-center">
                         <h1 className="text-5xl md:text-6xl font-display font-bold text-gray-900 mb-4 drop-shadow-sm leading-tight">
