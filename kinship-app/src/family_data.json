@@ -71,8 +71,9 @@
             "born_date": "2/13/1806",
             "born_location": "Waterbury, CT",
             "died_date": "8/20/1873",
-            "died_location": "Englewood, NJ (his summer home to which he had retired)",
+            "died_location": "Englewood, NJ",
             "born_year_int": 1806,
+            "died_location_note": "his summer home to which he had retired",
             "died_year_int": 1873
         },
         "story": {
@@ -712,8 +713,9 @@
             "born_date": "1768",
             "born_location": "Widnes, Lancashire, England",
             "died_date": "8/25/1827",
-            "died_location": "likely MA (assume Boston)",
+            "died_location": "likely MA",
             "born_year_int": 1768,
+            "died_location_note": "assume Boston",
             "died_year_int": 1827
         },
         "story": {
@@ -750,8 +752,9 @@
             "born_date": "1/29/1771",
             "born_location": "Boston, MA",
             "died_date": "6/18/1851",
-            "died_location": "MA (assume Boston)",
+            "died_location": "MA",
             "born_year_int": 1771,
+            "died_location_note": "assume Boston",
             "died_year_int": 1851
         },
         "story": {
@@ -818,8 +821,9 @@
             "born_date": "1/21/1783",
             "born_location": "Waltham, MA",
             "died_date": "10/1/1877",
-            "died_location": "MA (assume Boston)",
+            "died_location": "MA",
             "born_year_int": 1783,
+            "died_location_note": "assume Boston",
             "died_year_int": 1877
         },
         "story": {
@@ -1373,9 +1377,10 @@
         "generation": "GENERATION VI:  FOUR GREAT GRANDPARENTS",
         "vital_stats": {
             "born_date": "7/1/1753",
-            "born_location": "CT (assume New Haven)",
+            "born_location": "CT",
             "died_date": "4/8/1850",
             "died_location": "New Haven, CT",
+            "born_location_note": "assume New Haven",
             "born_year_int": 1753,
             "died_year_int": 1850
         },
@@ -2677,8 +2682,9 @@
             "born_date": "1726",
             "born_location": "New Haven, CT",
             "died_date": "after 1771",
-            "died_location": "CT (per Geni)",
+            "died_location": "CT",
             "born_year_int": 1726,
+            "died_location_note": "per Geni",
             "died_year_int": 1772
         },
         "story": {
@@ -3978,8 +3984,9 @@
             "born_date": "1670",
             "born_location": "Woburn, MA",
             "died_date": "1750",
-            "died_location": "Ashford, CT (Windham County)",
+            "died_location": "Ashford, CT",
             "born_year_int": 1670,
+            "died_location_note": "Windham County",
             "died_year_int": 1750
         },
         "story": {
@@ -5414,8 +5421,9 @@
             "born_date": "1686",
             "born_location": "New Haven, CT",
             "died_date": "c. 1788",
-            "died_location": "New Haven, CT (?)",
+            "died_location": "New Haven, CT",
             "born_year_int": 1686,
+            "died_location_note": "?",
             "died_year_int": 1788
         },
         "story": {
@@ -5725,8 +5733,9 @@
             "born_date": "1660",
             "born_location": "Cambridge, MA",
             "died_date": "1732",
-            "died_location": "Malden MA (or Conway, MA)",
+            "died_location": "Malden MA",
             "born_year_int": 1660,
+            "died_location_note": "or Conway, MA",
             "died_year_int": 1732
         },
         "story": {
@@ -8138,8 +8147,9 @@
             "born_date": "12/1637",
             "born_location": "Hartford, CT",
             "died_date": "7/27/1677",
-            "died_location": "Franklin, CT (Norwich West Farms)",
+            "died_location": "Franklin, CT",
             "born_year_int": 1637,
+            "died_location_note": "Norwich West Farms",
             "died_year_int": 1677
         },
         "story": {
@@ -15563,8 +15573,9 @@
             "born_date": "before 7/1620",
             "born_location": "Epping, Essex, England",
             "died_date": "9/11/1697",
-            "died_location": "Lancaster, MA (Indian attack)",
+            "died_location": "Lancaster, MA",
             "born_year_int": 1619,
+            "died_location_note": "Indian attack",
             "died_year_int": 1697
         },
         "story": {
@@ -15601,8 +15612,9 @@
             "born_date": "1632",
             "born_location": "Lancashire, England",
             "died_date": "9/11/1697",
-            "died_location": "Lancaster, MA (Indian attack)",
+            "died_location": "Lancaster, MA",
             "born_year_int": 1632,
+            "died_location_note": "Indian attack",
             "died_year_int": 1697
         },
         "story": {
@@ -20791,8 +20803,9 @@
             "born_date": "c. 1615",
             "born_location": "England",
             "died_date": "after 4/1670",
-            "died_location": "New Haven, CT (uncertain)",
+            "died_location": "New Haven, CT",
             "born_year_int": 1615,
+            "died_location_note": "uncertain",
             "died_year_int": 1671
         },
         "story": {
@@ -21049,9 +21062,10 @@
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
         "vital_stats": {
             "born_date": "before 1637",
-            "born_location": "London, England (uncertain)",
+            "born_location": "London, England",
             "died_date": "6/7/1699",
             "died_location": "Waterbury, CT",
+            "born_location_note": "uncertain",
             "born_year_int": 1636,
             "died_year_int": 1699
         },
@@ -25088,9 +25102,10 @@
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
         "vital_stats": {
             "born_date": "1611",
-            "born_location": "Hereford, Herefordshire, England (but possibly Gloucestershire)",
+            "born_location": "Hereford, Herefordshire, England",
             "died_date": "15/14/1676",
             "died_location": "Charlestown, MA",
+            "born_location_note": "but possibly Gloucestershire",
             "born_year_int": 1611,
             "died_year_int": 1676
         },
@@ -26567,9 +26582,10 @@
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
         "vital_stats": {
             "born_date": "1610",
-            "born_location": "Earnley, Sussex, England (possibly Lincolnshire)",
+            "born_location": "Earnley, Sussex, England",
             "died_date": "1654",
             "died_location": "Watertown, MA",
+            "born_location_note": "possibly Lincolnshire",
             "born_year_int": 1610,
             "died_year_int": 1654
         },
@@ -26682,8 +26698,9 @@
             "born_date": "1608",
             "born_location": "Westhorpe, Suffolk, England",
             "died_date": "1644",
-            "died_location": "MA (assume Cambridge)",
+            "died_location": "MA",
             "born_year_int": 1608,
+            "died_location_note": "assume Cambridge",
             "died_year_int": 1644
         },
         "story": {
@@ -32005,9 +32022,10 @@
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
         "vital_stats": {
             "born_date": "c. 1615",
-            "born_location": "London (?)",
+            "born_location": "London",
             "died_date": "1685",
             "died_location": "Lyme, CT",
+            "born_location_note": "?",
             "born_year_int": 1615,
             "died_year_int": 1685
         },
@@ -32194,8 +32212,9 @@
             "born_date": "C. 1600",
             "born_location": "London, England",
             "died_date": "10/14/1694",
-            "died_location": "Lyme, CT (but show as New Haven on Tree)",
+            "died_location": "Lyme, CT",
             "born_year_int": 1600,
+            "died_location_note": "but show as New Haven on Tree",
             "died_year_int": 1694
         },
         "story": {
@@ -32238,8 +32257,9 @@
             "born_date": "Unknown",
             "born_location": "England",
             "died_date": "12/5/1683",
-            "died_location": "Lyme, CT (but shown as New Haven on Tree)",
+            "died_location": "Lyme, CT",
             "born_year_int": null,
+            "died_location_note": "but shown as New Haven on Tree",
             "died_year_int": 1683
         },
         "story": {
@@ -36638,9 +36658,10 @@
         "generation": "GENERATION XII:  TEN GREAT GRANDPARENTS",
         "vital_stats": {
             "born_date": "1588",
-            "born_location": "Dorset, England (possibly Beaminster)",
+            "born_location": "Dorset, England",
             "died_date": "1648",
             "died_location": "Windsor, CT",
+            "born_location_note": "possibly Beaminster",
             "born_year_int": 1588,
             "died_year_int": 1648
         },
