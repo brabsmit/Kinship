@@ -15,7 +15,7 @@ class GenealogyTextPipeline:
         self.cache_updated = False
 
     def load_cache(self):
-        cache_file = "src/wikimedia_cache.json"
+        cache_file = "./kinship-app/src/wikimedia_cache.json"
         if os.path.exists(cache_file):
             with open(cache_file, "r") as f:
                 try:
@@ -26,7 +26,7 @@ class GenealogyTextPipeline:
 
     def save_cache(self):
         if self.cache_updated:
-            with open("src/wikimedia_cache.json", "w") as f:
+            with open("./kinship-app/src/wikimedia_cache.json", "w") as f:
                 json.dump(self.image_cache, f, indent=4)
             print("Wikimedia cache saved.")
 
