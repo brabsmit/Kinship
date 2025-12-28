@@ -15,6 +15,7 @@ import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronR
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { getHeroImage } from './utils/assetMapper';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -582,6 +583,29 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
     </div>
 );
 
+const HeroImage = ({ location, year }) => {
+    const asset = getHeroImage(location, year);
+
+    return (
+        <div className="relative w-full h-48 md:h-64 overflow-hidden mb-[-2rem] z-0">
+            {/* Gradient Overlay to blend with header */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E50] to-transparent opacity-100 z-10"></div>
+
+            <img
+                src={asset.src}
+                alt={asset.alt}
+                className="w-full h-full object-cover"
+                style={asset.style}
+                onError={(e) => { e.target.style.display = 'none'; }}
+            />
+
+            <div className="absolute bottom-10 right-4 z-20 text-white/40 text-[10px] uppercase tracking-widest font-mono text-right max-w-xs drop-shadow-md">
+                {asset.caption}
+            </div>
+        </div>
+    );
+};
+
 const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
     if (!item) return null;
 
@@ -603,9 +627,12 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
 
     return (
         <div className="h-full bg-[#F9F5F0] flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl">
+            {/* HERO IMAGE */}
+            <HeroImage location={bornLoc} year={bornYear} />
+
             {/* --- HEADER --- */}
-            <div className="bg-[#2C3E50] p-8 text-white relative flex-shrink-0">
-                <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+            <div className="bg-[#2C3E50] p-8 text-white relative flex-shrink-0 z-20 bg-transparent -mt-8 pt-0">
+                <button onClick={onClose} className="absolute top-0 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
                     <X size={20} />
                 </button>
                 
