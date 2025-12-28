@@ -30,6 +30,70 @@ class GenealogyTextPipeline:
         else:
             return "Unknown", text.strip()
 
+    def split_sentences(self, text):
+        if not text:
+            return []
+        text = re.sub(r"^NOTES:\s*", "", text, flags=re.IGNORECASE)
+        parts = re.split(r'[.;]\s+', text)
+        return [p.strip() for p in parts if p.strip()]
+
+    def extract_year(self, text):
+        matches = list(re.finditer(r'\b(16|17|18|19)\d{2}\b', text))
+        if matches:
+            return int(matches[0].group(0))
+        return None
+
+    def extract_relative_date(self, text, context_year):
+        if not context_year:
+            return None
+        match = re.search(r'\b(one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty)\s+years?\s+(later|after)', text, re.IGNORECASE)
+        if match:
+            number_map = {
+                "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+                "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+                "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50
+            }
+            num = number_map.get(match.group(1).lower())
+            if num:
+                return context_year + num
+        return None
+
+    def extract_location(self, text):
+        loc_regex = r'(?:\b(?:in|at|to|from)\s+)([A-Z][a-zA-Z]+(?:[\s,]+[A-Z][a-zA-Z]+)*)'
+        m = re.search(loc_regex, text)
+        if m:
+            candidate = m.group(1)
+            candidate = re.sub(r'\s+in\s+\d{4}.*', '', candidate)
+            ignored = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "Harvard", "Yale", "College", "University", "War", "Church"]
+            if candidate in ignored:
+                return None
+            return candidate
+        return None
+
+    def extract_events_from_text(self, text):
+        sentences = self.split_sentences(text)
+        events = []
+        current_context_year = None
+
+        for sent in sentences:
+            year = self.extract_year(sent)
+            if year:
+                current_context_year = year
+            else:
+                year = self.extract_relative_date(sent, current_context_year)
+                if year:
+                    current_context_year = year
+
+            if year:
+                loc = self.extract_location(sent)
+                events.append({
+                    "year": year,
+                    "label": sent,
+                    "location": loc or "Unknown",
+                    "type": "personal"
+                })
+        return events
+
     def parse_document(self):
         print(f"--- Scanning Narrative Document ({self.docx_path}) ---")
         try:
@@ -109,6 +173,7 @@ class GenealogyTextPipeline:
                     },
                     "story": {
                         "notes": "",
+                        "life_events": []
                     },
                     "metadata": {
                         "source_id": source_id,
@@ -138,7 +203,9 @@ class GenealogyTextPipeline:
                 # Extract Notes
                 n_match = notes_start_pattern.search(text)
                 if n_match:
-                    current_profile["story"]["notes"] = n_match.group(1).strip()
+                    notes_text = n_match.group(1).strip()
+                    current_profile["story"]["notes"] = notes_text
+                    current_profile["story"]["life_events"] = self.extract_events_from_text(notes_text)
 
         # Save the last one
         if current_profile:
@@ -214,6 +281,7 @@ class GenealogyTextPipeline:
                 "vital_stats": p["vital_stats"],
                 "story": {
                     "notes": p["story"]["notes"],
+                    "life_events": p["story"].get("life_events", [])
                 },
                 "relations": p.get("relations", {}),
                 "metadata": {

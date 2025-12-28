@@ -36,6 +36,7 @@ const LOCATION_COORDINATES = {
     "Manhattan, NY": [40.7831, -73.9712],
     "New York, NY": [40.7128, -74.0060],
     "New York City": [40.7128, -74.0060],
+    "New York": [40.7128, -74.0060],
     "Waterbury, CT": [41.5582, -73.0515],
     "New Haven, CT": [41.3083, -72.9279],
     "Englewood, NJ": [40.8929, -73.9726],
@@ -211,6 +212,21 @@ const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
     });
 };
 
+const getPersonalLifeEvents = (lifeEvents, born, died) => {
+    if (!lifeEvents || lifeEvents.length === 0) return [];
+
+    return lifeEvents.filter(e => {
+        // Only include if it has a year and is within range (optional, sometimes events might be slightly out of range due to estimations)
+        // But let's trust the extraction for now or be lenient.
+        // Actually, if we extracted it from the story, it belongs to the person.
+        return e.year && e.year > 0;
+    }).map(e => ({
+        ...e,
+        region: "Personal", // Or "Personal"
+        type: e.type || "personal"
+    }));
+};
+
 // --- 2. RELATIONSHIP CALCULATOR ---
 const calculateRelationship = (ancestorId) => {
     // Dynamic fallback if generation label is missing, otherwise use logic
@@ -378,13 +394,26 @@ const GraphView = ({ data, onNodeClick }) => {
 
 // --- COMPONENTS ---
 
-const KeyLocationsMap = ({ bornLoc, diedLoc }) => {
+const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
     const bornCoords = getCoordinates(bornLoc);
     const diedCoords = getCoordinates(diedLoc);
 
     const missingLocations = [];
     if (bornLoc && bornLoc !== "Unknown" && !bornCoords) missingLocations.push(bornLoc);
     if (diedLoc && diedLoc !== "Unknown" && !diedCoords) missingLocations.push(diedLoc);
+
+    // Process Life Events
+    const eventMarkers = lifeEvents
+        .filter(e => e.location && e.location !== "Unknown")
+        .map(e => {
+            const coords = getCoordinates(e.location);
+            if (!coords) {
+                if (!missingLocations.includes(e.location)) missingLocations.push(e.location);
+                return null;
+            }
+            return { pos: coords, type: e.year + " Event", color: '#10B981', loc: e.location, label: e.label }; // Green
+        })
+        .filter(Boolean);
 
     // Default View: Center of New England (approx Hartford/Springfield area)
     const defaultPosition = [41.7658, -72.6734];
@@ -395,23 +424,46 @@ const KeyLocationsMap = ({ bornLoc, diedLoc }) => {
     const markers = [];
     let polyline = null;
 
-    if (bornCoords && diedCoords) {
+    // Collect all points to determine center/bounds (naive)
+    const allPoints = [];
+
+    if (bornCoords) {
         markers.push({ pos: bornCoords, type: 'Birth', color: '#3B82F6', loc: bornLoc }); // Blue
-        if (bornLoc !== diedLoc) {
-            markers.push({ pos: diedCoords, type: 'Death', color: '#EF4444', loc: diedLoc }); // Red
-            polyline = [bornCoords, diedCoords];
+        allPoints.push(bornCoords);
+    }
+
+    // Add event markers
+    eventMarkers.forEach(m => {
+        markers.push(m);
+        allPoints.push(m.pos);
+    });
+
+    if (diedCoords) {
+        if (!bornCoords || bornLoc !== diedLoc) {
+             markers.push({ pos: diedCoords, type: 'Death', color: '#EF4444', loc: diedLoc }); // Red
+             allPoints.push(diedCoords);
         }
-        // Simple center logic (midpoint)
-        center = [(bornCoords[0] + diedCoords[0]) / 2, (bornCoords[1] + diedCoords[1]) / 2];
+    }
+
+    if (bornCoords && diedCoords && bornLoc !== diedLoc) {
+        polyline = [bornCoords, ...eventMarkers.map(m => m.pos), diedCoords];
+        // Sort by time? Ideally. But events might not be in path order if we just list them.
+        // For now, let's just keep the simple born -> died line or skip it if we have events,
+        // because the path is complex.
+        // Let's keep the born-died line only if no intermediate events, or maybe just line them all up?
+        // Simple: Just line from Born -> Died for "Lifespan".
+        polyline = [bornCoords, diedCoords];
+    }
+
+    if (allPoints.length > 0) {
+        // Simple centroid
+        const avgLat = allPoints.reduce((sum, p) => sum + p[0], 0) / allPoints.length;
+        const avgLng = allPoints.reduce((sum, p) => sum + p[1], 0) / allPoints.length;
+        center = [avgLat, avgLng];
+
+        // Adjust zoom based on spread? (Mock logic)
         zoom = 8;
-    } else if (bornCoords) {
-        markers.push({ pos: bornCoords, type: 'Birth', color: '#3B82F6', loc: bornLoc });
-        center = bornCoords;
-        zoom = 9;
-    } else if (diedCoords) {
-        markers.push({ pos: diedCoords, type: 'Death', color: '#EF4444', loc: diedLoc });
-        center = diedCoords;
-        zoom = 9;
+        if (allPoints.length > 2) zoom = 7;
     }
 
     return (
@@ -426,6 +478,7 @@ const KeyLocationsMap = ({ bornLoc, diedLoc }) => {
                         <Popup>
                             <strong>{m.type} Location</strong><br />
                             {m.loc}
+                            {m.label && <><br/><span className="text-xs text-gray-500">{m.label}</span></>}
                         </Popup>
                     </Marker>
                 ))}
@@ -490,7 +543,11 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
     const diedLoc = item.vital_stats.died_location || "Unknown";
 
     // Pass locations to getLifeEvents for region filtering
-    const events = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date, bornLoc, diedLoc);
+    const historyEvents = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date, bornLoc, diedLoc);
+    const personalEvents = getPersonalLifeEvents(item.story.life_events, bornYear, diedYear);
+
+    // Merge and sort
+    const events = [...historyEvents, ...personalEvents].sort((a, b) => a.year - b.year);
 
     const relationship = calculateRelationship(item.id);
     const family = getFamilyLinks(item, familyData);
@@ -540,7 +597,7 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
                              <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                                 <MapPin size={16} /> Key Locations
                             </h2>
-                            <KeyLocationsMap bornLoc={bornLoc} diedLoc={diedLoc} />
+                            <KeyLocationsMap bornLoc={bornLoc} diedLoc={diedLoc} lifeEvents={personalEvents} />
                         </div>
 
                         {bornYear > 0 && (
