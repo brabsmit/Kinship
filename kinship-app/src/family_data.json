@@ -420,7 +420,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "3.2.1",
+                "3.2.2"
+            ],
             "children": [
                 "3"
             ],
@@ -479,7 +482,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "4.2.1",
+                "4.2.2"
+            ],
             "children": [
                 "4"
             ],
@@ -759,62 +765,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #206"
-        }
-    },
-    {
-        "id": "6.2",
-        "name": "Missing due to End of Information in Gen V (2):  Phebe Powell",
-        "generation": "GENERATION VI:  FOUR GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "6"
-            ],
-            "spouses": [
-                "6.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #212"
-        }
-    },
-    {
-        "id": "7.1",
-        "name": "Missing due to Initial Immigrant in Gen V (2):  Henry Wainwright",
-        "generation": "GENERATION VI:  FOUR GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "7"
-            ],
-            "spouses": [
-                "7.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #213"
         }
     },
     {
@@ -1200,37 +1150,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #276"
-        }
-    },
-    {
-        "id": "3.2",
-        "name": "NOTES:  This identification is tentative; she is indicated in WikiTree as the spouse of the Jonathan that I believe is the father of Rachel",
-        "generation": "GENERATION VI:  FOUR GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "3.2.1",
-                "3.2.2"
-            ],
-            "children": [
-                "3"
-            ],
-            "spouses": [
-                "3.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #280"
         }
     },
     {
@@ -1734,62 +1653,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #365"
-        }
-    },
-    {
-        "id": "6.2",
-        "name": "4 from Gen V - Phebe Powell",
-        "generation": "GENERATION VII:  FIVE GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "6"
-            ],
-            "spouses": [
-                "6.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #373"
-        }
-    },
-    {
-        "id": "7.1",
-        "name": "4 from Gen V - Henry Wainwright",
-        "generation": "GENERATION VII:  FIVE GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "7"
-            ],
-            "spouses": [
-                "7.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #375"
         }
     },
     {
@@ -3609,62 +3472,6 @@
         }
     },
     {
-        "id": "1.1.2.1",
-        "name": "Edward Stuart",
-        "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.1.2"
-            ],
-            "spouses": [
-                "1.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #684"
-        }
-    },
-    {
-        "id": "5.2.2.1",
-        "name": "Impact of End of Information in Gen VII (2):  Francis Keene",
-        "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "5.2.2"
-            ],
-            "spouses": [
-                "5.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #685"
-        }
-    },
-    {
         "id": "1.1.1.1.1",
         "name": "Daniel Dodge",
         "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS",
@@ -4158,7 +3965,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "2.1.1.1.2.1",
+                "2.1.1.1.2.2"
+            ],
             "children": [
                 "2.1.1.1"
             ],
@@ -5114,7 +4924,10 @@
             ]
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "3.2.2.2.2.2.1",
+                "3.2.2.2.2.2.2"
+            ],
             "children": [],
             "spouses": [
                 "3.2.2.2.2.1"
@@ -5815,7 +5628,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.2.1.1.1.1",
+                "5.2.1.1.1.2"
+            ],
             "children": [
                 "5.2.1.1"
             ],
@@ -5843,7 +5659,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.2.1.1.2.1",
+                "5.2.1.1.2.2"
+            ],
             "children": [
                 "5.2.1.1"
             ],
@@ -5950,37 +5769,6 @@
         }
     },
     {
-        "id": "5.2.1.1.1",
-        "name": "See Above",
-        "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.2.1.1.1.1",
-                "5.2.1.1.1.2"
-            ],
-            "children": [
-                "5.2.1.1"
-            ],
-            "spouses": [
-                "5.2.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1069"
-        }
-    },
-    {
         "id": "5.2.2.2.2",
         "name": "Mother of Mary Powell Keene",
         "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS",
@@ -6009,37 +5797,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1070"
-        }
-    },
-    {
-        "id": "5.2.1.1.2",
-        "name": "See Above",
-        "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.2.1.1.2.1",
-                "5.2.1.1.2.2"
-            ],
-            "children": [
-                "5.2.1.1"
-            ],
-            "spouses": [
-                "5.2.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1071"
         }
     },
     {
@@ -7022,34 +6779,6 @@
         }
     },
     {
-        "id": "4.2.1.2.2",
-        "name": "Mary (Unknown) Walcott",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.2.1.2"
-            ],
-            "spouses": [
-                "4.2.1.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1246"
-        }
-    },
-    {
         "id": "1.1.1.1.1.1",
         "name": "Richard Dodge",
         "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
@@ -7340,7 +7069,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "1.2.1.1.1.2.1",
+                "1.2.1.1.1.2.2"
+            ],
             "children": [
                 "1.2.1.1.1"
             ],
@@ -7351,34 +7083,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1294"
-        }
-    },
-    {
-        "id": "1.2.1.1.1.2",
-        "name": "NOTES:  Arrived c. 1652, circumstances unclear but family lore about him being a prisoner of war; first settled in Salem, to Woburn 1661; daughter Hannah married John Proctor of Salem; parents of Dorcas Wilson Cleveland",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1297"
         }
     },
     {
@@ -7500,37 +7204,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1313"
-        }
-    },
-    {
-        "id": "1.2.1.1.1.2",
-        "name": "Dorcas Wilson Cleveland",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1/29/1657",
-            "born_location": "Woburn, MA",
-            "died_date": "11/29/1714",
-            "died_location": "Woburn, MA"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "1.2.1.1.1.2.1",
-                "1.2.1.1.1.2.2"
-            ],
-            "children": [
-                "1.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1319"
         }
     },
     {
@@ -8124,37 +7797,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1417"
-        }
-    },
-    {
-        "id": "2.1.1.1.2",
-        "name": "Anna Nichols Watson",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1645",
-            "born_location": "New Haven, CT",
-            "died_date": "1721",
-            "died_location": "Hartford, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "2.1.1.1.2.1",
-                "2.1.1.1.2.2"
-            ],
-            "children": [
-                "2.1.1.1"
-            ],
-            "spouses": [
-                "2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1423"
         }
     },
     {
@@ -9013,7 +8655,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "3.2.1.1.2.1.2.1",
+                "3.2.1.1.2.1.2.2"
+            ],
             "children": [
                 "3.2.1.1.2.1"
             ],
@@ -9944,35 +9589,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1723"
-        }
-    },
-    {
-        "id": "3.2.2.2.2.2",
-        "name": "Sarah Peck Gilbert",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1663",
-            "born_location": "Lyme, CT",
-            "died_date": "1730",
-            "died_location": "New Haven, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "3.2.2.2.2.2.1",
-                "3.2.2.2.2.2.2"
-            ],
-            "children": [],
-            "spouses": [
-                "3.2.2.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1729"
         }
     },
     {
@@ -11132,7 +10748,9 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.1.2.1.2.2.2"
+            ],
             "children": [
                 "5.1.2.1.2"
             ],
@@ -11254,7 +10872,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.2.1.1.1.2.1",
+                "5.2.1.1.1.2.2"
+            ],
             "children": [
                 "5.2.1.1.1"
             ],
@@ -11282,7 +10903,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.2.1.1.2.1.1",
+                "5.2.1.1.2.1.2"
+            ],
             "children": [
                 "5.2.1.1.2"
             ],
@@ -11310,7 +10934,9 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.2.1.1.2.2.1"
+            ],
             "children": [
                 "5.2.1.1.2"
             ],
@@ -11476,34 +11102,6 @@
         }
     },
     {
-        "id": "5.2.1.1.1.1",
-        "name": "See above",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "5.2.1.1.1"
-            ],
-            "spouses": [
-                "5.2.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1987"
-        }
-    },
-    {
         "id": "5.2.2.2.1.2",
         "name": "Paternal Grandmother of Mary Powell Keene",
         "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
@@ -11532,37 +11130,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1988"
-        }
-    },
-    {
-        "id": "5.2.1.1.1.2",
-        "name": "See above",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.2.1.1.1.2.1",
-                "5.2.1.1.1.2.2"
-            ],
-            "children": [
-                "5.2.1.1.1"
-            ],
-            "spouses": [
-                "5.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1989"
         }
     },
     {
@@ -11597,37 +11164,6 @@
         }
     },
     {
-        "id": "5.2.1.1.2.1",
-        "name": "See above",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.2.1.1.2.1.1",
-                "5.2.1.1.2.1.2"
-            ],
-            "children": [
-                "5.2.1.1.2"
-            ],
-            "spouses": [
-                "5.2.1.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1991"
-        }
-    },
-    {
         "id": "5.2.2.2.2.2",
         "name": "Maternal Grandmother of Mary Powell Keene",
         "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
@@ -11653,36 +11189,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #1992"
-        }
-    },
-    {
-        "id": "5.2.1.1.2.2",
-        "name": "See above",
-        "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.2.1.1.2.2.1"
-            ],
-            "children": [
-                "5.2.1.1.2"
-            ],
-            "spouses": [
-                "5.2.1.1.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #1993"
         }
     },
     {
@@ -13728,232 +13234,6 @@
         }
     },
     {
-        "id": "2.2.1.2.2.2",
-        "name": "Rachel Ball",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.2.1.2.2"
-            ],
-            "spouses": [
-                "2.2.1.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2339"
-        }
-    },
-    {
-        "id": "4.1.2.1.1.2",
-        "name": "Joanna (Unknown) Atwater",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.2.1.1"
-            ],
-            "spouses": [
-                "4.1.2.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2340"
-        }
-    },
-    {
-        "id": "8.1.2.2.1.2",
-        "name": "Sarah Palmer Goulding",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.1.2.2.1"
-            ],
-            "spouses": [
-                "8.1.2.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2341"
-        }
-    },
-    {
-        "id": "2.2.1.2.2.1",
-        "name": "Cornelius Merry",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.2.1.2.2"
-            ],
-            "spouses": [
-                "2.2.1.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2343"
-        }
-    },
-    {
-        "id": "4.2.1.1.1.2",
-        "name": "Peter Mallory, Sr. [3.1.2.1.1.1}; Thomas Oakes Sr.  [4.2.1.1.1.1}; Elizabeth F Oakes",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.2.1.1.1"
-            ],
-            "spouses": [
-                "4.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2344"
-        }
-    },
-    {
-        "id": "4.2.1.1.2.1",
-        "name": "Peter Tufts, Sr.",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.2.1.1.2"
-            ],
-            "spouses": [
-                "4.2.1.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2345"
-        }
-    },
-    {
-        "id": "5.1.2.1.2.2",
-        "name": "Christopher Hauxhurst",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.1.2.1.2.2.2"
-            ],
-            "children": [
-                "5.1.2.1.2"
-            ],
-            "spouses": [
-                "5.1.2.1.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2346"
-        }
-    },
-    {
-        "id": "8.2.2.1.1.2",
-        "name": "Mary Bemis",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.2.2.1.1"
-            ],
-            "spouses": [
-                "8.2.2.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2347"
-        }
-    },
-    {
         "id": "1.1.1.1.1.1.1",
         "name": "Richard Dodge",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -15362,7 +14642,10 @@
             ]
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "1.2.2.1.2.2.2.1",
+                "1.2.2.1.2.2.2.2"
+            ],
             "children": [
                 "1.2.2.1.2.2"
             ],
@@ -15564,65 +14847,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #2591"
-        }
-    },
-    {
-        "id": "1.2.2.1.2.2.2",
-        "name": "Hester Hyde Post",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "c. 1635 (unclear if",
-            "born_location": "MA/CT or England)",
-            "died_date": "11/13/1703",
-            "died_location": "Norwich, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "1.2.2.1.2.2.2.1",
-                "1.2.2.1.2.2.2.2"
-            ],
-            "children": [
-                "1.2.2.1.2.2"
-            ],
-            "spouses": [
-                "1.2.2.1.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2598"
-        }
-    },
-    {
-        "id": "1.2.2.1.1.1.1",
-        "name": "NOTES:  Childhood arrival; daughter of William Hyde, this Generation X,",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.2.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2602"
         }
     },
     {
@@ -16464,7 +15688,10 @@
             ]
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "2.1.1.2.2.2.1.1",
+                "2.1.1.2.2.2.1.2"
+            ],
             "children": [
                 "2.1.1.2.2.2"
             ],
@@ -17618,37 +16845,6 @@
         }
     },
     {
-        "id": "2.1.1.2.2.2.1",
-        "name": "See",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "2.1.1.2.2.2.1.1",
-                "2.1.1.2.2.2.1.2"
-            ],
-            "children": [
-                "2.1.1.2.2.2"
-            ],
-            "spouses": [
-                "2.1.1.2.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2922"
-        }
-    },
-    {
         "id": "2.2.2.1.2.2.2",
         "name": "Sarah Birchard Barnard",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -17677,34 +16873,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #2923"
-        }
-    },
-    {
-        "id": "2.1.1.2.2.2.2",
-        "name": "See",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.1.2.2.2"
-            ],
-            "spouses": [
-                "2.1.1.2.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #2924"
         }
     },
     {
@@ -18342,50 +17510,6 @@
         }
     },
     {
-        "id": "4.2",
-        "name": "Children:  Mary Preston Mallory (1629); Elizabeth Preston Alsop (1624) in",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "July or August 1647",
-            "died_location": "New Haven, CT"
-        },
-        "story": {
-            "notes": "In GMD and GM; arrived on \u201cTruelove\u201d in 1635 with children, his wife had died in England; first settled in Dorchester; New Haven by 1640",
-            "life_events": [
-                {
-                    "year": 1635,
-                    "label": "arrived on \u201cTruelove\u201d in 1635 with children, his wife had died in England",
-                    "location": "England",
-                    "type": "personal"
-                },
-                {
-                    "year": 1640,
-                    "label": "New Haven by 1640",
-                    "location": "Unknown",
-                    "type": "personal"
-                }
-            ]
-        },
-        "relations": {
-            "parents": [
-                "4.2.1",
-                "4.2.2"
-            ],
-            "children": [
-                "4"
-            ],
-            "spouses": [
-                "4.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3031"
-        }
-    },
-    {
         "id": "3.1.2.1.1.2.2",
         "name": "Elizabeth Sale Preston",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -18778,32 +17902,6 @@
             ]
         },
         "relations": {
-            "parents": [],
-            "children": [
-                "3.2.1.1.1.1"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3096"
-        }
-    },
-    {
-        "id": "3.2.1.1.1.1.1",
-        "name": "Mary Sperry (?) Beecher",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "c. 1624",
-            "born_location": "[New Haven?]",
-            "died_date": "1677",
-            "died_location": "New Haven, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
             "parents": [
                 "3.2.1.1.1.1.1.1",
                 "3.2.1.1.1.1.1.2"
@@ -18815,7 +17913,7 @@
         },
         "metadata": {
             "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3103"
+            "location_in_doc": "Paragraph #3096"
         }
     },
     {
@@ -18920,65 +18018,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3119"
-        }
-    },
-    {
-        "id": "3.2.1.1.2.1.2",
-        "name": "Mary Bullard Farrington",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1628",
-            "born_location": "Barnham, Suffolk, England",
-            "died_date": "1703",
-            "died_location": "Branford, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "3.2.1.1.2.1.2.1",
-                "3.2.1.1.2.1.2.2"
-            ],
-            "children": [
-                "3.2.1.1.2.1"
-            ],
-            "spouses": [
-                "3.2.1.1.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3126"
-        }
-    },
-    {
-        "id": "3.1.1.1.1.1",
-        "name": "NOTES:  Second husband William Hoadley (m. 1686) appears in Gen IX as",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "3.1.1.1.1"
-            ],
-            "spouses": [
-                "3.1.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3130"
         }
     },
     {
@@ -20105,7 +19144,10 @@
             ]
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "4.1.1.2.1.1.1.1",
+                "4.1.1.2.1.1.1.2"
+            ],
             "children": [
                 "4.1.1.2.1.1"
             ],
@@ -20393,37 +19435,6 @@
         }
     },
     {
-        "id": "4.1.1.2.1.1.1",
-        "name": "See",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "4.1.1.2.1.1.1.1",
-                "4.1.1.2.1.1.1.2"
-            ],
-            "children": [
-                "4.1.1.2.1.1"
-            ],
-            "spouses": [
-                "4.1.1.2.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3368"
-        }
-    },
-    {
         "id": "4.1.2.1.1.1.2",
         "name": "Mother of David Atwater",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -20451,62 +19462,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3369"
-        }
-    },
-    {
-        "id": "4.1.1.2.1.1.2",
-        "name": "See",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.1.2.1.1"
-            ],
-            "spouses": [
-                "4.1.1.2.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3370"
-        }
-    },
-    {
-        "id": "4.1.2.1.2.1.1",
-        "name": "Joseph Bradley",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1645",
-            "born_location": "New Haven, CT",
-            "died_date": "1704",
-            "died_location": "New Haven, CT"
-        },
-        "story": {
-            "notes": "Child of William Bradley and Alice Prichard Bradley listed in this generation",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.2.1.2.1"
-            ],
-            "spouses": [
-                "4.1.2.1.2.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3371"
         }
     },
     {
@@ -21354,7 +20309,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "4.2.2.1.2.2.2.1",
+                "4.2.2.1.2.2.2.2"
+            ],
             "children": [
                 "4.2.2.1.2.2"
             ],
@@ -21455,37 +20413,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3531"
-        }
-    },
-    {
-        "id": "4.2.2.1.2.2.2",
-        "name": "Elizabeth Wilmot Mix",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1649",
-            "born_location": "New Haven, CT",
-            "died_date": "1721",
-            "died_location": "New Haven, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "4.2.2.1.2.2.2.1",
-                "4.2.2.1.2.2.2.2"
-            ],
-            "children": [
-                "4.2.2.1.2.2"
-            ],
-            "spouses": [
-                "4.2.2.1.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3537"
         }
     },
     {
@@ -21931,7 +20858,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "5.2.1.1.2.1.2.1",
+                "5.2.1.1.2.1.2.2"
+            ],
             "children": [
                 "5.2.1.1.2.1"
             ],
@@ -22096,34 +21026,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3638"
-        }
-    },
-    {
-        "id": "5.1.2.2.1.2.1",
-        "name": "See Henry Reddocke",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "5.1.2.2.1.2"
-            ],
-            "spouses": [
-                "5.1.2.2.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3639"
         }
     },
     {
@@ -22321,34 +21223,6 @@
         }
     },
     {
-        "id": "5.2.1.1.1.2.1",
-        "name": "See Jonas Wood",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "5.2.1.1.1.2"
-            ],
-            "spouses": [
-                "5.2.1.1.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3663"
-        }
-    },
-    {
         "id": "5.2.2.2.1.2.2",
         "name": "Maternal Grandmother of Martha Powell Keene\u2019s Father",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -22374,34 +21248,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3664"
-        }
-    },
-    {
-        "id": "5.2.1.1.1.2.2",
-        "name": "See Mary Drake Wood",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "5.2.1.1.1.2"
-            ],
-            "spouses": [
-                "5.2.1.1.1.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3665"
         }
     },
     {
@@ -22433,34 +21279,6 @@
         }
     },
     {
-        "id": "5.2.1.1.2.1.1",
-        "name": "See Richard Willets",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "5.2.1.1.2.1"
-            ],
-            "spouses": [
-                "5.2.1.1.2.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3667"
-        }
-    },
-    {
         "id": "5.2.2.2.2.1.2",
         "name": "Paternal Grandmother of Martha Powell Keene\u2019s Mother",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -22486,37 +21304,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3668"
-        }
-    },
-    {
-        "id": "5.2.1.1.2.1.2",
-        "name": "See Mary Washburn Willets",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "5.2.1.1.2.1.2.1",
-                "5.2.1.1.2.1.2.2"
-            ],
-            "children": [
-                "5.2.1.1.2.1"
-            ],
-            "spouses": [
-                "5.2.1.1.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3669"
         }
     },
     {
@@ -22999,34 +21786,6 @@
         }
     },
     {
-        "id": "6.1.1.2.1.2.1",
-        "name": "See Nicholas Jacob",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "6.1.1.2.1.2"
-            ],
-            "spouses": [
-                "6.1.1.2.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3748"
-        }
-    },
-    {
         "id": "6.1.1.2.2.2.2",
         "name": "Mother of Deborah Jacob",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -23052,34 +21811,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #3749"
-        }
-    },
-    {
-        "id": "6.1.1.2.1.2.2",
-        "name": "See Mary Gilman Jacob",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "6.1.1.2.1.2"
-            ],
-            "spouses": [
-                "6.1.1.2.1.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3750"
         }
     },
     {
@@ -23978,32 +22709,6 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
-            "children": [
-                "7.2.1.2.2.2"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3904"
-        }
-    },
-    {
-        "id": "7.2.1.2.2.2.1",
-        "name": "Francis Ludlam King",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "1633",
-            "born_location": "Matlock, Derbyshire, England",
-            "died_date": "1/14/1692",
-            "died_location": "Suffolk County, NY"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
             "parents": [
                 "7.2.1.2.2.2.1.1",
                 "7.2.1.2.2.2.1.2"
@@ -24015,7 +22720,7 @@
         },
         "metadata": {
             "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #3910"
+            "location_in_doc": "Paragraph #3904"
         }
     },
     {
@@ -24821,7 +23526,10 @@
             "life_events": []
         },
         "relations": {
-            "parents": [],
+            "parents": [
+                "8.1.1.1.2.2.2.1",
+                "8.1.1.1.2.2.2.2"
+            ],
             "children": [
                 "8.1.1.1.2.2"
             ],
@@ -24871,32 +23579,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4046"
-        }
-    },
-    {
-        "id": "8.1.1.2.1.1.1",
-        "name": "Elizabeth (UNKNOWN) Clarke",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "before 1625",
-            "born_location": "England",
-            "died_date": "12/11/1692",
-            "died_location": "Roxbury, MA"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.1.1.2.1.1"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4053"
         }
     },
     {
@@ -26021,32 +24703,6 @@
         }
     },
     {
-        "id": "8.2.2.1.2.1.1",
-        "name": "Abigail Eddy Benjamin",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "before 1601",
-            "born_location": "Cranbrook, Kent, England",
-            "died_date": "1687",
-            "died_location": "Charlestown, MA"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.2.2.1.2.1"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4253"
-        }
-    },
-    {
         "id": "8.2.2.1.2.2.1",
         "name": "William Allen",
         "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
@@ -26259,37 +24915,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4291"
-        }
-    },
-    {
-        "id": "8.1.1.1.2.2.2",
-        "name": "NOTES:  GMD, GM; arrived 1634 on \u201cFrances\u201d with family, Aunt and cousins; see",
-        "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [
-                "8.1.1.1.2.2.2.1",
-                "8.1.1.1.2.2.2.2"
-            ],
-            "children": [
-                "8.1.1.1.2.2"
-            ],
-            "spouses": [
-                "8.1.1.1.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4297"
         }
     },
     {
@@ -27894,34 +26519,6 @@
         }
     },
     {
-        "id": "1.2.2.1.1.1.1",
-        "name": "See William Hyde in Generation X",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.2.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4572"
-        }
-    },
-    {
         "id": "1.2.2.1.2.2.2.2",
         "name": "Mother of Hester Hyde Post",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -27947,34 +26544,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4574"
-        }
-    },
-    {
-        "id": "1.2.2.1.1.1.2",
-        "name": "See Hester Trott Hyde in Generation X",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4575"
         }
     },
     {
@@ -28359,62 +26928,6 @@
         }
     },
     {
-        "id": "1.2.2.1.2.2.1.1",
-        "name": "See Stephen Post",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.2.2.1"
-            ],
-            "spouses": [
-                "1.2.2.1.2.2.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4635"
-        }
-    },
-    {
-        "id": "1.2.2.1.2.2.1.2",
-        "name": "See Elinor Panton Post",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.2.2.1"
-            ],
-            "spouses": [
-                "1.2.2.1.2.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4638"
-        }
-    },
-    {
         "id": "1.2.2.2.2.2.2.1",
         "name": "Father of Hester Hyde Post",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -28443,34 +26956,6 @@
         }
     },
     {
-        "id": "1.2.2.1.1.1.1",
-        "name": "See William Hyde Generation X",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.2.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4641"
-        }
-    },
-    {
         "id": "1.2.2.2.2.2.2.2",
         "name": "Mother of Hester Hyde Post",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -28496,75 +26981,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4643"
-        }
-    },
-    {
-        "id": "1.2.2.1.1.1.2",
-        "name": "See Hester Frances Trott Hyde Generation X",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "1.2.2.1.1.1"
-            ],
-            "spouses": [
-                "1.2.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4644"
-        }
-    },
-    {
-        "id": "2.1.1.1.1.2.2.1",
-        "name": "Nicholas Denslow",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "c. 1585-1590",
-            "born_location": "England",
-            "died_date": "3/8/1667",
-            "died_location": "Windsor, CT"
-        },
-        "story": {
-            "notes": "Arrived by 1632; first in Dorchester, to Windsor by 1636",
-            "life_events": [
-                {
-                    "year": 1632,
-                    "label": "Arrived by 1632",
-                    "location": "Unknown",
-                    "type": "personal"
-                },
-                {
-                    "year": 1636,
-                    "label": "first in Dorchester, to Windsor by 1636",
-                    "location": "Dorchester",
-                    "type": "personal"
-                }
-            ]
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.1.1.1.2.2"
-            ],
-            "spouses": [
-                "2.1.1.1.1.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4646"
         }
     },
     {
@@ -29522,34 +27938,6 @@
         }
     },
     {
-        "id": "2.1.2.2.1.2.1.1",
-        "name": "See John Drake, Sr.",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.2.2.1.2.1"
-            ],
-            "spouses": [
-                "2.1.2.2.1.2.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4808"
-        }
-    },
-    {
         "id": "2.1.2.2.2.1.2.2",
         "name": "Mother of Elizabeth Drake",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -29575,34 +27963,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4809"
-        }
-    },
-    {
-        "id": "2.1.2.2.1.2.1.2",
-        "name": "See Lettice Shakespear Drake",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.2.2.1.2.1"
-            ],
-            "spouses": [
-                "2.1.2.2.1.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4810"
         }
     },
     {
@@ -29894,34 +28254,6 @@
         }
     },
     {
-        "id": "2.1.1.2.2.2.1.1",
-        "name": "See Sir Thomas Birchard",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.1.2.2.2.1"
-            ],
-            "spouses": [
-                "2.1.1.2.2.2.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4856"
-        }
-    },
-    {
         "id": "2.2.2.1.2.2.2.2",
         "name": "Mother of Sarah Birchard Barnard",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -29947,34 +28279,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4857"
-        }
-    },
-    {
-        "id": "2.1.1.2.2.2.1.2",
-        "name": "See Mary Robinson Birchard",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.1.2.2.2.1"
-            ],
-            "spouses": [
-                "2.1.1.2.2.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4858"
         }
     },
     {
@@ -30144,34 +28448,6 @@
         }
     },
     {
-        "id": "2.2.2.2.1.1.2.1",
-        "name": "See Joseph Loomis",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.2.2.2.1.1.2"
-            ],
-            "spouses": [
-                "2.2.2.2.1.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4883"
-        }
-    },
-    {
         "id": "2.2.2.2.2.1.2.2",
         "name": "Mother of Sarah Loomis Olmstead",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -30197,34 +28473,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #4884"
-        }
-    },
-    {
-        "id": "2.2.2.2.1.1.2.2",
-        "name": "See Mary White Loomis",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.2.2.2.1.1.2"
-            ],
-            "spouses": [
-                "2.2.2.2.1.1.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #4885"
         }
     },
     {
@@ -31514,88 +29762,6 @@
         }
     },
     {
-        "id": "4.1.1.2.1.1.1.1",
-        "name": "See Thomas Sayre",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.1.2.1.1.1"
-            ],
-            "spouses": [
-                "4.1.1.2.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5090"
-        }
-    },
-    {
-        "id": "4.1.2.1.1.1.2.1",
-        "name": "Mother of Damaris Sayre Atwater",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.2.1.1.1.2"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5091"
-        }
-    },
-    {
-        "id": "4.1.1.2.1.1.1.2",
-        "name": "See Mrs. Thomas Sayre",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.1.2.1.1.1"
-            ],
-            "spouses": [
-                "4.1.1.2.1.1.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5092"
-        }
-    },
-    {
         "id": "4.1.2.1.2.1.2.1",
         "name": "John Brockett",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -31823,75 +29989,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #5127"
-        }
-    },
-    {
-        "id": "4.1.1.1.2.2.1",
-        "name": "Anthony Tompson, Sr.",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "c. 1605",
-            "born_location": "England",
-            "died_date": "9/1648",
-            "died_location": "New Haven, CT"
-        },
-        "story": {
-            "notes": "In GMD; arrived in Boston 6/26/1637 aboard the \u201cHector\u201d or a sister vessel; to New Haven 1638",
-            "life_events": [
-                {
-                    "year": 1637,
-                    "label": "arrived in Boston 6/26/1637 aboard the \u201cHector\u201d or a sister vessel",
-                    "location": "Boston",
-                    "type": "personal"
-                },
-                {
-                    "year": 1638,
-                    "label": "to New Haven 1638",
-                    "location": "New Haven",
-                    "type": "personal"
-                }
-            ]
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.1.1.2.2"
-            ],
-            "spouses": [
-                "4.1.1.1.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5131"
-        }
-    },
-    {
-        "id": "4.1.1.1.2.2.2",
-        "name": "Katherine (Unknown) Thompson Camp",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "c. 1615",
-            "born_location": "England",
-            "died_date": "In New Haven",
-            "died_location": "CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.1.1.2.2"
-            ],
-            "spouses": [
-                "4.1.1.1.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5138"
         }
     },
     {
@@ -32584,34 +30681,6 @@
         }
     },
     {
-        "id": "4.1.2.1.2.2.1.2",
-        "name": "NOTES:  See",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.1.2.1.2.2.1"
-            ],
-            "spouses": [
-                "4.1.2.1.2.2.1.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5258"
-        }
-    },
-    {
         "id": "4.2.2.2.2.1.2.1",
         "name": "Micah Tompkins",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -32781,32 +30850,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #5282"
-        }
-    },
-    {
-        "id": "4.2.2.2.1.2.1.2",
-        "name": "NOTES:  Father of Rebecka Turner Mix",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "4.2.2.2.1.2.1"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5288"
         }
     },
     {
@@ -33509,69 +31552,6 @@
         }
     },
     {
-        "id": "7.2.2.2.2.2.1",
-        "name": "Deacon Wiliam Douglas",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "c. 1610",
-            "born_location": "Northamptonshire, England",
-            "died_date": "7/26/1682",
-            "died_location": "New London, CT"
-        },
-        "story": {
-            "notes": "Arrived with family 1640; original grantor of New London",
-            "life_events": [
-                {
-                    "year": 1640,
-                    "label": "Arrived with family 1640",
-                    "location": "Unknown",
-                    "type": "personal"
-                }
-            ]
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "7.2.2.2.2.2"
-            ],
-            "spouses": [
-                "7.2.2.2.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5415"
-        }
-    },
-    {
-        "id": "7.2.2.2.2.2.2",
-        "name": "Ann Mattle (or Motley) Douglas",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "c. 1604",
-            "born_location": "Northamptonshire, England",
-            "died_date": "9/16/1685",
-            "died_location": "New London, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "7.2.2.2.2.2"
-            ],
-            "spouses": [
-                "7.2.2.2.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5422"
-        }
-    },
-    {
         "id": "7.2.1.2.1.2.1.1",
         "name": "Capt. Richard Raymond (Rayment)",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -34185,88 +32165,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #5526"
-        }
-    },
-    {
-        "id": "2.1.2.1.1.2.2.1",
-        "name": "NOTES:  GMD, GMB; arrived 1633 on \u201cGriffin\u201d; Governor of Massachusetts 1635; to Hartford 1637; first governor of CT and served as governor 8 times; many other offices; also appears above as",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.2.1.1.2.2"
-            ],
-            "spouses": [
-                "2.1.2.1.1.2.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5532"
-        }
-    },
-    {
-        "id": "7.2.2.1.2.2.2.1",
-        "name": "Mabel Harlakenden Haynes",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "1614",
-            "born_location": "Earls Colne, Essex, England",
-            "died_date": "1655",
-            "died_location": "Hartford, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "7.2.2.1.2.2.2"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5533"
-        }
-    },
-    {
-        "id": "2.1.2.1.1.2.2.2",
-        "name": "NOTES:  GMD, GM (both under Roger H); arrived 1635 with brother Roger on \u201cDefence\u201d; 2nd husband Samuel Eaton died within a year in an epidemic; also appears above as",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.1.2.1.1.2.2"
-            ],
-            "spouses": [
-                "2.1.2.1.1.2.2.1"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5537"
         }
     },
     {
@@ -35125,39 +33023,6 @@
         }
     },
     {
-        "id": "8.1.2.1.1.2.2.1",
-        "name": "Sarah Page (?) Hubbard",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "1604",
-            "born_location": "Suffolk",
-            "died_date": "1/18/1689",
-            "died_location": "Woburn, MA"
-        },
-        "story": {
-            "notes": "Married 2nd 1668 William Hamlett; 4 other children",
-            "life_events": [
-                {
-                    "year": 1668,
-                    "label": "Married 2nd 1668 William Hamlett",
-                    "location": "Unknown",
-                    "type": "personal"
-                }
-            ]
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.1.2.1.1.2.2"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5680"
-        }
-    },
-    {
         "id": "8.1.2.1.2.2.2.1",
         "name": "Elder Richard Masterson",
         "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
@@ -35257,88 +33122,6 @@
         "metadata": {
             "source_ref": "Unknown",
             "location_in_doc": "Paragraph #5697"
-        }
-    },
-    {
-        "id": "8.1.2.2.2.2.1.1",
-        "name": "Susan Wolffenden Merritt",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "before 8/11/1594",
-            "born_location": "Little Welnetham, Suffolk, England",
-            "died_date": "2/23/1665",
-            "died_location": "Cambridge, MA"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.1.2.2.2.2.1"
-            ],
-            "spouses": []
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5704"
-        }
-    },
-    {
-        "id": "8.2.1.1.1.1.2.1",
-        "name": "Bygod Eggleston",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "1587",
-            "born_location": "Settrington, Yorkshire, England",
-            "died_date": "1674",
-            "died_location": "Windsor, CT"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "8.2.1.1.1.1.2"
-            ],
-            "spouses": [
-                "8.2.1.1.1.1.2.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5708"
-        }
-    },
-    {
-        "id": "2.2.1.1.1.1.1",
-        "name": "NOTES:  GMD, GMB; arrived with Winthrop Fleet 1630; among founders of Dorchester in 1630 and Windsor in 1634; appears as father of Samuel at",
-        "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS",
-        "vital_stats": {
-            "born_date": "Unknown",
-            "born_location": "Unknown",
-            "died_date": "Unknown",
-            "died_location": "Unknown"
-        },
-        "story": {
-            "notes": "",
-            "life_events": []
-        },
-        "relations": {
-            "parents": [],
-            "children": [
-                "2.2.1.1.1.1"
-            ],
-            "spouses": [
-                "2.2.1.1.1.1.2"
-            ]
-        },
-        "metadata": {
-            "source_ref": "Unknown",
-            "location_in_doc": "Paragraph #5714"
         }
     },
     {
