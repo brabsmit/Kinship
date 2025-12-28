@@ -111,25 +111,104 @@ const createMarkerIcon = (color) => L.divIcon({
 });
 
 // --- 1. HISTORICAL CONTEXT ENGINE ---
-const HISTORY_EVENTS = [
-    { year: 1607, label: "Jamestown Founded", type: "era" },
-    { year: 1620, label: "Mayflower Arrives", type: "era" },
-    { year: 1692, label: "Salem Witch Trials", type: "event" },
-    { year: 1776, label: "Declaration of Independence", type: "war" },
-    { year: 1789, label: "Washington becomes President", type: "politics" },
-    { year: 1812, label: "War of 1812", type: "war" },
-    { year: 1837, label: "Panic of 1837 (Financial Crisis)", type: "economy" },
-    { year: 1848, label: "California Gold Rush", type: "era" },
-    { year: 1861, label: "Civil War Begins", type: "war" },
-    { year: 1865, label: "Lincoln Assassinated", type: "politics" },
-    { year: 1879, label: "Lightbulb Invented", type: "tech" }
+const HISTORY_DB = [
+    { year: 1603, label: "Queen Elizabeth I dies", region: "UK", type: "political" },
+    { year: 1605, label: "Gunpowder Plot", region: "UK", type: "political" },
+    { year: 1607, label: "Jamestown Founded", region: "USA", type: "era" },
+    { year: 1611, label: "King James Bible Published", region: "UK", type: "culture" },
+    { year: 1616, label: "Shakespeare dies", region: "UK", type: "culture" },
+    { year: 1620, label: "Mayflower Arrives", region: "USA", type: "era" },
+    { year: 1625, label: "Charles I becomes King", region: "UK", type: "political" },
+    { year: 1630, label: "Boston Founded", region: "USA", type: "era" },
+    { year: 1636, label: "Harvard College Founded", region: "USA", type: "education" },
+    { year: 1642, label: "English Civil War Begins", region: "UK", type: "war" },
+    { year: 1649, label: "Charles I Executed", region: "UK", type: "political" },
+    { year: 1660, label: "The Restoration", region: "UK", type: "political" },
+    { year: 1664, label: "New Amsterdam becomes New York", region: "USA", type: "political" },
+    { year: 1665, label: "Great Plague of London", region: "UK", type: "health" },
+    { year: 1666, label: "Great Fire of London", region: "UK", type: "disaster" },
+    { year: 1675, label: "King Philip's War", region: "USA", type: "war" },
+    { year: 1688, label: "Glorious Revolution", region: "UK", type: "political" },
+    { year: 1692, label: "Salem Witch Trials", region: "USA", type: "event" },
+    { year: 1707, label: "Act of Union (Great Britain)", region: "UK", type: "political" },
+    { year: 1714, label: "George I becomes King", region: "UK", type: "political" },
+    { year: 1754, label: "French and Indian War Begins", region: "USA", type: "war" },
+    { year: 1760, label: "Industrial Revolution Begins", region: "UK", type: "economy" },
+    { year: 1765, label: "Stamp Act", region: "USA", type: "political" },
+    { year: 1770, label: "Boston Massacre", region: "USA", type: "event" },
+    { year: 1773, label: "Boston Tea Party", region: "USA", type: "event" },
+    { year: 1775, label: "Revolutionary War Begins", region: "USA", type: "war" },
+    { year: 1776, label: "Declaration of Independence", region: "USA", type: "political" },
+    { year: 1781, label: "Battle of Yorktown", region: "USA", type: "war" },
+    { year: 1787, label: "US Constitution Signed", region: "USA", type: "political" },
+    { year: 1789, label: "Washington becomes President", region: "USA", type: "politics" },
+    { year: 1789, label: "French Revolution Begins", region: "Europe", type: "political" },
+    { year: 1793, label: "Cotton Gin Invented", region: "USA", type: "tech" },
+    { year: 1801, label: "United Kingdom formed", region: "UK", type: "political" },
+    { year: 1803, label: "Louisiana Purchase", region: "USA", type: "politics" },
+    { year: 1804, label: "Napoleon becomes Emperor", region: "Global", type: "political" },
+    { year: 1805, label: "Battle of Trafalgar", region: "UK", type: "war" },
+    { year: 1812, label: "War of 1812", region: "USA", type: "war" },
+    { year: 1815, label: "Battle of Waterloo", region: "Global", type: "war" },
+    { year: 1825, label: "Erie Canal Opens", region: "USA", type: "economy" },
+    { year: 1830, label: "Liverpool and Manchester Railway", region: "UK", type: "tech" },
+    { year: 1837, label: "Queen Victoria Crowned", region: "UK", type: "political" },
+    { year: 1837, label: "Panic of 1837", region: "USA", type: "economy" },
+    { year: 1845, label: "Irish Potato Famine", region: "Global", type: "disaster" },
+    { year: 1848, label: "California Gold Rush", region: "USA", type: "era" },
+    { year: 1851, label: "The Great Exhibition", region: "UK", type: "culture" },
+    { year: 1854, label: "Crimean War", region: "Global", type: "war" },
+    { year: 1859, label: "On the Origin of Species", region: "Global", type: "science" },
+    { year: 1861, label: "Civil War Begins", region: "USA", type: "war" },
+    { year: 1863, label: "Emancipation Proclamation", region: "USA", type: "politics" },
+    { year: 1865, label: "Lincoln Assassinated", region: "USA", type: "politics" },
+    { year: 1869, label: "Transcontinental Railroad", region: "USA", type: "tech" },
+    { year: 1876, label: "Telephone Invented", region: "USA", type: "tech" },
+    { year: 1879, label: "Lightbulb Invented", region: "USA", type: "tech" },
+    { year: 1888, label: "Jack the Ripper Murders", region: "UK", type: "event" },
+    { year: 1893, label: "Panic of 1893", region: "USA", type: "economy" }
 ];
 
-const getLifeEvents = (bornDate, diedDate) => {
+const detectRegion = (locationString) => {
+    if (!locationString) return "Global";
+    const loc = locationString.toLowerCase();
+
+    // USA
+    if (loc.includes("usa") || loc.includes("united states") ||
+        loc.includes("ct") || loc.includes("connecticut") ||
+        loc.includes("ma") || loc.includes("massachusetts") ||
+        loc.includes("ny") || loc.includes("new york") ||
+        loc.includes("nj") || loc.includes("new jersey") ||
+        loc.includes("pa") || loc.includes("pennsylvania") ||
+        loc.includes("va") || loc.includes("virginia")) {
+        return "USA";
+    }
+
+    // UK
+    if (loc.includes("uk") || loc.includes("united kingdom") ||
+        loc.includes("england") || loc.includes("britain") ||
+        loc.includes("london") || loc.includes("scotland") ||
+        loc.includes("wales")) {
+        return "UK";
+    }
+
+    return "Global";
+};
+
+const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
     const born = parseInt(bornDate?.match(/\d{4}/)?.[0] || 0);
     const died = parseInt(diedDate?.match(/\d{4}/)?.[0] || 0);
     if (!born || !died) return [];
-    return HISTORY_EVENTS.filter(e => e.year >= born && e.year <= died);
+
+    // Determine Ancestor's Region
+    // Priority: Birth Location -> Death Location
+    const region = detectRegion(bornLoc) !== "Global" ? detectRegion(bornLoc) : detectRegion(diedLoc);
+
+    return HISTORY_DB.filter(e => {
+        const inTime = e.year >= born && e.year <= died;
+        const matchesRegion = e.region === "Global" || e.region === region;
+        return inTime && matchesRegion;
+    });
 };
 
 // --- 2. RELATIONSHIP CALCULATOR ---
@@ -361,18 +440,29 @@ const KeyLocationsMap = ({ bornLoc, diedLoc }) => {
     );
 };
 
-const TimelineEvent = ({ event, age }) => (
-    <div className="flex items-center gap-4 mb-6 opacity-75 hover:opacity-100 transition-opacity group">
-        <div className="w-16 text-right font-mono text-sm text-gray-500">{event.year}</div>
-        <div className="w-3 h-3 rounded-full bg-gray-300 border-2 border-white shadow-sm z-10 group-hover:bg-[#E67E22] transition-colors"></div>
-        <div className="flex-1 bg-gray-50 p-3 rounded-lg border border-gray-100 text-sm text-gray-700 group-hover:bg-white group-hover:shadow-md transition-all">
-            <span className="font-bold text-gray-900">{event.label}</span>
-            <span className="block text-xs text-gray-500 uppercase tracking-wider mt-1">
-                Ancestor was approx {age} years old
-            </span>
+const TimelineEvent = ({ event, age }) => {
+    const isGlobal = event.region === "Global" || event.region === "Europe"; // Europe is semi-global context here
+
+    return (
+        <div className={`timeline-event flex items-center gap-4 mb-6 transition-opacity group ${isGlobal ? 'opacity-60 hover:opacity-100' : 'opacity-100'}`}>
+            <div className="w-16 text-right font-mono text-sm text-gray-500">{event.year}</div>
+            <div className={`w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 transition-colors ${isGlobal ? 'bg-gray-300' : 'bg-[#E67E22]'}`}></div>
+            <div className={`flex-1 p-3 rounded-lg border text-sm transition-all ${isGlobal ? 'bg-gray-50 border-gray-100 text-gray-600' : 'bg-white border-[#E67E22]/30 text-gray-800 shadow-sm'}`}>
+                <div className="flex justify-between items-start">
+                    <span className={`font-bold ${isGlobal ? 'text-gray-700' : 'text-gray-900'}`}>{event.label}</span>
+                    {event.region !== "Global" && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded ml-2">
+                            {event.region}
+                        </span>
+                    )}
+                </div>
+                <span className="block text-xs text-gray-400 uppercase tracking-wider mt-1">
+                    Ancestor was approx {age} years old
+                </span>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const FamilyMemberLink = ({ member, role, onClick }) => (
     <div 
@@ -395,12 +485,15 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
     const diedYear = parseInt(item.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
-    const events = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date);
-    const relationship = calculateRelationship(item.id);
-    const family = getFamilyLinks(item, familyData);
 
     const bornLoc = item.vital_stats.born_location || "Unknown";
     const diedLoc = item.vital_stats.died_location || "Unknown";
+
+    // Pass locations to getLifeEvents for region filtering
+    const events = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date, bornLoc, diedLoc);
+
+    const relationship = calculateRelationship(item.id);
+    const family = getFamilyLinks(item, familyData);
 
     return (
         <div className="h-full bg-[#F9F5F0] flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl">
