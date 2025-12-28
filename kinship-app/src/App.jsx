@@ -11,12 +11,13 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
+import { fetchResearchSuggestions } from './services/aiReasoning';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -1107,6 +1108,26 @@ const StatItem = ({ label, value, icon }) => (
 const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation, onSelectThread }) => {
     if (!item) return null;
 
+    const [researchSuggestions, setResearchSuggestions] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    React.useEffect(() => {
+        setResearchSuggestions(null);
+        setIsAnalyzing(false);
+    }, [item]);
+
+    const handleAnalyzeProfile = async () => {
+        setIsAnalyzing(true);
+        try {
+            const suggestions = await fetchResearchSuggestions(item);
+            setResearchSuggestions(suggestions);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
     const diedYear = parseInt(item.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
 
@@ -1309,6 +1330,67 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
                         </div>
                     )}
+
+                    {/* RESEARCH ASSISTANT */}
+                    <div className="mt-16">
+                         <div className="flex items-center gap-4 mb-8">
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <Brain size={14} strokeWidth={1.5} /> Research Assistant
+                            </h2>
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                        </div>
+
+                        {!researchSuggestions && !isAnalyzing && (
+                            <div className="flex flex-col items-center justify-center p-8 bg-white border border-gray-200 rounded-xl text-center">
+                                <div className="bg-blue-50 p-3 rounded-full mb-4">
+                                    <Brain size={24} className="text-blue-500" />
+                                </div>
+                                <h3 className="font-display font-bold text-gray-800 mb-2">Uncover Missing Details</h3>
+                                <p className="text-sm text-gray-500 mb-6 max-w-sm">
+                                    Use AI to analyze this profile and find actionable next steps for your research.
+                                </p>
+                                <button
+                                    onClick={handleAnalyzeProfile}
+                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center gap-2"
+                                >
+                                    <Sparkles size={14} /> Analyze Profile
+                                </button>
+                            </div>
+                        )}
+
+                        {isAnalyzing && (
+                            <div className="flex flex-col items-center justify-center p-12 bg-white border border-gray-200 rounded-xl">
+                                <div className="animate-spin text-blue-500 mb-4">
+                                    <Loader2 size={24} />
+                                </div>
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Analyzing Records...</p>
+                            </div>
+                        )}
+
+                        {researchSuggestions && (
+                            <div className="bg-white border border-blue-100 rounded-xl overflow-hidden shadow-sm">
+                                <div className="bg-blue-50/50 px-6 py-4 border-b border-blue-100 flex justify-between items-center">
+                                     <h3 className="font-bold text-blue-800 text-sm flex items-center gap-2">
+                                        <Sparkles size={14} className="text-blue-500" /> Suggested Research Steps
+                                     </h3>
+                                     <button onClick={() => setResearchSuggestions(null)} className="text-blue-400 hover:text-blue-600">
+                                        <X size={14} />
+                                     </button>
+                                </div>
+                                <div className="divide-y divide-gray-100">
+                                    {researchSuggestions.map((suggestion, idx) => (
+                                        <div key={idx} className="p-4 flex gap-3 hover:bg-gray-50 transition-colors">
+                                            <div className="mt-0.5 text-blue-400 shrink-0">
+                                                <CheckSquare size={16} />
+                                            </div>
+                                            <p className="text-sm text-gray-700 leading-relaxed">{suggestion}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     {/* META FOOTER */}
                      <div className="mt-16 pt-8 border-t border-gray-200/50 text-center">
