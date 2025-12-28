@@ -2,6 +2,7 @@ import re
 import json
 import os
 from docx import Document
+from collections import defaultdict
 
 class GenealogyTextPipeline:
     def __init__(self, docx_path):
@@ -107,7 +108,7 @@ class GenealogyTextPipeline:
 
         current_profile = None
         seen_ids = set()
-        current_generation = "Uncategorized" # Default until we hit the first header
+        current_generation = "Uncategorized"
         
         # Regex Patterns
         id_pattern = re.compile(r"\{(\d+(\.\d+)*)\}")
@@ -116,11 +117,8 @@ class GenealogyTextPipeline:
         notes_start_pattern = re.compile(r"NOTES:\s*(.*)", re.IGNORECASE)
         source_tag_pattern = re.compile(r"\[source:\s*(.*?)\]", re.IGNORECASE)
         
-        # Generation Header Pattern (e.g., "GENERATION I: PARENTS")
-        # We look for lines starting with GENERATION (case-insensitive)
         gen_header_pattern = re.compile(r"^(GENERATION\s+[IVXLCDM]+.*)", re.IGNORECASE)
 
-        # Iterate through paragraphs
         for index, para in enumerate(doc.paragraphs):
             if index % 1000 == 0:
                 print(f"Processing paragraph {index}/{total_paragraphs}")
@@ -129,30 +127,21 @@ class GenealogyTextPipeline:
             if not text:
                 continue
 
-            # 1. Check for Generation Header
             gen_match = gen_header_pattern.match(text)
             if gen_match:
-                # We found a header like "GENERATION I: PARENTS"
                 current_generation = gen_match.group(1).strip()
-                # Determine "Clean" label (optional, e.g. just "Generation I")
-                # For now we keep the whole descriptive string as it's useful context
                 print(f"   > Detected Section: {current_generation}")
-                
-                # If we were building a profile, save it before moving on (rare but possible)
                 if current_profile:
                     self.family_data.append(current_profile)
                     current_profile = None
                 continue
 
-            # 2. Check for New ID (Start of a Person)
             match = id_pattern.search(text)
             if match:
-                # Save previous profile if exists
                 if current_profile:
                     self.family_data.append(current_profile)
                     current_profile = None
 
-                # Initialize New Profile
                 uid = match.group(1)
 
                 if uid in seen_ids:
@@ -161,18 +150,16 @@ class GenealogyTextPipeline:
                     continue
                 seen_ids.add(uid)
                 
-                # Extract Source Tag
                 source_match = source_tag_pattern.search(text)
                 source_id = source_match.group(1) if source_match else "Unknown"
 
-                # Extract Name
                 raw_name = text.split('{')[0].strip()
                 clean_name = re.sub(r"\[source:.*?\]", "", raw_name).strip()
 
                 current_profile = {
                     "id": uid,
                     "name": clean_name,
-                    "generation": current_generation, # <--- NEW FIELD
+                    "generation": current_generation,
                     "vital_stats": {
                         "born_date": "Unknown",
                         "born_location": "Unknown",
@@ -190,9 +177,7 @@ class GenealogyTextPipeline:
                 }
                 continue
 
-            # 3. If we are inside a profile, parse details
             if current_profile:
-                # Extract Birth
                 b_match = born_pattern.search(text)
                 if b_match:
                     raw_born = b_match.group(1).strip()
@@ -200,7 +185,6 @@ class GenealogyTextPipeline:
                     current_profile["vital_stats"]["born_date"] = b_date
                     current_profile["vital_stats"]["born_location"] = b_loc
 
-                # Extract Death
                 d_match = died_pattern.search(text)
                 if d_match:
                     raw_died = d_match.group(1).strip()
@@ -208,14 +192,12 @@ class GenealogyTextPipeline:
                     current_profile["vital_stats"]["died_date"] = d_date
                     current_profile["vital_stats"]["died_location"] = d_loc
 
-                # Extract Notes
                 n_match = notes_start_pattern.search(text)
                 if n_match:
                     notes_text = n_match.group(1).strip()
                     current_profile["story"]["notes"] = notes_text
                     current_profile["story"]["life_events"] = self.extract_events_from_text(notes_text)
 
-        # Save the last one
         if current_profile:
             self.family_data.append(current_profile)
 
@@ -227,7 +209,6 @@ class GenealogyTextPipeline:
 
         for p in self.family_data:
             pid = p['id']
-            # Initialize if not present (although we are modifying the dicts in the list)
             if 'relations' not in p:
                  p['relations'] = {
                     "parents": [],
@@ -235,38 +216,30 @@ class GenealogyTextPipeline:
                     "spouses": []
                 }
 
-            # 1. Parent/Child Linking (by ID hierarchy)
-            # Logic: In this dataset (Ahnentafel-like), 1.1.1 is the PARENT of 1.1.
-            # Longer ID = Ancestor. Shorter ID = Descendant.
             if '.' in pid:
                 child_id = pid.rsplit('.', 1)[0]
                 if child_id in id_map:
-                    # Current person (pid) is a PARENT of child_id.
                     if child_id not in p['relations']['children']:
                         p['relations']['children'].append(child_id)
 
-                    # Add current person (pid) as parent to child
                     child_p = id_map[child_id]
                     if 'relations' not in child_p:
                         child_p['relations'] = {"parents": [], "children": [], "spouses": []}
                     if pid not in child_p['relations']['parents']:
                         child_p['relations']['parents'].append(pid)
 
-            # 2. Spouse Linking (by ID Adjacency/Pattern)
-            # Pattern A: Dotted IDs ending in .1 and .2 (e.g., 1.1.1 and 1.1.2)
             spouse_candidate = None
             if '.' in pid:
                 if pid.endswith('.1'):
                     spouse_candidate = pid[:-1] + '2'
                 elif pid.endswith('.2'):
                     spouse_candidate = pid[:-1] + '1'
-            # Pattern B: Top-level Integer IDs (e.g., 1 and 2, 3 and 4)
             else:
                 try:
                     nid = int(pid)
-                    if nid % 2 != 0: # Odd (1, 3, 5) -> Spouse is Next Even
+                    if nid % 2 != 0:
                         spouse_candidate = str(nid + 1)
-                    else: # Even (2, 4, 6) -> Spouse is Prev Odd
+                    else:
                         spouse_candidate = str(nid - 1)
                 except ValueError:
                     pass
@@ -275,9 +248,145 @@ class GenealogyTextPipeline:
                 if spouse_candidate not in p['relations']['spouses']:
                     p['relations']['spouses'].append(spouse_candidate)
 
+    def _get_birth_year(self, profile):
+        raw = profile.get("vital_stats", {}).get("born_date", "")
+        match = re.search(r'\d{4}', raw)
+        if match:
+            return int(match.group(0))
+        return None
+
+    def _find_mentions(self):
+        print("--- Ariadne: Weaving Connections ---")
+        # Build Name Index
+        # Use a list to handle duplicates (collisions)
+        name_index = defaultdict(list)
+
+        for p in self.family_data:
+            full_name = p['name']
+            pid = p['id']
+
+            # Normalize
+            normalized_name = " ".join([n.capitalize() for n in full_name.split()])
+            name_index[normalized_name].append(pid)
+
+            # Variations: First Last
+            parts = normalized_name.split()
+            if len(parts) > 2:
+                short_name = f"{parts[0]} {parts[-1]}"
+                # Only add short name if it doesn't conflict with an existing full name
+                # (though here we just append to list and filter later)
+                name_index[short_name].append(pid)
+
+        # Filter ambiguous names
+        clean_name_index = {}
+        for name, ids in name_index.items():
+            unique_ids = list(set(ids))
+            if len(unique_ids) == 1:
+                clean_name_index[name] = unique_ids[0]
+            else:
+                # Ambiguous name (e.g., "Sarah Dodge" -> [1.2, 5.1.2.2?])
+                # We skip linking based on this name to avoid false positives
+                # print(f"Ambiguous name skipped: {name} -> {unique_ids}")
+                pass
+
+        # Keywords for relationship types
+        # These must appear in the same CLAUSE as the name
+        keywords = {
+            "partner": "Business Partner",
+            "business": "Business Partner",
+            "firm": "Business Partner",
+            "married": "Spouse",
+            "wife": "Spouse",
+            "husband": "Spouse",
+            "spouse": "Spouse",
+            "wed": "Spouse",
+            "cousin": "Cousin",
+            "friend": "Friend",
+            "neighbor": "Neighbor",
+            "associate": "Associate"
+        }
+
+        count = 0
+        sorted_names = sorted(clean_name_index.keys(), key=len, reverse=True)
+        id_map = {p['id']: p for p in self.family_data}
+
+        for p in self.family_data:
+            p['related_links'] = []
+            notes = p['story']['notes']
+            if not notes:
+                continue
+
+            source_born = self._get_birth_year(p)
+            found_ids = set()
+
+            # Split into clauses for tighter context
+            # Split on punctuation (. ; ,)
+            clauses = re.split(r'[.;,]', notes)
+
+            for clause in clauses:
+                if not clause.strip():
+                    continue
+
+                for name in sorted_names:
+                    target_id = clean_name_index[name]
+                    if target_id == p['id']:
+                        continue
+                    if target_id in found_ids:
+                        continue
+
+                    # Regex for exact word match in this clause
+                    pattern = r'\b' + re.escape(name) + r'\b'
+                    if re.search(pattern, clause):
+
+                        # Date sanity check for strict relationships (Spouse, Partner)
+                        # If dates are wildly off (>100 years), assume it's a "Mentioned" (e.g. ancestor)
+                        # or skip if it looks like a collision.
+                        target_p = id_map.get(target_id)
+                        target_born = self._get_birth_year(target_p) if target_p else None
+
+                        is_contemporary = True
+                        if source_born and target_born:
+                            diff = abs(source_born - target_born)
+                            if diff > 80:
+                                is_contemporary = False
+
+                        found_ids.add(target_id)
+
+                        # Determine Type
+                        rel_type = "Mentioned"
+                        lower_clause = clause.lower()
+
+                        # Search for keywords in the clause
+                        for k, v in keywords.items():
+                            # Use regex for keyword matching to avoid partial matches
+                            if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
+                                # If keyword implies contemporary but they are not, downgrade to Mentioned
+                                if v in ["Spouse", "Business Partner", "Friend"] and not is_contemporary:
+                                    rel_type = "Mentioned"
+                                else:
+                                    rel_type = v
+                                break
+
+                        # Context sentence (full sentence)
+                        full_sentences = self.split_sentences(notes)
+                        source_sentence = clause.strip()
+                        for s in full_sentences:
+                            if clause.strip() in s:
+                                source_sentence = s
+                                break
+
+                        p['related_links'].append({
+                            "target_id": target_id,
+                            "relation_type": rel_type,
+                            "source_text": source_sentence.strip()
+                        })
+                        count += 1
+
+        print(f"Ariadne found {count} text-based connections.")
+
     def clean_and_save(self):
-        # Run linking before saving
         self.link_family_members()
+        self._find_mentions()
 
         final_list = []
         
@@ -285,13 +394,14 @@ class GenealogyTextPipeline:
             final_profile = {
                 "id": p["id"],
                 "name": p["name"],
-                "generation": p["generation"], # <--- Pass this through to JSON
+                "generation": p["generation"],
                 "vital_stats": p["vital_stats"],
                 "story": {
                     "notes": p["story"]["notes"],
                     "life_events": p["story"].get("life_events", [])
                 },
                 "relations": p.get("relations", {}),
+                "related_links": p.get("related_links", []),
                 "metadata": {
                     "source_ref": p["metadata"]["source_id"],
                     "location_in_doc": f"Paragraph #{p['metadata']['doc_paragraph_index']}"
@@ -305,9 +415,6 @@ class GenealogyTextPipeline:
         
         print(f"Data saved to {output_filename}")
 
-# ==========================================
-# EXECUTION
-# ==========================================
 if __name__ == "__main__":
     word_file = "GENEALOGY DSD Paternal Ancestry.docx"
     
