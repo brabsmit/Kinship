@@ -381,7 +381,7 @@ class GenealogyTextPipeline:
 
         # 3. War Veteran
         # Keywords: War, Revolution, Army, Regiment, Captain, Lieutenant, General, Soldier, Private
-        if re.search(r'\b(served in|soldier|captain|lieutenant|general|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b', notes, re.IGNORECASE):
+        if re.search(r'\b(served in|soldier|captain|major|lieutenant|general|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b', notes, re.IGNORECASE):
              tags.append("War Veteran")
 
         # 4. Founder / Settler
