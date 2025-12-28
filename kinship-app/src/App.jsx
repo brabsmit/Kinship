@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -236,7 +236,7 @@ const generateTrivia = (data, branchName) => {
 
     if (oldestPerson) {
         stats.push({
-            icon: <Clock size={16} />,
+            icon: <Clock size={16} strokeWidth={1.5} />,
             text: `${oldestPerson.name} lived to be ${maxAge} years old, the longest in this branch.`
         });
     }
@@ -245,7 +245,7 @@ const generateTrivia = (data, branchName) => {
     if (validAges > 0) {
         const avgAge = Math.round(totalAge / validAges);
         stats.push({
-             icon: <Users size={16} />,
+             icon: <Users size={16} strokeWidth={1.5} />,
              text: `In the ${branchName} Branch, the average lifespan was ${avgAge} years.`
         });
     }
@@ -270,7 +270,7 @@ const generateTrivia = (data, branchName) => {
 
     if (mostCommonName && maxCount > 1) {
         stats.push({
-            icon: <User size={16} />,
+            icon: <User size={16} strokeWidth={1.5} />,
             text: `The name "${mostCommonName}" appears ${maxCount} times in this branch.`
         });
     }
@@ -288,7 +288,7 @@ const generateTrivia = (data, branchName) => {
 
     if (earliestPerson) {
          stats.push({
-            icon: <Anchor size={16} />,
+            icon: <Anchor size={16} strokeWidth={1.5} />,
             text: `The earliest recorded ancestor here is ${earliestPerson.name}, born in ${minBorn}.`
         });
     }
@@ -316,7 +316,7 @@ const generateTrivia = (data, branchName) => {
 
     if (immigrantCount > 0) {
         stats.push({
-            icon: <MapPin size={16} />,
+            icon: <MapPin size={16} strokeWidth={1.5} />,
             text: `${immigrantCount} ancestors in this branch were immigrants or migrated between major regions.`
         });
     }
@@ -652,12 +652,6 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
     }
 
     if (bornCoords && diedCoords && bornLoc !== diedLoc) {
-        polyline = [bornCoords, ...eventMarkers.map(m => m.pos), diedCoords];
-        // Sort by time? Ideally. But events might not be in path order if we just list them.
-        // For now, let's just keep the simple born -> died line or skip it if we have events,
-        // because the path is complex.
-        // Let's keep the born-died line only if no intermediate events, or maybe just line them all up?
-        // Simple: Just line from Born -> Died for "Lifespan".
         polyline = [bornCoords, diedCoords];
     }
 
@@ -690,42 +684,57 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
                 ))}
                 {polyline && <Polyline positions={polyline} color="#2C3E50" dashArray="5, 10" />}
             </MapContainer>
-            {missingLocations.length > 0 && (
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-lg text-xs text-red-600 z-[1000] border border-red-100 text-center animate-in fade-in slide-in-from-bottom-2">
-                    <span className="font-bold">Note:</span> Could not locate coordinates for: {missingLocations.join(", ")}
-                </div>
-            )}
         </div>
     );
 };
 
-const TimelineEvent = ({ event, age }) => {
+const TimelineEvent = ({ event, age, isFirst }) => {
     const isPersonal = event.region === "Personal";
 
     return (
-        <div className={`timeline-event flex items-center gap-4 mb-6 transition-opacity group ${isPersonal ? 'opacity-100 scale-100' : 'opacity-60 hover:opacity-100'}`}>
-            <div className="w-16 text-right font-mono text-sm text-gray-500">{event.year}</div>
-            <div className={`w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 transition-colors ${isPersonal ? 'bg-[#E67E22] scale-125' : 'bg-gray-300'}`}></div>
-            <div className={`flex-1 p-3 rounded-lg border text-sm transition-all ${isPersonal ? 'bg-white border-[#E67E22]/50 text-gray-900 shadow-md' : 'bg-gray-50 border-gray-100 text-gray-500'}`}>
-                <div className="flex justify-between items-start">
-                    <span className={`font-bold ${isPersonal ? 'text-gray-900' : 'text-gray-600'}`}>{event.label}</span>
+        <div className="timeline-event group flex gap-6 relative">
+             {/* Line */}
+             <div className="absolute left-[3.25rem] top-0 bottom-0 w-px bg-gray-200 group-last:bottom-auto group-last:h-6"></div>
+
+             {/* Year */}
+             <div className="w-16 pt-1 text-right font-mono text-sm text-gray-400 group-hover:text-gray-600 transition-colors">
+                 {event.year}
+             </div>
+
+             {/* Dot */}
+             <div className={`
+                relative z-10 w-4 h-4 mt-2 rounded-full border-2 transition-all
+                ${isPersonal
+                    ? 'bg-[#E67E22] border-[#F9F5F0] scale-110 shadow-sm group-hover:scale-125'
+                    : 'bg-gray-300 border-[#F9F5F0] group-hover:bg-gray-400'
+                }
+             `}></div>
+
+             {/* Content */}
+             <div className="flex-1 pb-8">
+                 <div className={`
+                    text-sm transition-colors
+                    ${isPersonal ? 'font-bold text-gray-900' : 'text-gray-500'}
+                 `}>
+                     {event.label}
+                 </div>
+
+                 <div className="flex items-center gap-2 mt-1">
+                    {/* Age Badge */}
+                    {age >= 0 && (
+                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">
+                            Age {age}
+                        </span>
+                    )}
+
                     {/* Context Badge */}
                     {!isPersonal && event.region !== "Global" && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded ml-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 px-1.5 rounded">
                             {event.region}
                         </span>
                     )}
-                     {/* Personal Badge */}
-                     {isPersonal && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded ml-2">
-                            Personal
-                        </span>
-                    )}
-                </div>
-                <span className="block text-xs text-gray-400 uppercase tracking-wider mt-1">
-                    Ancestor was approx {age} years old
-                </span>
-            </div>
+                 </div>
+             </div>
         </div>
     );
 };
@@ -733,16 +742,16 @@ const TimelineEvent = ({ event, age }) => {
 const FamilyMemberLink = ({ member, role, onClick }) => (
     <div 
         onClick={() => onClick(member)}
-        className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all"
+        className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group"
     >
-        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-lg">
+        <div className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 font-serif font-bold group-hover:bg-orange-50 group-hover:text-orange-600 transition-colors">
             {member.name.charAt(0)}
         </div>
         <div>
-            <div className="text-xs text-gray-400 uppercase font-bold tracking-wider">{role}</div>
-            <div className="font-medium text-gray-800 text-sm truncate max-w-[120px]">{member.name}</div>
+            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-0.5">{role}</div>
+            <div className="font-display font-bold text-gray-800 group-hover:text-[#E67E22] transition-colors">{member.name}</div>
         </div>
-        <ChevronRight size={16} className="text-gray-300 ml-auto" />
+        <ChevronRight size={16} className="text-gray-300 ml-auto group-hover:translate-x-1 transition-transform" />
     </div>
 );
 
@@ -751,44 +760,47 @@ const HeroImage = ({ location, year }) => {
     const [imgSrc, setImgSrc] = useState(asset.src);
     const [hasError, setHasError] = useState(false);
 
-    // If props change, reset state
     React.useEffect(() => {
         setImgSrc(asset.src);
         setHasError(false);
     }, [asset.src]);
 
     const handleError = (e) => {
-        // If the current image is already the fallback, just hide it or stop
         if (imgSrc === ASSETS.generic_antique.src) {
             e.target.style.display = 'none';
             return;
         }
-
-        // Otherwise, switch to fallback
-        console.warn(`Failed to load hero image: ${imgSrc}. Switching to fallback.`);
         setImgSrc(ASSETS.generic_antique.src);
         setHasError(true);
     };
 
     return (
-        <div className="relative w-full h-48 md:h-64 overflow-hidden mb-[-2rem] z-0">
-            {/* Gradient Overlay to blend with header */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E50] to-transparent opacity-100 z-10"></div>
+        <div className="relative w-full h-80 md:h-96 overflow-hidden">
+            {/* Gradient Overlay for Texture Blend */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#fdfbf7] via-transparent to-black/30 z-10"></div>
 
             <img
                 src={imgSrc}
                 alt={asset.alt}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover grayscale opacity-80 mix-blend-multiply"
                 style={asset.style}
                 onError={handleError}
             />
 
-            <div className="absolute bottom-10 right-4 z-20 text-white/40 text-[10px] uppercase tracking-widest font-mono text-right max-w-xs drop-shadow-md">
+             <div className="absolute bottom-4 right-4 z-20 text-black/20 text-[10px] uppercase tracking-widest font-mono text-right max-w-xs">
                 {hasError ? ASSETS.generic_antique.caption : asset.caption}
             </div>
         </div>
     );
 };
+
+const StatItem = ({ label, value, icon }) => (
+    <div className="flex flex-col items-center justify-center text-center px-4">
+        <div className="text-gray-400 mb-2">{icon}</div>
+        <div className="text-sm font-bold text-gray-800 font-display">{value}</div>
+        <div className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">{label}</div>
+    </div>
+);
 
 const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
     if (!item) return null;
@@ -809,121 +821,126 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
     const relationship = calculateRelationship(item.id);
     const family = getFamilyLinks(item, familyData);
 
-    return (
-        <div className="h-full bg-[#F9F5F0] flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl">
-            {/* HERO IMAGE */}
-            <HeroImage location={bornLoc} year={bornYear} />
+    // Stats for the bar
+    const childrenCount = family.children.length;
+    const spousesCount = family.spouses.length;
 
-            {/* --- HEADER --- */}
-            <div className="bg-[#2C3E50] p-8 text-white relative flex-shrink-0 z-20 bg-transparent -mt-8 pt-0">
-                <button onClick={onClose} className="absolute top-0 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
-                    <X size={20} />
+    return (
+        <div className="h-full bg-texture-paper flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl relative">
+
+            {/* Sticky Close / Nav Bar */}
+            <div className="absolute top-0 left-0 right-0 z-50 p-6 flex justify-between items-start pointer-events-none">
+                 <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-100 shadow-sm pointer-events-auto flex items-center gap-2">
+                    <Anchor size={12} className="text-[#E67E22]" strokeWidth={1.5} />
+                    <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{relationship}</span>
+                 </div>
+                 <button onClick={onClose} className="pointer-events-auto p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full text-gray-400 hover:text-gray-800 shadow-sm border border-gray-100 transition-all">
+                    <X size={20} strokeWidth={1.5} />
                 </button>
-                
-                <div className="flex items-center gap-2 text-[#E67E22] font-mono text-xs uppercase tracking-[0.2em] mb-4">
-                    <Anchor size={14} />
-                    <span>{relationship}</span>
-                </div>
-                
-                <h1 className="text-4xl md:text-5xl font-serif font-bold mb-2 leading-tight">
-                    {item.name}
-                </h1>
-                <p className="text-white/60 font-mono text-sm">
-                    {item.vital_stats.born_date} — {item.vital_stats.died_date}
-                </p>
             </div>
 
-            {/* --- CONTENT --- */}
+            {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto custom-scrollbar">
-                <div className="max-w-4xl mx-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                {/* HERO HEADER */}
+                <div className="relative">
+                    <HeroImage location={bornLoc} year={bornYear} />
                     
-                    {/* LEFT COL */}
-                    <div className="lg:col-span-2 space-y-12">
-                        {item.story?.notes && (
-                            <div>
-                                <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                                    <BookOpen size={16} /> The Story
-                                </h2>
-                                <div className="bg-white p-8 rounded-none border-l-4 border-[#E67E22] shadow-sm">
-                                    <p className="text-xl text-gray-800 leading-relaxed font-serif first-letter:text-5xl first-letter:float-left first-letter:mr-3 first-letter:font-bold first-letter:text-[#2C3E50]">
-                                        {item.story.notes}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* --- MAP SECTION --- */}
-                        <div>
-                             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                                <MapPin size={16} /> Key Locations
-                            </h2>
-                            <KeyLocationsMap bornLoc={bornLoc} diedLoc={diedLoc} lifeEvents={personalEvents} />
-                        </div>
-
-                        {bornYear > 0 && (
-                            <div>
-                                <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-8 flex items-center gap-2">
-                                    <Clock size={16} /> Historical Context
-                                </h2>
-                                <div className="relative border-l-2 border-gray-200 ml-[3.25rem] space-y-0">
-                                    <div className="flex items-center gap-4 mb-8 -ml-[3.25rem]">
-                                        <div className="w-16 text-right font-bold text-[#2C3E50]">{bornYear}</div>
-                                        <div className="w-4 h-4 rounded-full bg-[#2C3E50] border-4 border-[#F9F5F0] shadow-md z-10"></div>
-                                        <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
-                                            <div className="font-bold text-[#2C3E50]">Born</div>
-                                            <div className="text-xs text-gray-500">{bornLoc}</div>
-                                        </div>
-                                    </div>
-                                    {events.map((e, i) => <TimelineEvent key={i} event={e} age={e.year - bornYear} />)}
-                                    <div className="flex items-center gap-4 mt-8 -ml-[3.25rem]">
-                                        <div className="w-16 text-right font-bold text-[#2C3E50]">{diedYear}</div>
-                                        <div className="w-4 h-4 rounded-full bg-[#2C3E50] border-4 border-[#F9F5F0] shadow-md z-10"></div>
-                                        <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
-                                            <div className="font-bold text-[#2C3E50]">Died</div>
-                                            <div className="text-xs text-gray-500">{diedLoc}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* RIGHT COL */}
-                    <div className="space-y-8">
-                        <div>
-                            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Users size={16} /> Family Network
-                            </h2>
-                            <div className="flex flex-col gap-3">
-                                {family.parents.map(p => (
-                                    <FamilyMemberLink key={p.id} member={p} role="Parent" onClick={onNavigate} />
-                                ))}
-
-                                {family.spouses.length > 0 && (
-                                    <div className="mt-2 space-y-2">
-                                        <div className="text-xs font-bold text-gray-300 uppercase tracking-widest pl-1">Spouses</div>
-                                        {family.spouses.map(spouse => <FamilyMemberLink key={spouse.id} member={spouse} role="Spouse" onClick={onNavigate} />)}
-                                    </div>
-                                )}
-
-                                {family.children.length > 0 && (
-                                    <div className="mt-2 space-y-2">
-                                        <div className="text-xs font-bold text-gray-300 uppercase tracking-widest pl-1">Children</div>
-                                        {family.children.map(child => <FamilyMemberLink key={child.id} member={child} role="Child" onClick={onNavigate} />)}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Metadata */}
-                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Record Details</div>
-                             <div className="space-y-2 text-xs text-gray-600">
-                                <div className="flex justify-between"><span>ID:</span><span className="font-mono">{item.id}</span></div>
-                                <div className="flex justify-between"><span>Source:</span><span className="font-mono truncate max-w-[150px]">{item.metadata.location_in_doc}</span></div>
-                             </div>
+                    <div className="absolute bottom-0 left-0 right-0 px-8 pb-12 pt-24 bg-gradient-to-t from-[#fdfbf7] to-transparent z-20 flex flex-col items-center text-center">
+                        <h1 className="text-5xl md:text-6xl font-display font-bold text-gray-900 mb-4 drop-shadow-sm leading-tight">
+                            {item.name}
+                        </h1>
+                        <div className="flex items-center gap-4 text-gray-500 font-mono text-sm uppercase tracking-widest">
+                            <span>{bornYear || '?'}</span>
+                            <span className="w-8 h-px bg-gray-300"></span>
+                            <span>{diedYear || '?'}</span>
                         </div>
                     </div>
+                </div>
+
+                {/* MAIN CONTENT CONTAINER */}
+                <div className="max-w-3xl mx-auto px-6 pb-24">
+
+                    {/* STATS BAR */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-12 bg-white/50 rounded-xl mx-4">
+                        <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
+                        <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
+                        <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
+                        <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
+                    </div>
+
+                    {/* STORY / BIO */}
+                    {item.story?.notes && (
+                        <div className="mb-16">
+                            <p className="text-lg md:text-xl font-body-serif text-gray-800 leading-loose first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
+                                {item.story.notes}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* UNIFIED TIMELINE */}
+                    {bornYear > 0 && (
+                        <div className="mb-16">
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Clock size={14} strokeWidth={1.5} /> Life & Times
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+
+                            <div className="pl-4 md:pl-8">
+                                <TimelineEvent event={{ year: bornYear, label: `Born in ${bornLoc}`, region: "Personal" }} age={0} />
+                                {events.map((e, i) => <TimelineEvent key={i} event={e} age={e.year - bornYear} />)}
+                                <TimelineEvent event={{ year: diedYear, label: `Died in ${diedLoc}`, region: "Personal" }} age={diedYear - bornYear} />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* LOCATIONS MAP */}
+                    <div className="mb-16">
+                         <div className="flex items-center gap-4 mb-8">
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <MapPin size={14} strokeWidth={1.5} /> Journey
+                            </h2>
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                        </div>
+                        <KeyLocationsMap bornLoc={bornLoc} diedLoc={diedLoc} lifeEvents={personalEvents} />
+                    </div>
+
+                    {/* FAMILY CONNECTIONS */}
+                    <div>
+                         <div className="flex items-center gap-4 mb-8">
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <Network size={14} strokeWidth={1.5} /> Connections
+                            </h2>
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {family.parents.map(p => (
+                                <FamilyMemberLink key={p.id} member={p} role="Parent" onClick={onNavigate} />
+                            ))}
+                            {family.spouses.map(spouse => (
+                                <FamilyMemberLink key={spouse.id} member={spouse} role="Spouse" onClick={onNavigate} />
+                            ))}
+                            {family.children.map(child => (
+                                <FamilyMemberLink key={child.id} member={child} role="Child" onClick={onNavigate} />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* META FOOTER */}
+                     <div className="mt-16 pt-8 border-t border-gray-200/50 text-center">
+                         <div className="inline-flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest font-mono">
+                            <span>ID: {item.id}</span>
+                            <span>•</span>
+                            <span>Src: {item.metadata.location_in_doc}</span>
+                         </div>
+                     </div>
+
                 </div>
             </div>
         </div>

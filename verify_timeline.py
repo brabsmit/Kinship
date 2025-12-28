@@ -23,7 +23,7 @@ def run():
             page.click('text=William Earl Dodge, Sr.')
 
             # Wait for Historical Context header
-            page.wait_for_selector('text=Historical Context', timeout=5000)
+            page.wait_for_selector('text=Life & Times', timeout=5000)
             print("Profile loaded.")
 
             # Scroll to the bottom
@@ -58,9 +58,8 @@ def run():
                     print(f"    Computed Opacity: {opacity}")
 
             # Take a specific screenshot of the timeline area
-            # We target the parent of the timeline events which is likely the last child of the main content
-            # Or we can just screenshot the 'custom-scrollbar' container
-            page.locator(".custom-scrollbar").screenshot(path="verification/timeline_area.png")
+            # We use nth(1) because the first custom-scrollbar is likely the list view on the left
+            page.locator(".custom-scrollbar").nth(1).screenshot(path="verification/timeline_area.png")
             print("\nScreenshot saved to verification/timeline_area.png")
 
         except Exception as e:
