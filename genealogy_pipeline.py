@@ -8,8 +8,7 @@ from docx import Document
 from collections import defaultdict
 
 class GenealogyTextPipeline:
-    def __init__(self, docx_path):
-        self.docx_path = docx_path
+    def __init__(self):
         self.family_data = []
         self.image_cache = self.load_cache()
         self.cache_updated = False
@@ -239,10 +238,10 @@ class GenealogyTextPipeline:
                 })
         return events
 
-    def parse_document(self):
-        print(f"--- Scanning Narrative Document ({self.docx_path}) ---")
+    def parse_document(self, docx_path, lineage_label):
+        print(f"--- Scanning Narrative Document ({docx_path}) ---")
         try:
-            doc = Document(self.docx_path)
+            doc = Document(docx_path)
         except Exception as e:
             print(f"CRITICAL ERROR: Could not load Word doc. {e}")
             return
@@ -303,6 +302,7 @@ class GenealogyTextPipeline:
                 current_profile = {
                     "id": uid,
                     "name": clean_name,
+                    "lineage": lineage_label,
                     "generation": current_generation,
                     "vital_stats": {
                         "born_date": "Unknown",
@@ -584,6 +584,21 @@ class GenealogyTextPipeline:
         print(f"Ariadne found {count} text-based connections.")
 
     def clean_and_save(self):
+        # Deduplicate profiles based on ID (keep first occurrence)
+        unique_data = {}
+        for p in self.family_data:
+            pid = p['id']
+            if pid not in unique_data:
+                unique_data[pid] = p
+            else:
+                existing_lineage = unique_data[pid].get('lineage')
+                new_lineage = p.get('lineage')
+                # If duplicates across lineages, usually we keep first, but maybe warn
+                if existing_lineage != new_lineage:
+                     print(f"   > Duplicate ID {pid} found across lineages ({existing_lineage} vs {new_lineage}). Keeping {existing_lineage}.")
+
+        self.family_data = list(unique_data.values())
+
         self.link_family_members()
         self._find_mentions()
 
@@ -603,6 +618,7 @@ class GenealogyTextPipeline:
             final_profile = {
                 "id": p["id"],
                 "name": p["name"],
+                "lineage": p.get("lineage", "Unknown"),
                 "generation": p["generation"],
                 "vital_stats": p["vital_stats"],
                 "story": {
@@ -630,11 +646,17 @@ class GenealogyTextPipeline:
         print(f"Data saved to {output_filename}")
 
 if __name__ == "__main__":
-    word_file = "GENEALOGY DSD Paternal Ancestry.docx"
-    
-    if os.path.exists(word_file):
-        pipeline = GenealogyTextPipeline(word_file)
-        pipeline.parse_document()
-        pipeline.clean_and_save()
-    else:
-        print(f"Error: Could not find {word_file}")
+    files = {
+        "Paternal": "GENEALOGY DSD Paternal Ancestry.docx",
+        "Maternal": "GENEALOGY DSD Maternal Ancestry.docx"
+    }
+
+    pipeline = GenealogyTextPipeline()
+
+    for lineage, filename in files.items():
+        if os.path.exists(filename):
+            pipeline.parse_document(filename, lineage)
+        else:
+            print(f"Error: Could not find {filename}")
+
+    pipeline.clean_and_save()
