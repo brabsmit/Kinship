@@ -776,6 +776,91 @@ const ProfileTrivia = ({ person, familyData }) => {
 
 // --- COMPONENTS ---
 
+const GenerationGroup = ({ generation, items, selectedAncestor, onSelect, userRelation, searchText }) => {
+    const [isOpen, setIsOpen] = useState(true);
+
+    React.useEffect(() => {
+        if (searchText) setIsOpen(true);
+    }, [searchText]);
+
+    return (
+        <div className="mb-0 border-b border-gray-100 last:border-0">
+            {/* Sticky Header for Generation */}
+            <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="sticky top-0 bg-gray-50/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors"
+            >
+                <div className="flex items-center gap-2">
+                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    {generation}
+                </div>
+                <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
+            </div>
+
+            {isOpen && (
+                <div className="bg-white">
+                    {items.map(item => {
+                        const born = item.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
+                        const died = item.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
+                        const relation = calculateRelationship(item.id, userRelation);
+                        const isSelected = selectedAncestor?.id === item.id;
+
+                        return (
+                            <div
+                                key={item.id}
+                                onClick={() => onSelect(item)}
+                                className={`
+                                    group py-3 pr-4 cursor-pointer transition-all border-b border-gray-50 last:border-0 border-l-4
+                                    ${isSelected
+                                        ? 'bg-blue-50 border-l-[#2C3E50] pl-3'
+                                        : 'bg-white hover:bg-gray-50 border-l-transparent pl-3'
+                                    }
+                                `}
+                            >
+                                <div className="flex justify-between items-start mb-1">
+                                    <div className="flex items-center gap-1.5 min-w-0">
+                                        {item.story?.notes && (
+                                            <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-[#E67E22]" : "text-[#F59E0B]"}`} />
+                                        )}
+                                        <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-gray-900' : 'text-gray-800'}`}>
+                                            {item.name}
+                                        </h3>
+                                    </div>
+                                    <div className={`text-xs font-mono shrink-0 ${isSelected ? 'text-gray-500' : 'text-gray-400'}`}>
+                                        {born} – {died}
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center mt-1">
+                                     <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ${
+                                        isSelected ? 'text-blue-400' : 'text-gray-400'
+                                    }`}>
+                                        {relation}
+                                    </span>
+
+                                    {/* List Item Tags */}
+                                    {item.story.tags && item.story.tags.length > 0 && (
+                                        <div className="flex gap-1">
+                                            {item.story.tags.map(tag => {
+                                                const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                                return (
+                                                    <span key={tag} className={`p-0.5 rounded-full ${conf.color} border-none`} title={tag}>
+                                                        {React.cloneElement(conf.icon, { size: 8 })}
+                                                    </span>
+                                                )
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const TriviaWidget = ({ data, branchName }) => {
     const triviaItems = useMemo(() => generateTrivia(data, branchName), [data, branchName]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -1482,71 +1567,15 @@ export default function App() {
         {viewMode === 'list' ? (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {Object.entries(groupedData).map(([generation, items]) => (
-                    <div key={generation} className="mb-2">
-                        {/* Sticky Header for Generation */}
-                        <div className="sticky top-0 bg-gray-100/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between">
-                            {generation}
-                            <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
-                        </div>
-
-                        <div className="px-4 py-2">
-                            {items.map(item => {
-                                const born = item.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
-                                const died = item.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
-                                const relation = calculateRelationship(item.id, userRelation);
-                                const isSelected = selectedAncestor?.id === item.id;
-
-                                return (
-                                    <div
-                                        key={item.id}
-                                        onClick={() => setSelectedAncestor(item)}
-                                        className={`
-                                            group p-3 mb-2 rounded-lg cursor-pointer border transition-all
-                                            ${isSelected
-                                                ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
-                                                : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
-                                            }
-                                        `}
-                                    >
-                                        <div className="flex justify-between items-start mb-1">
-                                            <div className="flex items-center gap-1.5 min-w-0">
-                                                {item.story?.notes && (
-                                                    <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-[#E67E22]" : "text-[#F59E0B]"}`} />
-                                                )}
-                                                <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-white' : 'text-gray-800'}`}>
-                                                    {item.name}
-                                                </h3>
-                                                {/* List Item Tags */}
-                                                {item.story.tags && item.story.tags.length > 0 && (
-                                                    <div className="flex gap-1 ml-2">
-                                                        {item.story.tags.map(tag => {
-                                                            const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
-                                                            return (
-                                                                <span key={tag} className={`p-0.5 rounded-full ${conf.color} border-none`} title={tag}>
-                                                                    {React.cloneElement(conf.icon, { size: 8 })}
-                                                                </span>
-                                                            )
-                                                        })}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ml-2 ${
-                                                isSelected ? 'text-gray-300' : 'text-gray-400'
-                                            }`}>
-                                                {relation}
-                                            </span>
-                                        </div>
-
-                                        <div className={`flex items-center gap-2 text-xs font-mono ${
-                                            isSelected ? 'text-gray-300' : 'text-gray-500'
-                                        }`}>
-                                            <span>{born} – {died}</span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    <GenerationGroup
+                        key={generation}
+                        generation={generation}
+                        items={items}
+                        selectedAncestor={selectedAncestor}
+                        onSelect={setSelectedAncestor}
+                        userRelation={userRelation}
+                        searchText={searchText}
+                    />
                 ))}
             </div>
         ) : (
