@@ -2,6 +2,103 @@
 import familyData from './family_data.json';
 import React, { useState, useMemo } from 'react';
 import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default Leaflet icons in Vite/Webpack
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
+// --- CONSTANTS & HELPERS ---
+
+const LOCATION_COORDINATES = {
+    "Hartford, CT": [41.7658, -72.6734],
+    "Manhattan, NY": [40.7831, -73.9712],
+    "New York, NY": [40.7128, -74.0060],
+    "New York City": [40.7128, -74.0060],
+    "Waterbury, CT": [41.5582, -73.0515],
+    "New Haven, CT": [41.3083, -72.9279],
+    "Englewood, NJ": [40.8929, -73.9726],
+    "Oyster Bay, Long Island, NY": [40.8653, -73.5324],
+    "Oyster Bay, NY": [40.8653, -73.5324],
+    "Newburgh, NY": [41.5032, -74.0104],
+    "Boston, MA": [42.3601, -71.0589],
+    "Norwich, CT": [41.5243, -72.0759],
+    "Simsbury, CT": [41.8759, -72.8012],
+    "Simsbury CT": [41.8759, -72.8012],
+    "Middletown, CT": [41.5623, -72.6506],
+    "Branford, CT": [41.2795, -72.8151],
+    "Stratford, CT": [41.1845, -73.1332],
+    "Ipswich, MA": [42.6792, -70.8412],
+    "Watertown, MA": [42.3709, -71.1828],
+    "Brooklyn, CT": [41.7884, -71.9495],
+    "Killingly, CT": [41.8537, -71.8795],
+    "Hampton, CT": [41.7834, -72.0531],
+    "East Haddam, CT": [41.4587, -72.4626],
+    "Windsor, CT": [41.8519, -72.6437],
+    "West Hartford, CT": [41.7621, -72.7420],
+    "Wethersfield, CT": [41.7145, -72.6579],
+    "Westbury, Long Island, NY": [40.7557, -73.5876],
+    "Westbury, NY": [40.7557, -73.5876],
+    "Colchester, CT": [41.5734, -72.3331],
+    "New London, CT": [41.3557, -72.0995],
+    "Waltham, MA": [42.3765, -71.2356],
+    "Worcester, MA": [42.2626, -71.8023],
+    "Salem, MA": [42.5195, -70.8967],
+    "Medford, MA": [42.4184, -71.1062],
+    "Woburn, MA": [42.4793, -71.1523],
+    "England": [52.3555, -1.1743],
+    "London, England": [51.5074, -0.1278],
+    "Athens, PA": [41.9529, -76.5163],
+    "Coeymans, NY": [42.4776, -73.7946],
+    "Coxsackie, NY": [42.3601, -73.8068],
+    "Shelton, Fairfield County, CT": [41.3165, -73.0932],
+    "Milford, CT": [41.2307, -73.0640],
+    "Trumbull, CT": [41.2562, -73.1909],
+    "Derby, CT": [41.3207, -73.0890],
+    "Sunderland, MA": [42.4695, -72.5795],
+    "Conway, MA": [42.5106, -72.6976],
+    "Bridport, Dorset, England": [50.7337, -2.7563],
+    "Dorset, England": [50.7483, -2.3452],
+    "Great Limber, Lincolnshire, England": [53.5656, -0.2874],
+    "Lincolnshire, England": [53.2285, -0.5478],
+    "Somerset, England": [51.0109, -3.1029],
+    "Taunton, MA": [41.9001, -71.0898],
+    "Essex, England": [51.7670, 0.4664],
+    "Cambridge, MA": [42.3736, -71.1097],
+    "Hingham, MA": [42.2417, -70.8898],
+    "Marshfield, Plymouth Colony, MA": [42.0917, -70.7056],
+    "Roxbury, MA": [42.3152, -71.0914],
+    "Dedham, MA": [42.2436, -71.1699]
+};
+
+const getCoordinates = (locationName) => {
+    if (!locationName) return null;
+    return LOCATION_COORDINATES[locationName] || null;
+};
+
+const createMarkerIcon = (color) => L.divIcon({
+    className: 'bg-transparent border-none',
+    html: `<div style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+             <svg width="32" height="32" viewBox="0 0 24 24" fill="${color}" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+               <circle cx="12" cy="10" r="3" fill="white"></circle>
+             </svg>
+           </div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+});
 
 // --- 1. HISTORICAL CONTEXT ENGINE ---
 const HISTORY_EVENTS = [
@@ -66,6 +163,68 @@ const getFamilyLinks = (person, allData) => {
 };
 
 // --- COMPONENTS ---
+
+const KeyLocationsMap = ({ bornLoc, diedLoc }) => {
+    const bornCoords = getCoordinates(bornLoc);
+    const diedCoords = getCoordinates(diedLoc);
+
+    const missingLocations = [];
+    if (bornLoc && bornLoc !== "Unknown" && !bornCoords) missingLocations.push(bornLoc);
+    if (diedLoc && diedLoc !== "Unknown" && !diedCoords) missingLocations.push(diedLoc);
+
+    // Default View: Center of New England (approx Hartford/Springfield area)
+    const defaultPosition = [41.7658, -72.6734];
+    const defaultZoom = 7;
+
+    let center = defaultPosition;
+    let zoom = defaultZoom;
+    const markers = [];
+    let polyline = null;
+
+    if (bornCoords && diedCoords) {
+        markers.push({ pos: bornCoords, type: 'Birth', color: '#3B82F6', loc: bornLoc }); // Blue
+        if (bornLoc !== diedLoc) {
+            markers.push({ pos: diedCoords, type: 'Death', color: '#EF4444', loc: diedLoc }); // Red
+            polyline = [bornCoords, diedCoords];
+        }
+        // Simple center logic (midpoint)
+        center = [(bornCoords[0] + diedCoords[0]) / 2, (bornCoords[1] + diedCoords[1]) / 2];
+        zoom = 8;
+    } else if (bornCoords) {
+        markers.push({ pos: bornCoords, type: 'Birth', color: '#3B82F6', loc: bornLoc });
+        center = bornCoords;
+        zoom = 9;
+    } else if (diedCoords) {
+        markers.push({ pos: diedCoords, type: 'Death', color: '#EF4444', loc: diedLoc });
+        center = diedCoords;
+        zoom = 9;
+    }
+
+    return (
+        <div className="h-[400px] w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm z-0 relative">
+            <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {markers.map((m, i) => (
+                    <Marker key={i} position={m.pos} icon={createMarkerIcon(m.color)}>
+                        <Popup>
+                            <strong>{m.type} Location</strong><br />
+                            {m.loc}
+                        </Popup>
+                    </Marker>
+                ))}
+                {polyline && <Polyline positions={polyline} color="#2C3E50" dashArray="5, 10" />}
+            </MapContainer>
+            {missingLocations.length > 0 && (
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-lg text-xs text-red-600 z-[1000] border border-red-100 text-center animate-in fade-in slide-in-from-bottom-2">
+                    <span className="font-bold">Note:</span> Could not locate coordinates for: {missingLocations.join(", ")}
+                </div>
+            )}
+        </div>
+    );
+};
 
 const TimelineEvent = ({ event, age }) => (
     <div className="flex items-center gap-4 mb-6 opacity-75 hover:opacity-100 transition-opacity group">
@@ -147,6 +306,14 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
                                 </div>
                             </div>
                         )}
+
+                        {/* --- MAP SECTION --- */}
+                        <div>
+                             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                <MapPin size={16} /> Key Locations
+                            </h2>
+                            <KeyLocationsMap bornLoc={bornLoc} diedLoc={diedLoc} />
+                        </div>
 
                         {bornYear > 0 && (
                             <div>
