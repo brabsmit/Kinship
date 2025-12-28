@@ -544,18 +544,25 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
 };
 
 const TimelineEvent = ({ event, age }) => {
-    const isGlobal = event.region === "Global" || event.region === "Europe"; // Europe is semi-global context here
+    const isPersonal = event.region === "Personal";
 
     return (
-        <div className={`timeline-event flex items-center gap-4 mb-6 transition-opacity group ${isGlobal ? 'opacity-60 hover:opacity-100' : 'opacity-100'}`}>
+        <div className={`timeline-event flex items-center gap-4 mb-6 transition-opacity group ${isPersonal ? 'opacity-100 scale-100' : 'opacity-60 hover:opacity-100'}`}>
             <div className="w-16 text-right font-mono text-sm text-gray-500">{event.year}</div>
-            <div className={`w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 transition-colors ${isGlobal ? 'bg-gray-300' : 'bg-[#E67E22]'}`}></div>
-            <div className={`flex-1 p-3 rounded-lg border text-sm transition-all ${isGlobal ? 'bg-gray-50 border-gray-100 text-gray-600' : 'bg-white border-[#E67E22]/30 text-gray-800 shadow-sm'}`}>
+            <div className={`w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 transition-colors ${isPersonal ? 'bg-[#E67E22] scale-125' : 'bg-gray-300'}`}></div>
+            <div className={`flex-1 p-3 rounded-lg border text-sm transition-all ${isPersonal ? 'bg-white border-[#E67E22]/50 text-gray-900 shadow-md' : 'bg-gray-50 border-gray-100 text-gray-500'}`}>
                 <div className="flex justify-between items-start">
-                    <span className={`font-bold ${isGlobal ? 'text-gray-700' : 'text-gray-900'}`}>{event.label}</span>
-                    {event.region !== "Global" && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded ml-2">
+                    <span className={`font-bold ${isPersonal ? 'text-gray-900' : 'text-gray-600'}`}>{event.label}</span>
+                    {/* Context Badge */}
+                    {!isPersonal && event.region !== "Global" && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded ml-2">
                             {event.region}
+                        </span>
+                    )}
+                     {/* Personal Badge */}
+                     {isPersonal && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded ml-2">
+                            Personal
                         </span>
                     )}
                 </div>
