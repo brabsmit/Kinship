@@ -1,0 +1,10 @@
+
+> kinship-app@0.0.0 dev
+> vite
+
+
+  VITE v7.3.0  ready in 261 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+8:22:09 PM [vite] (client) hmr update /src/App.jsx, /src/index.css

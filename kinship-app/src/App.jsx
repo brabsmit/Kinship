@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -994,6 +994,11 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation 
     const relationship = calculateRelationship(item.id, userRelation);
     const family = getFamilyLinks(item, familyData);
 
+    const relatedConnections = (item.related_links || []).map(link => {
+        const target = familyData.find(p => p.id === link.target_id);
+        return target ? { target, link } : null;
+    }).filter(Boolean);
+
     // Stats for the bar
     const childrenCount = family.children.length;
     const spousesCount = family.spouses.length;
@@ -1122,6 +1127,43 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation 
                             ))}
                         </div>
                     </div>
+
+                    {/* STORY CONNECTIONS */}
+                    {relatedConnections.length > 0 && (
+                        <div className="mt-16">
+                             <div className="flex items-center gap-4 mb-8">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Link size={14} strokeWidth={1.5} /> Story Connections
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {relatedConnections.map(({ target, link }, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => onNavigate(target)}
+                                        className="flex items-start gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group"
+                                    >
+                                         <div className="w-10 h-10 shrink-0 rounded-full bg-orange-50/50 border border-orange-100 flex items-center justify-center text-orange-400 font-serif font-bold group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">
+                                            <Link size={16} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-0.5">{link.relation_type}</div>
+                                            <div className="font-display font-bold text-gray-800 group-hover:text-[#E67E22] transition-colors mb-1">{target.name}</div>
+                                            {link.source_text && (
+                                                <div className="text-xs text-gray-500 italic border-l-2 border-orange-100 pl-2 leading-relaxed">
+                                                    "{link.source_text}"
+                                                </div>
+                                            )}
+                                        </div>
+                                        <ChevronRight size={16} className="text-gray-300 mt-2 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* META FOOTER */}
                      <div className="mt-16 pt-8 border-t border-gray-200/50 text-center">
