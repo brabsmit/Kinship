@@ -42,8 +42,18 @@ const calculateRelationship = (ancestorId) => {
 };
 
 // --- 3. FAMILY LINKING LOGIC ---
-const getFamilyLinks = (personId, allData) => {
-    // Logic: If ID is "1.1.1", Parent is "1.1". Children start with "1.1.1."
+const getFamilyLinks = (person, allData) => {
+    // 1. Use Explicit Relations if available (Pre-computed in Pipeline)
+    if (person.relations) {
+        const parents = (person.relations.parents || []).map(id => allData.find(p => p.id === id)).filter(Boolean);
+        const children = (person.relations.children || []).map(id => allData.find(p => p.id === id)).filter(Boolean);
+        const spouses = (person.relations.spouses || []).map(id => allData.find(p => p.id === id)).filter(Boolean);
+
+        return { parents, children, spouses };
+    }
+
+    // 2. Fallback Logic (Legacy)
+    const personId = person.id;
     const parentId = personId.includes('.') ? personId.substring(0, personId.lastIndexOf('.')) : null;
     const parent = allData.find(p => p.id === parentId);
     
@@ -52,7 +62,7 @@ const getFamilyLinks = (personId, allData) => {
         return p.id.startsWith(personId + '.') && p.id.split('.').length === personId.split('.').length + 1;
     });
 
-    return { parent, children };
+    return { parents: parent ? [parent] : [], children, spouses: [] };
 };
 
 // --- COMPONENTS ---
@@ -93,7 +103,7 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
     const diedYear = parseInt(item.vital_stats.died?.match(/\d{4}/)?.[0] || 0);
     const events = getLifeEvents(item.vital_stats.born, item.vital_stats.died);
     const relationship = calculateRelationship(item.id);
-    const family = getFamilyLinks(item.id, familyData);
+    const family = getFamilyLinks(item, familyData);
 
     const bornLoc = item.vital_stats.born?.split(',').slice(1).join(',').trim() || "Unknown";
     const diedLoc = item.vital_stats.died?.split(',').slice(1).join(',').trim() || "Unknown";
@@ -173,7 +183,17 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
                                 <Users size={16} /> Family Network
                             </h2>
                             <div className="flex flex-col gap-3">
-                                {family.parent && <FamilyMemberLink member={family.parent} role="Parent" onClick={onNavigate} />}
+                                {family.parents.map(p => (
+                                    <FamilyMemberLink key={p.id} member={p} role="Parent" onClick={onNavigate} />
+                                ))}
+
+                                {family.spouses.length > 0 && (
+                                    <div className="mt-2 space-y-2">
+                                        <div className="text-xs font-bold text-gray-300 uppercase tracking-widest pl-1">Spouses</div>
+                                        {family.spouses.map(spouse => <FamilyMemberLink key={spouse.id} member={spouse} role="Spouse" onClick={onNavigate} />)}
+                                    </div>
+                                )}
+
                                 {family.children.length > 0 && (
                                     <div className="mt-2 space-y-2">
                                         <div className="text-xs font-bold text-gray-300 uppercase tracking-widest pl-1">Children</div>
