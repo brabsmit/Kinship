@@ -1085,7 +1085,7 @@ export default function App() {
   // Group data by Generation
   const groupedData = useMemo(() => {
     const groups = {};
-    const filtered = familyData.filter(item => {
+    const filtered = filteredGraphData.filter(item => {
         const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
         const matchesStory = !storyMode || (item.story?.notes);
         return matchesSearch && matchesStory;
@@ -1098,7 +1098,7 @@ export default function App() {
     });
 
     return groups;
-  }, [searchText, storyMode]);
+  }, [searchText, storyMode, filteredGraphData]);
 
   return (
     <div className="flex h-screen bg-white font-sans overflow-hidden">
@@ -1136,38 +1136,26 @@ export default function App() {
               </div>
             </div>
 
-            {/* Search or Branch Filter Row */}
-            {viewMode === 'graph' ? (
-                <div className="flex gap-2 items-center">
-                    <div className="flex-1 overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
-                        {Object.entries(BRANCHES).map(([id, name]) => (
-                            <button
-                                key={id}
-                                onClick={() => setSelectedBranchId(id)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
-                                    selectedBranchId === id
-                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-                                }`}
-                            >
-                                {id}. {name}
-                            </button>
-                        ))}
-                    </div>
-                     <button
-                        onClick={() => setStoryMode(!storyMode)}
-                        className={`px-3 py-1.5 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider h-full
-                            ${storyMode
-                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                            }
-                        `}
-                        title="Toggle Story Mode"
-                    >
-                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                    </button>
+            {/* Unified Controls: Branch Filter & Search */}
+            <div className="flex flex-col gap-3">
+                {/* Branch Selector (Horizontal Scroll) */}
+                <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
+                    {Object.entries(BRANCHES).map(([id, name]) => (
+                        <button
+                            key={id}
+                            onClick={() => setSelectedBranchId(id)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
+                                selectedBranchId === id
+                                ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
+                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                            }`}
+                        >
+                            {id}. {name}
+                        </button>
+                    ))}
                 </div>
-            ) : (
+
+                {/* Search & Options Row */}
                 <div className="flex gap-2">
                     <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
                         <Search size={16} className="text-gray-400" />
@@ -1193,7 +1181,7 @@ export default function App() {
                         <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
                     </button>
                 </div>
-            )}
+            </div>
         </div>
 
         {/* TRIVIA WIDGET */}
@@ -1212,35 +1200,48 @@ export default function App() {
                         </div>
 
                         <div className="px-4 py-2">
-                            {items.map(item => (
-                                <div
-                                    key={item.id}
-                                    onClick={() => setSelectedAncestor(item)}
-                                    className={`
-                                        group p-4 mb-2 rounded-lg cursor-pointer border transition-all
-                                        ${selectedAncestor?.id === item.id
-                                            ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
-                                            : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
-                                        }
-                                    `}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex items-center gap-2">
-                                            {item.story?.notes && (
-                                                <BookOpen size={12} className={selectedAncestor?.id === item.id ? "text-[#E67E22]" : "text-[#F59E0B]"} />
-                                            )}
-                                            <h3 className={`font-bold text-sm ${selectedAncestor?.id === item.id ? 'text-white' : 'text-gray-800'}`}>
-                                                {item.name}
-                                            </h3>
+                            {items.map(item => {
+                                const born = item.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
+                                const died = item.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
+                                const relation = calculateRelationship(item.id);
+                                const isSelected = selectedAncestor?.id === item.id;
+
+                                return (
+                                    <div
+                                        key={item.id}
+                                        onClick={() => setSelectedAncestor(item)}
+                                        className={`
+                                            group p-3 mb-2 rounded-lg cursor-pointer border transition-all
+                                            ${isSelected
+                                                ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
+                                                : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
+                                            }
+                                        `}
+                                    >
+                                        <div className="flex justify-between items-start mb-1">
+                                            <div className="flex items-center gap-1.5 min-w-0">
+                                                {item.story?.notes && (
+                                                    <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-[#E67E22]" : "text-[#F59E0B]"}`} />
+                                                )}
+                                                <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                                                    {item.name}
+                                                </h3>
+                                            </div>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ml-2 ${
+                                                isSelected ? 'text-gray-300' : 'text-gray-400'
+                                            }`}>
+                                                {relation}
+                                            </span>
                                         </div>
-                                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                                            selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+
+                                        <div className={`flex items-center gap-2 text-xs font-mono ${
+                                            isSelected ? 'text-gray-300' : 'text-gray-500'
                                         }`}>
-                                            {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
-                                        </span>
+                                            <span>{born} – {died}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 ))}
