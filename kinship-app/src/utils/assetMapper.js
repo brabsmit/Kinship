@@ -1,6 +1,6 @@
 // src/utils/assetMapper.js
 
-const ASSETS = {
+export const ASSETS = {
     // UK / England
     england_1600: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/The_Kingdome_of_Great_Britaine_and_Ireland_-_Performed_by_John_Speede_%3B_Graved_by_I._Hondius_-_btv1b53225465b_%282_of_3%29.jpg/1024px-The_Kingdome_of_Great_Britaine_and_Ireland_-_Performed_by_John_Speede_%3B_Graved_by_I._Hondius_-_btv1b53225465b_%282_of_3%29.jpg",
@@ -27,7 +27,7 @@ const ASSETS = {
 
     // New York / NYC
     ny_1800: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bird%27s_Eye_Panorama_of_Manhattan_%26_New_York_City_1873.jpg/1920px-Bird%27s_Eye_Panorama_of_Manhattan_%26_New_York_City_1873.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bird%27s_Eye_Panorama_of_Manhattan_%26_New_York_City_1873.jpg/1024px-Bird%27s_Eye_Panorama_of_Manhattan_%26_New_York_City_1873.jpg",
         alt: "Bird's Eye View of New York City (1873)",
         caption: "The Bustling Metropolis of the 19th Century",
         style: { filter: "sepia(10%)" }
