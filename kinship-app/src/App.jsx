@@ -375,7 +375,7 @@ const generateProfileTrivia = (person, allData) => {
         const eventAt20 = HISTORY_DB.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
         if (eventAt20) {
             facts.push({
-                text: `Was around 20 years old during the ${eventAt20.label}.`,
+                text: `Was around 20 years old when the ${eventAt20.label}.`,
                 icon: <BookOpen size={16} />
             });
         }
