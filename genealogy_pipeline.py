@@ -8,6 +8,41 @@ class GenealogyTextPipeline:
         self.docx_path = docx_path
         self.family_data = []
 
+    def _normalize_date(self, raw_date_string):
+        """
+        Parses a raw date string and returns a best-guess integer year.
+        Returns None if no valid year is found.
+        """
+        if not raw_date_string or raw_date_string.lower() == "unknown":
+            return None
+
+        # Clean up the string
+        s = raw_date_string.strip().lower()
+
+        # Extract the first 4-digit year candidate to work with
+        # (1000-2999)
+        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])\b', s)
+        if not year_match:
+            return None
+
+        year_val = int(year_match.group(0))
+        start_index = year_match.start()
+
+        # Look at the text *before* the year for modifiers
+        pre_text = s[:start_index]
+
+        # 1. Handle "before" / "bef"
+        # Logic: if "bef" or "before" appears in the text preceding the year
+        if re.search(r'\b(bef\.?|before)\b', pre_text):
+            return year_val - 1
+
+        # 2. Handle "after" / "aft"
+        if re.search(r'\b(aft\.?|after)\b', pre_text):
+            return year_val + 1
+
+        # 3. Standard Year Extraction
+        return year_val
+
     def split_date_location(self, text):
         if not text or text.lower() == "unknown":
             return "Unknown", "Unknown"
@@ -199,6 +234,7 @@ class GenealogyTextPipeline:
                     b_date, b_loc = self.split_date_location(raw_born)
                     current_profile["vital_stats"]["born_date"] = b_date
                     current_profile["vital_stats"]["born_location"] = b_loc
+                    current_profile["vital_stats"]["born_year_int"] = self._normalize_date(b_date)
 
                 # Extract Death
                 d_match = died_pattern.search(text)
@@ -207,6 +243,7 @@ class GenealogyTextPipeline:
                     d_date, d_loc = self.split_date_location(raw_died)
                     current_profile["vital_stats"]["died_date"] = d_date
                     current_profile["vital_stats"]["died_location"] = d_loc
+                    current_profile["vital_stats"]["died_year_int"] = self._normalize_date(d_date)
 
                 # Extract Notes
                 n_match = notes_start_pattern.search(text)
