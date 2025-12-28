@@ -8,6 +8,28 @@ class GenealogyTextPipeline:
         self.docx_path = docx_path
         self.family_data = []
 
+    def split_date_location(self, text):
+        if not text or text.lower() == "unknown":
+            return "Unknown", "Unknown"
+
+        # Check for " in " separator
+        in_sep = re.search(r"\s+in\s+", text, re.IGNORECASE)
+        if in_sep:
+            parts = re.split(r"\s+in\s+", text, flags=re.IGNORECASE, maxsplit=1)
+            return parts[0].strip(), parts[1].strip()
+
+        # Check for "," separator
+        if "," in text:
+            parts = text.split(",", 1)
+            return parts[0].strip(), parts[1].strip()
+
+        # No separator found
+        # Heuristic: If it contains digits, it's likely a date. Otherwise, location.
+        if any(char.isdigit() for char in text):
+            return text.strip(), "Unknown"
+        else:
+            return "Unknown", text.strip()
+
     def parse_document(self):
         print(f"--- Scanning Narrative Document ({self.docx_path}) ---")
         try:
@@ -80,8 +102,10 @@ class GenealogyTextPipeline:
                     "name": clean_name,
                     "generation": current_generation, # <--- NEW FIELD
                     "vital_stats": {
-                        "born": "Unknown",
-                        "died": "Unknown"
+                        "born_date": "Unknown",
+                        "born_location": "Unknown",
+                        "died_date": "Unknown",
+                        "died_location": "Unknown"
                     },
                     "story": {
                         "notes": "",
@@ -98,12 +122,18 @@ class GenealogyTextPipeline:
                 # Extract Birth
                 b_match = born_pattern.search(text)
                 if b_match:
-                    current_profile["vital_stats"]["born"] = b_match.group(1).strip()
+                    raw_born = b_match.group(1).strip()
+                    b_date, b_loc = self.split_date_location(raw_born)
+                    current_profile["vital_stats"]["born_date"] = b_date
+                    current_profile["vital_stats"]["born_location"] = b_loc
 
                 # Extract Death
                 d_match = died_pattern.search(text)
                 if d_match:
-                    current_profile["vital_stats"]["died"] = d_match.group(1).strip()
+                    raw_died = d_match.group(1).strip()
+                    d_date, d_loc = self.split_date_location(raw_died)
+                    current_profile["vital_stats"]["died_date"] = d_date
+                    current_profile["vital_stats"]["died_location"] = d_loc
 
                 # Extract Notes
                 n_match = notes_start_pattern.search(text)
