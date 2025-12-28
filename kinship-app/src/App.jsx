@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -42,6 +42,17 @@ const BRANCHES = {
     6: "Harris",
     7: "Wainwright",
     8: "Coolidge"
+};
+
+const TAG_CONFIG = {
+    "Immigrant": { icon: <Globe size={12} />, color: "bg-blue-100 text-blue-700 border-blue-200" },
+    "War Veteran": { icon: <Shield size={12} />, color: "bg-red-100 text-red-700 border-red-200" },
+    "Mayflower": { icon: <Anchor size={12} />, color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+    "Founder": { icon: <Flag size={12} />, color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    "Salem Witch Trials": { icon: <Flame size={12} />, color: "bg-purple-100 text-purple-700 border-purple-200" },
+    "University Educated": { icon: <GraduationCap size={12} />, color: "bg-amber-100 text-amber-700 border-amber-200" },
+    "Quaker": { icon: <User size={12} />, color: "bg-gray-100 text-gray-700 border-gray-200" },
+    "default": { icon: <Tag size={12} />, color: "bg-gray-50 text-gray-600 border-gray-200" }
 };
 
 const LOCATION_COORDINATES = {
@@ -569,6 +580,7 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
 
     // We override the default label in node display, but here we set data
     // ReactFlow default node expects 'label' in data to render text.
+    const tags = person.story?.tags || [];
     nodes[nodes.length - 1].data.label = (
         <div className="relative">
             {hasStory && (
@@ -578,6 +590,18 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
             )}
             <div className="font-bold text-sm text-gray-800 truncate">{person.name}</div>
             <div className="text-xs text-gray-500">b. {bornYear}</div>
+            {tags.length > 0 && (
+                <div className="flex justify-center gap-1 mt-1">
+                    {tags.slice(0, 3).map(tag => {
+                        const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                        return (
+                            <span key={tag} className={`p-0.5 rounded-full ${conf.color}`} title={tag}>
+                                {React.cloneElement(conf.icon, { size: 8 })}
+                            </span>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 
@@ -1011,12 +1035,27 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation 
                 <div className="max-w-3xl mx-auto px-6 pb-24">
 
                     {/* STATS BAR */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-12 bg-white/50 rounded-xl mx-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-8 bg-white/50 rounded-xl mx-4">
                         <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
                         <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
                         <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                         <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                     </div>
+
+                    {/* TAGS */}
+                    {item.story.tags && item.story.tags.length > 0 && (
+                        <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
+                            {item.story.tags.map(tag => {
+                                const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                return (
+                                    <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
+                                        {conf.icon}
+                                        {tag}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
                     {/* PROFILE TRIVIA */}
                     <ProfileTrivia person={item} familyData={familyData} />
@@ -1105,6 +1144,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
+  const [selectedTag, setSelectedTag] = useState(null);
 
   // New State for User Relationship
   const [userRelation, setUserRelation] = useState(() => {
@@ -1118,8 +1158,12 @@ export default function App() {
   };
 
   const filteredGraphData = useMemo(() => {
-    return familyData.filter(p => String(p.id).startsWith(String(selectedBranchId)));
-  }, [selectedBranchId]);
+    return familyData.filter(p => {
+        const matchesBranch = String(p.id).startsWith(String(selectedBranchId));
+        const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
+        return matchesBranch && matchesTag;
+    });
+  }, [selectedBranchId, selectedTag]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
@@ -1225,6 +1269,37 @@ export default function App() {
                         <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
                     </button>
                 </div>
+
+                {/* Tag Filters */}
+                <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+                    <button
+                        onClick={() => setSelectedTag(null)}
+                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
+                            !selectedTag
+                            ? 'bg-gray-800 text-white border-gray-800'
+                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                        }`}
+                    >
+                        All
+                    </button>
+                    {Object.keys(TAG_CONFIG).filter(t => t !== 'default').map(tag => {
+                         const conf = TAG_CONFIG[tag];
+                         const isActive = selectedTag === tag;
+                         return (
+                            <button
+                                key={tag}
+                                onClick={() => setSelectedTag(isActive ? null : tag)}
+                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                    isActive
+                                    ? conf.color + ' ring-1 ring-offset-1'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                }`}
+                            >
+                                {conf.icon} {tag}
+                            </button>
+                         );
+                    })}
+                </div>
             </div>
         </div>
 
@@ -1270,6 +1345,19 @@ export default function App() {
                                                 <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-white' : 'text-gray-800'}`}>
                                                     {item.name}
                                                 </h3>
+                                                {/* List Item Tags */}
+                                                {item.story.tags && item.story.tags.length > 0 && (
+                                                    <div className="flex gap-1 ml-2">
+                                                        {item.story.tags.map(tag => {
+                                                            const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                                            return (
+                                                                <span key={tag} className={`p-0.5 rounded-full ${conf.color} border-none`} title={tag}>
+                                                                    {React.cloneElement(conf.icon, { size: 8 })}
+                                                                </span>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                )}
                                             </div>
                                             <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ml-2 ${
                                                 isSelected ? 'text-gray-300' : 'text-gray-400'
