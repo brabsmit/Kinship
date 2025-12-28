@@ -321,7 +321,92 @@ const generateTrivia = (data, branchName) => {
         });
     }
 
+    // 5. War Veterans (Lived through major wars between ages 18-40)
+    let veteranCount = 0;
+    const warEvents = HISTORY_DB.filter(e => e.type === 'war');
+
+    data.forEach(p => {
+        const born = parseInt(p.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+        const died = parseInt(p.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
+
+        if (born && died) {
+            // Check if they were "fighting age" (approx 18-40) during any war
+            const wasFightingAge = warEvents.some(w => {
+                const ageAtWarStart = w.year - born;
+                return ageAtWarStart >= 18 && ageAtWarStart <= 40;
+            });
+            if (wasFightingAge) veteranCount++;
+        }
+    });
+
+    if (veteranCount > 5) { // Threshold to make it interesting
+         stats.push({
+            icon: <BookOpen size={16} strokeWidth={1.5} />,
+            text: `${veteranCount} ancestors in this branch lived through major conflicts during their prime years.`
+        });
+    }
+
     return stats;
+};
+
+const generateProfileTrivia = (person, allData) => {
+    const facts = [];
+    const born = parseInt(person.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+    const died = parseInt(person.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
+    const bornLoc = person.vital_stats.born_location || "";
+
+    // 1. Age Context
+    if (born && died) {
+        const age = died - born;
+        if (age < 50) facts.push({
+             text: `Died young at ${age}, which was common for the time.`,
+             icon: <Clock size={16} />
+        });
+        else if (age > 80) facts.push({
+             text: `Lived to ${age}, surpassing the average life expectancy of the era.`,
+             icon: <Clock size={16} />
+        });
+    }
+
+    // 2. Historical Context
+    // Find an event they were alive for (around 20 years old)
+    if (born) {
+        const age20 = born + 20;
+        const eventAt20 = HISTORY_DB.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
+        if (eventAt20) {
+            facts.push({
+                text: `Was around 20 years old during the ${eventAt20.label}.`,
+                icon: <BookOpen size={16} />
+            });
+        }
+    }
+
+    // 3. Name Context
+    if (person.name) {
+        const firstName = person.name.split(' ')[0];
+        const sameName = allData.filter(p => p.name.startsWith(firstName) && p.id !== person.id);
+        if (sameName.length > 1) {
+             facts.push({
+                text: `Shares the name "${firstName}" with ${sameName.length} other relatives in this record.`,
+                icon: <User size={16} />
+             });
+        }
+    }
+
+    // 4. Location Context
+    if (bornLoc.includes("CT")) {
+         facts.push({
+            text: "Born in Connecticut, a central hub for this family branch.",
+            icon: <MapPin size={16} />
+         });
+    } else if (bornLoc.includes("England")) {
+         facts.push({
+            text: "Born in England, marking the origins of this line.",
+            icon: <Anchor size={16} />
+         });
+    }
+
+    return facts;
 };
 
 const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
@@ -554,6 +639,41 @@ const GraphView = ({ data, onNodeClick, searchText, storyMode }) => {
                 <MiniMap style={{ height: 120 }} zoomable pannable />
                 <Background variant="dots" gap={12} size={1} />
             </ReactFlow>
+        </div>
+    );
+};
+
+const ProfileTrivia = ({ person, familyData }) => {
+    const triviaItems = useMemo(() => generateProfileTrivia(person, familyData), [person, familyData]);
+
+    if (triviaItems.length === 0) return null;
+
+    // Just show the first relevant one for now, or maybe map them?
+    // Let's show one primary interesting fact to keep it clean, or a small list.
+    // The design requests a "Did you know" section.
+
+    return (
+        <div className="mb-12 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-6 border border-orange-100/50">
+             <div className="flex items-center gap-4 mb-4">
+                <div className="h-px bg-orange-200 flex-1"></div>
+                <h2 className="text-xs font-bold text-orange-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Sparkles size={14} strokeWidth={1.5} /> Did You Know?
+                </h2>
+                <div className="h-px bg-orange-200 flex-1"></div>
+            </div>
+
+            <div className="grid gap-3">
+                {triviaItems.slice(0, 3).map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                        <div className="mt-0.5 text-orange-400 shrink-0 bg-white p-1.5 rounded-full shadow-sm">
+                            {item.icon}
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed font-medium">
+                            {item.text}
+                        </p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
@@ -802,7 +922,7 @@ const StatItem = ({ label, value, icon }) => (
     </div>
 );
 
-const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
+const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
     if (!item) return null;
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -868,6 +988,9 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
                         <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                         <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                     </div>
+
+                    {/* PROFILE TRIVIA */}
+                    <ProfileTrivia person={item} familyData={familyData} />
 
                     {/* STORY / BIO */}
                     {item.story?.notes && (
@@ -1073,7 +1196,9 @@ export default function App() {
         </div>
 
         {/* TRIVIA WIDGET */}
-        <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
+        {viewMode === 'graph' && (
+            <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
+        )}
 
         {viewMode === 'list' ? (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -1144,6 +1269,7 @@ export default function App() {
           {selectedAncestor ? (
              <ImmersiveProfile 
                 item={selectedAncestor} 
+                familyData={familyData}
                 onClose={() => setSelectedAncestor(null)} 
                 onNavigate={setSelectedAncestor}
              />
