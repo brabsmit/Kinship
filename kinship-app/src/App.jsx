@@ -18,9 +18,9 @@ const HISTORY_EVENTS = [
     { year: 1879, label: "Lightbulb Invented", type: "tech" }
 ];
 
-const getLifeEvents = (bornStr, diedStr) => {
-    const born = parseInt(bornStr?.match(/\d{4}/)?.[0] || 0);
-    const died = parseInt(diedStr?.match(/\d{4}/)?.[0] || 0);
+const getLifeEvents = (bornDate, diedDate) => {
+    const born = parseInt(bornDate?.match(/\d{4}/)?.[0] || 0);
+    const died = parseInt(diedDate?.match(/\d{4}/)?.[0] || 0);
     if (!born || !died) return [];
     return HISTORY_EVENTS.filter(e => e.year >= born && e.year <= died);
 };
@@ -99,14 +99,14 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
 const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
     if (!item) return null;
 
-    const bornYear = parseInt(item.vital_stats.born?.match(/\d{4}/)?.[0] || 0);
-    const diedYear = parseInt(item.vital_stats.died?.match(/\d{4}/)?.[0] || 0);
-    const events = getLifeEvents(item.vital_stats.born, item.vital_stats.died);
+    const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+    const diedYear = parseInt(item.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
+    const events = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date);
     const relationship = calculateRelationship(item.id);
     const family = getFamilyLinks(item, familyData);
 
-    const bornLoc = item.vital_stats.born?.split(',').slice(1).join(',').trim() || "Unknown";
-    const diedLoc = item.vital_stats.died?.split(',').slice(1).join(',').trim() || "Unknown";
+    const bornLoc = item.vital_stats.born_location || "Unknown";
+    const diedLoc = item.vital_stats.died_location || "Unknown";
 
     return (
         <div className="h-full bg-[#F9F5F0] flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl">
@@ -125,7 +125,7 @@ const ImmersiveProfile = ({ item, onClose, onNavigate }) => {
                     {item.name}
                 </h1>
                 <p className="text-white/60 font-mono text-sm">
-                    {item.vital_stats.born} — {item.vital_stats.died}
+                    {item.vital_stats.born_date} — {item.vital_stats.died_date}
                 </p>
             </div>
 
@@ -294,7 +294,7 @@ export default function App() {
                                     <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
                                         selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
                                     }`}>
-                                        {item.vital_stats.born?.match(/\d{4}/)?.[0] || 'Unknown'}
+                                        {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
                                     </span>
                                 </div>
                             </div>
