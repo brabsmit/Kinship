@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -53,6 +53,26 @@ const TAG_CONFIG = {
     "University Educated": { icon: <GraduationCap size={12} />, color: "bg-amber-100 text-amber-700 border-amber-200" },
     "Quaker": { icon: <User size={12} />, color: "bg-gray-100 text-gray-700 border-gray-200" },
     "default": { icon: <Tag size={12} />, color: "bg-gray-50 text-gray-600 border-gray-200" }
+};
+
+const NARRATIVE_THREADS = [
+    { id: "pilgrims", title: "The Mayflower Pilgrims", keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"], color: "bg-[#8B4513] text-white border-[#5D2E0C]", hex: "#8B4513", icon: <Anchor size={14} /> },
+    { id: "witches", title: "Salem Witch Trials", keywords: ["Salem", "Witch", "1692", "Accused"], color: "bg-purple-700 text-white border-purple-900", hex: "#7E22CE", icon: <Flame size={14} /> },
+    { id: "founders", title: "Town Founders", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
+    { id: "revolution", title: "The Patriots", keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"], color: "bg-blue-800 text-white border-blue-950", hex: "#1E40AF", icon: <Shield size={14} /> },
+    { id: "industrialists", title: "The Industrialists", keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"], color: "bg-slate-700 text-white border-slate-900", hex: "#334155", icon: <Hammer size={14} /> },
+    { id: "quakers", title: "The Quakers", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> }
+];
+
+const detectThreads = (person) => {
+    const notes = (person.story?.notes || "").toLowerCase();
+    const tags = (person.story?.tags || []).map(t => t.toLowerCase());
+
+    return NARRATIVE_THREADS.filter(thread => {
+        return thread.keywords.some(k =>
+            notes.includes(k.toLowerCase()) || tags.includes(k.toLowerCase())
+        );
+    });
 };
 
 const LOCATION_COORDINATES = {
@@ -523,7 +543,7 @@ const getFamilyLinks = (person, allData) => {
 const nodeWidth = 200;
 const nodeHeight = 60;
 
-const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
+const buildGenealogyGraph = (data, searchText = '', storyMode = false, selectedThreadId = null) => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
@@ -538,6 +558,9 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     const hasStory = !!person.story?.notes;
     const isMatch = !searchText || person.name.toLowerCase().includes(searchText.toLowerCase());
 
+    const personThreads = detectThreads(person);
+    const isInThread = selectedThreadId ? personThreads.some(t => t.id === selectedThreadId) : false;
+
     // Visual Logic
     let opacity = 1;
     let border = '1px solid #ddd';
@@ -546,10 +569,12 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     // Dimming logic
     // If search is active and not a match -> Dim
     // If story mode is active, NO search is active, and not a story -> Dim
-    // (If search is active, we prioritize search results visibility even if they don't have a story)
+    // If thread is selected and not in thread -> Dim
     if (searchText && !isMatch) {
         opacity = 0.2;
-    } else if (storyMode && !hasStory && !searchText) {
+    } else if (selectedThreadId && !isInThread) {
+        opacity = 0.2;
+    } else if (storyMode && !hasStory && !searchText && !selectedThreadId) {
         opacity = 0.2;
     }
 
@@ -557,6 +582,15 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     if (storyMode && hasStory) {
         border = '2px solid #F59E0B'; // Gold
         boxShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
+    }
+
+    // Highlighting logic (Thread Mode)
+    if (selectedThreadId && isInThread) {
+        const thread = NARRATIVE_THREADS.find(t => t.id === selectedThreadId);
+        if (thread) {
+            border = `2px solid ${thread.hex}`;
+            boxShadow = `0 0 15px ${thread.hex}40`;
+        }
     }
 
     dagreGraph.setNode(String(person.id), { width: nodeWidth, height: nodeHeight });
@@ -611,14 +645,24 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     links.children.forEach(child => {
         const edgeId = `${String(person.id)}-${String(child.id)}`;
         if (!processedEdges.has(edgeId)) {
+            const childThreads = detectThreads(child);
+            const childInThread = selectedThreadId ? childThreads.some(t => t.id === selectedThreadId) : false;
+            const isThreadEdge = selectedThreadId && isInThread && childInThread;
+            const threadColor = selectedThreadId ? NARRATIVE_THREADS.find(t => t.id === selectedThreadId)?.hex : null;
+
             dagreGraph.setEdge(String(person.id), String(child.id));
             edges.push({
                 id: edgeId,
                 source: String(person.id),
                 target: String(child.id),
                 type: 'smoothstep',
-                markerEnd: { type: MarkerType.ArrowClosed },
-                style: { stroke: '#2C3E50' }
+                markerEnd: { type: MarkerType.ArrowClosed, color: isThreadEdge ? threadColor : '#2C3E50' },
+                style: {
+                    stroke: isThreadEdge ? threadColor : '#2C3E50',
+                    strokeWidth: isThreadEdge ? 3 : 1,
+                    opacity: selectedThreadId && !isThreadEdge ? 0.2 : 1
+                },
+                animated: isThreadEdge
             });
             processedEdges.add(edgeId);
         }
@@ -660,8 +704,8 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
   return { nodes: layoutedNodes, edges };
 };
 
-const GraphView = ({ data, onNodeClick, searchText, storyMode }) => {
-    const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => buildGenealogyGraph(data, searchText, storyMode), [data, searchText, storyMode]);
+const GraphView = ({ data, onNodeClick, searchText, storyMode, selectedThreadId }) => {
+    const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => buildGenealogyGraph(data, searchText, storyMode, selectedThreadId), [data, searchText, storyMode, selectedThreadId]);
 
     // We need to update nodes when props change, but useNodesState manages internal state too.
     // So we use useEffect to sync.
@@ -975,7 +1019,7 @@ const StatItem = ({ label, value, icon }) => (
     </div>
 );
 
-const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation }) => {
+const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation, onSelectThread }) => {
     if (!item) return null;
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -1047,20 +1091,36 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation 
                         <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                     </div>
 
-                    {/* TAGS */}
-                    {item.story.tags && item.story.tags.length > 0 && (
-                        <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
-                            {item.story.tags.map(tag => {
-                                const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
-                                return (
-                                    <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
-                                        {conf.icon}
-                                        {tag}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                    {/* TAGS & THREADS */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
+                        {item.story.tags && item.story.tags.map(tag => {
+                            const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                            return (
+                                <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
+                                    {conf.icon}
+                                    {tag}
+                                </div>
+                            );
+                        })}
+
+                        {/* Narrative Thread Badges */}
+                        {detectThreads(item).map(thread => (
+                            <button
+                                key={thread.id}
+                                onClick={() => {
+                                    if (onSelectThread) {
+                                        onSelectThread(thread.id);
+                                        onClose(); // Close profile to show graph
+                                    }
+                                }}
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
+                                title={`View "${thread.title}" Epic`}
+                            >
+                                {thread.icon}
+                                Part of the {thread.title} Epic
+                            </button>
+                        ))}
+                    </div>
 
                     {/* PROFILE TRIVIA */}
                     <ProfileTrivia person={item} familyData={familyData} />
@@ -1187,6 +1247,7 @@ export default function App() {
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
   const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
 
   // New State for User Relationship
   const [userRelation, setUserRelation] = useState(() => {
@@ -1353,6 +1414,41 @@ export default function App() {
                          );
                     })}
                 </div>
+
+                {/* Narrative Epics Selector (Only in Graph Mode) */}
+                {viewMode === 'graph' && (
+                    <div className="flex flex-col gap-1 mt-1">
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
+                        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                            <button
+                                onClick={() => setSelectedThreadId(null)}
+                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                    !selectedThreadId
+                                    ? 'bg-gray-800 text-white border-gray-800'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                }`}
+                            >
+                                <X size={10} /> None
+                            </button>
+                            {NARRATIVE_THREADS.map(thread => {
+                                const isActive = selectedThreadId === thread.id;
+                                return (
+                                    <button
+                                        key={thread.id}
+                                        onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
+                                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                            isActive
+                                            ? thread.color + ' ring-1 ring-offset-1'
+                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {thread.icon} {thread.title}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
 
@@ -1437,6 +1533,7 @@ export default function App() {
                     data={filteredGraphData}
                     searchText={searchText}
                     storyMode={storyMode}
+                    selectedThreadId={selectedThreadId}
                     onNodeClick={(person) => {
                         setSelectedAncestor(person);
                     }}
@@ -1460,6 +1557,10 @@ export default function App() {
                 onClose={() => setSelectedAncestor(null)} 
                 onNavigate={setSelectedAncestor}
                 userRelation={userRelation}
+                onSelectThread={(threadId) => {
+                    setSelectedThreadId(threadId);
+                    setViewMode('graph'); // Switch to graph view to see the thread
+                }}
              />
           ) : (
              <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
