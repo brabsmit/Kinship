@@ -1414,9 +1414,6 @@ export default function App() {
                      <Info size={48} className="text-gray-400" />
                  </div>
                  <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor</h2>
-                 <p className="max-w-md text-center text-gray-500 px-6">
-                    Discover their stories, see the world through their eyes, and understand how they connect to you.
-                 </p>
              </div>
           )}
       </div>
