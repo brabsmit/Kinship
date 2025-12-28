@@ -15,7 +15,7 @@ import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronR
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { getHeroImage } from './utils/assetMapper';
+import { getHeroImage, ASSETS } from './utils/assetMapper';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -592,6 +592,27 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
 
 const HeroImage = ({ location, year }) => {
     const asset = getHeroImage(location, year);
+    const [imgSrc, setImgSrc] = useState(asset.src);
+    const [hasError, setHasError] = useState(false);
+
+    // If props change, reset state
+    React.useEffect(() => {
+        setImgSrc(asset.src);
+        setHasError(false);
+    }, [asset.src]);
+
+    const handleError = (e) => {
+        // If the current image is already the fallback, just hide it or stop
+        if (imgSrc === ASSETS.generic_antique.src) {
+            e.target.style.display = 'none';
+            return;
+        }
+
+        // Otherwise, switch to fallback
+        console.warn(`Failed to load hero image: ${imgSrc}. Switching to fallback.`);
+        setImgSrc(ASSETS.generic_antique.src);
+        setHasError(true);
+    };
 
     return (
         <div className="relative w-full h-48 md:h-64 overflow-hidden mb-[-2rem] z-0">
@@ -599,15 +620,15 @@ const HeroImage = ({ location, year }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#2C3E50] to-transparent opacity-100 z-10"></div>
 
             <img
-                src={asset.src}
+                src={imgSrc}
                 alt={asset.alt}
                 className="w-full h-full object-cover"
                 style={asset.style}
-                onError={(e) => { e.target.style.display = 'none'; }}
+                onError={handleError}
             />
 
             <div className="absolute bottom-10 right-4 z-20 text-white/40 text-[10px] uppercase tracking-widest font-mono text-right max-w-xs drop-shadow-md">
-                {asset.caption}
+                {hasError ? ASSETS.generic_antique.caption : asset.caption}
             </div>
         </div>
     );
