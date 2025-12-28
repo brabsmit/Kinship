@@ -31,6 +31,17 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 // --- CONSTANTS & HELPERS ---
 
+const BRANCHES = {
+    1: "Dodge",
+    2: "Phelps",
+    3: "Hoadley",
+    4: "Hotchkiss",
+    5: "Parish",
+    6: "Harris",
+    7: "Wainwright",
+    8: "Coolidge"
+};
+
 const LOCATION_COORDINATES = {
     "Hartford, CT": [41.7658, -72.6734],
     "Manhattan, NY": [40.7831, -73.9712],
@@ -713,6 +724,11 @@ export default function App() {
   const [searchText, setSearchText] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
   const [storyMode, setStoryMode] = useState(false);
+  const [selectedBranchId, setSelectedBranchId] = useState('1');
+
+  const filteredGraphData = useMemo(() => {
+    return familyData.filter(p => p.id.startsWith(selectedBranchId));
+  }, [selectedBranchId]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
@@ -768,32 +784,64 @@ export default function App() {
               </div>
             </div>
 
-            {/* Search & Story Filter Row */}
-            <div className="flex gap-2">
-                <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
-                    <Search size={16} className="text-gray-400" />
-                    <input
-                      type="text"
-                      className="ml-2 flex-1 bg-transparent outline-none text-sm"
-                      placeholder="Find an ancestor..."
-                      value={searchText}
-                      onChange={e => setSearchText(e.target.value)}
-                    />
+            {/* Search or Branch Filter Row */}
+            {viewMode === 'graph' ? (
+                <div className="flex gap-2 items-center">
+                    <div className="flex-1 overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
+                        {Object.entries(BRANCHES).map(([id, name]) => (
+                            <button
+                                key={id}
+                                onClick={() => setSelectedBranchId(id)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
+                                    selectedBranchId === id
+                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                                }`}
+                            >
+                                {id}. {name}
+                            </button>
+                        ))}
+                    </div>
+                     <button
+                        onClick={() => setStoryMode(!storyMode)}
+                        className={`px-3 py-1.5 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider h-full
+                            ${storyMode
+                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
+                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
+                            }
+                        `}
+                        title="Toggle Story Mode"
+                    >
+                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
+                    </button>
                 </div>
+            ) : (
+                <div className="flex gap-2">
+                    <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                        <Search size={16} className="text-gray-400" />
+                        <input
+                        type="text"
+                        className="ml-2 flex-1 bg-transparent outline-none text-sm"
+                        placeholder="Find an ancestor..."
+                        value={searchText}
+                        onChange={e => setSearchText(e.target.value)}
+                        />
+                    </div>
 
-                <button
-                    onClick={() => setStoryMode(!storyMode)}
-                    className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
-                        ${storyMode
-                            ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                            : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                        }
-                    `}
-                    title="Toggle Story Mode"
-                >
-                    <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                </button>
-            </div>
+                    <button
+                        onClick={() => setStoryMode(!storyMode)}
+                        className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
+                            ${storyMode
+                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
+                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
+                            }
+                        `}
+                        title="Toggle Story Mode"
+                    >
+                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
+                    </button>
+                </div>
+            )}
         </div>
 
         {viewMode === 'list' ? (
@@ -843,7 +891,7 @@ export default function App() {
         ) : (
             <div className="flex-1 overflow-hidden relative border-t border-gray-100">
                 <GraphView
-                    data={familyData}
+                    data={filteredGraphData}
                     searchText={searchText}
                     storyMode={storyMode}
                     onNodeClick={(person) => {
