@@ -4981,5 +4981,545 @@
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
+    },
+    "Henham, Essex|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/5/54/Pledgdon_Hall%2C_near_Henham%2C_Essex_-_geograph.org.uk_-_148209.jpg",
+        "alt": "Historical image of Henham, Essex",
+        "caption": "Pledgdon Hall, near Henham, Essex. A fine 17th century timber-framed house. There is also a large barn on site that is used for weddings. This photo w...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Weyhill, Hampshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_history_of_Hampshire_and_the_Isle_of_Wight_%28IA_historyofhampshi04doub%29.pdf/page1-1024px-A_history_of_Hampshire_and_the_Isle_of_Wight_%28IA_historyofhampshi04doub%29.pdf.jpg",
+        "alt": "Historical image of Weyhill, Hampshire, England",
+        "caption": "\n45 52\n\nSubjects: Natural history...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Boxted, Essex|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/The_church_bells_of_Essex_-_their_founders%2C_inscriptions%2C_traditions%2C_and_uses_%28IA_churchbellsofess00deed%29.pdf/page1-1024px-The_church_bells_of_Essex_-_their_founders%2C_inscriptions%2C_traditions%2C_and_uses_%28IA_churchbellsofess00deed%29.pdf.jpg",
+        "alt": "Historical image of Boxted, Essex",
+        "caption": "\nSubjects: Bells...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "New Buckenham, Norfolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Handbook_for_Essex%2C_Suffolk%2C_Norfolk%2C_and_Cambridgeshire_.._%28IA_handbookforessex00johnrich%29.pdf/page1-1024px-Handbook_for_Essex%2C_Suffolk%2C_Norfolk%2C_and_Cambridgeshire_.._%28IA_handbookforessex00johnrich%29.pdf.jpg",
+        "alt": "Historical image of New Buckenham, Norfolk, England",
+        "caption": "\nSubjects: Essex (England) -- Guidebooks; Suffolk (England) -- Guidebooks; Norfolk (England) -- Guidebooks; Cambridgeshire (England) -- Guidebooks...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "East Horsley, Surrey, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu/page1-1024px-The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu.jpg",
+        "alt": "Historical image of East Horsley, Surrey, England",
+        "caption": "The Victoria history of the county of Surrey...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Whitechapel, London, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/1924_Geographia_Pictorial_Map_of_London%2C_England_-_Geographicus_-_London-geographia-1924.jpg/1024px-1924_Geographia_Pictorial_Map_of_London%2C_England_-_Geographicus_-_London-geographia-1924.jpg",
+        "alt": "Historical image of Whitechapel, London, England",
+        "caption": "This is a wonderful map of pocket map of London and published c. 1924 by Geographia Ltd.  Covers downtown London from the Hammersmith Bridge and Wormw...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Stratford-on-Avon, Warwickshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/The_Shakespearean_guide_to_Stratford-on-Avon_%28IA_shakespeareangui00wardiala%29.pdf/page1-1024px-The_Shakespearean_guide_to_Stratford-on-Avon_%28IA_shakespeareangui00wardiala%29.pdf.jpg",
+        "alt": "Historical image of Stratford-on-Avon, Warwickshire, England",
+        "caption": "\nSubjects: Shakespeare, William, 1564-1616...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Freston, Suffolk|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf09suff%29.pdf/page1-1024px-Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf09suff%29.pdf.jpg",
+        "alt": "Historical image of Freston, Suffolk",
+        "caption": "\nVols. 1-9, 1848-1898; vols. 1-24, 1848-1948 in 1 v. (Includes index to the proceedings under their earlier titles); vols. 10-17, 1898-1921, in v. 18;...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Wolfstein, Pfalz, Holy Roman Empire|16th century": null,
+    "Netherlands|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Atlas_Van_der_Hagen-KW1049B10_002-NOVISSIMA_TOTIUS_TERRARUM_ORBIS_TABULA_-Wereldkaart_in_2_hemisferen.jpeg/1024px-Atlas_Van_der_Hagen-KW1049B10_002-NOVISSIMA_TOTIUS_TERRARUM_ORBIS_TABULA_-Wereldkaart_in_2_hemisferen.jpeg",
+        "alt": "Historical image of Netherlands",
+        "caption": "The Amsterdam wood merchant Johannes de Ram (deceased c 1693) was active as map publisher between 1678 and 1693. De Ram purchased old copper plates at...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Vorden, Gelderland, Netherlands|17th century": null,
+    "West Flanders, now Belgium|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bobbins_of_Belgium_-_a_book_of_Belgian_lace%2C_lace-workers%2C_lace-schools_and_lace-villages_%28IA_cu31924014556967%29.pdf/page1-1024px-Bobbins_of_Belgium_-_a_book_of_Belgian_lace%2C_lace-workers%2C_lace-schools_and_lace-villages_%28IA_cu31924014556967%29.pdf.jpg",
+        "alt": "Historical image of West Flanders, now Belgium",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Ruinen, Drenthe, Netherlands|17th century": null,
+    "Aston Clinton, Buckinghamshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto01roya%29.pdf/page1-1024px-An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto01roya%29.pdf.jpg",
+        "alt": "Historical image of Aston Clinton, Buckinghamshire, England",
+        "caption": "\nAt head of title: Royal commission on historical monuments (England)\nBaron Burghclere, chairman\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Northchurch, Hertfordshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/An_inventory_of_the_historical_monuments_in_Hertfordshire_%28IA_inventoryofhisto00roya%29.pdf/page1-1024px-An_inventory_of_the_historical_monuments_in_Hertfordshire_%28IA_inventoryofhisto00roya%29.pdf.jpg",
+        "alt": "Historical image of Northchurch, Hertfordshire, England",
+        "caption": "\nAt head of title: Royal commission on historical monuments (England)\nBaron Burghclere, chairman\nSubjects: genealogy...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Wrotham, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/California_Digital_Library_%28IA_northmostaustral02jack%29.pdf/page1-1024px-California_Digital_Library_%28IA_northmostaustral02jack%29.pdf.jpg",
+        "alt": "Historical image of Wrotham, Kent, England",
+        "caption": "\nSubjects: Queensland -- Discovery and exploration; Cape York Peninsula (Qld.)...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Great Yarmouth, Norfolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/7/73/17th_century_cottage_on_Fleggburgh_Common_-_geograph.org.uk_-_2509048.jpg",
+        "alt": "Historical image of Great Yarmouth, Norfolk, England",
+        "caption": "17th century cottage on Fleggburgh Common\u00a0...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Semer, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/The_Chronicle_of_Calais%2C_in_the_reigns_of_Henry_VII_and_Henry_VIII_to_the_year_1540_%28IA_trent_0116401962059%29.pdf/page1-1024px-The_Chronicle_of_Calais%2C_in_the_reigns_of_Henry_VII_and_Henry_VIII_to_the_year_1540_%28IA_trent_0116401962059%29.pdf.jpg",
+        "alt": "Historical image of Semer, Suffolk, England",
+        "caption": "\nxlii, 227 pages, 1 unnumbered leaf of plates\u00a0: 23 cm\nIncludes index\nAttributed to Richard Turpyn\nIncludes bibliographical references and index\nSubjec...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Blaby Parish, Leicestershire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/History%2C_gazetteer%2C_and_directory_of_Leicestershire%2C_and_the_small_county_of_Rutland_-_together_with_the_adjacent_towns_of_Grantham_%26_Stamford_..._%28IA_historygazetteer00whitrich%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Blaby Parish, Leicestershire, England",
+        "caption": "\nSubjects: Leicestershire (England) -- Guidebooks; Leicestershire (England) -- Directories; Rutland (England) -- Guidebooks; Rutland (England) -- Dire...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Tidmington, Worcestershire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/An_index_to_Worcestershire_fines%2C_1649-1714_%28IA_indextoworcester00grearich%29.pdf/page1-1024px-An_index_to_Worcestershire_fines%2C_1649-1714_%28IA_indextoworcester00grearich%29.pdf.jpg",
+        "alt": "Historical image of Tidmington, Worcestershire, England",
+        "caption": "\nSubjects: Fines and recoveries -- England Worcestershire; Land tenure -- England Worcestershire...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Long Marston, Gloucestershire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Catalogue_of_a_collection_of_curious_and_interesting_antiquities%2C_chiefly_found_on_the_site_of_Roman_London%2C_formed_by_the_late_Edward_Bedford_Price%2C_Esq.%2C_F.S.A._%28IA_catalogueofcolle00putt%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Long Marston, Gloucestershire, England",
+        "caption": "\n28 p.\u00a0; 22 x 14 cm\nLots: 571\nOnly copy not annotated\nUnbound copy scanned\nApril 7, 1853\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Shalford, Essex (uncertain)|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Handbook_for_Berkshire_-_including_Windsor%2C_Reading%2C_Maidenhead%2C_Bray%2C_Newbury%2C_Aldworth%2C_the_Downs%2C_the_Ridgeway%2C_Abington%2C_Faringdon%2C_Buckland%2C_Cumnor%2C_etc_%28IA_handbookforberks00unse%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Shalford, Essex (uncertain)",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Tamworth, Staffordshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Collections_for_a_history_of_Staffordshire_%28IA_collectionsforhi03staf%29.pdf/page1-1024px-Collections_for_a_history_of_Staffordshire_%28IA_collectionsforhi03staf%29.pdf.jpg",
+        "alt": "Historical image of Tamworth, Staffordshire, England",
+        "caption": "\nPlace of publication and publisher varies\nEach vol. includes index\nCLICK ON WEB ADDRESS TO REACH SELECTED VOLUMES\nv. 1 (1880). Pipe Rolls of 1130 and...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Springfield, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb13esse%29.pdf/page1-1024px-Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb13esse%29.pdf.jpg",
+        "alt": "Historical image of Springfield, Essex, England",
+        "caption": "\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\n\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Wrightsbridge, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/The_Wright-Chamberlin_genealogy_from_emigrant_ancestors_to_present_generations_%28IA_wrightchamberlin00barb%29.pdf/page1-1024px-The_Wright-Chamberlin_genealogy_from_emigrant_ancestors_to_present_generations_%28IA_wrightchamberlin00barb%29.pdf.jpg",
+        "alt": "Historical image of Wrightsbridge, Essex, England",
+        "caption": "\nSubjects: Chamberlain family (Richard Chamberline, d 1673) [from old catalog]; Wright family (Samuel Wright, d 1665) [from old catalog]...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "possibly Greenwich, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/State_of_Rhode_Island_and_Providence_Plantations_at_the_end_of_the_century_-_a_history_%28IA_stateofrhodeisla04fiel%29.pdf/page1-1024px-State_of_Rhode_Island_and_Providence_Plantations_at_the_end_of_the_century_-_a_history_%28IA_stateofrhodeisla04fiel%29.pdf.jpg",
+        "alt": "Historical image of possibly Greenwich, Kent, England",
+        "caption": "\nSubjects: Rhode Island -- History...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Cranbrook, Kent, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Place_names_in_Kent_%28IA_placenamesinkent00hors%29.pdf/page1-1024px-Place_names_in_Kent_%28IA_placenamesinkent00hors%29.pdf.jpg",
+        "alt": "Historical image of Cranbrook, Kent, England",
+        "caption": "\nSubjects: Names, Geographical -- England Kent...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Austerfield, Yorkshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/The_new_Yorkshire_gazetteer_%28IA_newyorkshiregaze00clar%29.pdf/page1-1024px-The_new_Yorkshire_gazetteer_%28IA_newyorkshiregaze00clar%29.pdf.jpg",
+        "alt": "Historical image of Austerfield, Yorkshire, England",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Pitminster, Somerset, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Bellum_civile_%28IA_bellumcivile00hopt%29.pdf/page1-1024px-Bellum_civile_%28IA_bellumcivile00hopt%29.pdf.jpg",
+        "alt": "Historical image of Pitminster, Somerset, England",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "possibly Devon, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/DEV-290123_16th_to_17th_century_storage_jar_sherd_copy_%28FindID_472237%29.jpg/1024px-DEV-290123_16th_to_17th_century_storage_jar_sherd_copy_%28FindID_472237%29.jpg",
+        "alt": "Historical image of possibly Devon, England",
+        "caption": "Postmedieval pottery sherd. The sherd is part of a storage jar dating from the 16th - 17th century AD (1500s to 1600s AD). The sherd is from the rim o...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Long Sutton, Hampshire|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/The_history_of_Sutton%2C_New_Hampshire.djvu/page1-1024px-The_history_of_Sutton%2C_New_Hampshire.djvu.jpg",
+        "alt": "Historical image of Long Sutton, Hampshire",
+        "caption": "Long Sutton, Hampshire 16th century map...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Battisford, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf/page1-1024px-The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf.jpg",
+        "alt": "Historical image of Battisford, Suffolk, England",
+        "caption": "\nBibliography: p.2-3\n\nSubjects: Names, Geographical -- England Suffolk; English language -- Etymology Names...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Little Waldingfield, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf/page1-1024px-Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf.jpg",
+        "alt": "Historical image of Little Waldingfield, Suffolk, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "White Colne, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf/page1-1024px-Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf.jpg",
+        "alt": "Historical image of White Colne, Essex, England",
+        "caption": "\nv.\u00a0: 22 cm\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\nMaster and use copy...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Cranbrook, Kent, England (if she is Mary White)|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Handbook_for_travellers_in_Kent_%28IA_handbookfortrave00john_7%29.pdf/page1-1024px-Handbook_for_travellers_in_Kent_%28IA_handbookfortrave00john_7%29.pdf.jpg",
+        "alt": "Historical image of Cranbrook, Kent, England (if she is Mary White)",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Horsham, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Sussex_archaeological_collections_relating_to_the_history_and_antiquities_of_the_county_%28IA_sussexarchaeolog32suss%29.pdf/page1-1024px-Sussex_archaeological_collections_relating_to_the_history_and_antiquities_of_the_county_%28IA_sussexarchaeolog32suss%29.pdf.jpg",
+        "alt": "Historical image of Horsham, Suffolk, England",
+        "caption": "\nTitle varies slightly\nCLICK ON WEB ADDRESS TO REACH SELECTED VOLUMES\nAvery index to architectural periodicals. Second edition. Revised and enlarged. ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Great Bentley, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Catalogue_of_the_library_of_the_Royal_Archaeological_Institute_of_Great_Britain_and_Ireland_%28IA_catalogueoflibra00roya_0%29.pdf/page1-1024px-Catalogue_of_the_library_of_the_Royal_Archaeological_Institute_of_Great_Britain_and_Ireland_%28IA_catalogueoflibra00roya_0%29.pdf.jpg",
+        "alt": "Historical image of Great Bentley, Essex, England",
+        "caption": "\nIndex\n\nSubjects: Royal Archaeological Institute of Great Britain and Ireland. Library...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Framlingham, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Handbook_for_Essex%2C_Suffolk%2C_Norfolk%2C_and_Cambridgeshire_.._%28IA_handbookforessex00johnrich%29.pdf/page1-1024px-Handbook_for_Essex%2C_Suffolk%2C_Norfolk%2C_and_Cambridgeshire_.._%28IA_handbookforessex00johnrich%29.pdf.jpg",
+        "alt": "Historical image of Framlingham, Suffolk, England",
+        "caption": "\nSubjects: Essex (England) -- Guidebooks; Suffolk (England) -- Guidebooks; Norfolk (England) -- Guidebooks; Cambridgeshire (England) -- Guidebooks...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "possibly Malden, MA|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu/page1-1024px-The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu.jpg",
+        "alt": "Historical image of possibly Malden, MA",
+        "caption": "The Victoria history of the county of Surrey...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Maldon, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb06esse%29.pdf/page1-1024px-Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb06esse%29.pdf.jpg",
+        "alt": "Historical image of Maldon, Essex, England",
+        "caption": "\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\n\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Wrentham, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/The_Paynes_of_Hamilton%2C_a_genealogical_and_biographical_record_%28IA_cu31924029843418%29.pdf/page1-1024px-The_Paynes_of_Hamilton%2C_a_genealogical_and_biographical_record_%28IA_cu31924029843418%29.pdf.jpg",
+        "alt": "Historical image of Wrentham, Suffolk, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Crosby Ravensworth, Westmoreland, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/The_manuscripts_of_S._H._Le_Fleming%2C_Esq.%2C_of_Rydal_Hall_%28IA_manuscriptsofshl00grea%29.pdf/page1-1024px-The_manuscripts_of_S._H._Le_Fleming%2C_Esq.%2C_of_Rydal_Hall_%28IA_manuscriptsofshl00grea%29.pdf.jpg",
+        "alt": "Historical image of Crosby Ravensworth, Westmoreland, England",
+        "caption": "\nAt head of title: Historical Manuscripts Commission\nParliament. Papers by command. C. 5889-iv\n\"Chiefly a calendar (of the) letters and papers of Sir ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Great Burstead, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Ancient_Yew_Tree_Great_Burstead_Church.jpg/1024px-Ancient_Yew_Tree_Great_Burstead_Church.jpg",
+        "alt": "Historical image of Great Burstead, Essex, England",
+        "caption": "An Ancient Female Yew Tree, almost 5 meters in circumference which indicates its over 1000 years old, and pre dates the present church, registered wit...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Dedham, Essex|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/March_17th%2C_1876._Celebration_of_the_centennial_anniversary_of_the_evacuation_of_Boston_%28IA_march17th1876cel00bost%29.pdf/page1-1024px-March_17th%2C_1876._Celebration_of_the_centennial_anniversary_of_the_evacuation_of_Boston_%28IA_march17th1876cel00bost%29.pdf.jpg",
+        "alt": "Historical image of Dedham, Essex",
+        "caption": "\nSubjects: Washington, George, 1732-1799...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Saffron Walden, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf/page1-1024px-Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf.jpg",
+        "alt": "Historical image of Saffron Walden, Essex, England",
+        "caption": "\nv.\u00a0: 22 cm\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\nMaster and use copy...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Cranfield, Bedfordshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/The_Beauties_of_England_and_Wales%2C_or%2C_Delineations%2C_topographical%2C_historical%2C_and_descriptive%2C_of_each_county_%28IA_beautiesofenglan105brit%29.pdf/page1-1024px-The_Beauties_of_England_and_Wales%2C_or%2C_Delineations%2C_topographical%2C_historical%2C_and_descriptive%2C_of_each_county_%28IA_beautiesofenglan105brit%29.pdf.jpg",
+        "alt": "Historical image of Cranfield, Bedfordshire, England",
+        "caption": "\nAdded engraved t.p. in each vol\nIn vol. XII-XVIII, title and imprint vary slightly\n\"In the earlier volumes [I-VI] the letterpress seems to have been ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "East Farleigh, Kent, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Place_names_in_Kent_%28IA_placenamesinkent00hors%29.pdf/page1-1024px-Place_names_in_Kent_%28IA_placenamesinkent00hors%29.pdf.jpg",
+        "alt": "Historical image of East Farleigh, Kent, England",
+        "caption": "\nSubjects: Names, Geographical -- England Kent...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Glemsford, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/8/87/Chequers%2C_Glemsford%2C_Suffolk_-_geograph.org.uk_-_165396.jpg",
+        "alt": "Historical image of Glemsford, Suffolk, England",
+        "caption": "Chequers, Glemsford, Suffolk. This is one of the many old listed buildings that make up Glemsford. It is 17th century and originally a hall house....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Redgrave, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/5/52/St_Botolph%27s_church%2C_Botesdale%2C_Suffolk_-_geograph.org.uk_-_40521.jpg",
+        "alt": "Historical image of Redgrave, Suffolk, England",
+        "caption": "Chapel House (right) and part of the former chapel of St Bartholomew (left), Botesdale, Suffolk, seen from the north.St Bartholomew's was founded as a...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Nuneaton, Warwickshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
+        "alt": "Historical image of Nuneaton, Warwickshire, England",
+        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Weyhill, Hampshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/The_Dunlop_book_-_the_motorist%27s_guide%2C_counsellor_and_friend_%28IA_dunlopbookmotori00dunl%29.pdf/page1-1024px-The_Dunlop_book_-_the_motorist%27s_guide%2C_counsellor_and_friend_%28IA_dunlopbookmotori00dunl%29.pdf.jpg",
+        "alt": "Historical image of Weyhill, Hampshire, England",
+        "caption": "\nIncludes index\n\nSubjects: Automobile travel...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bures St Marys, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/0/08/St_Peter%27s_Church_-_south_aisle_east_window_-_geograph.org.uk_-_907109.jpg",
+        "alt": "Historical image of Bures St Marys, Suffolk, England",
+        "caption": "Azure, a fess between two chevrons or, arms of de Cornard/Cornherd/Conerth, later adopted by their heirs de Grey of Merton, Suffolk (according to Blom...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Wolston, Warwickshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
+        "alt": "Historical image of Wolston, Warwickshire, England",
+        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Horton Kirby, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Notes_on_the_churches_of_Kent_%28IA_notesonchurcheso00glyn%29.pdf/page1-1024px-Notes_on_the_churches_of_Kent_%28IA_notesonchurcheso00glyn%29.pdf.jpg",
+        "alt": "Historical image of Horton Kirby, Kent, England",
+        "caption": "\nSubjects: Church architecture -- England Kent; Church buildings -- England Kent...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Freston, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf09suff%29.pdf/page1-1024px-Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf09suff%29.pdf.jpg",
+        "alt": "Historical image of Freston, Suffolk, England",
+        "caption": "\nVols. 1-9, 1848-1898; vols. 1-24, 1848-1948 in 1 v. (Includes index to the proceedings under their earlier titles); vols. 10-17, 1898-1921, in v. 18;...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Old Newton, Freston, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf09suff%29.pdf/page1-1024px-Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf09suff%29.pdf.jpg",
+        "alt": "Historical image of Old Newton, Freston, Suffolk, England",
+        "caption": "\nVols. 1-9, 1848-1898; vols. 1-24, 1848-1948 in 1 v. (Includes index to the proceedings under their earlier titles); vols. 10-17, 1898-1921, in v. 18;...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Alcester, Warwickshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Windsor_House%2C_1_Church_Street_-_geograph.org.uk_-_3191211.jpg/1024px-Windsor_House%2C_1_Church_Street_-_geograph.org.uk_-_3191211.jpg",
+        "alt": "Historical image of Alcester, Warwickshire, England",
+        "caption": "Windsor House, 1 Church Street\u00a0...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Springfield, Essex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb13esse%29.pdf/page1-1024px-Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb13esse%29.pdf.jpg",
+        "alt": "Historical image of Springfield, Essex, England",
+        "caption": "\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\n\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Twywell, Northamptonshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/VCH_Northamptonshire_1.djvu/page1-1024px-VCH_Northamptonshire_1.djvu.jpg",
+        "alt": "Historical image of Twywell, Northamptonshire, England",
+        "caption": "s:Victoria County History...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Woodrige, Suffolk, England|16th century": null,
+    "Horsham, Sussex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Handbook_for_travellers_in_Sussex_%28IA_handbookfortrave00unse_14%29.pdf/page1-1024px-Handbook_for_travellers_in_Sussex_%28IA_handbookfortrave00unse_14%29.pdf.jpg",
+        "alt": "Historical image of Horsham, Sussex, England",
+        "caption": "\n22, 174 p. 18 cm\nIncludes \"Index, 1900.\"\nCover title: Murray's hand-book, Sussex\nSpine title: Hand-book for Sussex\nPrinted in Oxford by Horace Hart. ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bramford, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf/page1-1024px-The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf.jpg",
+        "alt": "Historical image of Bramford, Suffolk, England",
+        "caption": "\nBibliography: p.2-3\n\nSubjects: Names, Geographical -- England Suffolk; English language -- Etymology Names...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Great Bentley, Essex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Two_centuries_of_travel_in_Essex_County%2C_Massachusetts%2C_a_collection_of_narratives_and_observations_made_by_travelers%2C_1605-1799%3B_%28IA_twocenturiesoftr00dow%29.pdf/page1-1024px-Two_centuries_of_travel_in_Essex_County%2C_Massachusetts%2C_a_collection_of_narratives_and_observations_made_by_travelers%2C_1605-1799%3B_%28IA_twocenturiesoftr00dow%29.pdf.jpg",
+        "alt": "Historical image of Great Bentley, Essex, England",
+        "caption": "\nOne plate printed on both sides\nOne hundred and fifty copies printed. This copy not numbered\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Sherington, Buckinghamshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto02roya%29.pdf/page1-1024px-An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto02roya%29.pdf.jpg",
+        "alt": "Historical image of Sherington, Buckinghamshire, England",
+        "caption": "\nAt head of title: Royal commission on historical monuments (England)\nBaron Burghclere, chairman\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Newport Pagnell, Buckinghamshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto02roya%29.pdf/page1-1024px-An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto02roya%29.pdf.jpg",
+        "alt": "Historical image of Newport Pagnell, Buckinghamshire, England",
+        "caption": "\nAt head of title: Royal commission on historical monuments (England)\nBaron Burghclere, chairman\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Great Burstead, Billerica, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/From_generation_to_generation._The_genealogies_of_Dwight_Stone_and_Olive_Evans_%28IA_fromgenerationto00lcneil%29.pdf/page1-1024px-From_generation_to_generation._The_genealogies_of_Dwight_Stone_and_Olive_Evans_%28IA_fromgenerationto00lcneil%29.pdf.jpg",
+        "alt": "Historical image of Great Burstead, Billerica, Essex, England",
+        "caption": "\nSubjects: Stone family; Evans family; Stone, Dwight, 1817-1901...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bures St. Mary, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf04unse%29.pdf/page1-1024px-Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf04unse%29.pdf.jpg",
+        "alt": "Historical image of Bures St. Mary, Suffolk, England",
+        "caption": "\n22 v. 22 cm\nVols. 1-9, 1848-1898; vols. 1-24, 1848-1948 in 1 v. (Includes index to the proceedings under their earlier titles); vols. 10-17, 1898-192...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Wolston, Warwickshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
+        "alt": "Historical image of Wolston, Warwickshire, England",
+        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Olney Parish, Buckinghamshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/A_Genealogy_of_the_Descendants_of_Thomas_Olney_%28IA_genealogyofdesce01olne%29.pdf/page1-1024px-A_Genealogy_of_the_Descendants_of_Thomas_Olney_%28IA_genealogyofdesce01olne%29.pdf.jpg",
+        "alt": "Historical image of Olney Parish, Buckinghamshire, England",
+        "caption": "\nIncludes index\n\nSubjects: Olney family...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Assington, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf/page1-1024px-Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf.jpg",
+        "alt": "Historical image of Assington, Suffolk, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Boxford, Essex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/The_history_of_Boxford%2C_Essex_County%2C_Massachusetts_%28IA_historyofboxford00perley%29.pdf/page1-1024px-The_history_of_Boxford%2C_Essex_County%2C_Massachusetts_%28IA_historyofboxford00perley%29.pdf.jpg",
+        "alt": "Historical image of Boxford, Essex, England",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
     }
 }
