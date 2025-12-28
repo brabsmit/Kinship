@@ -1248,6 +1248,7 @@ export default function App() {
   const [selectedBranchId, setSelectedBranchId] = useState('1');
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const [selectedLineage, setSelectedLineage] = useState('Paternal');
 
   // New State for User Relationship
   const [userRelation, setUserRelation] = useState(() => {
@@ -1262,11 +1263,15 @@ export default function App() {
 
   const filteredGraphData = useMemo(() => {
     return familyData.filter(p => {
+        // Lineage Filter: Default to 'Paternal' if field is missing (legacy data)
+        const pLineage = p.lineage || 'Paternal';
+        const matchesLineage = pLineage === selectedLineage;
+
         const matchesBranch = String(p.id).startsWith(String(selectedBranchId));
         const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
-        return matchesBranch && matchesTag;
+        return matchesLineage && matchesBranch && matchesTag;
     });
-  }, [selectedBranchId, selectedTag]);
+  }, [selectedBranchId, selectedTag, selectedLineage]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
@@ -1329,6 +1334,23 @@ export default function App() {
 
             {/* Unified Controls: Branch Filter & Search */}
             <div className="flex flex-col gap-3">
+                {/* Lineage Selector */}
+                <div className="flex gap-2">
+                    {['Paternal', 'Maternal'].map(lin => (
+                        <button
+                            key={lin}
+                            onClick={() => setSelectedLineage(lin)}
+                            className={`flex-1 py-1.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
+                                selectedLineage === lin
+                                ? (lin === 'Paternal' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#D946EF] text-[#D946EF]')
+                                : 'border-transparent text-gray-400 hover:text-gray-600'
+                            }`}
+                        >
+                            {lin} Lineage
+                        </button>
+                    ))}
+                </div>
+
                 {/* Branch Selector (Horizontal Scroll) */}
                 <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
                     {Object.entries(BRANCHES).map(([id, name]) => (
@@ -1337,7 +1359,7 @@ export default function App() {
                             onClick={() => setSelectedBranchId(id)}
                             className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
                                 selectedBranchId === id
-                                ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
+                                ? (selectedLineage === 'Paternal' ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm' : 'bg-[#831843] text-white border-[#831843] shadow-sm')
                                 : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                             }`}
                         >
