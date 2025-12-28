@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -206,6 +206,122 @@ const detectRegion = (locationString) => {
     }
 
     return "Global";
+};
+
+const generateTrivia = (data, branchName) => {
+    if (!data || data.length === 0) return [];
+
+    const stats = [];
+
+    // 1. Longest Life
+    let maxAge = 0;
+    let oldestPerson = null;
+    let validAges = 0;
+    let totalAge = 0;
+
+    data.forEach(p => {
+        const born = parseInt(p.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+        const died = parseInt(p.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
+
+        if (born && died && died > born) {
+            const age = died - born;
+            validAges++;
+            totalAge += age;
+            if (age > maxAge) {
+                maxAge = age;
+                oldestPerson = p;
+            }
+        }
+    });
+
+    if (oldestPerson) {
+        stats.push({
+            icon: <Clock size={16} />,
+            text: `${oldestPerson.name} lived to be ${maxAge} years old, the longest in this branch.`
+        });
+    }
+
+    // Average Lifespan
+    if (validAges > 0) {
+        const avgAge = Math.round(totalAge / validAges);
+        stats.push({
+             icon: <Users size={16} />,
+             text: `In the ${branchName} Branch, the average lifespan was ${avgAge} years.`
+        });
+    }
+
+    // 2. Most Common Name
+    const nameCounts = {};
+    data.forEach(p => {
+        const firstName = p.name.split(' ')[0];
+        if (firstName) {
+            nameCounts[firstName] = (nameCounts[firstName] || 0) + 1;
+        }
+    });
+
+    let mostCommonName = '';
+    let maxCount = 0;
+    Object.entries(nameCounts).forEach(([name, count]) => {
+        if (count > maxCount) {
+            maxCount = count;
+            mostCommonName = name;
+        }
+    });
+
+    if (mostCommonName && maxCount > 1) {
+        stats.push({
+            icon: <User size={16} />,
+            text: `The name "${mostCommonName}" appears ${maxCount} times in this branch.`
+        });
+    }
+
+    // 3. Oldest Generation (Earliest Birth Year)
+    let minBorn = 9999;
+    let earliestPerson = null;
+    data.forEach(p => {
+         const born = parseInt(p.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+         if (born && born < minBorn) {
+             minBorn = born;
+             earliestPerson = p;
+         }
+    });
+
+    if (earliestPerson) {
+         stats.push({
+            icon: <Anchor size={16} />,
+            text: `The earliest recorded ancestor here is ${earliestPerson.name}, born in ${minBorn}.`
+        });
+    }
+
+    // 4. Immigrant Count
+    let immigrantCount = 0;
+    data.forEach(p => {
+        const bornLoc = p.vital_stats.born_location || "";
+        const diedLoc = p.vital_stats.died_location || "";
+        const notes = p.story?.notes || "";
+
+        const isImmigrantNote = notes.toLowerCase().includes("immigrant");
+
+        const regionBorn = detectRegion(bornLoc);
+        const regionDied = detectRegion(diedLoc);
+
+        // Check migration (e.g., UK -> USA)
+        // Ensure both regions are valid (not Global/Unknown) and different
+        const isMigration = (regionBorn !== "Global" && regionDied !== "Global" && regionBorn !== regionDied);
+
+        if (isImmigrantNote || isMigration) {
+            immigrantCount++;
+        }
+    });
+
+    if (immigrantCount > 0) {
+        stats.push({
+            icon: <MapPin size={16} />,
+            text: `${immigrantCount} ancestors in this branch were immigrants or migrated between major regions.`
+        });
+    }
+
+    return stats;
 };
 
 const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
@@ -443,6 +559,46 @@ const GraphView = ({ data, onNodeClick, searchText, storyMode }) => {
 };
 
 // --- COMPONENTS ---
+
+const TriviaWidget = ({ data, branchName }) => {
+    const triviaItems = useMemo(() => generateTrivia(data, branchName), [data, branchName]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    // Effect to cycle random fact when branch changes (data changes)
+    React.useEffect(() => {
+        if (triviaItems.length > 0) {
+            // Pick a random index
+            const randomIndex = Math.floor(Math.random() * triviaItems.length);
+            setCurrentIndex(randomIndex);
+        }
+    }, [triviaItems]);
+
+    if (triviaItems.length === 0) return null;
+
+    const currentItem = triviaItems[currentIndex];
+
+    return (
+        <div className="mx-4 mb-4 mt-2 bg-gradient-to-br from-[#FFF8E1] to-[#FFECB3] p-4 rounded-xl border border-[#F59E0B]/30 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-2 opacity-10">
+                <Lightbulb size={48} className="text-[#F59E0B]" />
+            </div>
+
+            <div className="flex items-start gap-3 relative z-10">
+                <div className="bg-white/80 p-2 rounded-full text-[#F59E0B] shadow-sm">
+                    {currentItem.icon || <Sparkles size={16} />}
+                </div>
+                <div>
+                    <div className="text-[10px] font-bold text-[#B45309] uppercase tracking-widest mb-1 flex items-center gap-1">
+                        Did You Know?
+                    </div>
+                    <p className="text-xs text-[#78350F] font-medium leading-relaxed">
+                        {currentItem.text}
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
     const bornCoords = getCoordinates(bornLoc);
@@ -898,6 +1054,9 @@ export default function App() {
                 </div>
             )}
         </div>
+
+        {/* TRIVIA WIDGET */}
+        <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
 
         {viewMode === 'list' ? (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
