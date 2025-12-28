@@ -349,6 +349,59 @@ class GenealogyTextPipeline:
 
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
 
+    def extract_tags(self, profile):
+        tags = []
+        notes = profile["story"]["notes"]
+        born_loc = profile["vital_stats"]["born_location"]
+        died_loc = profile["vital_stats"]["died_location"]
+
+        # 1. Immigrant
+        # Heuristic: Born in UK/Europe, Died in USA/MA/CT
+        # Or keyword "immigrant", "came to america"
+        is_immigrant = False
+        if re.search(r'\b(immigrant|emigrated|came to america|arrived in|arrived with)\b', notes, re.IGNORECASE):
+            is_immigrant = True
+
+        # Simple location check
+        uk_locations = ["England", "UK", "Britain", "London", "Dorset", "Essex", "Somerset", "Lincolnshire", "Suffolk", "Kent", "Holland", "Netherlands", "Scotland", "Ireland", "Wales"]
+        us_locations = ["MA", "CT", "NY", "NJ", "USA", "Massachusetts", "Connecticut", "New York", "Pennsylvania", "New Hampshire", "Rhode Island"]
+
+        born_uk = any(l.lower() in born_loc.lower() for l in uk_locations)
+        died_us = any(l.lower() in died_loc.lower() for l in us_locations)
+
+        if born_uk and died_us:
+            is_immigrant = True
+
+        if is_immigrant:
+            tags.append("Immigrant")
+
+        # 2. Mayflower
+        if re.search(r'\bMayflower\b', notes, re.IGNORECASE):
+            tags.append("Mayflower")
+
+        # 3. War Veteran
+        # Keywords: War, Revolution, Army, Regiment, Captain, Lieutenant, General, Soldier, Private
+        if re.search(r'\b(served in|soldier|captain|lieutenant|general|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b', notes, re.IGNORECASE):
+             tags.append("War Veteran")
+
+        # 4. Founder / Settler
+        if re.search(r'\b(founder|settler|pioneer|first settler|original proprietor)\b', notes, re.IGNORECASE):
+            tags.append("Founder")
+
+        # 5. Salem Witch Trials
+        if re.search(r'\b(witch|salem trials|accused of witchcraft)\b', notes, re.IGNORECASE):
+            tags.append("Salem Witch Trials")
+
+        # 6. Education
+        if re.search(r'\b(Harvard|Yale|College|University)\b', notes, re.IGNORECASE):
+             tags.append("University Educated")
+
+        # 7. Quaker
+        if re.search(r'\b(Quaker|Friends)\b', notes, re.IGNORECASE):
+            tags.append("Quaker")
+
+        return list(set(tags))
+
     def link_family_members(self):
         print("--- Linking Family Members ---")
         id_map = {p['id']: p for p in self.family_data}
@@ -544,6 +597,9 @@ class GenealogyTextPipeline:
 
             hero_image = self.fetch_wikimedia_image(born_loc, born_year)
 
+            # Extract Tags
+            tags = self.extract_tags(p)
+
             final_profile = {
                 "id": p["id"],
                 "name": p["name"],
@@ -551,7 +607,8 @@ class GenealogyTextPipeline:
                 "vital_stats": p["vital_stats"],
                 "story": {
                     "notes": p["story"]["notes"],
-                    "life_events": p["story"].get("life_events", [])
+                    "life_events": p["story"].get("life_events", []),
+                    "tags": tags
                 },
                 "hero_image": hero_image,
                 "relations": p.get("relations", {}),
