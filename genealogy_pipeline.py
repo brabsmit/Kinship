@@ -106,6 +106,7 @@ class GenealogyTextPipeline:
         print(f"Total paragraphs in document: {total_paragraphs}")
 
         current_profile = None
+        seen_ids = set()
         current_generation = "Uncategorized" # Default until we hit the first header
         
         # Regex Patterns
@@ -149,9 +150,16 @@ class GenealogyTextPipeline:
                 # Save previous profile if exists
                 if current_profile:
                     self.family_data.append(current_profile)
+                    current_profile = None
 
                 # Initialize New Profile
                 uid = match.group(1)
+
+                if uid in seen_ids:
+                    print(f"   > Duplicate ID found: {uid}. Skipping new profile creation.")
+                    current_profile = None
+                    continue
+                seen_ids.add(uid)
                 
                 # Extract Source Tag
                 source_match = source_tag_pattern.search(text)
