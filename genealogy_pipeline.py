@@ -380,8 +380,52 @@ class GenealogyTextPipeline:
             tags.append("Mayflower")
 
         # 3. War Veteran
-        # Keywords: War, Revolution, Army, Regiment, Captain, Lieutenant, General, Soldier, Private
-        if re.search(r'\b(served in|soldier|captain|lieutenant|general|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b', notes, re.IGNORECASE):
+        is_veteran = False
+
+        # A. Check Name for Rank (Start of string only)
+        # We trust titles in the name field more than loose keywords in notes
+        if re.search(r'^(Captain|Lieutenant|General|Major|Colonel|Sergeant|Corporal|Ensign)\b', profile["name"], re.IGNORECASE):
+            is_veteran = True
+
+        # B. Check Notes with Context
+        if not is_veteran:
+            # Keywords: Participation verbs and Ranks.
+            # Excluded generic war names to avoid "Born during Revolutionary War" false positives.
+            keywords_pattern = r'\b(served in|served during|soldier|captain|lieutenant|general|private|sergeant|colonel|major|veteran|fought in|enlisted|active in)\b'
+            matches = list(re.finditer(keywords_pattern, notes, re.IGNORECASE))
+
+            for m in matches:
+                start, end = m.span()
+                word = m.group(0).lower()
+
+                # Context check
+                # Look at previous 40 chars and next 40 chars
+                pre_context = notes[max(0, start-40):start].lower()
+                post_context = notes[end:min(len(notes), end+40)].lower()
+
+                # Exclude if relational or attributional (e.g. "daughter of Captain", "with Captain", "under Captain")
+                # We look for these keywords immediately preceding the rank/term
+                if re.search(r'\b(father|mother|husband|wife|son|daughter|brother|sister|widow|grandson|granddaughter|uncle|aunt|nephew|niece|with|under|by)\s+(was|is|of)?\s*(the|a|an|his|her|their)?\s*$', pre_context):
+                    continue
+
+                # Exclude "General Court"
+                if word == "general" and re.match(r'\s+court', post_context):
+                    continue
+
+                # Exclude "Private" if it seems non-military (e.g. "private life", "in private")
+                if word == "private" and (re.search(r'\b(life|school|tutor|burial)\b', post_context) or re.search(r'\bin\s*$', pre_context)):
+                    continue
+
+                # Exclude "Active in" if not followed by "War"
+                if word == "active in":
+                     if not re.search(r'\bwar\b', post_context):
+                         continue
+
+                # If we pass checks, mark as veteran
+                is_veteran = True
+                break
+
+        if is_veteran:
              tags.append("War Veteran")
 
         # 4. Founder / Settler
