@@ -16,6 +16,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
+import RelationshipSelector from './RelationshipSelector';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -441,18 +442,45 @@ const getPersonalLifeEvents = (lifeEvents, born, died) => {
 };
 
 // --- 2. RELATIONSHIP CALCULATOR ---
-const calculateRelationship = (ancestorId) => {
-    // Dynamic fallback if generation label is missing, otherwise use logic
-    const ancestorGen = ancestorId.split('.').length; 
-    const readerGen = 6; 
-    const diff = readerGen - ancestorGen;
+const calculateRelationship = (ancestorId, userRelation) => {
+    if (!userRelation) return "Relative";
 
-    if (diff === 0) return "Same Generation (Cousin)";
+    const { anchorId, stepsDown } = userRelation;
+
+    // Logic:
+    // 1. Determine "Generation Index" of Anchor.
+    //    DATASET CONVENTION: ID length correlates with AGE (Older = Longer ID).
+    //    Example: '1' (Child, born 1805) -> '1.1' (Parent, born 1774).
+    //    Therefore: Higher Gen Index = Older Generation.
+
+    // 2. Determine User's Generation Index.
+    //    User is 'stepsDown' generations *below* (younger than) the anchor.
+    //    Since Younger = Lower Index, we SUBTRACT stepsDown.
+    //    User Gen Index = AnchorGenIndex - stepsDown.
+
+    const anchorGenIndex = String(anchorId).split('.').length;
+    const userGenIndex = anchorGenIndex - stepsDown;
+
+    // 3. Determine Target Ancestor's Generation Index.
+    const ancestorGenIndex = String(ancestorId).split('.').length;
+
+    // 4. Calculate Difference (Generations between User and Ancestor)
+    //    Diff = AncestorGenIndex - UserGenIndex
+    //    Positive Diff = Ancestor is Older (Higher Index)
+    const diff = ancestorGenIndex - userGenIndex;
+
+    if (diff === 0) return "Same Generation";
     if (diff === 1) return "Parent / Aunt / Uncle";
     if (diff === 2) return "Grandparent";
     if (diff === 3) return "Great-Grandparent";
-    if (diff >= 4) return `${diff}th Great-Grandparent`;
-    if (diff < 0) return "Descendant";
+    if (diff === 4) return "2nd Great-Grandparent";
+    if (diff === 5) return "3rd Great-Grandparent";
+    if (diff >= 6) return `${diff-2}th Great-Grandparent`;
+
+    if (diff === -1) return "Child";
+    if (diff === -2) return "Grandchild";
+    if (diff <= -3) return "Descendant";
+
     return "Relative";
 };
 
@@ -923,7 +951,7 @@ const StatItem = ({ label, value, icon }) => (
     </div>
 );
 
-const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
+const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation }) => {
     if (!item) return null;
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -939,7 +967,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
     // Merge and sort
     const events = [...historyEvents, ...personalEvents].sort((a, b) => a.year - b.year);
 
-    const relationship = calculateRelationship(item.id);
+    const relationship = calculateRelationship(item.id, userRelation);
     const family = getFamilyLinks(item, familyData);
 
     // Stats for the bar
@@ -1078,6 +1106,17 @@ export default function App() {
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
 
+  // New State for User Relationship
+  const [userRelation, setUserRelation] = useState(() => {
+    const saved = localStorage.getItem('userRelation');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const handleRelationComplete = (relation) => {
+    setUserRelation(relation);
+    localStorage.setItem('userRelation', JSON.stringify(relation));
+  };
+
   const filteredGraphData = useMemo(() => {
     return familyData.filter(p => String(p.id).startsWith(String(selectedBranchId)));
   }, [selectedBranchId]);
@@ -1103,6 +1142,11 @@ export default function App() {
   return (
     <div className="flex h-screen bg-white font-sans overflow-hidden">
       
+      {/* Relationship Modal */}
+      {!userRelation && (
+          <RelationshipSelector data={familyData} onComplete={handleRelationComplete} />
+      )}
+
       {/* --- LEFT NAVIGATION --- */}
       <div className={`
         flex flex-col border-r border-gray-200 bg-white h-full z-10 transition-all duration-300
@@ -1203,7 +1247,7 @@ export default function App() {
                             {items.map(item => {
                                 const born = item.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
                                 const died = item.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
-                                const relation = calculateRelationship(item.id);
+                                const relation = calculateRelationship(item.id, userRelation);
                                 const isSelected = selectedAncestor?.id === item.id;
 
                                 return (
@@ -1274,6 +1318,7 @@ export default function App() {
                 familyData={familyData}
                 onClose={() => setSelectedAncestor(null)} 
                 onNavigate={setSelectedAncestor}
+                userRelation={userRelation}
              />
           ) : (
              <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
