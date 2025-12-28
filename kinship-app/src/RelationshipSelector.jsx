@@ -55,6 +55,7 @@ export default function RelationshipSelector({ data, onComplete }) {
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-4">
 
                     {step === 1 && (
+                        <>
                         <div className="space-y-2">
                             {candidates.map(person => (
                                 <button
@@ -75,6 +76,15 @@ export default function RelationshipSelector({ data, onComplete }) {
                                 </button>
                             ))}
                         </div>
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                             <button
+                                onClick={() => onComplete({ isGuest: true })}
+                                className="w-full py-3 text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors"
+                            >
+                                I'm not related / Skip for now
+                            </button>
+                        </div>
+                        </>
                     )}
 
                     {step === 2 && (

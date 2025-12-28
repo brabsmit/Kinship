@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, LogOut } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -443,7 +443,7 @@ const getPersonalLifeEvents = (lifeEvents, born, died) => {
 
 // --- 2. RELATIONSHIP CALCULATOR ---
 const calculateRelationship = (ancestorId, userRelation) => {
-    if (!userRelation) return "Relative";
+    if (!userRelation || userRelation.isGuest) return "Relative";
 
     const { anchorId, stepsDown } = userRelation;
 
@@ -1223,6 +1223,17 @@ export default function App() {
                         title="Toggle Story Mode"
                     >
                         <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
+                    </button>
+
+                     <button
+                        onClick={() => {
+                            setUserRelation(null);
+                            localStorage.removeItem('userRelation');
+                        }}
+                        className="px-3 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all flex items-center justify-center"
+                        title="Reset Identity / Session"
+                    >
+                        <LogOut size={16} />
                     </button>
                 </div>
             </div>
