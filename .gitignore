@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+.env
+
+# OS
+.DS_Store
+
+# Generated Data
+# family_data.json is generated but placed in kinship-app/src/family_data.json
+# It seems the user wants the repo to be clean, but usually generated assets needed for frontend might be kept if it's not run often.
+# However, usually we ignore generated assets.
+# Given the prompt, I'll ignore it.
+kinship-app/src/family_data.json
+
+# Node modules and build artifacts (in case root commands create them)
+node_modules/
+dist/
+build/
