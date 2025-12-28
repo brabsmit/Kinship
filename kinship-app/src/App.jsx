@@ -318,9 +318,9 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
         boxShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
     }
 
-    dagreGraph.setNode(person.id, { width: nodeWidth, height: nodeHeight });
+    dagreGraph.setNode(String(person.id), { width: nodeWidth, height: nodeHeight });
     nodes.push({
-      id: person.id,
+      id: String(person.id),
       data: { label: person.name, year: bornYear, hasStory },
       type: 'default', // Using default for now, can be custom
       position: { x: 0, y: 0 }, // Placeholder
@@ -355,13 +355,13 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
 
     // Parent -> Child
     links.children.forEach(child => {
-        const edgeId = `${person.id}-${child.id}`;
+        const edgeId = `${String(person.id)}-${String(child.id)}`;
         if (!processedEdges.has(edgeId)) {
-            dagreGraph.setEdge(person.id, child.id);
+            dagreGraph.setEdge(String(person.id), String(child.id));
             edges.push({
                 id: edgeId,
-                source: person.id,
-                target: child.id,
+                source: String(person.id),
+                target: String(child.id),
                 type: 'smoothstep',
                 markerEnd: { type: MarkerType.ArrowClosed },
                 style: { stroke: '#2C3E50' }
@@ -372,13 +372,13 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
 
     // Spouses
     links.spouses.forEach(spouse => {
-        const [s, t] = [person.id, spouse.id].sort();
+        const [s, t] = [String(person.id), String(spouse.id)].sort();
         const edgeId = `spouse-${s}-${t}`;
         if (!processedEdges.has(edgeId)) {
              edges.push({
                 id: edgeId,
-                source: person.id,
-                target: spouse.id,
+                source: String(person.id),
+                target: String(spouse.id),
                 type: 'straight',
                 style: { strokeDasharray: '5,5', stroke: '#E67E22' },
                 animated: false,
@@ -420,7 +420,7 @@ const GraphView = ({ data, onNodeClick, searchText, storyMode }) => {
     }, [layoutedNodes, layoutedEdges, setNodes, setEdges]);
 
     return (
-        <div className="w-full h-full bg-gray-50">
+        <div className="w-full h-full bg-gray-50 relative">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -727,7 +727,7 @@ export default function App() {
   const [selectedBranchId, setSelectedBranchId] = useState('1');
 
   const filteredGraphData = useMemo(() => {
-    return familyData.filter(p => p.id.startsWith(selectedBranchId));
+    return familyData.filter(p => String(p.id).startsWith(String(selectedBranchId)));
   }, [selectedBranchId]);
 
   // Group data by Generation
