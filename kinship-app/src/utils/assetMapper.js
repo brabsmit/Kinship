@@ -1,4 +1,5 @@
 // src/utils/assetMapper.js
+import wikimediaCache from '../wikimedia_cache.json' with { type: "json" };
 
 export const ASSETS = {
     // UK / England
@@ -53,6 +54,27 @@ export const getHeroImage = (location, year) => {
 
     const loc = location.toLowerCase();
     const y = parseInt(year) || 0;
+
+    // 0. Cache Lookup
+    if (location) {
+        let century = "historical";
+        if (y > 0) {
+             const c = Math.floor((y - 1) / 100) + 1;
+             century = `${c}th century`;
+        }
+
+        // Try specific key: "Location|Century"
+        const specificKey = `${location}|${century}`;
+        if (wikimediaCache[specificKey]) {
+            return wikimediaCache[specificKey];
+        }
+
+        // Try historical key: "Location|historical"
+        const historicalKey = `${location}|historical`;
+        if (wikimediaCache[historicalKey]) {
+            return wikimediaCache[historicalKey];
+        }
+    }
 
     // 1. New York Logic
     if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {

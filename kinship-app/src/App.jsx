@@ -11,11 +11,12 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
+import RelationshipSelector from './RelationshipSelector';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -41,6 +42,17 @@ const BRANCHES = {
     6: "Harris",
     7: "Wainwright",
     8: "Coolidge"
+};
+
+const TAG_CONFIG = {
+    "Immigrant": { icon: <Globe size={12} />, color: "bg-blue-100 text-blue-700 border-blue-200" },
+    "War Veteran": { icon: <Shield size={12} />, color: "bg-red-100 text-red-700 border-red-200" },
+    "Mayflower": { icon: <Anchor size={12} />, color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+    "Founder": { icon: <Flag size={12} />, color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    "Salem Witch Trials": { icon: <Flame size={12} />, color: "bg-purple-100 text-purple-700 border-purple-200" },
+    "University Educated": { icon: <GraduationCap size={12} />, color: "bg-amber-100 text-amber-700 border-amber-200" },
+    "Quaker": { icon: <User size={12} />, color: "bg-gray-100 text-gray-700 border-gray-200" },
+    "default": { icon: <Tag size={12} />, color: "bg-gray-50 text-gray-600 border-gray-200" }
 };
 
 const LOCATION_COORDINATES = {
@@ -441,18 +453,45 @@ const getPersonalLifeEvents = (lifeEvents, born, died) => {
 };
 
 // --- 2. RELATIONSHIP CALCULATOR ---
-const calculateRelationship = (ancestorId) => {
-    // Dynamic fallback if generation label is missing, otherwise use logic
-    const ancestorGen = ancestorId.split('.').length; 
-    const readerGen = 6; 
-    const diff = readerGen - ancestorGen;
+const calculateRelationship = (ancestorId, userRelation) => {
+    if (!userRelation || userRelation.isGuest) return "Relative";
 
-    if (diff === 0) return "Same Generation (Cousin)";
+    const { anchorId, stepsDown } = userRelation;
+
+    // Logic:
+    // 1. Determine "Generation Index" of Anchor.
+    //    DATASET CONVENTION: ID length correlates with AGE (Older = Longer ID).
+    //    Example: '1' (Child, born 1805) -> '1.1' (Parent, born 1774).
+    //    Therefore: Higher Gen Index = Older Generation.
+
+    // 2. Determine User's Generation Index.
+    //    User is 'stepsDown' generations *below* (younger than) the anchor.
+    //    Since Younger = Lower Index, we SUBTRACT stepsDown.
+    //    User Gen Index = AnchorGenIndex - stepsDown.
+
+    const anchorGenIndex = String(anchorId).split('.').length;
+    const userGenIndex = anchorGenIndex - stepsDown;
+
+    // 3. Determine Target Ancestor's Generation Index.
+    const ancestorGenIndex = String(ancestorId).split('.').length;
+
+    // 4. Calculate Difference (Generations between User and Ancestor)
+    //    Diff = AncestorGenIndex - UserGenIndex
+    //    Positive Diff = Ancestor is Older (Higher Index)
+    const diff = ancestorGenIndex - userGenIndex;
+
+    if (diff === 0) return "Same Generation";
     if (diff === 1) return "Parent / Aunt / Uncle";
     if (diff === 2) return "Grandparent";
     if (diff === 3) return "Great-Grandparent";
-    if (diff >= 4) return `${diff}th Great-Grandparent`;
-    if (diff < 0) return "Descendant";
+    if (diff === 4) return "2nd Great-Grandparent";
+    if (diff === 5) return "3rd Great-Grandparent";
+    if (diff >= 6) return `${diff-2}th Great-Grandparent`;
+
+    if (diff === -1) return "Child";
+    if (diff === -2) return "Grandchild";
+    if (diff <= -3) return "Descendant";
+
     return "Relative";
 };
 
@@ -541,6 +580,7 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
 
     // We override the default label in node display, but here we set data
     // ReactFlow default node expects 'label' in data to render text.
+    const tags = person.story?.tags || [];
     nodes[nodes.length - 1].data.label = (
         <div className="relative">
             {hasStory && (
@@ -550,6 +590,18 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
             )}
             <div className="font-bold text-sm text-gray-800 truncate">{person.name}</div>
             <div className="text-xs text-gray-500">b. {bornYear}</div>
+            {tags.length > 0 && (
+                <div className="flex justify-center gap-1 mt-1">
+                    {tags.slice(0, 3).map(tag => {
+                        const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                        return (
+                            <span key={tag} className={`p-0.5 rounded-full ${conf.color}`} title={tag}>
+                                {React.cloneElement(conf.icon, { size: 8 })}
+                            </span>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 
@@ -923,7 +975,7 @@ const StatItem = ({ label, value, icon }) => (
     </div>
 );
 
-const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
+const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation }) => {
     if (!item) return null;
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -939,8 +991,13 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
     // Merge and sort
     const events = [...historyEvents, ...personalEvents].sort((a, b) => a.year - b.year);
 
-    const relationship = calculateRelationship(item.id);
+    const relationship = calculateRelationship(item.id, userRelation);
     const family = getFamilyLinks(item, familyData);
+
+    const relatedConnections = (item.related_links || []).map(link => {
+        const target = familyData.find(p => p.id === link.target_id);
+        return target ? { target, link } : null;
+    }).filter(Boolean);
 
     // Stats for the bar
     const childrenCount = family.children.length;
@@ -983,12 +1040,27 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
                 <div className="max-w-3xl mx-auto px-6 pb-24">
 
                     {/* STATS BAR */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-12 bg-white/50 rounded-xl mx-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-8 bg-white/50 rounded-xl mx-4">
                         <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
                         <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
                         <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                         <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                     </div>
+
+                    {/* TAGS */}
+                    {item.story.tags && item.story.tags.length > 0 && (
+                        <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
+                            {item.story.tags.map(tag => {
+                                const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                return (
+                                    <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
+                                        {conf.icon}
+                                        {tag}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
                     {/* PROFILE TRIVIA */}
                     <ProfileTrivia person={item} familyData={familyData} />
@@ -1056,6 +1128,43 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
                         </div>
                     </div>
 
+                    {/* STORY CONNECTIONS */}
+                    {relatedConnections.length > 0 && (
+                        <div className="mt-16">
+                             <div className="flex items-center gap-4 mb-8">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Link size={14} strokeWidth={1.5} /> Story Connections
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {relatedConnections.map(({ target, link }, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => onNavigate(target)}
+                                        className="flex items-start gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group"
+                                    >
+                                         <div className="w-10 h-10 shrink-0 rounded-full bg-orange-50/50 border border-orange-100 flex items-center justify-center text-orange-400 font-serif font-bold group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">
+                                            <Link size={16} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-0.5">{link.relation_type}</div>
+                                            <div className="font-display font-bold text-gray-800 group-hover:text-[#E67E22] transition-colors mb-1">{target.name}</div>
+                                            {link.source_text && (
+                                                <div className="text-xs text-gray-500 italic border-l-2 border-orange-100 pl-2 leading-relaxed">
+                                                    "{link.source_text}"
+                                                </div>
+                                            )}
+                                        </div>
+                                        <ChevronRight size={16} className="text-gray-300 mt-2 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     {/* META FOOTER */}
                      <div className="mt-16 pt-8 border-t border-gray-200/50 text-center">
                          <div className="inline-flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest font-mono">
@@ -1077,15 +1186,31 @@ export default function App() {
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
+  const [selectedTag, setSelectedTag] = useState(null);
+
+  // New State for User Relationship
+  const [userRelation, setUserRelation] = useState(() => {
+    const saved = localStorage.getItem('userRelation');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const handleRelationComplete = (relation) => {
+    setUserRelation(relation);
+    localStorage.setItem('userRelation', JSON.stringify(relation));
+  };
 
   const filteredGraphData = useMemo(() => {
-    return familyData.filter(p => String(p.id).startsWith(String(selectedBranchId)));
-  }, [selectedBranchId]);
+    return familyData.filter(p => {
+        const matchesBranch = String(p.id).startsWith(String(selectedBranchId));
+        const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
+        return matchesBranch && matchesTag;
+    });
+  }, [selectedBranchId, selectedTag]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
     const groups = {};
-    const filtered = familyData.filter(item => {
+    const filtered = filteredGraphData.filter(item => {
         const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
         const matchesStory = !storyMode || (item.story?.notes);
         return matchesSearch && matchesStory;
@@ -1098,11 +1223,16 @@ export default function App() {
     });
 
     return groups;
-  }, [searchText, storyMode]);
+  }, [searchText, storyMode, filteredGraphData]);
 
   return (
     <div className="flex h-screen bg-white font-sans overflow-hidden">
       
+      {/* Relationship Modal */}
+      {!userRelation && (
+          <RelationshipSelector data={familyData} onComplete={handleRelationComplete} />
+      )}
+
       {/* --- LEFT NAVIGATION --- */}
       <div className={`
         flex flex-col border-r border-gray-200 bg-white h-full z-10 transition-all duration-300
@@ -1136,38 +1266,26 @@ export default function App() {
               </div>
             </div>
 
-            {/* Search or Branch Filter Row */}
-            {viewMode === 'graph' ? (
-                <div className="flex gap-2 items-center">
-                    <div className="flex-1 overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
-                        {Object.entries(BRANCHES).map(([id, name]) => (
-                            <button
-                                key={id}
-                                onClick={() => setSelectedBranchId(id)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
-                                    selectedBranchId === id
-                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-                                }`}
-                            >
-                                {id}. {name}
-                            </button>
-                        ))}
-                    </div>
-                     <button
-                        onClick={() => setStoryMode(!storyMode)}
-                        className={`px-3 py-1.5 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider h-full
-                            ${storyMode
-                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                            }
-                        `}
-                        title="Toggle Story Mode"
-                    >
-                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                    </button>
+            {/* Unified Controls: Branch Filter & Search */}
+            <div className="flex flex-col gap-3">
+                {/* Branch Selector (Horizontal Scroll) */}
+                <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
+                    {Object.entries(BRANCHES).map(([id, name]) => (
+                        <button
+                            key={id}
+                            onClick={() => setSelectedBranchId(id)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
+                                selectedBranchId === id
+                                ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
+                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                            }`}
+                        >
+                            {id}. {name}
+                        </button>
+                    ))}
                 </div>
-            ) : (
+
+                {/* Search & Options Row */}
                 <div className="flex gap-2">
                     <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
                         <Search size={16} className="text-gray-400" />
@@ -1192,8 +1310,50 @@ export default function App() {
                     >
                         <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
                     </button>
+
+                     <button
+                        onClick={() => {
+                            setUserRelation(null);
+                            localStorage.removeItem('userRelation');
+                        }}
+                        className="px-3 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all flex items-center justify-center"
+                        title="Reset Identity / Session"
+                    >
+                        <LogOut size={16} />
+                    </button>
                 </div>
-            )}
+
+                {/* Tag Filters */}
+                <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+                    <button
+                        onClick={() => setSelectedTag(null)}
+                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
+                            !selectedTag
+                            ? 'bg-gray-800 text-white border-gray-800'
+                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                        }`}
+                    >
+                        All
+                    </button>
+                    {Object.keys(TAG_CONFIG).filter(t => t !== 'default').map(tag => {
+                         const conf = TAG_CONFIG[tag];
+                         const isActive = selectedTag === tag;
+                         return (
+                            <button
+                                key={tag}
+                                onClick={() => setSelectedTag(isActive ? null : tag)}
+                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                    isActive
+                                    ? conf.color + ' ring-1 ring-offset-1'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                }`}
+                            >
+                                {conf.icon} {tag}
+                            </button>
+                         );
+                    })}
+                </div>
+            </div>
         </div>
 
         {/* TRIVIA WIDGET */}
@@ -1212,35 +1372,61 @@ export default function App() {
                         </div>
 
                         <div className="px-4 py-2">
-                            {items.map(item => (
-                                <div
-                                    key={item.id}
-                                    onClick={() => setSelectedAncestor(item)}
-                                    className={`
-                                        group p-4 mb-2 rounded-lg cursor-pointer border transition-all
-                                        ${selectedAncestor?.id === item.id
-                                            ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
-                                            : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
-                                        }
-                                    `}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex items-center gap-2">
-                                            {item.story?.notes && (
-                                                <BookOpen size={12} className={selectedAncestor?.id === item.id ? "text-[#E67E22]" : "text-[#F59E0B]"} />
-                                            )}
-                                            <h3 className={`font-bold text-sm ${selectedAncestor?.id === item.id ? 'text-white' : 'text-gray-800'}`}>
-                                                {item.name}
-                                            </h3>
+                            {items.map(item => {
+                                const born = item.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
+                                const died = item.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
+                                const relation = calculateRelationship(item.id, userRelation);
+                                const isSelected = selectedAncestor?.id === item.id;
+
+                                return (
+                                    <div
+                                        key={item.id}
+                                        onClick={() => setSelectedAncestor(item)}
+                                        className={`
+                                            group p-3 mb-2 rounded-lg cursor-pointer border transition-all
+                                            ${isSelected
+                                                ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
+                                                : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
+                                            }
+                                        `}
+                                    >
+                                        <div className="flex justify-between items-start mb-1">
+                                            <div className="flex items-center gap-1.5 min-w-0">
+                                                {item.story?.notes && (
+                                                    <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-[#E67E22]" : "text-[#F59E0B]"}`} />
+                                                )}
+                                                <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                                                    {item.name}
+                                                </h3>
+                                                {/* List Item Tags */}
+                                                {item.story.tags && item.story.tags.length > 0 && (
+                                                    <div className="flex gap-1 ml-2">
+                                                        {item.story.tags.map(tag => {
+                                                            const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                                            return (
+                                                                <span key={tag} className={`p-0.5 rounded-full ${conf.color} border-none`} title={tag}>
+                                                                    {React.cloneElement(conf.icon, { size: 8 })}
+                                                                </span>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ml-2 ${
+                                                isSelected ? 'text-gray-300' : 'text-gray-400'
+                                            }`}>
+                                                {relation}
+                                            </span>
                                         </div>
-                                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                                            selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+
+                                        <div className={`flex items-center gap-2 text-xs font-mono ${
+                                            isSelected ? 'text-gray-300' : 'text-gray-500'
                                         }`}>
-                                            {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
-                                        </span>
+                                            <span>{born} – {died}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 ))}
@@ -1273,6 +1459,7 @@ export default function App() {
                 familyData={familyData}
                 onClose={() => setSelectedAncestor(null)} 
                 onNavigate={setSelectedAncestor}
+                userRelation={userRelation}
              />
           ) : (
              <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
@@ -1280,9 +1467,6 @@ export default function App() {
                      <Info size={48} className="text-gray-400" />
                  </div>
                  <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor</h2>
-                 <p className="max-w-md text-center text-gray-500 px-6">
-                    Discover their stories, see the world through their eyes, and understand how they connect to you.
-                 </p>
              </div>
           )}
       </div>

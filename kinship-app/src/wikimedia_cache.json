@@ -159,6 +159,14 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
+    "Hartford County, CT|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/First_century_of_national_existence%3B_the_United_States_as_they_were_and_are.._%28IA_firstcenturyofna02hodg%29.pdf/page1-1024px-First_century_of_national_existence%3B_the_United_States_as_they_were_and_are.._%28IA_firstcenturyofna02hodg%29.pdf.jpg",
+        "alt": "Historical image of Hartford County, CT",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Simsbury, CT|18th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Captain_Jacob_Pettibone.JPG/1024px-Captain_Jacob_Pettibone.JPG",
         "alt": "Historical image of Simsbury, CT",
@@ -247,20 +255,13 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "New London (or Glastonbury), CT|18th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Glastenbury_for_two_hundred_years-_a_centennial_discourse%2C_May_18th_1853_%28IA_glastenburyfortw00chapa%29.pdf/page1-1024px-Glastenbury_for_two_hundred_years-_a_centennial_discourse%2C_May_18th_1853_%28IA_glastenburyfortw00chapa%29.pdf.jpg",
-        "alt": "Historical image of New London (or Glastonbury), CT",
-        "caption": "\nSubjects: Glastonbury (Conn.\u00a0: Town) -- History; Glastonbury (Conn.\u00a0: Town) -- Genealogy...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
+    "New London (or Glastonbury), CT|18th century": null,
     "Worcester, MA|18th century": null,
     "MA|18th century": null,
     "Charlestown, MA|18th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Charlestown_Pig_fire_engine_ornament%2C_mid_1800s_-_Old_State_House_Museum%2C_Boston%2C_MA_-_IMG_6680.JPG/1024px-Charlestown_Pig_fire_engine_ornament%2C_mid_1800s_-_Old_State_House_Museum%2C_Boston%2C_MA_-_IMG_6680.JPG",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Armagh_clergy_and_parishes.pdf/page1-1024px-Armagh_clergy_and_parishes.pdf.jpg",
         "alt": "Historical image of Charlestown, MA",
-        "caption": "Charlestown Pig fire engine ornament, mid 1800s - Old State House Museum, Boston, Massachusetts, USA....",
+        "caption": "scan of the compiled work by James B. Leslie about clergy in County Amargh, Norther Ireland to 1911...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -298,17 +299,17 @@
         }
     },
     "Salem, MA|18th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Essex_Street%2C_Salem%2C_MA_-_54366103565.jpg/1024px-Essex_Street%2C_Salem%2C_MA_-_54366103565.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Broad_Street_Cemetery%2C_Broad_Street%2C_Salem%2C_MA_-_54365913044.jpg/1024px-Broad_Street_Cemetery%2C_Broad_Street%2C_Salem%2C_MA_-_54365913044.jpg",
         "alt": "Historical image of Salem, MA",
-        "caption": "Built in 1786 as a Federal-style house with later 19th Century Italianate-style additions, this building is characteristic of the larger late 18th Cen...",
+        "caption": "Established in 1655, this cemetery was the second cemetery to be founded in the city of Salem, Massachusetts, supplementing the earlier, smaller Buryi...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
     "England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/The_New_England_historical_and_genealogical_register_%28IA_newenglandhistorv76wate%29.pdf/page1-1024px-The_New_England_historical_and_genealogical_register_%28IA_newenglandhistorv76wate%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/17th_Century_map_of_Cheshire.JPG/1024px-17th_Century_map_of_Cheshire.JPG",
         "alt": "Historical image of England",
-        "caption": "\nEntitled New England historical and genealogical register and antiquarian journal, 1853-1873\nOther slight variations in title\nCLICK ON WEB ADDRESS TO...",
+        "caption": "Map from the 1627 \"Miniature Speed Atlas\" of England Sotland Ireland and Wales, with maps by Pieter van den Keere Photograph taken mby me, the atlas o...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -467,25 +468,25 @@
         }
     },
     "Windsor, CT|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Life_in_the_eighteenth_century_%28IA_lifeineighteenth01eggl%29.pdf/page1-1024px-Life_in_the_eighteenth_century_%28IA_lifeineighteenth01eggl%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/South_Windsor_Historical_Society%2C_South_Windsor_CT.jpg/1024px-South_Windsor_Historical_Society%2C_South_Windsor_CT.jpg",
         "alt": "Historical image of Windsor, CT",
-        "caption": "\nFirst edition\nAt head of title: A little history of colonial life\nSubjects:...",
+        "caption": "South Windsor Historical Society, South Windsor Connecticut...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
     "Middletown, CT|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Annals_and_family_records_of_Winchester%2C_Conn.%2C_with_exercises_of_the_centennial_celebration%2C_on_the_16th_and_17th_days_of_August%2C_1871_%28IA_annalsfamilyreco00boydj%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Middletown%2C_CT_-_172_Washington_St_01.jpg/1024px-Middletown%2C_CT_-_172_Washington_St_01.jpg",
         "alt": "Historical image of Middletown, CT",
-        "caption": "\nSubjects: Winchester Center, Conn. -- History. [from old catalog]; Winchester Center, Conn. -- Genealogy. [from old catalog]...",
+        "caption": "172 Washington Street (Connecticut Route 66), Middletown, Connecticut, USA. In  the Washington Street Historical District, which is listed on the Nati...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
     "Middletown, MA|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Popp%27s_Journal%2C_1777-1783%3B_%28IA_poppsjournal177700popp%29.pdf/page1-1024px-Popp%27s_Journal%2C_1777-1783%3B_%28IA_poppsjournal177700popp%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Middletown_Upper_Houses%3B_a_history_of_the_north_society_of_Middletown%2C_Connecticut%2C_from_1650_to_1800.djvu/page1-1024px-Middletown_Upper_Houses%3B_a_history_of_the_north_society_of_Middletown%2C_Connecticut%2C_from_1650_to_1800.djvu.jpg",
         "alt": "Historical image of Middletown, MA",
-        "caption": "\nSubjects:...",
+        "caption": "\n847 p...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -498,7 +499,14 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "New Haven, CT|17th century": null,
+    "New Haven, CT|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/The_Columbus_historical_guide_and_map_of_New_York_city_%28IA_columbushistoric00bolit%29.pdf/page1-1024px-The_Columbus_historical_guide_and_map_of_New_York_city_%28IA_columbushistoric00bolit%29.pdf.jpg",
+        "alt": "Historical image of New Haven, CT",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Branford, CT|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Bulletin_of_the_New_York_genealogical_and_biographical_society_%28IA_bulletinofnewyor00newy%29.pdf/page1-1024px-Bulletin_of_the_New_York_genealogical_and_biographical_society_%28IA_bulletinofnewyor00newy%29.pdf.jpg",
         "alt": "Historical image of Branford, CT",
@@ -508,9 +516,9 @@
         }
     },
     "Fairfield, CT|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bascule_Span%2C_Machinery%2C_Sheet_56_-_Yellow_Mill_Bridge%2C_Spanning_Yellow_Mill_Channel_at_Stratford_Avenue%2C_Bridgeport%2C_Fairfield_County%2C_CT_HAER_CT-146-53.tif/lossy-page1-1024px-Bascule_Span%2C_Machinery%2C_Sheet_56_-_Yellow_Mill_Bridge%2C_Spanning_Yellow_Mill_Channel_at_Stratford_Avenue%2C_Bridgeport%2C_Fairfield_County%2C_CT_HAER_CT-146-53.tif.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/The_Hudson%3B_three_centuries_of_history%2C_romance_and_invention_%28IA_cu31924021589589%29.pdf/page1-1024px-The_Hudson%3B_three_centuries_of_history%2C_romance_and_invention_%28IA_cu31924021589589%29.pdf.jpg",
         "alt": "Historical image of Fairfield, CT",
-        "caption": "Fairfield, CT historical...",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -524,17 +532,17 @@
         }
     },
     "Derby, New Haven|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Papers_of_the_New_Haven_Colony_Historical_Society_%28IA_papersofnewhavenv8newh%29.pdf/page1-1024px-Papers_of_the_New_Haven_Colony_Historical_Society_%28IA_papersofnewhavenv8newh%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/The_two_hundredth_anniversary_of_the_settlement_of_the_town_of_New_Milford%2C_Conn.%2C_July_17th%2C_1907_%28IA_twohundredthanni01dave%29.pdf/page1-1024px-The_two_hundredth_anniversary_of_the_settlement_of_the_town_of_New_Milford%2C_Conn.%2C_July_17th%2C_1907_%28IA_twohundredthanni01dave%29.pdf.jpg",
         "alt": "Historical image of Derby, New Haven",
-        "caption": "\nSubjects: Local history; genealogy...",
+        "caption": "\nSubjects:...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
     "Dedham, MA|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Two_pieces_of_Sandwich_glass%2C_Fairbanks_House_and_Dedham%2C_MA%2C_c._1980%2C_-_Dedham_Historical_Society_-_Dedham_Massachusetts_-_DSC04314.jpg/1024px-Two_pieces_of_Sandwich_glass%2C_Fairbanks_House_and_Dedham%2C_MA%2C_c._1980%2C_-_Dedham_Historical_Society_-_Dedham_Massachusetts_-_DSC04314.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/March_17th%2C_1876._Celebration_of_the_centennial_anniversary_of_the_evacuation_of_Boston_%28IA_march17th1876cel00bost%29.pdf/page1-1024px-March_17th%2C_1876._Celebration_of_the_centennial_anniversary_of_the_evacuation_of_Boston_%28IA_march17th1876cel00bost%29.pdf.jpg",
         "alt": "Historical image of Dedham, MA",
-        "caption": "Exhibit in the Dedham Historical Society - Dedham Massachusetts, USA....",
+        "caption": "\nSubjects: Washington, George, 1732-1799...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -875,14 +883,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Branford, CT-|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Bulletin_of_the_New_York_genealogical_and_biographical_society_%28IA_bulletinofnewyor00newy%29.pdf/page1-1024px-Bulletin_of_the_New_York_genealogical_and_biographical_society_%28IA_bulletinofnewyor00newy%29.pdf.jpg",
-        "alt": "Historical image of Branford, CT-",
-        "caption": "\nSubjects:...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "Shorne, Kent, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Jottings_of_Kent%2C_being_a_series_of_historical%2C_ecclesiastical%2C_topographical%2C_and_statistical_sketches_%28IA_jottingsofkentbe00mill%29.pdf/page1-1024px-Jottings_of_Kent%2C_being_a_series_of_historical%2C_ecclesiastical%2C_topographical%2C_and_statistical_sketches_%28IA_jottingsofkentbe00mill%29.pdf.jpg",
         "alt": "Historical image of Shorne, Kent, England",
@@ -963,14 +963,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "assume England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/A_new_map_of_New_England%2C_New_York%2C_New_Iarsey%2C_Pensilvania%2C_Maryland_and_Virginia_-_btv1b85959985.jpg/1024px-A_new_map_of_New_England%2C_New_York%2C_New_Iarsey%2C_Pensilvania%2C_Maryland_and_Virginia_-_btv1b85959985.jpg",
-        "alt": "Historical image of assume England",
-        "caption": "Sujet\u00a0: Am\u00e9rique du Nord -- Est -- Colonies anglaises\nPennsylvanie, Colonie de la\nNouvelle-Angleterre, Colonie de la\nNew Jersey, Province de\nNew York,...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "Tibenham, Norfolk, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/An_address_from_the_gentry_of_Norfolk_and_Norwich_to_General_Monck_in_1660_%28IA_addressfromgentr00norf%29.pdf/page1-1024px-An_address_from_the_gentry_of_Norfolk_and_Norwich_to_General_Monck_in_1660_%28IA_addressfromgentr00norf%29.pdf.jpg",
         "alt": "Historical image of Tibenham, Norfolk, England",
@@ -1003,18 +995,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "near River Tweed, England; assume Northumberland County|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Sixth_report_and_inventory_of_monuments_and_constructions_in_the_county_of_Berwick_%28IA_sixthreportinven00scot%29.pdf/page1-1024px-Sixth_report_and_inventory_of_monuments_and_constructions_in_the_county_of_Berwick_%28IA_sixthreportinven00scot%29.pdf.jpg",
-        "alt": "Historical image of near River Tweed, England; assume Northumberland County",
-        "caption": "\nBibliography: p. x-xii\n26\nSubjects:...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
-    "Chesham, Buckinghamshire, England]|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto01roya%29.pdf/page1-1024px-An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto01roya%29.pdf.jpg",
-        "alt": "Historical image of Chesham, Buckinghamshire, England]",
-        "caption": "\nAt head of title: Royal commission on historical monuments (England)\nBaron Burghclere, chairman\nSubjects:...",
+    "near River Tweed, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/The_comprehensive_history_of_England_-_civil_and_military%2C_religious%2C_intellectual%2C_and_social%2C_from_the_earliest_period_to_the_suppression_of_the_Sepoy_revolt_%28IA_comprehensivehis07macf%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of near River Tweed, England",
+        "caption": "\nEach volume has added t.p., engraved\nIssued in 12 parts (called divisions)\nDiv. 12 contains sample title pages and preliminaries from previous 11 div...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1067,14 +1051,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Marblehead, MA|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Niles%27_weekly_register_%28IA_mdu-rare-031136%29.pdf/page1-1024px-Niles%27_weekly_register_%28IA_mdu-rare-031136%29.pdf.jpg",
-        "alt": "Historical image of Marblehead, MA",
-        "caption": "\nSubjects: United States--Politics and government--19th century--Periodicals...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "MA|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Louvre_Centaur%2C_Replica_of_2nd_Century_BC_Work_from_Asia_Minor%2C_Discovered_in_Rome_17th_Century_%289811925145%29.jpg/1024px-Louvre_Centaur%2C_Replica_of_2nd_Century_BC_Work_from_Asia_Minor%2C_Discovered_in_Rome_17th_Century_%289811925145%29.jpg",
         "alt": "Historical image of MA",
@@ -1091,10 +1067,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Barnstaple, Devon, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Yeo_Dale_Hotel%2C_Barnstaple_03.jpg/1024px-Yeo_Dale_Hotel%2C_Barnstaple_03.jpg",
-        "alt": "Historical image of Barnstaple, Devon, England",
-        "caption": "Yeo Dale Hotel, 124 Pilton Street, Barnstaple, Devon, England. Mid-19th century front with 17th century or older rear, Grade II listed....",
+    "Barnstable, Devon, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Results_of_Ethnological_Observations_Made_during_the_Last_Ten_Years_in_England_and_Wales_%28IA_jstor-3014195%29.pdf/page1-1024px-Results_of_Ethnological_Observations_Made_during_the_Last_Ten_Years_in_England_and_Wales_%28IA_jstor-3014195%29.pdf.jpg",
+        "alt": "Historical image of Barnstable, Devon, England",
+        "caption": "\n\"Results of Ethnological Observations Made during the Last Ten Years in England and Wales\" is an article from &lt;a href=\"/search.php?query=collectio...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1131,11 +1107,26 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Broughton, Northamptonshire, England|17th century": null,
+    "Broughton, Northamptonshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/The_Victoria_history_of_the_county_of_Northampton_%28IA_victoriahistoryo04adki%29.pdf/page1-1024px-The_Victoria_history_of_the_county_of_Northampton_%28IA_victoriahistoryo04adki%29.pdf.jpg",
+        "alt": "Historical image of Broughton, Northamptonshire, England",
+        "caption": "\nVol. 1, p. 301-356: Text of the Northamptonshire Domesday\nVols. 1, 3 reprint of the 1902- ed\nVols. 1, 3 have half-title: A history of the county of N...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Queens, NY|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/0/02/Freeport_NY-1873.jpg",
+        "alt": "Historical image of Queens, NY",
+        "caption": "Freeport, New York, 1873. Extracted from Fredrick W. Beers\u2019 map of the southern part of Hempstead, Long Island, New York, published in 1873....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Haddam, CT|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/General_Arrangement_Service_Building_-_Haddam_Neck_Nuclear_Power_Plant%2C_Service_Building%2C_362_Injun_Hollow_Road%2C_Haddam%2C_Middlesex_County%2C_CT_HAER_CT-185-F_%28sheet_1_of_4%29.png/1024px-thumbnail.png",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Annals_and_family_records_of_Winchester%2C_Conn.%2C_with_exercises_of_the_centennial_celebration%2C_on_the_16th_and_17th_days_of_August%2C_1871_%28IA_annalsfamilyreco00boydj%29.pdf/page1-1024px-thumbnail.pdf.jpg",
         "alt": "Historical image of Haddam, CT",
-        "caption": "Haddam, CT historical...",
+        "caption": "\nSubjects: Winchester Center, Conn. -- History. [from old catalog]; Winchester Center, Conn. -- Genealogy. [from old catalog]...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1152,6 +1143,14 @@
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/History_of_Southold%2C_L.I._-_its_first_century_%28IA_historyofsouthol01whit%29.pdf/page1-1024px-History_of_Southold%2C_L.I._-_its_first_century_%28IA_historyofsouthol01whit%29.pdf.jpg",
         "alt": "Historical image of Southold, Long Island, NY",
         "caption": "\nSubjects: Southold (N.Y.) -- History...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Boston, MA|historical": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Boston_National_Historical_Park_Visitor_Center%2C_Boston_MA.jpg/1024px-Boston_National_Historical_Park_Visitor_Center%2C_Boston_MA.jpg",
+        "alt": "Historical image of Boston, MA",
+        "caption": "Boston National Historical Park Visitor Center, 15 State Street, Boston Massachusetts 02109-3502...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1181,9 +1180,9 @@
         }
     },
     "Billerica, MA|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/An_historical_memoir_of_Billerica%2C_in_Massachusetts_%28IA_historicalmemoir00farmer%29.pdf/page1-1024px-An_historical_memoir_of_Billerica%2C_in_Massachusetts_%28IA_historicalmemoir00farmer%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/The_Century_illustrated_monthly_magazine_%28IA_centuryillustrat00newy%29.pdf/page1-1024px-The_Century_illustrated_monthly_magazine_%28IA_centuryillustrat00newy%29.pdf.jpg",
         "alt": "Historical image of Billerica, MA",
-        "caption": "\nSubjects:...",
+        "caption": "\nAdvertisements: p. [1-16] at beginning, p. [17-88] at end\nThe crisis of the Civil War (p. 794-795) -- Lincoln's goose nest home (p. 798-799)\nBound in...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1212,7 +1211,14 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Bridgenorth, Shropshire or Dedham, Essex, England|17th century": null,
+    "Bridgenorth, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/May_Meeting._Painters_and_Engravers_of_New_England%3B_Cromwellian_Settlement_of_Ireland%3B_Yeas_and_Nays_on_General_Conway%27s_Motion_%28IA_jstor-25079354%29.pdf/page1-1024px-May_Meeting._Painters_and_Engravers_of_New_England%3B_Cromwellian_Settlement_of_Ireland%3B_Yeas_and_Nays_on_General_Conway%27s_Motion_%28IA_jstor-25079354%29.pdf.jpg",
+        "alt": "Historical image of Bridgenorth, Suffolk, England",
+        "caption": "\n\"May Meeting. Painters and Engravers of New England; Cromwellian Settlement of Ireland; Yeas and Nays on General Conway's Motion\" is an article from ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Dedham, Essex, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/The_New_England_historical_and_genealogical_register_%28IA_newenglandhistor1853wate%29.pdf/page1-1024px-The_New_England_historical_and_genealogical_register_%28IA_newenglandhistor1853wate%29.pdf.jpg",
         "alt": "Historical image of Dedham, Essex, England",
@@ -1254,14 +1260,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "England; no information on parentage or birthplace|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf/page1-1024px-Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf.jpg",
-        "alt": "Historical image of England; no information on parentage or birthplace",
-        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "St. Albans, Hertfordshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Timber_framed_house_on_St_Michaels_Street%2C_St_Albans%2C_Hertfordshire.jpg/1024px-Timber_framed_house_on_St_Michaels_Street%2C_St_Albans%2C_Hertfordshire.jpg",
         "alt": "Historical image of St. Albans, Hertfordshire, England",
@@ -1286,9 +1284,9 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "England; parentage and birthplace unknown|17th century": {
+    "parentage and birthplace unknown|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Lives_of_Blaine_and_Logan_%28IA_livesofblainelog01will%29.pdf/page1-1024px-Lives_of_Blaine_and_Logan_%28IA_livesofblainelog01will%29.pdf.jpg",
-        "alt": "Historical image of England; parentage and birthplace unknown",
+        "alt": "Historical image of parentage and birthplace unknown",
         "caption": "\nSubjects: Blaine, James Gillespie, 1830-1893; Logan, John Alexander, 1826-1886. [from old catalog]; Campaign literature, 1884 -- Republican. [from ol...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -1470,14 +1468,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "MA/CT or England)|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/The_vale-royall_of_England%2C_or%2C_The_county_palatine_of_Chester_illustrated_-_wherein_is_contained_a_geographical_and_historical_description_of_that_famous_county_%28IA_valeroyallofengl00king%29.pdf/page1-1024px-thumbnail.pdf.jpg",
-        "alt": "Historical image of MA/CT or England)",
-        "caption": "\nDedication of \"Chronicon cestrense\" signed by the author, Samuel Lee\n\"A short treatise of the Isle of Man\" has special added t.p. \"Epistle dedicatory...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "Crewkerne, Somerset, England|16th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Notes_%26_Queries_for_Somerset_and_Dorset_v10.djvu/page1-1024px-Notes_%26_Queries_for_Somerset_and_Dorset_v10.djvu.jpg",
         "alt": "Historical image of Crewkerne, Somerset, England",
@@ -1559,17 +1549,17 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Barnardiston, Suffolk, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf04unse%29.pdf/page1-1024px-Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf04unse%29.pdf.jpg",
-        "alt": "Historical image of Barnardiston, Suffolk, England",
-        "caption": "\n22 v. 22 cm\nVols. 1-9, 1848-1898; vols. 1-24, 1848-1948 in 1 v. (Includes index to the proceedings under their earlier titles); vols. 10-17, 1898-192...",
+    "Barnardston, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Loan_exhibition_of_relics_and_heirlooms_under_the_auspices_of_the_Newport_historical_society_%28IA_loanexhibitionof00newpor%29.pdf/page1-1024px-Loan_exhibition_of_relics_and_heirlooms_under_the_auspices_of_the_Newport_historical_society_%28IA_loanexhibitionof00newpor%29.pdf.jpg",
+        "alt": "Historical image of Barnardston, Suffolk, England",
+        "caption": "\nSubjects: Museums -- Rhode Island Newport; Historical museums...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Kippax, South Yorkshire, England|17th century": {
+    "Kippax, West Yorkshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/A_memoir_of_a_portion_of_the_Bolling_family_in_England_and_Virginia_%28IA_memoirofportiono00inboll%29.pdf/page1-1024px-A_memoir_of_a_portion_of_the_Bolling_family_in_England_and_Virginia_%28IA_memoirofportiono00inboll%29.pdf.jpg",
-        "alt": "Historical image of Kippax, South Yorkshire, England",
+        "alt": "Historical image of Kippax, West Yorkshire, England",
         "caption": "\n16\n\nSubjects: Bolen family; Virginia -- Genealogy; England -- Genealogy; genealogy...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -1619,14 +1609,6 @@
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/The_naturalist_%28IA_natural12812920032004west%29.pdf/page1-1024px-The_naturalist_%28IA_natural12812920032004west%29.pdf.jpg",
         "alt": "Historical image of Settrington, Yorkshire",
         "caption": "\nImprint varies\nVol. t.p. for v. 3, issued separately, has title: The Naturalist, and field club journal\nTitle from caption\nSuspended May 1867-1874\nJo...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
-    "Saffron Waldon, Essex, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Freedom_after_ejection%3B_a_review_%281690-1692%29_of_Presbyterian_and_Congregational_nonconformity_in_England_and_Wales_%28IA_cu31924029455288%29.pdf/page1-1024px-Freedom_after_ejection%3B_a_review_%281690-1692%29_of_Presbyterian_and_Congregational_nonconformity_in_England_and_Wales_%28IA_cu31924029455288%29.pdf.jpg",
-        "alt": "Historical image of Saffron Waldon, Essex, England",
-        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1695,22 +1677,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Assume England|historical": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/The_New_England_historical_and_genealogical_register_%28IA_newenglandhistor00lccnewe%29.pdf/page1-1024px-The_New_England_historical_and_genealogical_register_%28IA_newenglandhistor00lccnewe%29.pdf.jpg",
-        "alt": "Historical image of Assume England",
-        "caption": "\nVols. for 1875-Jan. 1975 called also no. 113-513\nGeneral index: Vols. 1 (1847)-10 (1856), in v. 10 (Includes index to the journal under its earlier t...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
-    "assume England based on birthdate of child|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/An_introduction_to_Michael_Drayton._-_%28IA_introductiontomi00eltorich%29.pdf/page1-1024px-An_introduction_to_Michael_Drayton._-_%28IA_introductiontomi00eltorich%29.pdf.jpg",
-        "alt": "Historical image of assume England based on birthdate of child",
-        "caption": "\nAn enlarged and fully revised edition appeared in 1905 under title: Michael Drayton, a critical study\nBibliography: p. 67-86\nSubjects: Drayton, Micha...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "Lincolnshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/17th_Century_map_of_Lincolnshire.JPG/1024px-17th_Century_map_of_Lincolnshire.JPG",
         "alt": "Historical image of Lincolnshire, England",
@@ -1775,9 +1741,9 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "King\u2019s Walden, Hertfordshire, England|17th century": {
+    "King Walden, Hertfordshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Hertfordshire_%28IA_hertfordshire00tomp%29.pdf/page1-1024px-Hertfordshire_%28IA_hertfordshire00tomp%29.pdf.jpg",
-        "alt": "Historical image of King\u2019s Walden, Hertfordshire, England",
+        "alt": "Historical image of King Walden, Hertfordshire, England",
         "caption": "\nSubjects: Hertfordshire (England) -- Guidebooks...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -1855,14 +1821,7 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Dodington, Whitchurch, Shropshire, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_county_seats_of_Shropshire_-_a_series_of_descriptive_sketches%2C_with_historical_and_antiquarian_notes%2C_of_the_principal_family_mansions_%28IA_countyseatsofshr00leac%29.pdf/page1-1024px-thumbnail.pdf.jpg",
-        "alt": "Historical image of Dodington, Whitchurch, Shropshire, England",
-        "caption": "\n\"These sketches of the 'County seats of Shropshire' were originally designed for publication in Eddowes's Shrewsbury journal, and a number of the ear...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
+    "Dodington, Whitechurch, Shropshire, England|17th century": null,
     "Bishop\u2019s Waltham, Hampshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_history_of_Hampshire_and_the_Isle_of_Wight_%28IA_historyofhampshi04doub%29.pdf/page1-1024px-A_history_of_Hampshire_and_the_Isle_of_Wight_%28IA_historyofhampshi04doub%29.pdf.jpg",
         "alt": "Historical image of Bishop\u2019s Waltham, Hampshire, England",
@@ -1883,14 +1842,6 @@
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Bygone_Kent%3B_%28IA_bygonekent00steaiala%29.pdf/page1-1024px-Bygone_Kent%3B_%28IA_bygonekent00steaiala%29.pdf.jpg",
         "alt": "Historical image of Staplehurst, Kent, England",
         "caption": "\nSubjects: Kent (England) -- History; genealogy...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
-    "Dunston, Lincolnshire, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Lincolnshire_in_1836-_displayed_in_a_series_of_nearly_one_hundred_engravings%2C_on_steel_and_wood%3B_%28IA_lincolnshirein1800linc%29.pdf/page1-1024px-Lincolnshire_in_1836-_displayed_in_a_series_of_nearly_one_hundred_engravings%2C_on_steel_and_wood%3B_%28IA_lincolnshirein1800linc%29.pdf.jpg",
-        "alt": "Historical image of Dunston, Lincolnshire, England",
-        "caption": "\nSubjects:...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1919,9 +1870,9 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Shipley, Yorkshire, England (now part of Bradford)|17th century": {
+    "Shipley, Yorkshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/The_naturalist_%28IA_naturalist1936west%29.pdf/page1-1024px-The_naturalist_%28IA_naturalist1936west%29.pdf.jpg",
-        "alt": "Historical image of Shipley, Yorkshire, England (now part of Bradford)",
+        "alt": "Historical image of Shipley, Yorkshire, England",
         "caption": "\nImprint varies\nVol. t.p. for v. 3, issued separately, has title: The Naturalist, and field club journal\nTitle from caption\nSuspended May 1867-1874\nJo...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -1951,7 +1902,14 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Batley, Yorkshire, England (some sites say \u201cHold\u2019s Mills\u201d, but that is not an identifiable location)|17th century": null,
+    "Holds Mills, Yorkshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/History_of_the_New_England_Company%2C_from_its_incorporation%2C_in_the_seventeenth_century%2C_to_the_present_time_%28microform%29_%28IA_cihm_03421%29.pdf/page1-1024px-History_of_the_New_England_Company%2C_from_its_incorporation%2C_in_the_seventeenth_century%2C_to_the_present_time_%28microform%29_%28IA_cihm_03421%29.pdf.jpg",
+        "alt": "Historical image of Holds Mills, Yorkshire, England",
+        "caption": "\nSubtitle: Including a detailed report of the company's proceedings for the civilization and conversion of Indians, blacks and pagans in the Dominion ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Metheringham, Lincolnshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Books_from_the_Library_of_Congress_%28IA_historyoffensofs00whee%29.pdf/page1-1024px-Books_from_the_Library_of_Congress_%28IA_historyoffensofs00whee%29.pdf.jpg",
         "alt": "Historical image of Metheringham, Lincolnshire, England",
@@ -1985,9 +1943,9 @@
         }
     },
     "Sonning Berkshire, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Curiosities_of_Great_Britain_-_England_%26_Wales_delineated%2C_historical%2C_entertaining_%26_commercial_%28IA_curiositiesofgre09dugd%29.pdf/page1-1024px-Curiosities_of_Great_Britain_-_England_%26_Wales_delineated%2C_historical%2C_entertaining_%26_commercial_%28IA_curiositiesofgre09dugd%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Pearson_Road%2C_Sonning_-_geograph.org.uk_-_995530.jpg",
         "alt": "Historical image of Sonning Berkshire, England",
-        "caption": "\nSubjects:...",
+        "caption": "Pearson Road, Sonning, Berkshire, England.  Grove Cottage, standing at the junction with the High Street, catches some evening sunshine. The timber-fr...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -1996,14 +1954,6 @@
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/The_Archaeological_journal_%28IA_archaeologicaljoindex26brit%29.pdf/page1-1024px-The_Archaeological_journal_%28IA_archaeologicaljoindex26brit%29.pdf.jpg",
         "alt": "Historical image of Kempston, Bedfordshire, England",
         "caption": "\nAvery index to architectural periodicals. Second edition. Revised and enlarged. Supplement\nArt index\nArchitectural periodicals index\nRILA. R\u00e9pertoire...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
-    "Old Swinford, Worcestershire, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Old_Swinford_Hospital_-_Hagley_Road%2C_Stourbridge_-_sign.jpg/1024px-Old_Swinford_Hospital_-_Hagley_Road%2C_Stourbridge_-_sign.jpg",
-        "alt": "Historical image of Old Swinford, Worcestershire, England",
-        "caption": "I went up Hagley Road in Stourbridge looking for Costa (Google Maps said it was up here). But only ended up finding Costa Express at Tesco Express.\nIn...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2033,9 +1983,9 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Kingston upon Thames, Surrey, England|17th century": {
+    "Kingston, Surrey, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu/page1-1024px-The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu.jpg",
-        "alt": "Historical image of Kingston upon Thames, Surrey, England",
+        "alt": "Historical image of Kingston, Surrey, England",
         "caption": "The Victoria history of the county of Surrey...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -2049,17 +1999,33 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Derby, Derbyshire, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Gell%27s_Town_House_-_Friar_Gate%2C_Derby_-_geograph.org.uk_-_559752.jpg",
-        "alt": "Historical image of Derby, Derbyshire, England",
-        "caption": "Gell's Town House - Friar Gate, Derby Numbers 16-17 Friar Gate.   This fine mid 17th Century brick house was built for the Gell family of Hopton Hall,...",
+    "in England|historical": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Earldoms_of_Anglo-Saxon_England-es.svg/1024px-Earldoms_of_Anglo-Saxon_England-es.svg.png",
+        "alt": "Historical image of in England",
+        "caption": "Condados de la Inglaterra anglosajona en el 1025....",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Warwickshire, England|17th century": {
+    "Woodbury, Devon, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Collections_of_the_Nova_Scotia_Historical_Society_%28IA_collectionsofnov17nova%29.pdf/page1-1024px-Collections_of_the_Nova_Scotia_Historical_Society_%28IA_collectionsofnov17nova%29.pdf.jpg",
+        "alt": "Historical image of Woodbury, Devon, England",
+        "caption": "\nCumulated list of papers read before the Society since 1878 in vol. 5\nVol. 3 has title: Report and collections of the Nova Scotia Historical Society\n...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Taunton|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Graysalmshouses.jpg",
+        "alt": "Historical image of Taunton",
+        "caption": "Gray's Almshouses, Taunton. 17th century. Seen from the rear garden, looking NW....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Warwickshire|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/17th_Century_map_of_Warwickshire.jpg/1024px-17th_Century_map_of_Warwickshire.jpg",
-        "alt": "Historical image of Warwickshire, England",
+        "alt": "Historical image of Warwickshire",
         "caption": "Map from a 17th Century pocket atlas of Great Britain, drawn by John Speed and engraved by Peter Van Den Keere (Petrus Kaerius)....",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -2069,6 +2035,14 @@
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/The_story_of_old_Halifax_%28IA_storyofoldhalifa00hans%29.pdf/page1-1024px-The_story_of_old_Halifax_%28IA_storyofoldhalifa00hans%29.pdf.jpg",
         "alt": "Historical image of Halifax, Yorkshire, England",
         "caption": "\nSubjects: Halifax (England) -- History...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Yorkshire|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/The_17th_century_Kirkham_Bridge_awaits_repair_-_geograph.org.uk_-_4529222.jpg/1024px-The_17th_century_Kirkham_Bridge_awaits_repair_-_geograph.org.uk_-_4529222.jpg",
+        "alt": "Historical image of Yorkshire",
+        "caption": "The  17th  century  Kirkham  Bridge  awaits  repair\u00a0...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2177,10 +2151,26 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
+    "Medway, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/KENT-D5D126_%28FindID_714412%29.jpg/1024px-KENT-D5D126_%28FindID_714412%29.jpg",
+        "alt": "Historical image of Medway, Kent, England",
+        "caption": "A Post Medieval copper alloy  unifaced coin weight of 15th to 16th century date. The coin weight is for an Angel coin shows St Michael spearing a drag...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Lancaster, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/f/f7/17th_Century_house%2C_Hala_Road%2C_Scotforth_-_geograph.org.uk_-_3044567.jpg",
         "alt": "Historical image of Lancaster, England",
         "caption": "17th Century house, Hala Road, Scotforth\u00a0...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Salisbury or Lancaster, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Calendar_of_the_manuscripts_of_the_Most_Honourable_the_Marquess_of_Salisbury_..._preserved_at_Hatfield_House%2C_Hertfordshire_.._%28IA_calendarofmanusc10grea%29.pdf/page1-1024px-Calendar_of_the_manuscripts_of_the_Most_Honourable_the_Marquess_of_Salisbury_..._preserved_at_Hatfield_House%2C_Hertfordshire_.._%28IA_calendarofmanusc10grea%29.pdf.jpg",
+        "alt": "Historical image of Salisbury or Lancaster, England",
+        "caption": "\nVols. 1-13 issued as Gt. Brit. Parliament. Papers by command. C. 3777, 5463-v., 6823, 7574, 7884, 9246, 9467; Cd. 928, 2052, 3134, 5291, 7842\nAt head...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2193,12 +2183,26 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Coggeshall, Essex, England|17th century": null,
-    "Boston, Lincolnshire, England|17th century": null,
+    "Coggeshall, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb13esse%29.pdf/page1-1024px-Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb13esse%29.pdf.jpg",
+        "alt": "Historical image of Coggeshall, Essex, England",
+        "caption": "\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\n\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Boston, Lincolnshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/High_Water_Flood_Marks%2C_Boston_Stump%2C_Boston%2C_Lincolnshire%2C_England._30th_September_2019.jpg/1024px-High_Water_Flood_Marks%2C_Boston_Stump%2C_Boston%2C_Lincolnshire%2C_England._30th_September_2019.jpg",
+        "alt": "Historical image of Boston, Lincolnshire, England",
+        "caption": "Buttress attached to the west side of the Parish Church of St Botolph, Church Close, Boston, Lincolnshire (Boston Stump),  showing high water flood ma...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Hereford, Herefordshire, England (but possibly Gloucestershire)|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Collins%27s_peerage_of_England%3B_genealogical%2C_biographical%2C_and_historical_%28IA_collinsspeerageo06colliala%29.pdf/page1-1024px-Collins%27s_peerage_of_England%3B_genealogical%2C_biographical%2C_and_historical_%28IA_collinsspeerageo06colliala%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/May_Meeting._Painters_and_Engravers_of_New_England%3B_Cromwellian_Settlement_of_Ireland%3B_Yeas_and_Nays_on_General_Conway%27s_Motion_%28IA_jstor-25079354%29.pdf/page1-1024px-May_Meeting._Painters_and_Engravers_of_New_England%3B_Cromwellian_Settlement_of_Ireland%3B_Yeas_and_Nays_on_General_Conway%27s_Motion_%28IA_jstor-25079354%29.pdf.jpg",
         "alt": "Historical image of Hereford, Herefordshire, England (but possibly Gloucestershire)",
-        "caption": "\nv. 7. is a 1970, AMS Press reprint\n\nSubjects: Nobility -- Great Britain...",
+        "caption": "\n\"May Meeting. Painters and Engravers of New England; Cromwellian Settlement of Ireland; Yeas and Nays on General Conway's Motion\" is an article from ...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2253,9 +2257,9 @@
         }
     },
     "Bury St. Edmunds, Suffolk, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Wills_and_inventories_from_the_registers_of_the_commissary_of_Bury_St._Edmunds_and_the_archdeacon_of_Sudbury_%28IA_trent_0116401962190_49%29.pdf/page1-1024px-Wills_and_inventories_from_the_registers_of_the_commissary_of_Bury_St._Edmunds_and_the_archdeacon_of_Sudbury_%28IA_trent_0116401962190_49%29.pdf.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Proceedings_of_the_Bury_%26_West_Suffolk_Archaeological_Institute_%28IA_proceedingsofbur01unse%29.pdf/page1-1024px-Proceedings_of_the_Bury_%26_West_Suffolk_Archaeological_Institute_%28IA_proceedingsofbur01unse%29.pdf.jpg",
         "alt": "Historical image of Bury St. Edmunds, Suffolk, England",
-        "caption": "\nixx, 300, 8 pages 23 x 17 cm\nIncludes bibliographical references and index\nSubjects: Wills -- England -- Bury St. Edmunds; Wills; England -- Bury St....",
+        "caption": "\n1 v. 22 cm\nVol. 1-9, 1848-1898. (Includes index to later titles.)\nSloan candidate\nSubjects: Suffolk (England) -- Antiquities -- Periodicals; Suffolk ...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2293,9 +2297,9 @@
         }
     },
     "Bath, Somerset, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ba%C3%B1os_Romanos%2C_Bath%2C_Inglaterra%2C_2014-08-12%2C_DD_39-41_HDR.JPG/1024px-Ba%C3%B1os_Romanos%2C_Bath%2C_Inglaterra%2C_2014-08-12%2C_DD_39-41_HDR.JPG",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/The_eighteenth_century_architecture_of_Bath_%28IA_eighteenthcentur00gree%29.pdf/page1-1024px-The_eighteenth_century_architecture_of_Bath_%28IA_eighteenthcentur00gree%29.pdf.jpg",
         "alt": "Historical image of Bath, Somerset, England",
-        "caption": "View of the Great Bath, part of the Roman Baths complex, a site of historical interest in the city of Bath, England. The baths, based on the local hot...",
+        "caption": "\n\"This work is limited to 500 numbered copies, of which this is no. 125.\"\n\nSubjects: Architecture...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2308,8 +2312,22 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Westmill, Herefordshire, England|17th century": null,
-    "Norwich, Norfolk, England|17th century": null,
+    "Westmill, Herefordshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/The_Beauties_of_England_and_Wales%2C_or%2C_Delineations%2C_topographical%2C_historical%2C_and_descriptive%2C_of_each_county_%28IA_beautiesofenglan07brit%29.pdf/page1-1024px-The_Beauties_of_England_and_Wales%2C_or%2C_Delineations%2C_topographical%2C_historical%2C_and_descriptive%2C_of_each_county_%28IA_beautiesofenglan07brit%29.pdf.jpg",
+        "alt": "Historical image of Westmill, Herefordshire, England",
+        "caption": "\nAdded engraved t.p. in each vol\nIn vol. XII-XVIII, title and imprint vary slightly\n\"In the earlier volumes [I-VI] the letterpress seems to have been ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Norwich, Norfolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/c/c5/17th_century_cottages_in_Lion_and_Castle_Yard_off_Timberhill_-_geograph.org.uk_-_6243082.jpg",
+        "alt": "Historical image of Norwich, Norfolk, England",
+        "caption": "17th century cottages in Lion and Castle Yard off Timberhill\u00a0...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Earnley, Sussex, England (possibly Lincolnshire)|17th century": null,
     "Stratford on Avon, Warwickshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/The_Shakespearean_guide_to_Stratford-on-Avon_%28IA_shakespeareangui00wardiala%29.pdf/page1-1024px-The_Shakespearean_guide_to_Stratford-on-Avon_%28IA_shakespeareangui00wardiala%29.pdf.jpg",
@@ -2327,10 +2345,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Romford, Essex, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf/page1-1024px-Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf.jpg",
-        "alt": "Historical image of Romford, Essex, England",
-        "caption": "\nv.\u00a0: 22 cm\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\nMaster and use copy...",
+    "Rumford, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb06esse%29.pdf/page1-1024px-Essex_naturalist-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb06esse%29.pdf.jpg",
+        "alt": "Historical image of Rumford, Essex, England",
+        "caption": "\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\n\nSubjects:...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2351,10 +2369,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Bridgnorth, Shropshire, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Antiquities_of_Shropshire_%28IA_cu31924088020882%29.pdf/page1-1024px-Antiquities_of_Shropshire_%28IA_cu31924088020882%29.pdf.jpg",
-        "alt": "Historical image of Bridgnorth, Shropshire, England",
-        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+    "Bridgenorth, Shropshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Medieval_Lead_Token_%28front_and_reverse%29_%28FindID_662207%29.jpg/1024px-Medieval_Lead_Token_%28front_and_reverse%29_%28FindID_662207%29.jpg",
+        "alt": "Historical image of Bridgenorth, Shropshire, England",
+        "caption": "A cast lead alloy token of later medieval or post-medieval date (1200-1800). The token is sub-circular in plan. The decoration on the front face of th...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2415,6 +2433,14 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
+    "Dedham, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Soldiers_in_King_Philip%27s_war%3B_being_a_critical_account_of_that_war%2C_with_a_concise_history_of_the_Indian_wars_of_New_England_from_1620-1677%2C_official_lists_of_the_soldiers_of_Massachusetts_colony_%2814596180788%29.jpg/1024px-thumbnail.jpg",
+        "alt": "Historical image of Dedham, England",
+        "caption": "\nIdentifier: soldiersinkingph1896bodg (find matches)\nTitle: Soldiers in King Philip's war; being a critical account of that war, with a concise histor...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "St. Albans, Hertfordshire, England|16th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Transactions_of_the_Hertfordshire_Natural_History_Society_and_Field_Club_%28IA_transaction1219031905hert%29.pdf/page1-1024px-Transactions_of_the_Hertfordshire_Natural_History_Society_and_Field_Club_%28IA_transaction1219031905hert%29.pdf.jpg",
         "alt": "Historical image of St. Albans, Hertfordshire, England",
@@ -2431,7 +2457,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Colton, Norfolk, England (now combined with Marlington)|16th century": null,
     "Boxford, Suffolk, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf/page1-1024px-Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf.jpg",
         "alt": "Historical image of Boxford, Suffolk, England",
@@ -2440,14 +2465,7 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Polstead Hall, Suffolk, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/The_Alstons_and_Allstons_of_North_and_South_Carolina%3B_%28IA_alstonsallstonso00grov%29.pdf/page1-1024px-The_Alstons_and_Allstons_of_North_and_South_Carolina%3B_%28IA_alstonsallstonso00grov%29.pdf.jpg",
-        "alt": "Historical image of Polstead Hall, Suffolk, England",
-        "caption": "\nTwo pages of errata and addends, and blank leaves inserted\n\nSubjects: Allston family [John Allston, 1690-1780]...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
+    "Polestead Hall, Suffolk, England|16th century": null,
     "Claydon, Oxfordshire, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Books_from_the_Biodiversity_Heritage_Library_%28IA_cu31924001682305%29.pdf/page1-1024px-Books_from_the_Biodiversity_Heritage_Library_%28IA_cu31924001682305%29.pdf.jpg",
         "alt": "Historical image of Claydon, Oxfordshire, England",
@@ -2552,10 +2570,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Hunton, Kent, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/VCH_Kent_1.djvu/page1-1024px-VCH_Kent_1.djvu.jpg",
-        "alt": "Historical image of Hunton, Kent, England",
-        "caption": "s:Victoria County History...",
+    "Hunton, Hampshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/1-3_Hunton_Down_Lane%2C_Hampshire_01.jpg/1024px-1-3_Hunton_Down_Lane%2C_Hampshire_01.jpg",
+        "alt": "Historical image of Hunton, Hampshire, England",
+        "caption": "1-3, Hunton Down Lane, Hunton, Hampshire, England. Early 16th century, and 17th century, Grade II listed.\n.mw-parser-output .messagebox{margin:4px 0;w...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2728,7 +2746,15 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Marefield, Leicestershire, England|16th century": null,
+    "Essex|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Copped_Hall_interior_16th_century_door%2C_Essex%2C_England.jpg/1024px-Copped_Hall_interior_16th_century_door%2C_Essex%2C_England.jpg",
+        "alt": "Historical image of Essex",
+        "caption": "Photograph taken at a house and gardens open day on 1 June 2025, at Copped Hall, aka Copt Hall or Copthall, a Grade II listed country house, 1.5 miles...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Marchfield, Lincolnshire, England|16th century": null,
     "Barnham Broom, Norfolk, England|16th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/An_address_from_the_gentry_of_Norfolk_and_Norwich_to_General_Monck_in_1660_%28IA_addressfromgentr00norf%29.pdf/page1-1024px-An_address_from_the_gentry_of_Norfolk_and_Norwich_to_General_Monck_in_1660_%28IA_addressfromgentr00norf%29.pdf.jpg",
         "alt": "Historical image of Barnham Broom, Norfolk, England",
@@ -2745,17 +2771,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Wootton Wawen, Warwickshire, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
-        "alt": "Historical image of Wootton Wawen, Warwickshire, England",
-        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
-    "possibly North Tawton, Devon, England|17th century": {
+    "Wooten Wawen, Warwickshire, England|17th century": null,
+    "possibly North Tawton, England|17th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Devon_%26_Cornwall_notes_%26_queries_%28vol_10%29.djvu/page1-1024px-Devon_%26_Cornwall_notes_%26_queries_%28vol_10%29.djvu.jpg",
-        "alt": "Historical image of possibly North Tawton, Devon, England",
+        "alt": "Historical image of possibly North Tawton, England",
         "caption": "\n\"A quarterly journal devoted to the local history, biography and antiquities of the counties of Devon and Cornwall.\"...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
@@ -2785,10 +2804,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Lydeard, Somerset, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/0/03/Bishopslydeardchurch.jpg",
-        "alt": "Historical image of Lydeard, Somerset, England",
-        "caption": "St Mary the Virgin parish church, Bishop\u2019s Lydeard, Somerset, seen from the southeast...",
+    "Lydiard, Somerset, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Collections_for_a_history_of_Staffordshire_%28IA_collectionsforhi02staf_0%29.pdf/page1-1024px-Collections_for_a_history_of_Staffordshire_%28IA_collectionsforhi02staf_0%29.pdf.jpg",
+        "alt": "Historical image of Lydiard, Somerset, England",
+        "caption": "\nPlace of publication and publisher varies\nEach vol. includes index\nCLICK ON WEB ADDRESS TO REACH SELECTED VOLUMES\nv. 1 (1880). Pipe Rolls of 1130 and...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2801,10 +2820,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "High Onger, Essex, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/The_Old-Northern_Runic_Monuments_of_Scandinava_and_England%2C_Vol._I_%28IA_dli.granth.77158%29.pdf/page1-1024px-The_Old-Northern_Runic_Monuments_of_Scandinava_and_England%2C_Vol._I_%28IA_dli.granth.77158%29.pdf.jpg",
-        "alt": "Historical image of High Onger, Essex, England",
-        "caption": "\nSource: Asiatic Society of MumbaiIdentifier: BK_00081397Digitization Sponsor: Indian Express\nOriginal Source: &lt;a href=\"https://granthsanjeevani.co...",
+    "High Ongar, Essex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Handbook_for_Essex%2C_Suffolk%2C_Norfolk%2C_and_Cambridgeshire_%28IA_handbookforessex00unse%29.pdf/page1-1024px-Handbook_for_Essex%2C_Suffolk%2C_Norfolk%2C_and_Cambridgeshire_%28IA_handbookforessex00unse%29.pdf.jpg",
+        "alt": "Historical image of High Ongar, Essex, England",
+        "caption": "\nCover title: Murray's handbook, eastern counties\nSpine title: Hand-book, Essex, Suffolk, Norfolk, Cambridgeshire\n\"With map and plans.\"\nSubjects:...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2913,10 +2932,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Woolverstone, Suffolk, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf/page1-1024px-The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf.jpg",
-        "alt": "Historical image of Woolverstone, Suffolk, England",
-        "caption": "\nBibliography: p.2-3\n\nSubjects: Names, Geographical -- England Suffolk; English language -- Etymology Names...",
+    "Dedham, Essex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Illustrated_catalogue_of_nuggets_of_American_history%2C_sixteenth_to_nineteenth_century-_books%2C_broadsides%2C_maps%2C_views_and_manuscripts._To_be_sold_..._Nov._19th_and_20th%2C_1917_.._%28IA_cu31924029555491%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Dedham, Essex, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -2993,16 +3012,23 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "England (much dispute about his parentage/birthplace)|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/John_Smith_the_se-Baptist%2C_Thomas_Helwys%2C_and_the_first_Baptist_church_in_England_%28microform%29_-_with_fresh_light_upon_the_Pilgrim_Fathers%27_church_%28IA_johnsmithsebapti00burgrich%29.pdf/page1-1024px-thumbnail.pdf.jpg",
-        "alt": "Historical image of England (much dispute about his parentage/birthplace)",
-        "caption": "\nIncludes bibliographical references\nMicrofiche\nSubjects: Smyth, John, d. 1612; Helwys, Thomas, 1550?-1616?; Baptists -- England History; Pilgrims (Ne...",
+    "Mackrey End, Hertfordshire, England|17th century": null,
+    "England?|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/17th_Century_map_of_Cheshire.JPG/1024px-17th_Century_map_of_Cheshire.JPG",
+        "alt": "Historical image of England?",
+        "caption": "Map from the 1627 \"Miniature Speed Atlas\" of England Sotland Ireland and Wales, with maps by Pieter van den Keere Photograph taken mby me, the atlas o...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Potterhanworth, Lincolnshire, England|17th century": null,
-    "Thurvaston (part of Sutton on the Hill Parish), Derbyshire, England|17th century": null,
+    "Thurvaston, Derbyshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Notes_on_the_churches_of_Derbyshire_%28IA_notesonchurcheso03coxjiala%29.pdf/page1-1024px-Notes_on_the_churches_of_Derbyshire_%28IA_notesonchurcheso03coxjiala%29.pdf.jpg",
+        "alt": "Historical image of Thurvaston, Derbyshire, England",
+        "caption": "\nv. 1. The hundred of Scarsdale. 1875.--v. 2. The hundreds of the High Peak and Wirksworth. 1877.--v. 3. The hundreds of Appletree and Repton and Gres...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Edworth, Bedfordshire, England|16th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/California_Digital_Library_%28IA_listofbuildingsi00soutiala%29.pdf/page1-1024px-California_Digital_Library_%28IA_listofbuildingsi00soutiala%29.pdf.jpg",
         "alt": "Historical image of Edworth, Bedfordshire, England",
@@ -3027,10 +3053,10 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Bewdley, Worcestershire, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/The_military_memoirs_of_Lieut.-General_Sir_Joseph_Thackwell%2C_G.C.B.%2C_K.H.%3B_Colonel_16th_Lancers%2C_arranged_from_diaries_and_correspondence_%28IA_militarymemoirso00wyll%29.pdf/page1-1024px-thumbnail.pdf.jpg",
-        "alt": "Historical image of Bewdley, Worcestershire, England",
-        "caption": "\nSubjects: Thackwell, Joseph, Sir, 1781-1859...",
+    "Bewdley, Northamptonshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Wales_and_her_language_considered_from_a_historical%2C_educational_and_social_standpoint_-_with_remarks_on_modern_Welsh_literature_and_a_linguistic_map_of_the_country_%28IA_cu31924026863286%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Bewdley, Northamptonshire, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -3181,14 +3207,6 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Dedham, Essex, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Illustrated_catalogue_of_nuggets_of_American_history%2C_sixteenth_to_nineteenth_century-_books%2C_broadsides%2C_maps%2C_views_and_manuscripts._To_be_sold_..._Nov._19th_and_20th%2C_1917_.._%28IA_cu31924029555491%29.pdf/page1-1024px-thumbnail.pdf.jpg",
-        "alt": "Historical image of Dedham, Essex, England",
-        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
-        "style": {
-            "filter": "sepia(20%) contrast(110%)"
-        }
-    },
     "Boston, Lincolnshire, England|16th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/The_century_illustrated_monthly_magazine_%28IA_centuryillustratv40n2newy%29.pdf/page1-1024px-The_century_illustrated_monthly_magazine_%28IA_centuryillustratv40n2newy%29.pdf.jpg",
         "alt": "Historical image of Boston, Lincolnshire, England",
@@ -3317,18 +3335,18 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Mendlesham, Suffolk, England|17th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/History%2C_gazetteer%2C_and_directory_of_Suffolk%3B_%28IA_historygazetteer00whit_0%29.pdf/page1-1024px-History%2C_gazetteer%2C_and_directory_of_Suffolk%3B_%28IA_historygazetteer00whit_0%29.pdf.jpg",
-        "alt": "Historical image of Mendlesham, Suffolk, England",
-        "caption": "\nSubjects:...",
+    "Mendelsham, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Samuel_Hubbard%2C_of_Newport._1610-1689_%28IA_samuelhubbardofn00huli%29.pdf/page1-1024px-Samuel_Hubbard%2C_of_Newport._1610-1689_%28IA_samuelhubbardofn00huli%29.pdf.jpg",
+        "alt": "Historical image of Mendelsham, Suffolk, England",
+        "caption": "\nSubjects: Hubbard, Samuel, 1610-1689...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
     },
-    "Ashford, Kent, England|16th century": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Pumpkins_and_fireworks_for_sale%2C_Tenterden_High_Street_-_geograph.org.uk_-_1556613.jpg",
-        "alt": "Historical image of Ashford, Kent, England",
-        "caption": "Pumpkins and fireworks for sale, Tenterden High Street Seasonal requirements at Webb's Ironmongery Store, which has been in business for about 100 yea...",
+    "Sandwich, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Results_of_Ethnological_Observations_Made_during_the_Last_Ten_Years_in_England_and_Wales_%28IA_jstor-3014195%29.pdf/page1-1024px-Results_of_Ethnological_Observations_Made_during_the_Last_Ten_Years_in_England_and_Wales_%28IA_jstor-3014195%29.pdf.jpg",
+        "alt": "Historical image of Sandwich, Kent, England",
+        "caption": "\n\"Results of Ethnological Observations Made during the Last Ten Years in England and Wales\" is an article from &lt;a href=\"/search.php?query=collectio...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
@@ -3381,10 +3399,318 @@
             "filter": "sepia(20%) contrast(110%)"
         }
     },
+    "Aylesbury, Buckinghamshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Aylesbury_-_Walton_Mill_House_-_20231125101103.jpg/1024px-Aylesbury_-_Walton_Mill_House_-_20231125101103.jpg",
+        "alt": "Historical image of Aylesbury, Buckinghamshire, England",
+        "caption": "Aylesbury, Walton Mill House. 1800, incorporating early 16th century building fragment. Grade II listed. Aylesbury, Buckinghamshire, England....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
     "Axminster, Devon, England|16th century": {
         "src": "https://upload.wikimedia.org/wikipedia/commons/3/38/Axminster%2C_French_jetton_%28FindID_88936%29.jpg",
         "alt": "Historical image of Axminster, Devon, England",
         "caption": "French jetton, dating to the late 16th century....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Branford, CT-|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Bulletin_of_the_New_York_genealogical_and_biographical_society_%28IA_bulletinofnewyor00newy%29.pdf/page1-1024px-Bulletin_of_the_New_York_genealogical_and_biographical_society_%28IA_bulletinofnewyor00newy%29.pdf.jpg",
+        "alt": "Historical image of Branford, CT-",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "assume England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/A_new_map_of_New_England%2C_New_York%2C_New_Iarsey%2C_Pensilvania%2C_Maryland_and_Virginia_-_btv1b85959985.jpg/1024px-A_new_map_of_New_England%2C_New_York%2C_New_Iarsey%2C_Pensilvania%2C_Maryland_and_Virginia_-_btv1b85959985.jpg",
+        "alt": "Historical image of assume England",
+        "caption": "Sujet\u00a0: Am\u00e9rique du Nord -- Est -- Colonies anglaises\nPennsylvanie, Colonie de la\nNouvelle-Angleterre, Colonie de la\nNew Jersey, Province de\nNew York,...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "near River Tweed, England; assume Northumberland County|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Sixth_report_and_inventory_of_monuments_and_constructions_in_the_county_of_Berwick_%28IA_sixthreportinven00scot%29.pdf/page1-1024px-Sixth_report_and_inventory_of_monuments_and_constructions_in_the_county_of_Berwick_%28IA_sixthreportinven00scot%29.pdf.jpg",
+        "alt": "Historical image of near River Tweed, England; assume Northumberland County",
+        "caption": "\nBibliography: p. x-xii\n26\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Chesham, Buckinghamshire, England]|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto01roya%29.pdf/page1-1024px-An_inventory_of_the_historical_monuments_in_Buckinghamshire_.._%28IA_inventoryofhisto01roya%29.pdf.jpg",
+        "alt": "Historical image of Chesham, Buckinghamshire, England]",
+        "caption": "\nAt head of title: Royal commission on historical monuments (England)\nBaron Burghclere, chairman\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Marblehead, MA|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Niles%27_weekly_register_%28IA_mdu-rare-031136%29.pdf/page1-1024px-Niles%27_weekly_register_%28IA_mdu-rare-031136%29.pdf.jpg",
+        "alt": "Historical image of Marblehead, MA",
+        "caption": "\nSubjects: United States--Politics and government--19th century--Periodicals...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Barnstaple, Devon, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Yeo_Dale_Hotel%2C_Barnstaple_03.jpg/1024px-Yeo_Dale_Hotel%2C_Barnstaple_03.jpg",
+        "alt": "Historical image of Barnstaple, Devon, England",
+        "caption": "Yeo Dale Hotel, 124 Pilton Street, Barnstaple, Devon, England. Mid-19th century front with 17th century or older rear, Grade II listed....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bridgenorth, Shropshire or Dedham, Essex, England|17th century": null,
+    "England; no information on parentage or birthplace|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf/page1-1024px-Life_and_letters_of_John_Winthrop%2C_governor_of_the_Massachusetts-Bay_company_at_their_emigration_to_New_England_.._%28IA_cu31924077099905%29.pdf.jpg",
+        "alt": "Historical image of England; no information on parentage or birthplace",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "England; parentage and birthplace unknown|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Lives_of_Blaine_and_Logan_%28IA_livesofblainelog01will%29.pdf/page1-1024px-Lives_of_Blaine_and_Logan_%28IA_livesofblainelog01will%29.pdf.jpg",
+        "alt": "Historical image of England; parentage and birthplace unknown",
+        "caption": "\nSubjects: Blaine, James Gillespie, 1830-1893; Logan, John Alexander, 1826-1886. [from old catalog]; Campaign literature, 1884 -- Republican. [from ol...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "MA/CT or England)|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/The_vale-royall_of_England%2C_or%2C_The_county_palatine_of_Chester_illustrated_-_wherein_is_contained_a_geographical_and_historical_description_of_that_famous_county_%28IA_valeroyallofengl00king%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of MA/CT or England)",
+        "caption": "\nDedication of \"Chronicon cestrense\" signed by the author, Samuel Lee\n\"A short treatise of the Isle of Man\" has special added t.p. \"Epistle dedicatory...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Barnardiston, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf04unse%29.pdf/page1-1024px-Proceedings_of_the_Suffolk_Institute_of_Arch%C3%A6ology_and_Natural_History_%28IA_proceedingsofsuf04unse%29.pdf.jpg",
+        "alt": "Historical image of Barnardiston, Suffolk, England",
+        "caption": "\n22 v. 22 cm\nVols. 1-9, 1848-1898; vols. 1-24, 1848-1948 in 1 v. (Includes index to the proceedings under their earlier titles); vols. 10-17, 1898-192...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Kippax, South Yorkshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/A_memoir_of_a_portion_of_the_Bolling_family_in_England_and_Virginia_%28IA_memoirofportiono00inboll%29.pdf/page1-1024px-A_memoir_of_a_portion_of_the_Bolling_family_in_England_and_Virginia_%28IA_memoirofportiono00inboll%29.pdf.jpg",
+        "alt": "Historical image of Kippax, South Yorkshire, England",
+        "caption": "\n16\n\nSubjects: Bolen family; Virginia -- Genealogy; England -- Genealogy; genealogy...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Saffron Waldon, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Freedom_after_ejection%3B_a_review_%281690-1692%29_of_Presbyterian_and_Congregational_nonconformity_in_England_and_Wales_%28IA_cu31924029455288%29.pdf/page1-1024px-Freedom_after_ejection%3B_a_review_%281690-1692%29_of_Presbyterian_and_Congregational_nonconformity_in_England_and_Wales_%28IA_cu31924029455288%29.pdf.jpg",
+        "alt": "Historical image of Saffron Waldon, Essex, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Assume England|historical": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/The_New_England_historical_and_genealogical_register_%28IA_newenglandhistor00lccnewe%29.pdf/page1-1024px-The_New_England_historical_and_genealogical_register_%28IA_newenglandhistor00lccnewe%29.pdf.jpg",
+        "alt": "Historical image of Assume England",
+        "caption": "\nVols. for 1875-Jan. 1975 called also no. 113-513\nGeneral index: Vols. 1 (1847)-10 (1856), in v. 10 (Includes index to the journal under its earlier t...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "assume England based on birthdate of child|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/An_introduction_to_Michael_Drayton._-_%28IA_introductiontomi00eltorich%29.pdf/page1-1024px-An_introduction_to_Michael_Drayton._-_%28IA_introductiontomi00eltorich%29.pdf.jpg",
+        "alt": "Historical image of assume England based on birthdate of child",
+        "caption": "\nAn enlarged and fully revised edition appeared in 1905 under title: Michael Drayton, a critical study\nBibliography: p. 67-86\nSubjects: Drayton, Micha...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "King\u2019s Walden, Hertfordshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Hertfordshire_%28IA_hertfordshire00tomp%29.pdf/page1-1024px-Hertfordshire_%28IA_hertfordshire00tomp%29.pdf.jpg",
+        "alt": "Historical image of King\u2019s Walden, Hertfordshire, England",
+        "caption": "\nSubjects: Hertfordshire (England) -- Guidebooks...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Dodington, Whitchurch, Shropshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_county_seats_of_Shropshire_-_a_series_of_descriptive_sketches%2C_with_historical_and_antiquarian_notes%2C_of_the_principal_family_mansions_%28IA_countyseatsofshr00leac%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Dodington, Whitchurch, Shropshire, England",
+        "caption": "\n\"These sketches of the 'County seats of Shropshire' were originally designed for publication in Eddowes's Shrewsbury journal, and a number of the ear...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Dunston, Lincolnshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Lincolnshire_in_1836-_displayed_in_a_series_of_nearly_one_hundred_engravings%2C_on_steel_and_wood%3B_%28IA_lincolnshirein1800linc%29.pdf/page1-1024px-Lincolnshire_in_1836-_displayed_in_a_series_of_nearly_one_hundred_engravings%2C_on_steel_and_wood%3B_%28IA_lincolnshirein1800linc%29.pdf.jpg",
+        "alt": "Historical image of Dunston, Lincolnshire, England",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Shipley, Yorkshire, England (now part of Bradford)|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/The_naturalist_%28IA_naturalist1936west%29.pdf/page1-1024px-The_naturalist_%28IA_naturalist1936west%29.pdf.jpg",
+        "alt": "Historical image of Shipley, Yorkshire, England (now part of Bradford)",
+        "caption": "\nImprint varies\nVol. t.p. for v. 3, issued separately, has title: The Naturalist, and field club journal\nTitle from caption\nSuspended May 1867-1874\nJo...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Batley, Yorkshire, England (some sites say \u201cHold\u2019s Mills\u201d, but that is not an identifiable location)|17th century": null,
+    "Old Swinford, Worcestershire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Old_Swinford_Hospital_-_Hagley_Road%2C_Stourbridge_-_sign.jpg/1024px-Old_Swinford_Hospital_-_Hagley_Road%2C_Stourbridge_-_sign.jpg",
+        "alt": "Historical image of Old Swinford, Worcestershire, England",
+        "caption": "I went up Hagley Road in Stourbridge looking for Costa (Google Maps said it was up here). But only ended up finding Costa Express at Tesco Express.\nIn...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Kingston upon Thames, Surrey, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu/page1-1024px-The_Victoria_History_of_the_County_of_Surrey_Volume_3.djvu.jpg",
+        "alt": "Historical image of Kingston upon Thames, Surrey, England",
+        "caption": "The Victoria history of the county of Surrey...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Derby, Derbyshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Gell%27s_Town_House_-_Friar_Gate%2C_Derby_-_geograph.org.uk_-_559752.jpg",
+        "alt": "Historical image of Derby, Derbyshire, England",
+        "caption": "Gell's Town House - Friar Gate, Derby Numbers 16-17 Friar Gate.   This fine mid 17th Century brick house was built for the Gell family of Hopton Hall,...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Warwickshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/17th_Century_map_of_Warwickshire.jpg/1024px-17th_Century_map_of_Warwickshire.jpg",
+        "alt": "Historical image of Warwickshire, England",
+        "caption": "Map from a 17th Century pocket atlas of Great Britain, drawn by John Speed and engraved by Peter Van Den Keere (Petrus Kaerius)....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Romford, Essex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf/page1-1024px-Essex_naturalist_-_being_the_journal_of_the_Essex_Field_Club_%28IA_essexnaturalistb1819esse%29.pdf.jpg",
+        "alt": "Historical image of Romford, Essex, England",
+        "caption": "\nv.\u00a0: 22 cm\nFormed by the union of the Transactions of the Essex Field Club and the Journal of proceedings of the Essex Field Club\nMaster and use copy...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bridgnorth, Shropshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Antiquities_of_Shropshire_%28IA_cu31924088020882%29.pdf/page1-1024px-Antiquities_of_Shropshire_%28IA_cu31924088020882%29.pdf.jpg",
+        "alt": "Historical image of Bridgnorth, Shropshire, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Colton, Norfolk, England (now combined with Marlington)|16th century": null,
+    "Polstead Hall, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/The_Alstons_and_Allstons_of_North_and_South_Carolina%3B_%28IA_alstonsallstonso00grov%29.pdf/page1-1024px-The_Alstons_and_Allstons_of_North_and_South_Carolina%3B_%28IA_alstonsallstonso00grov%29.pdf.jpg",
+        "alt": "Historical image of Polstead Hall, Suffolk, England",
+        "caption": "\nTwo pages of errata and addends, and blank leaves inserted\n\nSubjects: Allston family [John Allston, 1690-1780]...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Hunton, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/VCH_Kent_1.djvu/page1-1024px-VCH_Kent_1.djvu.jpg",
+        "alt": "Historical image of Hunton, Kent, England",
+        "caption": "s:Victoria County History...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Marefield, Leicestershire, England|16th century": null,
+    "Wootton Wawen, Warwickshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
+        "alt": "Historical image of Wootton Wawen, Warwickshire, England",
+        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "possibly North Tawton, Devon, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Devon_%26_Cornwall_notes_%26_queries_%28vol_10%29.djvu/page1-1024px-Devon_%26_Cornwall_notes_%26_queries_%28vol_10%29.djvu.jpg",
+        "alt": "Historical image of possibly North Tawton, Devon, England",
+        "caption": "\n\"A quarterly journal devoted to the local history, biography and antiquities of the counties of Devon and Cornwall.\"...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Lydeard, Somerset, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/0/03/Bishopslydeardchurch.jpg",
+        "alt": "Historical image of Lydeard, Somerset, England",
+        "caption": "St Mary the Virgin parish church, Bishop\u2019s Lydeard, Somerset, seen from the southeast...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "High Onger, Essex, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/The_Old-Northern_Runic_Monuments_of_Scandinava_and_England%2C_Vol._I_%28IA_dli.granth.77158%29.pdf/page1-1024px-The_Old-Northern_Runic_Monuments_of_Scandinava_and_England%2C_Vol._I_%28IA_dli.granth.77158%29.pdf.jpg",
+        "alt": "Historical image of High Onger, Essex, England",
+        "caption": "\nSource: Asiatic Society of MumbaiIdentifier: BK_00081397Digitization Sponsor: Indian Express\nOriginal Source: &lt;a href=\"https://granthsanjeevani.co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Woolverstone, Suffolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf/page1-1024px-The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf.jpg",
+        "alt": "Historical image of Woolverstone, Suffolk, England",
+        "caption": "\nBibliography: p.2-3\n\nSubjects: Names, Geographical -- England Suffolk; English language -- Etymology Names...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "England (much dispute about his parentage/birthplace)|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/John_Smith_the_se-Baptist%2C_Thomas_Helwys%2C_and_the_first_Baptist_church_in_England_%28microform%29_-_with_fresh_light_upon_the_Pilgrim_Fathers%27_church_%28IA_johnsmithsebapti00burgrich%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of England (much dispute about his parentage/birthplace)",
+        "caption": "\nIncludes bibliographical references\nMicrofiche\nSubjects: Smyth, John, d. 1612; Helwys, Thomas, 1550?-1616?; Baptists -- England History; Pilgrims (Ne...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Potterhanworth, Lincolnshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Potterhanworth_village_green_triangle%2C_North_Kesteven%2C_Lincolnshire.jpg/1024px-Potterhanworth_village_green_triangle%2C_North_Kesteven%2C_Lincolnshire.jpg",
+        "alt": "Historical image of Potterhanworth, Lincolnshire, England",
+        "caption": "The village green triangle of Potterhanworth, at the junction of today's Nocton Road, Barrf Road, and Moor Lane (or Main Road), in North Kesteven, Lin...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Thurvaston (part of Sutton on the Hill Parish), Derbyshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Notes_on_the_churches_of_Derbyshire_%28IA_notesonchurcheso03coxjiala%29.pdf/page1-1024px-Notes_on_the_churches_of_Derbyshire_%28IA_notesonchurcheso03coxjiala%29.pdf.jpg",
+        "alt": "Historical image of Thurvaston (part of Sutton on the Hill Parish), Derbyshire, England",
+        "caption": "\nv. 1. The hundred of Scarsdale. 1875.--v. 2. The hundreds of the High Peak and Wirksworth. 1877.--v. 3. The hundreds of Appletree and Repton and Gres...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bewdley, Worcestershire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/The_military_memoirs_of_Lieut.-General_Sir_Joseph_Thackwell%2C_G.C.B.%2C_K.H.%3B_Colonel_16th_Lancers%2C_arranged_from_diaries_and_correspondence_%28IA_militarymemoirso00wyll%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Bewdley, Worcestershire, England",
+        "caption": "\nSubjects: Thackwell, Joseph, Sir, 1781-1859...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Mendlesham, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/History%2C_gazetteer%2C_and_directory_of_Suffolk%3B_%28IA_historygazetteer00whit_0%29.pdf/page1-1024px-History%2C_gazetteer%2C_and_directory_of_Suffolk%3B_%28IA_historygazetteer00whit_0%29.pdf.jpg",
+        "alt": "Historical image of Mendlesham, Suffolk, England",
+        "caption": "\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Ashford, Kent, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Pumpkins_and_fireworks_for_sale%2C_Tenterden_High_Street_-_geograph.org.uk_-_1556613.jpg",
+        "alt": "Historical image of Ashford, Kent, England",
+        "caption": "Pumpkins and fireworks for sale, Tenterden High Street Seasonal requirements at Webb's Ironmongery Store, which has been in business for about 100 yea...",
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
