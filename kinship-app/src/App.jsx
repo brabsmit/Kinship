@@ -271,7 +271,7 @@ const getFamilyLinks = (person, allData) => {
 const nodeWidth = 200;
 const nodeHeight = 60;
 
-const buildGenealogyGraph = (data) => {
+const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
@@ -283,28 +283,58 @@ const buildGenealogyGraph = (data) => {
 
   data.forEach((person) => {
     const bornYear = person.vital_stats.born_date?.match(/\d{4}/)?.[0] || '????';
+    const hasStory = !!person.story?.notes;
+    const isMatch = !searchText || person.name.toLowerCase().includes(searchText.toLowerCase());
+
+    // Visual Logic
+    let opacity = 1;
+    let border = '1px solid #ddd';
+    let boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+
+    // Dimming logic
+    // If search is active and not a match -> Dim
+    // If story mode is active, NO search is active, and not a story -> Dim
+    // (If search is active, we prioritize search results visibility even if they don't have a story)
+    if (searchText && !isMatch) {
+        opacity = 0.2;
+    } else if (storyMode && !hasStory && !searchText) {
+        opacity = 0.2;
+    }
+
+    // Highlighting logic (Story Mode)
+    if (storyMode && hasStory) {
+        border = '2px solid #F59E0B'; // Gold
+        boxShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
+    }
 
     dagreGraph.setNode(person.id, { width: nodeWidth, height: nodeHeight });
     nodes.push({
       id: person.id,
-      data: { label: person.name, year: bornYear },
+      data: { label: person.name, year: bornYear, hasStory },
       type: 'default', // Using default for now, can be custom
       position: { x: 0, y: 0 }, // Placeholder
       style: {
         background: '#fff',
-        border: '1px solid #ddd',
+        border,
         borderRadius: '8px',
         padding: '10px',
         textAlign: 'center',
         width: nodeWidth,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        boxShadow,
+        opacity,
+        transition: 'all 0.3s ease'
       },
     });
 
     // We override the default label in node display, but here we set data
     // ReactFlow default node expects 'label' in data to render text.
     nodes[nodes.length - 1].data.label = (
-        <div>
+        <div className="relative">
+            {hasStory && (
+                <div className="absolute -top-3 -right-3 bg-[#F59E0B] text-white p-1 rounded-full shadow-sm z-10" title="Has Story">
+                    <BookOpen size={10} fill="white" />
+                </div>
+            )}
             <div className="font-bold text-sm text-gray-800 truncate">{person.name}</div>
             <div className="text-xs text-gray-500">b. {bornYear}</div>
         </div>
@@ -365,10 +395,18 @@ const buildGenealogyGraph = (data) => {
   return { nodes: layoutedNodes, edges };
 };
 
-const GraphView = ({ data, onNodeClick }) => {
-    const { nodes: initialNodes, edges: initialEdges } = useMemo(() => buildGenealogyGraph(data), [data]);
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+const GraphView = ({ data, onNodeClick, searchText, storyMode }) => {
+    const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => buildGenealogyGraph(data, searchText, storyMode), [data, searchText, storyMode]);
+
+    // We need to update nodes when props change, but useNodesState manages internal state too.
+    // So we use useEffect to sync.
+    const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+
+    React.useEffect(() => {
+        setNodes(layoutedNodes);
+        setEdges(layoutedEdges);
+    }, [layoutedNodes, layoutedEdges, setNodes, setEdges]);
 
     return (
         <div className="w-full h-full bg-gray-50">
@@ -674,11 +712,16 @@ export default function App() {
   const [selectedAncestor, setSelectedAncestor] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
+  const [storyMode, setStoryMode] = useState(false);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
     const groups = {};
-    const filtered = familyData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+    const filtered = familyData.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
+        const matchesStory = !storyMode || (item.story?.notes);
+        return matchesSearch && matchesStory;
+    });
     
     filtered.forEach(item => {
         const gen = item.generation || "Other Relatives";
@@ -686,10 +729,8 @@ export default function App() {
         groups[gen].push(item);
     });
 
-    // Sort keys to maintain order (Gen I, II, III...) if possible, or just alphabetic for now
-    // In a real app, we'd use a sorting key.
     return groups;
-  }, [searchText]);
+  }, [searchText, storyMode]);
 
   return (
     <div className="flex h-screen bg-white font-sans overflow-hidden">
@@ -703,86 +744,108 @@ export default function App() {
             : 'md:w-[350px] shrink-0' // List Mode: fixed width
         }
       `}>
-        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-white z-20">
-          <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
-            <User size={24} className="text-[#E67E22]" /> Ancestry
-          </h1>
-          <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
-             <button
-                onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                title="List View"
-             >
-                <ListIcon size={18} />
-             </button>
-             <button
-                onClick={() => setViewMode('graph')}
-                className={`p-1.5 rounded-md transition-all ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                title="Graph View"
-             >
-                <Network size={18} />
-             </button>
-          </div>
+        {/* Header with Title and Controls */}
+        <div className="p-4 border-b border-gray-100 bg-white z-20 space-y-4">
+            <div className="flex justify-between items-center">
+              <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
+                <User size={24} className="text-[#E67E22]" /> Ancestry
+              </h1>
+
+              {/* View Mode Segmented Control */}
+              <div className="flex bg-gray-100 p-1 rounded-lg">
+                 <button
+                    onClick={() => setViewMode('list')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <ListIcon size={14} /> List
+                 </button>
+                 <button
+                    onClick={() => setViewMode('graph')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <Network size={14} /> Graph
+                 </button>
+              </div>
+            </div>
+
+            {/* Search & Story Filter Row */}
+            <div className="flex gap-2">
+                <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                    <Search size={16} className="text-gray-400" />
+                    <input
+                      type="text"
+                      className="ml-2 flex-1 bg-transparent outline-none text-sm"
+                      placeholder="Find an ancestor..."
+                      value={searchText}
+                      onChange={e => setSearchText(e.target.value)}
+                    />
+                </div>
+
+                <button
+                    onClick={() => setStoryMode(!storyMode)}
+                    className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
+                        ${storyMode
+                            ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
+                            : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
+                        }
+                    `}
+                    title="Toggle Story Mode"
+                >
+                    <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
+                </button>
+            </div>
         </div>
 
         {viewMode === 'list' ? (
-            <>
-                <div className="p-4">
-                    <div className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
-                        <Search size={18} className="text-gray-400" />
-                        <input
-                          type="text"
-                          className="ml-3 flex-1 bg-transparent outline-none text-sm"
-                          placeholder="Find an ancestor..."
-                          value={searchText}
-                          onChange={e => setSearchText(e.target.value)}
-                        />
-                    </div>
-                </div>
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+                {Object.entries(groupedData).map(([generation, items]) => (
+                    <div key={generation} className="mb-2">
+                        {/* Sticky Header for Generation */}
+                        <div className="sticky top-0 bg-gray-100/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between">
+                            {generation}
+                            <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
+                        </div>
 
-                <div className="flex-1 overflow-y-auto custom-scrollbar">
-                    {Object.entries(groupedData).map(([generation, items]) => (
-                        <div key={generation} className="mb-2">
-                            {/* Sticky Header for Generation */}
-                            <div className="sticky top-0 bg-gray-100/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between">
-                                {generation}
-                                <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
-                            </div>
-
-                            <div className="px-4 py-2">
-                                {items.map(item => (
-                                    <div
-                                        key={item.id}
-                                        onClick={() => setSelectedAncestor(item)}
-                                        className={`
-                                            group p-4 mb-2 rounded-lg cursor-pointer border transition-all
-                                            ${selectedAncestor?.id === item.id
-                                                ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
-                                                : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
-                                            }
-                                        `}
-                                    >
-                                        <div className="flex justify-between items-start">
+                        <div className="px-4 py-2">
+                            {items.map(item => (
+                                <div
+                                    key={item.id}
+                                    onClick={() => setSelectedAncestor(item)}
+                                    className={`
+                                        group p-4 mb-2 rounded-lg cursor-pointer border transition-all
+                                        ${selectedAncestor?.id === item.id
+                                            ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
+                                            : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
+                                        }
+                                    `}
+                                >
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex items-center gap-2">
+                                            {item.story?.notes && (
+                                                <BookOpen size={12} className={selectedAncestor?.id === item.id ? "text-[#E67E22]" : "text-[#F59E0B]"} />
+                                            )}
                                             <h3 className={`font-bold text-sm ${selectedAncestor?.id === item.id ? 'text-white' : 'text-gray-800'}`}>
                                                 {item.name}
                                             </h3>
-                                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                                                selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                                            }`}>
-                                                {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
-                                            </span>
                                         </div>
+                                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
+                                            selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                                        }`}>
+                                            {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
+                                        </span>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </>
+                    </div>
+                ))}
+            </div>
         ) : (
             <div className="flex-1 overflow-hidden relative border-t border-gray-100">
                 <GraphView
                     data={familyData}
+                    searchText={searchText}
+                    storyMode={storyMode}
                     onNodeClick={(person) => {
                         setSelectedAncestor(person);
                     }}
