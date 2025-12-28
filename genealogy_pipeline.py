@@ -16,6 +16,9 @@ class GenealogyTextPipeline:
             print(f"CRITICAL ERROR: Could not load Word doc. {e}")
             return
 
+        total_paragraphs = len(doc.paragraphs)
+        print(f"Total paragraphs in document: {total_paragraphs}")
+
         current_profile = None
         current_generation = "Uncategorized" # Default until we hit the first header
         
@@ -32,6 +35,9 @@ class GenealogyTextPipeline:
 
         # Iterate through paragraphs
         for index, para in enumerate(doc.paragraphs):
+            if index % 1000 == 0:
+                print(f"Processing paragraph {index}/{total_paragraphs}")
+
             text = para.text.strip()
             if not text:
                 continue
@@ -189,7 +195,7 @@ class GenealogyTextPipeline:
 
         output_filename = "kinship-app/src/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:
-            json.dump(final_list, f, indent=4, ensure_ascii=False)
+            json.dump(final_list, f, indent=4, ensure_ascii=True)
         
         print(f"Data saved to {output_filename}")
 
