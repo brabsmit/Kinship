@@ -21,6 +21,7 @@ import HitlistPanel from './components/HitlistPanel';
 import { fetchResearchSuggestions } from './services/aiReasoning';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -141,15 +142,64 @@ const LOCATION_COORDINATES = {
     "Dedham, MA": [42.2436, -71.1699]
 };
 
-const getCoordinates = (locationName) => {
-    if (!locationName) return null;
-    return LOCATION_COORDINATES[locationName] || null;
+const getCoordinates = (locationName, hierarchy = null) => {
+    if (!locationName) return { pos: null, tier: 4 };
+
+    // Tier 1: Exact Match
+    if (LOCATION_COORDINATES[locationName]) {
+        return { pos: LOCATION_COORDINATES[locationName], tier: 1, label: "Exact" };
+    }
+
+    // Tier 2: Historical
+    if (HISTORICAL_LOCATIONS[locationName]) {
+        return { pos: HISTORICAL_LOCATIONS[locationName], tier: 2, label: "Historical" };
+    }
+
+    // Tier 3: Region/State Fallback
+    // Check hierarchy if available
+    if (hierarchy) {
+        if (hierarchy.state && REGION_COORDINATES[hierarchy.state]) {
+            return { pos: REGION_COORDINATES[hierarchy.state], tier: 3, label: "Region" };
+        }
+        if (hierarchy.country && REGION_COORDINATES[hierarchy.country]) {
+            return { pos: REGION_COORDINATES[hierarchy.country], tier: 3, label: "Country" };
+        }
+    }
+
+    // Fallback: Check parts of string
+    const parts = locationName.split(',').map(s => s.trim());
+    for (const part of parts) {
+         if (REGION_COORDINATES[part]) {
+             return { pos: REGION_COORDINATES[part], tier: 3, label: "Region" };
+         }
+    }
+
+    return { pos: null, tier: 4, label: "Unknown" };
 };
 
-const createMarkerIcon = (color) => L.divIcon({
-    className: 'bg-transparent border-none',
-    html: `<div style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
-             <svg width="32" height="32" viewBox="0 0 24 24" fill="${color}" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+const createMarkerIcon = (color, tier) => {
+    // Tier 3: Gray Circle (Small)
+    if (tier === 3) {
+         return L.divIcon({
+            className: 'bg-transparent border-none',
+            html: `<div style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));">
+                     <svg width="24" height="24" viewBox="0 0 24 24" fill="#9CA3AF" stroke="white" stroke-width="2">
+                       <circle cx="12" cy="12" r="8"></circle>
+                     </svg>
+                   </div>`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+            popupAnchor: [0, -12]
+        });
+    }
+
+    // Tier 2: Sepia Pin
+    const finalColor = tier === 2 ? '#8B4513' : color;
+
+    return L.divIcon({
+        className: 'bg-transparent border-none',
+        html: `<div style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+             <svg width="32" height="32" viewBox="0 0 24 24" fill="${finalColor}" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                <circle cx="12" cy="10" r="3" fill="white"></circle>
              </svg>
@@ -158,6 +208,7 @@ const createMarkerIcon = (color) => L.divIcon({
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
 });
+};
 
 // --- 1. HISTORICAL CONTEXT ENGINE ---
 const HISTORY_DB = [
@@ -905,28 +956,35 @@ const TriviaWidget = ({ data, branchName }) => {
     );
 };
 
-const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
-    const bornCoords = getCoordinates(bornLoc);
-    const diedCoords = getCoordinates(diedLoc);
+const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeEvents = [] }) => {
+    const bornData = getCoordinates(bornLoc, bornHierarchy);
+    const diedData = getCoordinates(diedLoc, diedHierarchy);
 
     const missingLocations = [];
-    if (bornLoc && bornLoc !== "Unknown" && !bornCoords) missingLocations.push(bornLoc);
-    if (diedLoc && diedLoc !== "Unknown" && !diedCoords) missingLocations.push(diedLoc);
+    if (bornLoc && bornLoc !== "Unknown" && !bornData.pos) missingLocations.push(bornLoc);
+    if (diedLoc && diedLoc !== "Unknown" && !diedData.pos) missingLocations.push(diedLoc);
 
     // Process Life Events
     const eventMarkers = lifeEvents
         .filter(e => e.location && e.location !== "Unknown")
         .map(e => {
-            const coords = getCoordinates(e.location);
-            if (!coords) {
+            const data = getCoordinates(e.location);
+            if (!data.pos) {
                 if (!missingLocations.includes(e.location)) missingLocations.push(e.location);
                 return null;
             }
-            return { pos: coords, type: e.year + " Event", color: '#10B981', loc: e.location, label: e.label }; // Green
+            return {
+                pos: data.pos,
+                tier: data.tier,
+                type: e.year + " Event",
+                color: '#10B981',
+                loc: e.location,
+                label: e.label
+            };
         })
         .filter(Boolean);
 
-    // Default View: Center of New England (approx Hartford/Springfield area)
+    // Default View: Center of New England
     const defaultPosition = [41.7658, -72.6734];
     const defaultZoom = 7;
 
@@ -935,12 +993,18 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
     const markers = [];
     let polyline = null;
 
-    // Collect all points to determine center/bounds (naive)
     const allPoints = [];
 
-    if (bornCoords) {
-        markers.push({ pos: bornCoords, type: 'Birth', color: '#3B82F6', loc: bornLoc }); // Blue
-        allPoints.push(bornCoords);
+    if (bornData.pos) {
+        markers.push({
+            pos: bornData.pos,
+            tier: bornData.tier,
+            type: 'Birth',
+            color: '#3B82F6',
+            loc: bornLoc,
+            tierLabel: bornData.label
+        });
+        allPoints.push(bornData.pos);
     }
 
     // Add event markers
@@ -949,15 +1013,22 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
         allPoints.push(m.pos);
     });
 
-    if (diedCoords) {
-        if (!bornCoords || bornLoc !== diedLoc) {
-             markers.push({ pos: diedCoords, type: 'Death', color: '#EF4444', loc: diedLoc }); // Red
-             allPoints.push(diedCoords);
+    if (diedData.pos) {
+        if (!bornData.pos || bornLoc !== diedLoc) {
+             markers.push({
+                 pos: diedData.pos,
+                 tier: diedData.tier,
+                 type: 'Death',
+                 color: '#EF4444',
+                 loc: diedLoc,
+                 tierLabel: diedData.label
+             });
+             allPoints.push(diedData.pos);
         }
     }
 
-    if (bornCoords && diedCoords && bornLoc !== diedLoc) {
-        polyline = [bornCoords, diedCoords];
+    if (bornData.pos && diedData.pos && bornLoc !== diedLoc) {
+        polyline = [bornData.pos, diedData.pos];
     }
 
     if (allPoints.length > 0) {
@@ -973,16 +1044,28 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, lifeEvents = [] }) => {
 
     return (
         <div className="h-[400px] w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm z-0 relative">
+            {/* Unknown Location Badge */}
+            {missingLocations.length > 0 && (
+                <div className="absolute top-2 right-2 z-[1000] bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                     Location Unknown: {missingLocations[0]} {missingLocations.length > 1 ? `+${missingLocations.length-1}` : ''}
+                </div>
+            )}
+
             <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {markers.map((m, i) => (
-                    <Marker key={i} position={m.pos} icon={createMarkerIcon(m.color)}>
+                    <Marker key={i} position={m.pos} icon={createMarkerIcon(m.color, m.tier)}>
                         <Popup>
                             <strong>{m.type} Location</strong><br />
                             {m.loc}
+                            {m.tier === 3 && (
+                                <div className="mt-1 inline-block bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 rounded uppercase tracking-wider">
+                                    Approximate Location
+                                </div>
+                            )}
                             {m.label && <><br/><span className="text-xs text-gray-500">{m.label}</span></>}
                         </Popup>
                     </Marker>
@@ -1243,6 +1326,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const historyEvents = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date, bornLoc, diedLoc);
     const personalEvents = getPersonalLifeEvents(item.story.life_events, bornYear, diedYear);
 
+    const bornHierarchy = item.vital_stats.born_hierarchy;
+    const diedHierarchy = item.vital_stats.died_hierarchy;
+
     // Merge and sort
     const events = [...historyEvents, ...personalEvents].sort((a, b) => a.year - b.year);
 
@@ -1382,7 +1468,13 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </h2>
                             <div className="h-px bg-gray-200 flex-1"></div>
                         </div>
-                        <KeyLocationsMap bornLoc={bornLoc} diedLoc={diedLoc} lifeEvents={personalEvents} />
+                        <KeyLocationsMap
+                            bornLoc={bornLoc}
+                            diedLoc={diedLoc}
+                            bornHierarchy={bornHierarchy}
+                            diedHierarchy={diedHierarchy}
+                            lifeEvents={personalEvents}
+                        />
                     </div>
 
                     {/* FAMILY CONNECTIONS */}
