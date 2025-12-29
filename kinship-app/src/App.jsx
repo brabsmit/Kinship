@@ -20,6 +20,8 @@ import RelationshipSelector from './RelationshipSelector';
 import HitlistPanel from './components/HitlistPanel';
 import FilterMenu from './components/FilterMenu';
 import { fetchResearchSuggestions } from './services/aiReasoning';
+import { useAuth } from './context/AuthContext';
+import LoginModal from './components/LoginModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
@@ -1300,6 +1302,8 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
     const [researchSuggestions, setResearchSuggestions] = useState(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const { isAuthenticated } = useAuth();
 
     React.useEffect(() => {
         setResearchSuggestions(null);
@@ -1307,6 +1311,11 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     }, [item]);
 
     const handleAnalyzeProfile = async () => {
+        if (!isAuthenticated) {
+            setShowLoginModal(true);
+            return;
+        }
+
         setIsAnalyzing(true);
         try {
             const suggestions = await fetchResearchSuggestions(item);
@@ -1348,6 +1357,14 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
     return (
         <div className="h-full bg-texture-paper flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl relative">
+
+            <LoginModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onSuccess={() => {
+                    handleAnalyzeProfile();
+                }}
+            />
 
             {/* Sticky Close / Nav Bar */}
             <div className="absolute top-0 left-0 right-0 z-50 p-6 flex justify-between items-start pointer-events-none">
