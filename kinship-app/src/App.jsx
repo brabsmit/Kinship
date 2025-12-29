@@ -1636,8 +1636,27 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                                         ol: ({node, ...props}) => <ol {...props} className="list-decimal list-inside ml-2" />
                                                     }}
                                                 >
-                                                    {suggestion}
+                                                    {suggestion.text || suggestion}
                                                 </ReactMarkdown>
+
+                                                {/* Actionable Source Links */}
+                                                {suggestion.links && suggestion.links.length > 0 && (
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        {suggestion.links.map((link, i) => (
+                                                            <a
+                                                                key={i}
+                                                                href={link.url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide rounded-md transition-colors border border-blue-200"
+                                                                title={link.description}
+                                                            >
+                                                                <Search size={10} />
+                                                                {link.label}
+                                                            </a>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
