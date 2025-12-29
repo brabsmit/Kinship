@@ -10,6 +10,28 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
  * @returns {Promise<Array<string>>} - A list of research suggestions strings.
  */
 export async function fetchResearchSuggestions(profileData) {
+    if (!profileData || !profileData.id) {
+        return getDeterministicSuggestions(profileData);
+    }
+
+    // Check Cache
+    const cacheKey = `gemini_cache_${profileData.id}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+        try {
+            const data = JSON.parse(cached);
+            // Optional: Check timestamp for expiration (e.g., 7 days)
+            // For now, infinite cache is fine to "cut down on usage"
+            if (data.suggestions && Array.isArray(data.suggestions)) {
+                console.log(`[AI Cache] Hit for ${profileData.name}`);
+                return data.suggestions;
+            }
+        } catch (e) {
+            console.warn("Invalid cache data, clearing", e);
+            localStorage.removeItem(cacheKey);
+        }
+    }
+
     if (!API_KEY) {
         console.warn("VITE_GEMINI_API_KEY is not set. Using deterministic fallback.");
         return getDeterministicSuggestions(profileData);
@@ -34,7 +56,7 @@ Do not include any markdown formatting or explanations outside the JSON.
 
         // The user sample suggests response.text is directly available.
         // We will assume it contains the text content.
-        const candidate = response.text;
+        const candidate = response.text();
 
         if (!candidate) {
             throw new Error("No content returned from Gemini");
@@ -46,6 +68,16 @@ Do not include any markdown formatting or explanations outside the JSON.
         const parsed = JSON.parse(jsonString);
 
         if (parsed.suggestions && Array.isArray(parsed.suggestions)) {
+            // Save to Cache
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    timestamp: Date.now(),
+                    suggestions: parsed.suggestions
+                }));
+            } catch (e) {
+                console.warn("Failed to save to localStorage", e);
+            }
+
             return parsed.suggestions;
         } else {
             throw new Error("Invalid JSON structure from Gemini");
@@ -61,6 +93,8 @@ Do not include any markdown formatting or explanations outside the JSON.
  * Deterministic fallback logic to generate research suggestions based on profile gaps.
  */
 function getDeterministicSuggestions(profile) {
+    if (!profile) return [];
+
     const suggestions = [];
     const bornDate = profile.vital_stats?.born_date;
     const diedDate = profile.vital_stats?.died_date;
