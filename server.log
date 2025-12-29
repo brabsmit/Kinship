@@ -3,7 +3,8 @@
 > vite
 
 
-  VITE v7.3.0  ready in 310 ms
+  VITE v7.3.0  ready in 403 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose
+2:07:37 AM [vite] (client) hmr update /src/App.jsx, /src/index.css

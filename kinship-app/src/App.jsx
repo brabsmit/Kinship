@@ -1862,7 +1862,10 @@ export default function App() {
 
         {viewMode === 'hitlist' && (
              <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
-                 <HitlistPanel onSelectProfile={setSelectedAncestor} />
+                 <HitlistPanel onSelectProfile={(id) => {
+                     const person = familyData.find(p => String(p.id) === String(id));
+                     if (person) setSelectedAncestor(person);
+                 }} />
              </div>
         )}
       </div>
