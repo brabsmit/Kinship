@@ -1,3 +1,4 @@
+import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -25,28 +26,15 @@ Do not include any markdown formatting or explanations outside the JSON.
 `;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }]
-            })
+        const ai = new GoogleGenAI({ apiKey: API_KEY });
+        const response = await ai.models.generateContent({
+            model: "gemini-3-pro-preview",
+            contents: prompt,
         });
 
-        if (!response.ok) {
-            throw new Error(`Gemini API Error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        // Parse the response
-        const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        // The user sample suggests response.text is directly available.
+        // We will assume it contains the text content.
+        const candidate = response.text;
 
         if (!candidate) {
             throw new Error("No content returned from Gemini");
