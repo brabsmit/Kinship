@@ -57,12 +57,60 @@ const TAG_CONFIG = {
 };
 
 const NARRATIVE_THREADS = [
-    { id: "pilgrims", title: "The Mayflower Pilgrims", keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"], color: "bg-[#8B4513] text-white border-[#5D2E0C]", hex: "#8B4513", icon: <Anchor size={14} /> },
-    { id: "witches", title: "Salem Witch Trials", keywords: ["Salem", "Witch", "1692", "Accused"], color: "bg-purple-700 text-white border-purple-900", hex: "#7E22CE", icon: <Flame size={14} /> },
-    { id: "founders", title: "Town Founders", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
-    { id: "revolution", title: "The Patriots", keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"], color: "bg-blue-800 text-white border-blue-950", hex: "#1E40AF", icon: <Shield size={14} /> },
-    { id: "industrialists", title: "The Industrialists", keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"], color: "bg-slate-700 text-white border-slate-900", hex: "#334155", icon: <Hammer size={14} /> },
-    { id: "quakers", title: "The Quakers", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> }
+    {
+        id: "pilgrims",
+        title: "The Mayflower Pilgrims",
+        description: "The courageous journey of the separatists who fled religious persecution to establish Plymouth Colony in 1620.",
+        keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"],
+        color: "bg-[#8B4513] text-white border-[#5D2E0C]",
+        hex: "#8B4513",
+        icon: <Anchor size={14} />
+    },
+    {
+        id: "witches",
+        title: "Salem Witch Trials",
+        description: "The tragic events of 1692 in Salem Village, where fear and hysteria led to the accusation of innocent neighbors.",
+        keywords: ["Salem", "Witch", "1692", "Accused"],
+        color: "bg-purple-700 text-white border-purple-900",
+        hex: "#7E22CE",
+        icon: <Flame size={14} />
+    },
+    {
+        id: "founders",
+        title: "Town Founders",
+        description: "The pioneers who ventured into the wilderness to establish the towns, cities, and communities that form New England today.",
+        keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"],
+        color: "bg-emerald-700 text-white border-emerald-900",
+        hex: "#047857",
+        icon: <Flag size={14} />
+    },
+    {
+        id: "revolution",
+        title: "The Patriots",
+        description: "The brave men and women who fought for American independence and forged a new nation during the Revolutionary War.",
+        keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"],
+        color: "bg-blue-800 text-white border-blue-950",
+        hex: "#1E40AF",
+        icon: <Shield size={14} />
+    },
+    {
+        id: "industrialists",
+        title: "The Industrialists",
+        description: "The innovators, inventors, and tycoons who drove the Industrial Revolution and transformed the American economy.",
+        keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"],
+        color: "bg-slate-700 text-white border-slate-900",
+        hex: "#334155",
+        icon: <Hammer size={14} />
+    },
+    {
+        id: "quakers",
+        title: "The Quakers",
+        description: "The members of the Society of Friends who faced persecution for their beliefs in peace, equality, and simplicity.",
+        keywords: ["Quaker", "Society of Friends", "Persecuted"],
+        color: "bg-amber-700 text-white border-amber-900",
+        hex: "#B45309",
+        icon: <Scroll size={14} />
+    }
 ];
 
 const detectThreads = (person) => {
@@ -1057,7 +1105,7 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
     </div>
 );
 
-const HeroImage = ({ location, year, heroImage }) => {
+const HeroImage = ({ location, year, heroImage, height = "h-80 md:h-96" }) => {
     // Priority: heroImage prop > getHeroImage logic
     const asset = heroImage || getHeroImage(location, year);
     const [imgSrc, setImgSrc] = useState(asset.src);
@@ -1078,7 +1126,7 @@ const HeroImage = ({ location, year, heroImage }) => {
     };
 
     return (
-        <div className="relative w-full h-80 md:h-96 overflow-hidden">
+        <div className={`relative w-full ${height} overflow-hidden`}>
             {/* Gradient Overlay for Texture Blend */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#fdfbf7] via-transparent to-black/30 z-10"></div>
 
@@ -1092,6 +1140,147 @@ const HeroImage = ({ location, year, heroImage }) => {
 
              <div className="absolute bottom-4 right-4 z-20 text-black/20 text-[10px] uppercase tracking-widest font-mono text-right max-w-xs">
                 {hasError ? ASSETS.generic_antique.caption : asset.caption}
+            </div>
+        </div>
+    );
+};
+
+const EpicStory = ({ thread, members, onNavigate }) => {
+    const sortedMembers = useMemo(() => {
+        return [...members].sort((a, b) => {
+            const aBorn = parseInt(a.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+            const bBorn = parseInt(b.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+            return aBorn - bBorn;
+        });
+    }, [members]);
+
+    // Calculate a representative location for the map (center)
+    const locations = sortedMembers
+        .map(m => ({
+            born: m.vital_stats.born_location,
+            died: m.vital_stats.died_location,
+            events: m.story.life_events
+        }));
+
+    // Flatten life events for map
+    const allLifeEvents = sortedMembers.flatMap(m => {
+        const born = parseInt(m.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+        return [
+            { year: born, label: `Birth of ${m.name}`, location: m.vital_stats.born_location },
+            ...(m.story.life_events || [])
+        ];
+    });
+
+    const firstMember = sortedMembers[0];
+
+    return (
+        <div className="h-full bg-texture-paper flex flex-col overflow-hidden shadow-2xl relative animate-in fade-in duration-500">
+            {/* Header */}
+            <div className="relative">
+                <HeroImage location={firstMember?.vital_stats.born_location} year={1700} height="h-64" />
+                <div className="absolute inset-0 bg-black/40 z-10"></div>
+
+                <div className="absolute bottom-0 left-0 right-0 p-8 z-20 text-white">
+                    <div className="flex items-center gap-2 mb-2 opacity-90">
+                        {thread.icon}
+                        <span className="text-xs font-bold uppercase tracking-widest">Narrative Epic</span>
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">{thread.title}</h1>
+                    <p className="max-w-2xl text-lg font-serif opacity-90 leading-relaxed">
+                        {thread.description}
+                    </p>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-8">
+                <div className="max-w-4xl mx-auto">
+
+                    {/* Stats */}
+                    <div className="flex gap-8 mb-12 pb-8 border-b border-gray-200/50">
+                        <div className="text-center">
+                            <div className="text-3xl font-display font-bold text-gray-800">{members.length}</div>
+                            <div className="text-[10px] text-gray-400 uppercase tracking-widest">Ancestors</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-3xl font-display font-bold text-gray-800">
+                                {parseInt(sortedMembers[sortedMembers.length-1]?.vital_stats.born_date?.match(/\d{4}/)?.[0]) -
+                                 parseInt(sortedMembers[0]?.vital_stats.born_date?.match(/\d{4}/)?.[0])}
+                            </div>
+                            <div className="text-[10px] text-gray-400 uppercase tracking-widest">Years Spanned</div>
+                        </div>
+                    </div>
+
+                    {/* Timeline Story */}
+                    <div className="relative border-l-2 border-[#E67E22]/20 ml-4 md:ml-12 space-y-12">
+                        {sortedMembers.map((member, idx) => {
+                            const born = member.vital_stats.born_date?.match(/\d{4}/)?.[0];
+                            const died = member.vital_stats.died_date?.match(/\d{4}/)?.[0];
+
+                            return (
+                                <div key={member.id} className="relative pl-8 md:pl-12 group">
+                                    {/* Node Marker */}
+                                    <div
+                                        className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-2 border-[#E67E22] group-hover:scale-125 transition-transform shadow-sm z-10 cursor-pointer"
+                                        onClick={() => onNavigate(member)}
+                                    ></div>
+
+                                    {/* Date */}
+                                    <div className="absolute -left-[5.5rem] top-0 text-sm font-mono text-gray-400 w-16 text-right hidden md:block">
+                                        {born}
+                                    </div>
+
+                                    {/* Card */}
+                                    <div className="bg-white rounded-lg border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow relative top-[-6px]">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3
+                                                className="text-xl font-bold text-gray-800 font-display cursor-pointer hover:text-[#E67E22] transition-colors"
+                                                onClick={() => onNavigate(member)}
+                                            >
+                                                {member.name}
+                                            </h3>
+                                            <span className="text-xs font-mono text-gray-400">{born} – {died}</span>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {member.story.tags?.map(tag => (
+                                                <span key={tag} className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${TAG_CONFIG[tag]?.color || 'bg-gray-100'}`}>
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+
+                                        {member.story.notes && (
+                                            <p className="text-sm text-gray-600 leading-relaxed font-serif line-clamp-3">
+                                                {member.story.notes}
+                                            </p>
+                                        )}
+
+                                        <button
+                                            onClick={() => onNavigate(member)}
+                                            className="mt-4 text-xs font-bold uppercase tracking-widest text-[#E67E22] hover:text-[#D35400] flex items-center gap-1"
+                                        >
+                                            Read Full Profile <ChevronRight size={12} />
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Footer Map */}
+                    <div className="mt-16">
+                         <div className="flex items-center gap-4 mb-8">
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <MapPin size={14} strokeWidth={1.5} /> Epic Geography
+                            </h2>
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                        </div>
+                        <KeyLocationsMap bornLoc={firstMember?.vital_stats.born_location} lifeEvents={allLifeEvents} />
+                    </div>
+
+                </div>
             </div>
         </div>
     );
@@ -1511,10 +1700,10 @@ export default function App() {
                 : 'shrink-0' // List Mode: dynamic width
             }
         `}
-        style={viewMode === 'list' ? { width: sidebarWidth } : {}}
+        style={['list', 'epics'].includes(viewMode) ? { width: sidebarWidth } : {}}
       >
         {/* Resize Handle */}
-        {viewMode === 'list' && (
+        {['list', 'epics'].includes(viewMode) && (
             <div
                 className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
                 onMouseDown={startResizing}
@@ -1541,6 +1730,12 @@ export default function App() {
                     className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                  >
                     <Network size={14} /> Graph
+                 </button>
+                 <button
+                    onClick={() => setViewMode('epics')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'epics' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <Scroll size={14} /> Epics
                  </button>
               </div>
             </div>
@@ -1690,7 +1885,7 @@ export default function App() {
             <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
         )}
 
-        {viewMode === 'list' ? (
+        {viewMode === 'list' && (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {Object.entries(groupedData).map(([generation, items]) => (
                     <GenerationGroup
@@ -1704,7 +1899,9 @@ export default function App() {
                     />
                 ))}
             </div>
-        ) : (
+        )}
+
+        {viewMode === 'graph' && (
             <div className="flex-1 overflow-hidden relative border-t border-gray-100">
                 <GraphView
                     data={filteredGraphData}
@@ -1717,12 +1914,48 @@ export default function App() {
                 />
             </div>
         )}
+
+        {viewMode === 'epics' && (
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+                 {NARRATIVE_THREADS.map(thread => {
+                     const isSelected = selectedThreadId === thread.id;
+                     const threadMembers = familyData.filter(p => detectThreads(p).some(t => t.id === thread.id));
+
+                     return (
+                         <div
+                            key={thread.id}
+                            onClick={() => setSelectedThreadId(thread.id)}
+                            className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                isSelected
+                                ? `bg-white border-[${thread.hex}] shadow-md ring-1 ring-[${thread.hex}]`
+                                : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm'
+                            }`}
+                            style={isSelected ? { borderColor: thread.hex } : {}}
+                         >
+                             <div className="flex items-center gap-3 mb-2">
+                                 <div className={`p-2 rounded-lg text-white ${thread.color.split(' ')[0]}`}>
+                                     {thread.icon}
+                                 </div>
+                                 <h3 className="font-bold text-gray-800">{thread.title}</h3>
+                             </div>
+                             <p className="text-xs text-gray-500 mb-3 line-clamp-2">
+                                 {thread.description}
+                             </p>
+                             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                                 <Users size={12} />
+                                 {threadMembers.length} Ancestors
+                             </div>
+                         </div>
+                     );
+                 })}
+            </div>
+        )}
       </div>
 
       {/* --- RIGHT PANEL --- */}
       <div className={`
         bg-[#F9F5F0] relative transition-all duration-300
-        ${selectedAncestor
+        ${selectedAncestor || selectedThreadId
             ? 'flex-1 block'
             : (viewMode === 'graph' ? 'hidden' : 'flex-1 hidden md:block')
         }
@@ -1739,12 +1972,18 @@ export default function App() {
                     setViewMode('graph'); // Switch to graph view to see the thread
                 }}
              />
+          ) : selectedThreadId ? (
+              <EpicStory
+                thread={NARRATIVE_THREADS.find(t => t.id === selectedThreadId)}
+                members={familyData.filter(p => detectThreads(p).some(t => t.id === selectedThreadId))}
+                onNavigate={setSelectedAncestor}
+              />
           ) : (
              <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
                  <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6 animate-pulse">
                      <Info size={48} className="text-gray-400" />
                  </div>
-                 <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor</h2>
+                 <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor or Epic</h2>
              </div>
           )}
       </div>
