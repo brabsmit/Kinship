@@ -5,6 +5,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/publication/467/revolutionary-war-pensions",
         description: "Revolutionary War Pension and Bounty-Land Warrant Application Files"
     },
+    "M881": {
+        label: "NARA M881 (Rev War Service Records)",
+        url: "https://www.fold3.com/publication/470/us-revolutionary-war-service-records-1775-1783",
+        description: "Compiled service records of soldiers who served in the American Army during the Revolutionary War, 1775-1783"
+    },
     "Civil War": {
         label: "Fold3 Civil War Collection",
         url: "https://www.fold3.com/browse/251/civil-war-collection",
