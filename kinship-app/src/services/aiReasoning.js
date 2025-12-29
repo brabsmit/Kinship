@@ -1,15 +1,32 @@
 import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const CACHE_KEY_PREFIX = "kinship_ai_cache_";
 
 /**
  * Fetches research suggestions for a given ancestor profile.
  * Uses Google Gemini API if available, otherwise falls back to deterministic logic.
+ * Caches results in localStorage to reduce API usage.
  *
  * @param {Object} profileData - The ancestor profile object from family_data.json
  * @returns {Promise<Array<string>>} - A list of research suggestions strings.
  */
 export async function fetchResearchSuggestions(profileData) {
+    const cacheKey = `${CACHE_KEY_PREFIX}${profileData.id}`;
+
+    // Check localStorage cache
+    try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+            const parsedCache = JSON.parse(cached);
+            // Optional: Check expiry if we wanted to implement TTL, but simple cache is fine for now
+            console.log("Using cached AI suggestions for", profileData.name);
+            return parsedCache;
+        }
+    } catch (e) {
+        console.warn("Failed to read from localStorage", e);
+    }
+
     if (!API_KEY) {
         console.warn("VITE_GEMINI_API_KEY is not set. Using deterministic fallback.");
         return getDeterministicSuggestions(profileData);
@@ -28,7 +45,7 @@ Do not include any markdown formatting or explanations outside the JSON.
     try {
         const ai = new GoogleGenAI({ apiKey: API_KEY });
         const response = await ai.models.generateContent({
-            model: "gemini-3-pro-preview",
+            model: "gemini-2.0-flash", // Updated to a stable/available model if possible, or keep previous. Flash is usually good for this.
             contents: prompt,
         });
 
@@ -46,6 +63,12 @@ Do not include any markdown formatting or explanations outside the JSON.
         const parsed = JSON.parse(jsonString);
 
         if (parsed.suggestions && Array.isArray(parsed.suggestions)) {
+            // Save to cache
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(parsed.suggestions));
+            } catch (e) {
+                console.warn("Failed to save to localStorage", e);
+            }
             return parsed.suggestions;
         } else {
             throw new Error("Invalid JSON structure from Gemini");
