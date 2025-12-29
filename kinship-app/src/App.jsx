@@ -1417,6 +1417,36 @@ export default function App() {
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedLineage, setSelectedLineage] = useState('Paternal');
 
+  // Sidebar Resizing State
+  const [sidebarWidth, setSidebarWidth] = useState(450);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResizing = useCallback((e) => {
+    e.preventDefault();
+    setIsResizing(true);
+  }, []);
+
+  const stopResizing = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
+  const resize = useCallback((mouseMoveEvent) => {
+    if (isResizing) {
+      // Limit min/max width
+      const newWidth = Math.max(300, Math.min(mouseMoveEvent.clientX, 800));
+      setSidebarWidth(newWidth);
+    }
+  }, [isResizing]);
+
+  React.useEffect(() => {
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseup", stopResizing);
+    return () => {
+      window.removeEventListener("mousemove", resize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [resize, stopResizing]);
+
   // New State for User Relationship
   const [userRelation, setUserRelation] = useState(() => {
     const saved = localStorage.getItem('userRelation');
@@ -1446,7 +1476,11 @@ export default function App() {
     const filtered = filteredGraphData.filter(item => {
         const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
         const matchesStory = !storyMode || (item.story?.notes);
-        return matchesSearch && matchesStory;
+
+        // Filter by Epic/Thread if selected (List View Logic: Filter strictly)
+        const threadMatches = !selectedThreadId || detectThreads(item).some(t => t.id === selectedThreadId);
+
+        return matchesSearch && matchesStory && threadMatches;
     });
     
     filtered.forEach(item => {
@@ -1467,14 +1501,26 @@ export default function App() {
       )}
 
       {/* --- LEFT NAVIGATION --- */}
-      <div className={`
-        flex flex-col border-r border-gray-200 bg-white h-full z-10 transition-all duration-300
-        ${selectedAncestor ? 'hidden md:flex' : 'w-full'}
-        ${viewMode === 'graph'
-            ? 'md:flex-1 max-w-full' // Graph Mode: takes available space (flex-1), but max-w-full
-            : 'md:w-[350px] shrink-0' // List Mode: fixed width
-        }
-      `}>
+      <div
+        className={`
+            relative flex flex-col border-r border-gray-200 bg-white h-full z-10
+            ${!isResizing ? 'transition-all duration-300' : ''}
+            ${selectedAncestor ? 'hidden md:flex' : 'w-full'}
+            ${viewMode === 'graph'
+                ? 'md:flex-1 max-w-full' // Graph Mode: takes available space (flex-1), but max-w-full
+                : 'shrink-0' // List Mode: dynamic width
+            }
+        `}
+        style={viewMode === 'list' ? { width: sidebarWidth } : {}}
+      >
+        {/* Resize Handle */}
+        {viewMode === 'list' && (
+            <div
+                className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
+                onMouseDown={startResizing}
+                title="Drag to resize sidebar"
+            />
+        )}
         {/* Header with Title and Controls */}
         <div className="p-4 border-b border-gray-100 bg-white z-20 space-y-4">
             <div className="flex justify-between items-center">
@@ -1604,40 +1650,38 @@ export default function App() {
                     })}
                 </div>
 
-                {/* Narrative Epics Selector (Only in Graph Mode) */}
-                {viewMode === 'graph' && (
-                    <div className="flex flex-col gap-1 mt-1">
-                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
-                        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-                            <button
-                                onClick={() => setSelectedThreadId(null)}
-                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                    !selectedThreadId
-                                    ? 'bg-gray-800 text-white border-gray-800'
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                }`}
-                            >
-                                <X size={10} /> None
-                            </button>
-                            {NARRATIVE_THREADS.map(thread => {
-                                const isActive = selectedThreadId === thread.id;
-                                return (
-                                    <button
-                                        key={thread.id}
-                                        onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
-                                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                            isActive
-                                            ? thread.color + ' ring-1 ring-offset-1'
-                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                        }`}
-                                    >
-                                        {thread.icon} {thread.title}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                {/* Narrative Epics Selector (Available in both modes) */}
+                <div className="flex flex-col gap-1 mt-1">
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
+                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                        <button
+                            onClick={() => setSelectedThreadId(null)}
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                !selectedThreadId
+                                ? 'bg-gray-800 text-white border-gray-800'
+                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                            }`}
+                        >
+                            <X size={10} /> None
+                        </button>
+                        {NARRATIVE_THREADS.map(thread => {
+                            const isActive = selectedThreadId === thread.id;
+                            return (
+                                <button
+                                    key={thread.id}
+                                    onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
+                                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                        isActive
+                                        ? thread.color + ' ring-1 ring-offset-1'
+                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    {thread.icon} {thread.title}
+                                </button>
+                            );
+                        })}
                     </div>
-                )}
+                </div>
             </div>
         </div>
 
