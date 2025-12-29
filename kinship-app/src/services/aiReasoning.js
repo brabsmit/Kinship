@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { findSources } from '../utils/researchSources';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -7,7 +8,7 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
  * Uses Google Gemini API if available, otherwise falls back to deterministic logic.
  *
  * @param {Object} profileData - The ancestor profile object from family_data.json
- * @returns {Promise<Array<string>>} - A list of research suggestions strings.
+ * @returns {Promise<Array<Object>>} - A list of research suggestion objects {text, links}.
  */
 export async function fetchResearchSuggestions(profileData) {
     if (!profileData || !profileData.id) {
@@ -24,6 +25,15 @@ export async function fetchResearchSuggestions(profileData) {
             // For now, infinite cache is fine to "cut down on usage"
             if (data.suggestions && Array.isArray(data.suggestions)) {
                 console.log(`[AI Cache] Hit for ${profileData.name}`);
+
+                // Backwards compatibility: Handle legacy string array cache
+                if (data.suggestions.length > 0 && typeof data.suggestions[0] === 'string') {
+                    return data.suggestions.map(s => ({
+                        text: s,
+                        links: findSources(s)
+                    }));
+                }
+
                 return data.suggestions;
             }
         } catch (e) {
@@ -79,17 +89,23 @@ of the data you are looking at.
         const parsed = JSON.parse(jsonString);
 
         if (parsed.suggestions && Array.isArray(parsed.suggestions)) {
+            // Process suggestions to attach links
+            const processedSuggestions = parsed.suggestions.map(s => ({
+                text: s,
+                links: findSources(s)
+            }));
+
             // Save to Cache
             try {
                 localStorage.setItem(cacheKey, JSON.stringify({
                     timestamp: Date.now(),
-                    suggestions: parsed.suggestions
+                    suggestions: processedSuggestions
                 }));
             } catch (e) {
                 console.warn("Failed to save to localStorage", e);
             }
 
-            return parsed.suggestions;
+            return processedSuggestions;
         } else {
             throw new Error("Invalid JSON structure from Gemini");
         }
@@ -150,5 +166,8 @@ function getDeterministicSuggestions(profile) {
         suggestions.push("Look for obituaries in local newspapers.");
     }
 
-    return suggestions.slice(0, 3);
+    return suggestions.slice(0, 3).map(s => ({
+        text: s,
+        links: findSources(s)
+    }));
 }
