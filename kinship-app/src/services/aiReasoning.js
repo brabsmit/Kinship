@@ -44,7 +44,9 @@ ${JSON.stringify(profileData, null, 2)}
 Identify missing vital stats and ambiguities in the notes (e.g., 'conflicting dates', 'family tradition').
 Provide 3 specific, actionable research steps (e.g., 'Search 1850 US Census in Ohio').
 Return the response strictly as a JSON object with a single key "suggestions" which is an array of strings.
-Do not include any markdown formatting or explanations outside the JSON.
+Do not include any markdown formatting or explanations outside the JSON. The source of the provided data
+is a word document put together by a family member. If you see references to 'Paragraph #1960', that is the source
+of the data you are looking at.
 `;
 
     try {
