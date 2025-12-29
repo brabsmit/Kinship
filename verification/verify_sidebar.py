@@ -9,7 +9,7 @@ def verify_sidebar():
 
         try:
             # 1. Load the page
-            page.goto("http://localhost:5173")
+            page.goto("http://localhost:4000")
 
             # Dismiss initial modal
             try:
