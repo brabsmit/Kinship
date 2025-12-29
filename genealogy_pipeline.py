@@ -352,6 +352,7 @@ class GenealogyTextPipeline:
         id_pattern = re.compile(r"\{(\d+(\.\d+)*)\}")
         born_pattern = re.compile(r"Born:\s*(.*)", re.IGNORECASE)
         died_pattern = re.compile(r"Died:\s*(.*)", re.IGNORECASE)
+        children_pattern = re.compile(r"Children:\s*(.*)", re.IGNORECASE)
         notes_start_pattern = re.compile(r"NOTES:\s*(.*)", re.IGNORECASE)
         source_tag_pattern = re.compile(r"\[source:\s*(.*?)\]", re.IGNORECASE)
         
@@ -449,8 +450,109 @@ class GenealogyTextPipeline:
                     current_profile["story"]["notes"] = notes_text
                     current_profile["story"]["life_events"] = self.extract_events_from_text(notes_text)
 
+                c_match = children_pattern.search(text)
+                if c_match:
+                    raw_children = c_match.group(1).strip()
+                    # Also check next paragraphs if they look like list items or continuation?
+                    # For now, simplistic parsing of the line
+                    self._parse_children(raw_children, current_profile, lineage_label, current_generation, index)
+
         if current_profile:
             self.family_data.append(current_profile)
+
+    def _parse_children(self, text, parent_profile, lineage_label, generation, index):
+        """
+        Parses the children text block and creates sibling profiles.
+        Format variations:
+        - "Name (Year); Name (Year)"
+        - "Name (Year-Year)"
+        - "Name [Spouse] (Year)"
+        """
+        if not text: return
+
+        # Split by semicolon usually separates distinct children entries
+        # If no semicolon, maybe commas? But names have commas (Last, First).
+        # Heuristic: split by semicolon first.
+        segments = [s.strip() for s in text.split(';') if s.strip()]
+
+        # If no semicolons, it might be a single child or comma separated?
+        # Check if there are years in parens to guide splitting?
+        # For now, stick to semicolons or newlines (handled by loop above but here text is one line)
+
+        child_count = 0
+        for segment in segments:
+            # Extract Name and Year
+            # Regex: Name (Date)
+            # Name might include [Spouse]
+
+            # Find parens with digits (dates)
+            date_match = re.search(r'\(([^)]*\d+[^)]*)\)', segment)
+
+            raw_date = "Unknown"
+            clean_name = segment
+
+            if date_match:
+                raw_date = date_match.group(1)
+                # Remove the date part from name
+                clean_name = segment.replace(f"({raw_date})", "").strip()
+
+            # Clean name further (remove " and " or "others")
+            if "others" in clean_name.lower():
+                continue
+
+            clean_name = clean_name.strip()
+            if not clean_name: continue
+
+            # Generate a unique ID for this child
+            # Format: P<ParentID>_c<Index>
+            # Note: Parent ID must exist.
+            if not parent_profile or 'id' not in parent_profile:
+                continue
+
+            # Check if this child already exists as a main profile?
+            # We will handle this in deduplication or linking phase,
+            # but we need to create the object first.
+
+            child_id = f"{parent_profile['id']}_c{child_count}"
+            child_count += 1
+
+            # Create Child Profile
+            child_profile = {
+                "id": child_id,
+                "name": clean_name,
+                "lineage": lineage_label,
+                "generation": generation, # Technically next gen down, but close enough for now
+                "vital_stats": {
+                    "born_date": raw_date, # Often range "1884-1976" or just "1884"
+                    "born_location": "Unknown",
+                    "died_date": "Unknown", # Extracted later from range
+                    "died_location": "Unknown"
+                },
+                "story": {
+                    "notes": f"Child of {parent_profile['name']}. Source text: {segment}",
+                    "life_events": []
+                },
+                "metadata": {
+                    "source_id": "Derived",
+                    "doc_paragraph_index": index + 1,
+                    "is_child_entry": True,
+                    "parent_id": parent_profile['id']
+                }
+            }
+
+            # Handle Date Ranges in born_date
+            # e.g. "1884-1976" -> born 1884, died 1976
+            if "-" in raw_date or "–" in raw_date: # Handle en-dash too
+                split_char = "–" if "–" in raw_date else "-"
+                parts = raw_date.split(split_char)
+                if len(parts) >= 2:
+                    child_profile["vital_stats"]["born_date"] = parts[0].strip()
+                    child_profile["vital_stats"]["died_date"] = parts[1].strip()
+
+            child_profile["vital_stats"]["born_year_int"] = self._normalize_date(child_profile["vital_stats"]["born_date"])
+            child_profile["vital_stats"]["died_year_int"] = self._normalize_date(child_profile["vital_stats"]["died_date"])
+
+            self.family_data.append(child_profile)
 
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
 
@@ -685,20 +787,84 @@ class GenealogyTextPipeline:
         print(f"Ariadne found {count} text-based connections.")
 
     def clean_and_save(self):
-        # Deduplicate profiles based on ID (keep first occurrence)
-        unique_data = {}
-        for p in self.family_data:
-            pid = p['id']
-            if pid not in unique_data:
-                unique_data[pid] = p
-            else:
-                existing_lineage = unique_data[pid].get('lineage')
-                new_lineage = p.get('lineage')
-                # If duplicates across lineages, usually we keep first, but maybe warn
-                if existing_lineage != new_lineage:
-                     print(f"   > Duplicate ID {pid} found across lineages ({existing_lineage} vs {new_lineage}). Keeping {existing_lineage}.")
+        # 1. First pass: separate "Real" profiles from "Child" entries
+        real_profiles = {}
+        child_entries = []
 
-        self.family_data = list(unique_data.values())
+        for p in self.family_data:
+            if p.get("metadata", {}).get("is_child_entry"):
+                child_entries.append(p)
+            else:
+                pid = p['id']
+                if pid not in real_profiles:
+                    real_profiles[pid] = p
+
+        # 2. Process Child Entries:
+        # If a child entry matches a Real Profile by Name, discard the child entry (the real one is better).
+        # Otherwise, keep the child entry.
+
+        # Build Name Map for Real Profiles
+        real_name_map = {}
+        for pid, p in real_profiles.items():
+            # Normalize name: remove parens, extra spaces
+            norm = re.sub(r'\(.*?\)', '', p['name']).strip().lower()
+            real_name_map[norm] = pid
+
+        final_profiles = list(real_profiles.values())
+
+        for child in child_entries:
+            # Clean child name for matching
+            # Child name might be "Grace Dodge (John) Olmsted..." -> "Grace Dodge Olmsted"
+            # It's tricky.
+            # Simple check: if "Grace Dodge" is in the real profile name?
+
+            # Simple normalization
+            c_name = re.sub(r'\[.*?\]', '', child['name']) # remove spouses in brackets
+            c_name = re.sub(r'\(.*?\)', '', c_name).strip().lower()
+
+            match_found = False
+            for real_name, real_id in real_name_map.items():
+                # Check for strong match
+                if c_name == real_name or (len(c_name) > 5 and c_name in real_name):
+                    # Link parent to this REAL profile instead of the child entry
+                    parent_id = child["metadata"]["parent_id"]
+
+                    # Add parent/child link
+                    if parent_id in real_profiles:
+                         parent = real_profiles[parent_id]
+                         if 'relations' not in parent: parent['relations'] = {"children": [], "parents": [], "spouses": []}
+                         if real_id not in parent['relations']['children']:
+                             parent['relations']['children'].append(real_id)
+
+                    real_p = real_profiles[real_id]
+                    if 'relations' not in real_p: real_p['relations'] = {"children": [], "parents": [], "spouses": []}
+                    if parent_id not in real_p['relations']['parents']:
+                        real_p['relations']['parents'].append(parent_id)
+
+                    match_found = True
+                    break
+
+            if not match_found:
+                # Keep this child entry as a new profile
+                final_profiles.append(child)
+
+                # Link to parent
+                parent_id = child["metadata"]["parent_id"]
+                if parent_id in real_profiles:
+                     parent = real_profiles[parent_id]
+                     if 'relations' not in parent: parent['relations'] = {"children": [], "parents": [], "spouses": []}
+                     # Add this child ID
+                     if child['id'] not in parent['relations']['children']:
+                         parent['relations']['children'].append(child['id'])
+
+                # Link child to parent
+                if 'relations' not in child: child['relations'] = {"children": [], "parents": [], "spouses": []}
+                child['relations']['parents'].append(parent_id)
+
+        self.family_data = final_profiles
+
+        # Re-deduplicate just in case?
+        # self.family_data already unique by logic above.
 
         self.link_family_members()
         self._find_mentions()
