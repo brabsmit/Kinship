@@ -174,6 +174,67 @@ class GenealogyTextPipeline:
         else:
             return "Unknown", text.strip()
 
+    def _parse_location_hierarchy(self, location_string):
+        """
+        Parses a location string into structured components (City, State, Country).
+        Uses simple comma-splitting heuristics.
+        """
+        if not location_string or location_string.lower() == "unknown":
+            return None
+
+        parts = [p.strip() for p in location_string.split(',')]
+
+        hierarchy = {
+            "raw": location_string,
+            "city": None,
+            "county": None,
+            "state": None,
+            "country": None
+        }
+
+        # Common US State Abbreviations/Names appearing in this dataset
+        us_states = ["CT", "MA", "NY", "NJ", "PA", "VA", "RI", "NH", "VT", "ME", "DE", "MD", "SC", "NC", "GA", "OH", "IL", "MI"]
+
+        if len(parts) == 1:
+            # Just a city or country?
+            val = parts[0]
+            if val in ["USA", "England", "UK", "Canada"]:
+                hierarchy["country"] = val
+            elif val in us_states:
+                hierarchy["state"] = val
+                hierarchy["country"] = "USA"
+            else:
+                hierarchy["city"] = val
+
+        elif len(parts) >= 2:
+            last = parts[-1]
+
+            # Check if last part is a US State
+            if last.upper() in us_states or last in ["Connecticut", "Massachusetts", "New York", "New Jersey", "Pennsylvania"]:
+                hierarchy["country"] = "USA"
+                hierarchy["state"] = last
+                hierarchy["city"] = parts[0]
+                if len(parts) > 2:
+                    hierarchy["county"] = parts[1] # Middle part often county
+
+            elif last in ["USA", "United States"]:
+                hierarchy["country"] = "USA"
+                hierarchy["state"] = parts[-2] if len(parts) > 1 else None
+                hierarchy["city"] = parts[0]
+
+            elif last in ["England", "UK", "Great Britain"]:
+                hierarchy["country"] = "UK"
+                hierarchy["city"] = parts[0]
+                if len(parts) > 2:
+                    hierarchy["county"] = parts[1]
+
+            else:
+                # Generic fallback: City, Region
+                hierarchy["city"] = parts[0]
+                hierarchy["state"] = parts[-1]
+
+        return hierarchy
+
     def _extract_location_note(self, location_text):
         """
         Separates a trailing parenthetical note from the location string.
@@ -359,6 +420,7 @@ class GenealogyTextPipeline:
                     if b_note:
                         current_profile["vital_stats"]["born_location_note"] = b_note
                     current_profile["vital_stats"]["born_year_int"] = self._normalize_date(b_date)
+                    current_profile["vital_stats"]["born_hierarchy"] = self._parse_location_hierarchy(b_loc)
 
                 d_match = died_pattern.search(text)
                 if d_match:
@@ -371,6 +433,7 @@ class GenealogyTextPipeline:
                     if d_note:
                         current_profile["vital_stats"]["died_location_note"] = d_note
                     current_profile["vital_stats"]["died_year_int"] = self._normalize_date(d_date)
+                    current_profile["vital_stats"]["died_hierarchy"] = self._parse_location_hierarchy(d_loc)
 
                 n_match = notes_start_pattern.search(text)
                 if n_match:
