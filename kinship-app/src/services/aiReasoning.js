@@ -50,7 +50,17 @@ of the data you are looking at.
 `;
 
     try {
-        const ai = new GoogleGenAI({ apiKey: API_KEY });
+        // Use a proxy URL if we are running in the browser to avoid CORS/Origin issues
+        // with the API key when accessing from a non-localhost origin.
+        const isBrowser = typeof window !== 'undefined';
+        const baseUrl = isBrowser
+            ? `${window.location.origin}/google-ai`
+            : undefined; // Default for server-side/other
+
+        const ai = new GoogleGenAI({
+            apiKey: API_KEY,
+            baseURL: baseUrl,
+        });
         const response = await ai.models.generateContent({
             model: "gemini-3-pro-preview",
             contents: prompt,
