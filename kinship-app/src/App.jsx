@@ -11,12 +11,13 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
+import HitlistPanel from './components/HitlistPanel';
 import { fetchResearchSuggestions } from './services/aiReasoning';
 
 // Fix for default Leaflet icons in Vite/Webpack
@@ -1513,7 +1514,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 export default function App() {
   const [selectedAncestor, setSelectedAncestor] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist'
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
   const [selectedTag, setSelectedTag] = useState(null);
@@ -1650,6 +1651,12 @@ export default function App() {
                     className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                  >
                     <BookOpen size={14} /> Epics
+                    </button>
+                    <button
+                    onClick={() => setViewMode('hitlist')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <AlertTriangle size={14} /> Hitlist
                  </button>
               </div>
             </div>
@@ -1844,6 +1851,9 @@ export default function App() {
                         onSelect={(id) => setSelectedThreadId(id)}
                      />
                  )}
+        {viewMode === 'hitlist' && (
+             <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
+                 <HitlistPanel onSelectProfile={setSelectedAncestor} />
              </div>
         )}
       </div>
