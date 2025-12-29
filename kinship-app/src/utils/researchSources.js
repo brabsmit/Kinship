@@ -53,7 +53,7 @@ export const RESEARCH_SOURCES = {
     // --- IMMIGRATION ---
     "Great Migration": {
         label: "Great Migration Project",
-        url: "https://www.americanancestors.org/browse/publications/great-migration-study-project",
+        url: "https://www.familysearch.org/en/search/catalog/2550739",
         description: "authoritative accounts of immigrants to New England (1620-1640)"
     },
     "Passenger List": {
