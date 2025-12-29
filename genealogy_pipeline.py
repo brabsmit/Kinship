@@ -375,7 +375,7 @@ class GenealogyTextPipeline:
                 uid = match.group(1)
 
                 if uid in seen_ids:
-                    print(f"   > Duplicate ID found: {uid}. Skipping new profile creation.")
+                    # print(f"   > Duplicate ID found: {uid}. Skipping new profile creation.")
                     current_profile = None
                     continue
                 seen_ids.add(uid)
@@ -554,39 +554,34 @@ class GenealogyTextPipeline:
     def _find_mentions(self):
         print("--- Ariadne: Weaving Connections ---")
         # Build Name Index
-        # Use a list to handle duplicates (collisions)
         name_index = defaultdict(list)
 
         for p in self.family_data:
             full_name = p['name']
             pid = p['id']
 
-            # Normalize
-            normalized_name = " ".join([n.capitalize() for n in full_name.split()])
-            name_index[normalized_name].append(pid)
+            # Normalize: "William E. Dodge" -> "William E. Dodge"
+            # Remove [source: ...] if present (should be clean already but double check)
+            clean_name = full_name.split('{')[0].strip()
+            name_index[clean_name].append(pid)
 
-            # Variations: First Last
-            parts = normalized_name.split()
+            # Variations
+            parts = clean_name.split()
             if len(parts) > 2:
+                # First Last
                 short_name = f"{parts[0]} {parts[-1]}"
-                # Only add short name if it doesn't conflict with an existing full name
-                # (though here we just append to list and filter later)
                 name_index[short_name].append(pid)
 
-        # Filter ambiguous names
+        # Filter ambiguous
         clean_name_index = {}
         for name, ids in name_index.items():
-            unique_ids = list(set(ids))
-            if len(unique_ids) == 1:
-                clean_name_index[name] = unique_ids[0]
-            else:
-                # Ambiguous name (e.g., "Sarah Dodge" -> [1.2, 5.1.2.2?])
-                # We skip linking based on this name to avoid false positives
-                # print(f"Ambiguous name skipped: {name} -> {unique_ids}")
-                pass
+            if len(set(ids)) == 1:
+                clean_name_index[name] = ids[0]
+
+        # Optimization: Create a set of names for fast lookup
+        known_names = set(clean_name_index.keys())
 
         # Keywords for relationship types
-        # These must appear in the same CLAUSE as the name
         keywords = {
             "partner": "Business Partner",
             "business": "Business Partner",
@@ -603,80 +598,81 @@ class GenealogyTextPipeline:
         }
 
         count = 0
-        sorted_names = sorted(clean_name_index.keys(), key=len, reverse=True)
         id_map = {p['id']: p for p in self.family_data}
 
         for p in self.family_data:
             p['related_links'] = []
             notes = p['story']['notes']
-            if not notes:
+            if not notes: continue
+
+            # Optimization: Extract potential name candidates (Capitalized words sequences)
+            # Regex: \b[A-Z][a-z]+(?: [A-Z][a-z\.]+)+\b
+            # Matches "William Dodge", "Mr. Phelps", "Anson G. Phelps"
+            candidates = set(re.findall(r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z\.]+)+\b', notes))
+
+            # Filter candidates that are known names
+            valid_candidates = candidates.intersection(known_names)
+
+            if not valid_candidates:
                 continue
 
+            # Now verify context for valid candidates
+            clauses = re.split(r'[.;,]', notes)
             source_born = self._get_birth_year(p)
             found_ids = set()
 
-            # Split into clauses for tighter context
-            # Split on punctuation (. ; ,)
-            clauses = re.split(r'[.;,]', notes)
-
             for clause in clauses:
-                if not clause.strip():
-                    continue
+                if not clause.strip(): continue
 
-                for name in sorted_names:
+                for name in valid_candidates:
+                    if name not in clause: continue # Fast string check
+
+                    # Exact word boundary check
+                    if not re.search(r'\b' + re.escape(name) + r'\b', clause):
+                        continue
+
                     target_id = clean_name_index[name]
-                    if target_id == p['id']:
-                        continue
-                    if target_id in found_ids:
-                        continue
+                    if target_id == p['id']: continue
+                    if target_id in found_ids: continue
 
-                    # Regex for exact word match in this clause
-                    pattern = r'\b' + re.escape(name) + r'\b'
-                    if re.search(pattern, clause):
+                    # Date sanity check
+                    target_p = id_map.get(target_id)
+                    target_born = self._get_birth_year(target_p) if target_p else None
 
-                        # Date sanity check for strict relationships (Spouse, Partner)
-                        # If dates are wildly off (>100 years), assume it's a "Mentioned" (e.g. ancestor)
-                        # or skip if it looks like a collision.
-                        target_p = id_map.get(target_id)
-                        target_born = self._get_birth_year(target_p) if target_p else None
+                    is_contemporary = True
+                    if source_born and target_born:
+                        diff = abs(source_born - target_born)
+                        if diff > 80:
+                            is_contemporary = False
 
-                        is_contemporary = True
-                        if source_born and target_born:
-                            diff = abs(source_born - target_born)
-                            if diff > 80:
-                                is_contemporary = False
+                    found_ids.add(target_id)
 
-                        found_ids.add(target_id)
+                    # Determine Type
+                    rel_type = "Mentioned"
+                    lower_clause = clause.lower()
 
-                        # Determine Type
-                        rel_type = "Mentioned"
-                        lower_clause = clause.lower()
+                    for k, v in keywords.items():
+                        if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
+                            if v in ["Spouse", "Business Partner", "Friend"] and not is_contemporary:
+                                rel_type = "Mentioned"
+                            else:
+                                rel_type = v
+                            break
 
-                        # Search for keywords in the clause
-                        for k, v in keywords.items():
-                            # Use regex for keyword matching to avoid partial matches
-                            if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
-                                # If keyword implies contemporary but they are not, downgrade to Mentioned
-                                if v in ["Spouse", "Business Partner", "Friend"] and not is_contemporary:
-                                    rel_type = "Mentioned"
-                                else:
-                                    rel_type = v
-                                break
+                    # Context sentence
+                    full_sentences = self.split_sentences(notes)
+                    source_sentence = clause.strip()
+                    for s in full_sentences:
+                        if clause.strip() in s:
+                            source_sentence = s
+                            break
 
-                        # Context sentence (full sentence)
-                        full_sentences = self.split_sentences(notes)
-                        source_sentence = clause.strip()
-                        for s in full_sentences:
-                            if clause.strip() in s:
-                                source_sentence = s
-                                break
-
-                        p['related_links'].append({
-                            "target_id": target_id,
-                            "relation_type": rel_type,
-                            "source_text": source_sentence.strip()
-                        })
-                        count += 1
+                    p['related_links'].append({
+                        "target_id": target_id,
+                        "relation_type": rel_type,
+                        "source_text": source_sentence.strip()
+                    })
+                    count += 1
 
         print(f"Ariadne found {count} text-based connections.")
 
