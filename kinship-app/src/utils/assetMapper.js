@@ -9,6 +9,12 @@ export const ASSETS = {
         caption: "The World of 17th Century England",
         style: { filter: "sepia(30%) contrast(110%)" }
     },
+    england_countryside: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Wenceslaus_Hollar_-_Albury_House%2C_Surrey_%28State_1%29.jpg/1280px-Wenceslaus_Hollar_-_Albury_House%2C_Surrey_%28State_1%29.jpg",
+        alt: "Engraving of English Countryside (Wenceslaus Hollar, 1645)",
+        caption: "The English Countryside (17th Century)",
+        style: { filter: "sepia(40%) contrast(95%)" }
+    },
 
     // New England
     new_england_1600: {
@@ -16,6 +22,18 @@ export const ASSETS = {
         alt: "Captain John Smith's Map of New England (1616)",
         caption: "Early Settlement of New England",
         style: { filter: "sepia(20%)" }
+    },
+    new_england_pilgrims: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Map_of_New_England_by_Captain_John_Smith_%281616%29.jpg/1024px-Map_of_New_England_by_Captain_John_Smith_%281616%29.jpg",
+        alt: "Map of New England by Captain John Smith (1616)",
+        caption: "The World of the Pilgrims",
+        style: { filter: "sepia(15%) contrast(110%)" }
+    },
+    boston_old: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Bonner_Map_of_Boston_1722.jpg/1024px-Bonner_Map_of_Boston_1722.jpg",
+        alt: "Bonner Map of Boston (1722)",
+        caption: "Colonial Boston",
+        style: { filter: "sepia(25%) contrast(105%)" }
     },
 
     // Connecticut
@@ -55,7 +73,24 @@ export const getHeroImage = (location, year) => {
     const loc = location.toLowerCase();
     const y = parseInt(year) || 0;
 
-    // 0. Cache Lookup
+    // 1. Special Overrides (Muse Logic for known cache gaps or quality issues)
+    // Boston < 1750: Cache often has 1850 map or hyper-local street map. Bonner Map is better for "Early Boston".
+    if (loc.includes("boston") && y < 1750 && y > 1630) {
+        return ASSETS.boston_old;
+    }
+
+    // New England Pilgrim Era: Cache for "New England" or "Plymouth" might be a map. User wants "Pilgrim Life".
+    // We target generic "New England" queries or "Plymouth" specifically for this era.
+    if ((loc === "new england" || loc.includes("plymouth")) && y >= 1600 && y < 1650) {
+        return ASSETS.new_england_pilgrims;
+    }
+
+    // England Pre-1650: Cache might be a map. User wants "Woodcut".
+    if ((loc === "england" || loc === "uk") && y < 1650) {
+        return ASSETS.england_countryside;
+    }
+
+    // 2. Cache Lookup (Standard Priority)
     if (location) {
         let century = "historical";
         if (y > 0) {
@@ -63,42 +98,39 @@ export const getHeroImage = (location, year) => {
              century = `${c}th century`;
         }
 
-        // Try specific key: "Location|Century"
         const specificKey = `${location}|${century}`;
-        if (wikimediaCache[specificKey]) {
-            return wikimediaCache[specificKey];
-        }
+        if (wikimediaCache[specificKey]) return wikimediaCache[specificKey];
 
-        // Try historical key: "Location|historical"
         const historicalKey = `${location}|historical`;
-        if (wikimediaCache[historicalKey]) {
-            return wikimediaCache[historicalKey];
-        }
+        if (wikimediaCache[historicalKey]) return wikimediaCache[historicalKey];
     }
 
-    // 1. New York Logic
+    // 3. Fallback Logic (If not in cache)
+
+    // New York
     if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {
         if (y >= 1800) return ASSETS.ny_1800;
-        // Fallback for earlier NY could be New England map or Generic for now
-        return ASSETS.new_england_1600;
+        return ASSETS.new_england_1600; // Fallback to regional map
     }
 
-    // 2. Connecticut Logic
+    // Connecticut
     if (loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford") || loc.includes("new haven")) {
         if (y >= 1700) return ASSETS.ct_1700;
         return ASSETS.new_england_1600;
     }
 
-    // 3. Massachusetts / New England Logic
+    // Massachusetts / New England (Broader catch)
     if (loc.includes("ma") || loc.includes("massachusetts") || loc.includes("boston") || loc.includes("new england") || loc.includes("rhode island") || loc.includes("ri")) {
+        if (y >= 1600 && y < 1700) return ASSETS.new_england_pilgrims;
         return ASSETS.new_england_1600;
     }
 
-    // 4. UK / England Logic
+    // UK / England
     if (loc.includes("england") || loc.includes("uk") || loc.includes("britain") || loc.includes("london")) {
+        if (y < 1650) return ASSETS.england_countryside;
         return ASSETS.england_1600;
     }
 
-    // 5. Default Fallback
+    // 4. Default Fallback
     return ASSETS.generic_antique;
 };

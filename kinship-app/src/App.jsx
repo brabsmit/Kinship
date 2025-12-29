@@ -1172,6 +1172,7 @@ const HeroImage = ({ location, year, heroImage }) => {
             <img
                 src={imgSrc}
                 alt={asset.alt}
+                title={asset.caption}
                 className="w-full h-full object-cover grayscale opacity-80 mix-blend-multiply"
                 style={asset.style}
                 onError={handleError}
