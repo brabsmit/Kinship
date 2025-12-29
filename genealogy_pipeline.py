@@ -174,6 +174,32 @@ class GenealogyTextPipeline:
         else:
             return "Unknown", text.strip()
 
+    def _extract_location_note(self, location_text):
+        """
+        Separates a trailing parenthetical note from the location string.
+        Returns (clean_location, note).
+        """
+        if not location_text or location_text == "Unknown":
+            return location_text, None
+
+        # Regex to find text ending with (note)
+        # We capture the main part (lazy) and the content inside the *last* set of parens.
+        # This handles cases like "Location (Note)" -> "Location", "Note"
+        match = re.search(r'^(.*?)\s*\(([^)]+)\)$', location_text)
+        if match:
+            clean_loc = match.group(1).strip()
+            note = match.group(2).strip()
+            # If the resulting location is empty, it means the whole string was in parens
+            # e.g. "(Unknown)" -> loc="", note="Unknown".
+            # In this case, we probably shouldn't split it, or treat it as just note?
+            # For now, if clean_loc is empty, we return the original string to avoid data loss/empty location.
+            if not clean_loc:
+                return location_text, None
+
+            return clean_loc, note
+
+        return location_text, None
+
     def split_sentences(self, text):
         if not text:
             return []
@@ -325,17 +351,25 @@ class GenealogyTextPipeline:
                 b_match = born_pattern.search(text)
                 if b_match:
                     raw_born = b_match.group(1).strip()
-                    b_date, b_loc = self.split_date_location(raw_born)
+                    b_date, b_loc_raw = self.split_date_location(raw_born)
+                    b_loc, b_note = self._extract_location_note(b_loc_raw)
+
                     current_profile["vital_stats"]["born_date"] = b_date
                     current_profile["vital_stats"]["born_location"] = b_loc
+                    if b_note:
+                        current_profile["vital_stats"]["born_location_note"] = b_note
                     current_profile["vital_stats"]["born_year_int"] = self._normalize_date(b_date)
 
                 d_match = died_pattern.search(text)
                 if d_match:
                     raw_died = d_match.group(1).strip()
-                    d_date, d_loc = self.split_date_location(raw_died)
+                    d_date, d_loc_raw = self.split_date_location(raw_died)
+                    d_loc, d_note = self._extract_location_note(d_loc_raw)
+
                     current_profile["vital_stats"]["died_date"] = d_date
                     current_profile["vital_stats"]["died_location"] = d_loc
+                    if d_note:
+                        current_profile["vital_stats"]["died_location_note"] = d_note
                     current_profile["vital_stats"]["died_year_int"] = self._normalize_date(d_date)
 
                 n_match = notes_start_pattern.search(text)

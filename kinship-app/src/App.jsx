@@ -1358,9 +1358,17 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
 
                             <div className="pl-4 md:pl-8">
-                                <TimelineEvent event={{ year: bornYear, label: `Born in ${bornLoc}`, region: "Personal" }} age={0} />
+                                <TimelineEvent event={{
+                                    year: bornYear,
+                                    label: `Born in ${bornLoc}${item.vital_stats.born_location_note ? ` (${item.vital_stats.born_location_note})` : ''}`,
+                                    region: "Personal"
+                                }} age={0} />
                                 {events.map((e, i) => <TimelineEvent key={i} event={e} age={e.year - bornYear} />)}
-                                <TimelineEvent event={{ year: diedYear, label: `Died in ${diedLoc}`, region: "Personal" }} age={diedYear - bornYear} />
+                                <TimelineEvent event={{
+                                    year: diedYear,
+                                    label: `Died in ${diedLoc}${item.vital_stats.died_location_note ? ` (${item.vital_stats.died_location_note})` : ''}`,
+                                    region: "Personal"
+                                }} age={diedYear - bornYear} />
                             </div>
                         </div>
                     )}
