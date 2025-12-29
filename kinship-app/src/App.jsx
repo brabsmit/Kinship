@@ -1597,10 +1597,22 @@ export default function App() {
     });
   }, [selectedBranchId, selectedTag, selectedLineage]);
 
+  const filteredListData = useMemo(() => {
+    return familyData.filter(p => {
+        // Lineage Filter
+        const pLineage = p.lineage || 'Paternal';
+        const matchesLineage = pLineage === selectedLineage;
+
+        // Branch Filtering is EXCLUDED for List View as per request
+        const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
+        return matchesLineage && matchesTag;
+    });
+  }, [selectedTag, selectedLineage]); // selectedBranchId is intentionally excluded
+
   // Group data by Generation
   const groupedData = useMemo(() => {
     const groups = {};
-    const filtered = filteredGraphData.filter(item => {
+    const filtered = filteredListData.filter(item => {
         const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
         const matchesStory = !storyMode || (item.story?.notes);
 
