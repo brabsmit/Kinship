@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, AlertTriangle, ArrowRight, Loader2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import hitlistData from '../hitlist_data.json';
 
 const HitlistPanel = ({ onSelectProfile }) => {
@@ -74,7 +76,17 @@ const HitlistPanel = ({ onSelectProfile }) => {
                   </h3>
                   <ul className="list-disc list-inside space-y-1 text-sm text-rose-900">
                     {profile.issues.map((issue, i) => (
-                      <li key={i}>{issue}</li>
+                      <li key={i}>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            p: ({node, ...props}) => <span {...props} />,
+                            a: ({node, ...props}) => <a {...props} className="underline hover:text-rose-700" target="_blank" rel="noopener noreferrer" />
+                          }}
+                        >
+                          {issue}
+                        </ReactMarkdown>
+                      </li>
                     ))}
                   </ul>
                   <div className="mt-4 text-xs text-rose-700 font-mono">
@@ -92,7 +104,17 @@ const HitlistPanel = ({ onSelectProfile }) => {
                     {profile.recommendations.map((rec, i) => (
                       <li key={i} className="flex items-start">
                         <span className="font-bold mr-2 text-indigo-400">{i+1}.</span>
-                        <span>{rec}</span>
+                        <div className="flex-1">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              p: ({node, ...props}) => <span {...props} />,
+                              a: ({node, ...props}) => <a {...props} className="underline hover:text-indigo-700" target="_blank" rel="noopener noreferrer" />
+                            }}
+                          >
+                            {rec}
+                          </ReactMarkdown>
+                        </div>
                       </li>
                     ))}
                   </ul>

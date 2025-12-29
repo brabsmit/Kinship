@@ -19,6 +19,8 @@ import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
 import HitlistPanel from './components/HitlistPanel';
 import { fetchResearchSuggestions } from './services/aiReasoning';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -1488,7 +1490,19 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                             <div className="mt-0.5 text-blue-400 shrink-0">
                                                 <CheckSquare size={16} />
                                             </div>
-                                            <p className="text-sm text-gray-700 leading-relaxed">{suggestion}</p>
+                                            <div className="text-sm text-gray-700 leading-relaxed flex-1">
+                                                <ReactMarkdown
+                                                    remarkPlugins={[remarkGfm]}
+                                                    components={{
+                                                        p: ({node, ...props}) => <p {...props} className="mb-1 last:mb-0" />,
+                                                        a: ({node, ...props}) => <a {...props} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" />,
+                                                        ul: ({node, ...props}) => <ul {...props} className="list-disc list-inside ml-2" />,
+                                                        ol: ({node, ...props}) => <ol {...props} className="list-decimal list-inside ml-2" />
+                                                    }}
+                                                >
+                                                    {suggestion}
+                                                </ReactMarkdown>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
