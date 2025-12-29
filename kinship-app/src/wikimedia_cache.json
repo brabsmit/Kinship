@@ -5521,5 +5521,53 @@
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
+    },
+    "CT|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Map_of_Philipse_Patent_%28showing_the_Oblong_and_Gore%29.png/1024px-Map_of_Philipse_Patent_%28showing_the_Oblong_and_Gore%29.png",
+        "alt": "Historical image of CT",
+        "caption": "Map of the Philipse Patent, a land tract in lower New York State originally part of Dutchess County that became Putnam County in 1812.  It also shows ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Hereford, Herefordshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Maps_of_England_circa_1670%2C_Hereford_17_of_40_%2813433241815%29.jpg/1024px-Maps_of_England_circa_1670%2C_Hereford_17_of_40_%2813433241815%29.jpg",
+        "alt": "Historical image of Hereford, Herefordshire, England",
+        "caption": "38 old maps of England folded and bound in a leather book.  \nMost seem to have been printed from copper plates made by  \nRichard Blome in the 1660s an...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Earnley, Sussex, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Ebeneezer_Washburn%3B_his_ancestors_and_descendants%2C_with_some_connected_families_-_a_family_story_of_700_years_%28IA_ebeneezerwashbur00wash%29.pdf/page1-1024px-Ebeneezer_Washburn%3B_his_ancestors_and_descendants%2C_with_some_connected_families_-_a_family_story_of_700_years_%28IA_ebeneezerwashbur00wash%29.pdf.jpg",
+        "alt": "Historical image of Earnley, Sussex, England",
+        "caption": "\nSubjects: Washburn family; Washburn family (John Washburn, 1598-166-?); Washburn family (Ebeneezer Washburn, 1690-1768)...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Colton, Norfolk, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Annals_and_family_records_of_Winchester%2C_Conn.%2C_with_exercises_of_the_centennial_celebration%2C_on_the_16th_and_17th_days_of_August%2C_1871_%28IA_cu31924028843427%29.pdf/page1-1024px-thumbnail.pdf.jpg",
+        "alt": "Historical image of Colton, Norfolk, England",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "London|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/17th_century_map_of_London_%28W.Hollar%29_Temple_Bar.jpg/1024px-17th_century_map_of_London_%28W.Hollar%29_Temple_Bar.jpg",
+        "alt": "Historical image of London",
+        "caption": "17th century map of London, originally started by W.Hollar, student of German engraver Mattheus Merian. Published in the Netherlands. It is not clear ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Shalford, Essex|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Surrey_Archaeological_Collections_Volume_28.djvu/page1-1024px-Surrey_Archaeological_Collections_Volume_28.djvu.jpg",
+        "alt": "Historical image of Shalford, Essex",
+        "caption": "djvu scan of Surrey Archaeological Collections, Volume 28...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
     }
 }
