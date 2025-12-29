@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -57,12 +57,12 @@ const TAG_CONFIG = {
 };
 
 const NARRATIVE_THREADS = [
-    { id: "pilgrims", title: "The Mayflower Pilgrims", keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"], color: "bg-[#8B4513] text-white border-[#5D2E0C]", hex: "#8B4513", icon: <Anchor size={14} /> },
-    { id: "witches", title: "Salem Witch Trials", keywords: ["Salem", "Witch", "1692", "Accused"], color: "bg-purple-700 text-white border-purple-900", hex: "#7E22CE", icon: <Flame size={14} /> },
-    { id: "founders", title: "Town Founders", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
-    { id: "revolution", title: "The Patriots", keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"], color: "bg-blue-800 text-white border-blue-950", hex: "#1E40AF", icon: <Shield size={14} /> },
-    { id: "industrialists", title: "The Industrialists", keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"], color: "bg-slate-700 text-white border-slate-900", hex: "#334155", icon: <Hammer size={14} /> },
-    { id: "quakers", title: "The Quakers", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> }
+    { id: "pilgrims", title: "The Mayflower Pilgrims", description: "The brave souls who crossed the Atlantic on the Mayflower in 1620 to establish Plymouth Colony.", keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"], color: "bg-[#8B4513] text-white border-[#5D2E0C]", hex: "#8B4513", icon: <Anchor size={14} /> },
+    { id: "witches", title: "Salem Witch Trials", description: "Those involved in the hysteria of the Salem Witch Trials of 1692, as accused or accusers.", keywords: ["Salem", "Witch", "1692", "Accused"], color: "bg-purple-700 text-white border-purple-900", hex: "#7E22CE", icon: <Flame size={14} /> },
+    { id: "founders", title: "Town Founders", description: "Early settlers who established and incorporated the foundational towns of New England.", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
+    { id: "revolution", title: "The Patriots", description: "Soldiers and supporters who fought for American Independence during the Revolutionary War.", keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"], color: "bg-blue-800 text-white border-blue-950", hex: "#1E40AF", icon: <Shield size={14} /> },
+    { id: "industrialists", title: "The Industrialists", description: "Innovators and laborers who drove the manufacturing boom of the 19th century.", keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"], color: "bg-slate-700 text-white border-slate-900", hex: "#334155", icon: <Hammer size={14} /> },
+    { id: "quakers", title: "The Quakers", description: "Members of the Society of Friends who sought religious freedom and simplicity.", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> }
 ];
 
 const detectThreads = (person) => {
@@ -1105,6 +1105,108 @@ const StatItem = ({ label, value, icon }) => (
     </div>
 );
 
+const EpicList = ({ threads, onSelect }) => {
+    return (
+        <div className="p-4 space-y-4 overflow-y-auto h-full custom-scrollbar">
+            {threads.map(thread => (
+                <div
+                    key={thread.id}
+                    onClick={() => onSelect(thread.id)}
+                    className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group relative overflow-hidden"
+                >
+                    <div className={`absolute top-0 right-0 p-2 opacity-5 ${thread.color.split(' ')[0]} bg-clip-text text-transparent`}>
+                        {React.cloneElement(thread.icon, { size: 64 })}
+                    </div>
+
+                    <div className="flex items-start gap-3 relative z-10">
+                        <div className={`p-2 rounded-full ${thread.color} border-none`}>
+                            {React.cloneElement(thread.icon, { size: 16 })}
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-gray-800 mb-1">{thread.title}</h3>
+                            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
+                                {thread.description}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#E67E22] group-hover:gap-2 transition-all">
+                        Explore Epic <ChevronRight size={12} />
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const ThreadTimeline = ({ thread, members, onBack, onSelectMember }) => {
+    // Sort members by birth year
+    const sortedMembers = [...members].sort((a, b) => {
+        const aYear = parseInt(a.vital_stats.born_date?.match(/\d{4}/)?.[0] || 9999);
+        const bYear = parseInt(b.vital_stats.born_date?.match(/\d{4}/)?.[0] || 9999);
+        return aYear - bYear;
+    });
+
+    return (
+        <div className="flex flex-col h-full bg-white">
+            {/* Header */}
+            <div className={`p-4 ${thread.color.replace('text-white', 'bg-opacity-10')} border-b border-gray-100`}>
+                <button
+                    onClick={onBack}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-800 mb-3"
+                >
+                    <ChevronLeft size={12} /> Back to Epics
+                </button>
+
+                <div className="flex items-center gap-3 mb-2">
+                    <div className={`p-2 rounded-full ${thread.color}`}>
+                        {React.cloneElement(thread.icon, { size: 18 })}
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 font-display leading-tight">
+                        {thread.title}
+                    </h2>
+                </div>
+
+                <p className="text-xs text-gray-600 leading-relaxed pl-1">
+                    {thread.description}
+                </p>
+            </div>
+
+            {/* Timeline List */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 relative">
+                 {/* Vertical Line */}
+                 <div className="absolute left-7 top-4 bottom-4 w-px bg-gray-200"></div>
+
+                 {sortedMembers.map((member, idx) => {
+                     const born = member.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
+                     const died = member.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
+
+                     return (
+                        <div key={member.id} className="relative pl-8 pb-8 group last:pb-0">
+                            {/* Dot */}
+                            <div className={`absolute left-[0.3rem] top-1.5 w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 ${thread.hex ? '' : 'bg-gray-400'}`} style={{ backgroundColor: thread.hex }}></div>
+
+                            <div
+                                onClick={() => onSelectMember(member)}
+                                className="bg-white border border-gray-100 rounded-lg p-3 cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all"
+                            >
+                                <div className="flex justify-between items-start mb-1">
+                                    <h3 className="font-bold text-sm text-gray-800 group-hover:text-[#E67E22] transition-colors">
+                                        {member.name}
+                                    </h3>
+                                    <span className="text-xs font-mono text-gray-400">{born}</span>
+                                </div>
+                                <div className="text-xs text-gray-500 line-clamp-2">
+                                    {member.story.notes || "No specific notes available."}
+                                </div>
+                            </div>
+                        </div>
+                     );
+                 })}
+            </div>
+        </div>
+    );
+};
+
 const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation, onSelectThread }) => {
     if (!item) return null;
 
@@ -1216,7 +1318,8 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 onClick={() => {
                                     if (onSelectThread) {
                                         onSelectThread(thread.id);
-                                        onClose(); // Close profile to show graph
+                                        // View mode switching is handled in App.jsx but we can hint it here or ensure logic flow
+                                        // The prop is called onSelectThread, which sets state in App
                                     }
                                 }}
                                 className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
@@ -1542,6 +1645,12 @@ export default function App() {
                  >
                     <Network size={14} /> Graph
                  </button>
+                 <button
+                    onClick={() => setViewMode('threads')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <BookOpen size={14} /> Epics
+                 </button>
               </div>
             </div>
 
@@ -1690,7 +1799,7 @@ export default function App() {
             <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
         )}
 
-        {viewMode === 'list' ? (
+        {viewMode === 'list' && (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {Object.entries(groupedData).map(([generation, items]) => (
                     <GenerationGroup
@@ -1704,7 +1813,9 @@ export default function App() {
                     />
                 ))}
             </div>
-        ) : (
+        )}
+
+        {viewMode === 'graph' && (
             <div className="flex-1 overflow-hidden relative border-t border-gray-100">
                 <GraphView
                     data={filteredGraphData}
@@ -1716,6 +1827,24 @@ export default function App() {
                     }}
                 />
             </div>
+        )}
+
+        {viewMode === 'threads' && (
+             <div className="flex-1 overflow-hidden relative border-t border-gray-100 bg-[#FAFAF9]">
+                 {selectedThreadId ? (
+                     <ThreadTimeline
+                        thread={NARRATIVE_THREADS.find(t => t.id === selectedThreadId)}
+                        members={familyData.filter(p => detectThreads(p).some(t => t.id === selectedThreadId))}
+                        onBack={() => setSelectedThreadId(null)}
+                        onSelectMember={setSelectedAncestor}
+                     />
+                 ) : (
+                     <EpicList
+                        threads={NARRATIVE_THREADS}
+                        onSelect={(id) => setSelectedThreadId(id)}
+                     />
+                 )}
+             </div>
         )}
       </div>
 
@@ -1736,7 +1865,7 @@ export default function App() {
                 userRelation={userRelation}
                 onSelectThread={(threadId) => {
                     setSelectedThreadId(threadId);
-                    setViewMode('graph'); // Switch to graph view to see the thread
+                    setViewMode('threads'); // Switch to Threads view to see the timeline
                 }}
              />
           ) : (
