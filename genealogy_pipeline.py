@@ -55,6 +55,7 @@ class GenealogyTextPipeline:
         # Clean up location for search (remove detailed parts if too long?)
         # For now, use as is.
 
+
         api_url = "https://commons.wikimedia.org/w/api.php"
 
         for q in queries:
@@ -129,27 +130,34 @@ class GenealogyTextPipeline:
         s = raw_date_string.strip().lower()
 
         # Extract the first 4-digit year candidate to work with
-        # (1000-2999)
-        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])\b', s)
+        # (1000-2999).
+        # We capture the group to ensure we get the year digits.
+        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
         if not year_match:
             return None
 
-        year_val = int(year_match.group(0))
+        year_val = int(year_match.group(1))
         start_index = year_match.start()
 
         # Look at the text *before* the year for modifiers
         pre_text = s[:start_index]
 
-        # 1. Handle "before" / "bef"
-        # Logic: if "bef" or "before" appears in the text preceding the year
-        if re.search(r'\b(bef\.?|before)\b', pre_text):
+        # 1. Handle "before" / "bef" / "by"
+        # Logic: if "bef", "before", or "by" appears in the text preceding the year, return year - 1
+        if re.search(r'\b(bef\.?|before|by)\b', pre_text):
             return year_val - 1
 
         # 2. Handle "after" / "aft"
+        # Logic: if "aft" or "after" appears, return year + 1
         if re.search(r'\b(aft\.?|after)\b', pre_text):
             return year_val + 1
 
-        # 3. Standard Year Extraction
+        # 3. Handle dual dating like "1774/5" or ranges "1774-1778"
+        # The regex picks the first year found, which is standard genealogical practice for sorting (start date).
+
+        # 4. Handle "living in" or "fl."
+        # If "living in 1774", we return 1774 as the best anchor.
+
         return year_val
 
     def split_date_location(self, text):
