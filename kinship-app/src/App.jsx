@@ -1691,15 +1691,11 @@ export default function App() {
 
   const filteredListData = useMemo(() => {
     return familyData.filter(p => {
-        // Lineage Filter
-        const pLineage = p.lineage || 'Paternal';
-        const matchesLineage = pLineage === selectedLineage;
-
-        // Branch Filtering is EXCLUDED for List View as per request
+        // Lineage and Branch Filtering are EXCLUDED for List View as per request
         const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
-        return matchesLineage && matchesTag;
+        return matchesTag;
     });
-  }, [selectedTag, selectedLineage]); // selectedBranchId is intentionally excluded
+  }, [selectedTag]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
@@ -1721,7 +1717,7 @@ export default function App() {
     });
 
     return groups;
-  }, [searchText, storyMode, filteredGraphData]);
+  }, [searchText, storyMode, filteredListData, selectedThreadId]);
 
   return (
     <div className="flex h-screen bg-white font-sans overflow-hidden">
