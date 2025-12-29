@@ -1,0 +1,190 @@
+[
+  {
+    "id": "12.2.1.2.2.1.1",
+    "name": "John Knight",
+    "score": 14,
+    "issues": [
+      "Missing Birth Location",
+      "Died before born (1631 - 1614)",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Verify birth and death dates using primary source records for John Knight. Focus on English parish records (baptisms, marriages, burials) and early Massachusetts records (vital records, church records, land records, probate records). Prioritize records from Charlestown, MA, given the reported death location. The current dates are clearly contradictory and require immediate investigation.",
+      "Research potential birth locations within England. Start by examining areas where other Knights in the maternal lineage resided. Utilize surname distribution maps and online genealogical databases (Ancestry, Findmypast, FamilySearch) to identify clusters of Knights during the early 17th century. Focus on parishes where relevant records have been digitized and indexed. 'England' is too broad; a more specific location is needed for effective research.",
+      "Investigate early Charlestown, MA records for John Knight's presence and activities. Given his reported death in Charlestown, examine probate records, land records, church records, and town meeting minutes for any mention of John Knight. This might provide clues to his age, origins, and potential family connections, helping to resolve the date discrepancy and generate biographical information."
+    ],
+    "lineage": "Maternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "3.2.1.1.2.1.2",
+    "name": "NOTES:  First appears in the Saybrook area in 1663; Branford by 1666; parents both died in England; second wife appears in Gen VII as",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "**Focus on Early Connecticut Records:** Given the notes mentioning Saybrook and Branford, Connecticut, prioritize searching early Connecticut records. This includes land records (deeds, mortgages), probate records (wills, estate inventories), vital records (births, marriages, deaths), and church records (baptisms, marriages, burials) for these specific towns and the surrounding areas. Look for records mentioning this individual's name or potentially related individuals (spouses, children, or the parents identified in the profile). Utilize online databases such as Ancestry.com, FamilySearch.org, and AmericanAncestors.org, as well as the Connecticut State Library's resources.",
+      "**Investigate Genealogical Compilations and Published Resources:** The profile refers to \"Gen VII\" which suggests a previous genealogical work or lineage society application. Attempt to identify the specific source referenced and obtain a copy (either physically or digitally). Many early New England families have extensive published genealogies that may contain the missing vital details and further information about this individual. Search library catalogs (like WorldCat) and genealogical society websites to locate these publications. The \"Unknown\" source reference needs further investigation; research the source of the digital record, even if initially unknown, and trace back to its origin.",
+      "**Examine English Records for Parental Information:** The note stating that \"parents both died in England\" is a valuable clue. Initiate a search of English records, focusing on parish registers (baptisms, marriages, burials), probate records (wills, administrations), and possibly manorial records. Because the profile is generation IX, begin the search with the generation VII spouse, determine their likely timeframe, and then add approximately 60 years to find the right timeframe to look for the parents. Use resources like Ancestry.co.uk, Findmypast.co.uk, and FamilySearch.org (for English records). It may also be worthwhile to consult with a professional genealogist specializing in English research if initial searches prove unsuccessful."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
+  },
+  {
+    "id": "3.1.2.2.1.2",
+    "name": "Abigail? (UNKNOWN) Beardsley",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "**Focus on the spouse and children:** Research the profile IDs \"3.1.2.2.1.1\" (spouse) and \"3.1.2.2.1\" (child) to gather information about their lives. Their records might contain clues about Abigail's dates and locations of birth and death, or even her maiden name if 'UNKNOWN' is not accurate. Prioritize searching for marriage records of Abigail and her spouse, and birth records of her children.",
+      "**Examine Beardsley family genealogies and local histories:** Conduct a search for published genealogies and local history resources that mention the Beardsley family in the relevant geographic area of the lineage. These sources may contain information about Abigail, even if she is only mentioned briefly. Focus on resources from the time period and geographic location associated with this lineage.",
+      "**Analyze the 'source_ref' and 'location_in_doc':** While currently 'Unknown', the 'source_ref' field is critical. Attempt to determine the original source document referred to in the metadata. Even \"Paragraph #1647\" suggests a potentially larger document that may hold additional context and clues. Scrutinize the document associated with \"Paragraph #1647\" for even marginal mentions of individuals within the Beardsley lineage, even if the reference is not explicit."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
+  },
+  {
+    "id": "5.1.1.2.2.2",
+    "name": "Jane (UNKNOWN) Smith",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "1. **Focus on Spouse and Child:** Given the presence of spouse ('5.1.1.2.2.1') and child ('5.1.1.2.2') IDs, prioritize researching their records. Census records, marriage certificates, and death certificates for the spouse and/or child are likely to contain Jane's maiden name (confirming \"UNKNOWN\"), birth year range, and possibly birthplace. Pay close attention to residence patterns to infer potential locations for Jane's life events.",
+      "2. **Analyze the 'Paragraph #1918' Location:** Investigate the source document referenced by 'Paragraph #1918'. This seemingly specific location might provide contextual clues or direct information about Jane. Determine the type of document (e.g., family history book, court record, census transcription) and analyze the surrounding paragraphs for mentions of other family members or related events that could shed light on Jane's identity and life.",
+      "3. **Leverage Known Lineage Information and Source Reference:** The 'Paternal' lineage and 'Unknown' source_ref provide starting points. Explore commonly available records associated with the paternal line in the geographic areas where the spouse and child lived. Broaden the source search to include indexed genealogy databases, online family trees, and subscription services like Ancestry.com, FamilySearch, and MyHeritage, using the child's name and/or spouse's name to locate potential records related to Jane."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
+  },
+  {
+    "id": "5.2.2.2.1.1",
+    "name": "NOTES:  See also",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "1. Analyze the 'Paragraph #1960' reference in the 'metadata.location_in_doc' field of the source document. Scrutinize this paragraph and the surrounding text for any clues related to the individual's birth, marriage, death, or other identifying information. Even vague descriptions or mentions of associated individuals or locations could provide valuable leads.",
+      "2. Cross-reference the individual's relationships (parents, children, spouse) with other profiles in the database (5.2.2.2.1 and 5.2.2.2.1.2). Prioritize researching the spouse's profile (5.2.2.2.1.2) as that might list marriage details, which would include at least a location and approximate time frame, leading to the individual's birth and death information. Also, research the children's profiles (5.2.2.2.1) for potential information, such as locations where they were born or resided, providing possible geographic clues about the individual's life.",
+      "3. Given the 'GENERATION IX: SEVEN GREAT GRANDPARENTS' designation and the 'Paternal' lineage, conduct targeted searches in genealogical databases and online repositories (e.g., Ancestry, FamilySearch, MyHeritage) using the names of known descendants (children listed). Prioritize searches using date ranges suggested by the generational designation and limiting location based on information in the other profiles of direct relations. Look for census records, vital records, obituaries, and family trees that might include this individual."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
+  },
+  {
+    "id": "5.2.2.2.1.2",
+    "name": "NOTES:  See also",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Review the documents cited within Paragraph #1965 of the \"Unknown\" source reference, paying particular attention to mentions of individuals associated with IDs '5.2.2.2.1.2.1', '5.2.2.2.1.2.2', '5.2.2.2.1', and '5.2.2.2.1.1'. Look for birth, marriage, and death records, obituaries, wills, or census records related to these individuals which may provide clues about the subject's vital information and relationships.",
+      "Utilize online genealogy databases (e.g., Ancestry.com, FamilySearch, MyHeritage) using the IDs of the parents ('5.2.2.2.1.2.1' and '5.2.2.2.1.2.2'), children ('5.2.2.2.1'), and spouses ('5.2.2.2.1.1') as starting points. Search for family trees or records that may contain information about the individual identified as '5.2.2.2.1.2', particularly focusing on records indicating parental relationships and possible birth and death details.",
+      "The profile name \"NOTES: See also\" suggests the existence of supplementary information. Investigate any other profiles or records that reference this individual's ID ('5.2.2.2.1.2') or the IDs of their immediate family members. Cross-referencing information between related profiles may uncover biographical details or sources that are not directly linked to this profile."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
+  },
+  {
+    "id": "2.2.2.1.2.2.1",
+    "name": "NOTES:  See also",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "1. Analyze the profile of the listed child (\"2.2.2.1.2.2\") and spouse (\"2.2.2.1.2.2.2\"). Examine their vital statistics (birth, marriage, death details) and any attached sources. These records may contain information about the parents/spouses, including birth/death dates and locations, potentially providing clues or direct references to this individual.",
+      "2. Investigate the 'source_ref' and 'location_in_doc' metadata ('Unknown' and 'Paragraph #2768' respectively). If the original document is accessible, carefully review Paragraph #2768 for any information relating to this individual, including variant name spellings, relationships, or events that could lead to further research. Even if the source is generally labelled 'Unknown', the fact it comes from a specific paragraph suggests there may be some clue in the original document.",
+      "3. Conduct a targeted search based on the generation ('GENERATION X: EIGHT GREAT GRANDPARENTS') and the 'Paternal' lineage designation, combined with the names of known descendants (using ID \"2.2.2.1.2.2\" to search for the individual this ID represents and their relatives) in online genealogy databases (e.g., Ancestry, FamilySearch, MyHeritage). Focus on records such as census data, vital records indexes (birth, marriage, death), probate records, and land records within the region(s) associated with known descendants. The phrase 'NOTES: See also' might hint at an alternate name or a note included elsewhere, broaden the search to include any variants."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "2.2.2.1.2.2.2",
+    "name": "Notes:  See also",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "1. Prioritize research based on connected relatives. Using the provided parent and child IDs (2.2.2.1.2.2.2.1, 2.2.2.1.2.2.2.2, and 2.2.2.1.2.2), search for their individual records. Information contained within those records, such as birth certificates, marriage licenses, or death certificates, may provide details about this individual (2.2.2.1.2.2.2), including potential parents' names, dates, and locations that can serve as starting points for further investigation.",
+      "2. Investigate the 'Paragraph #2773' reference. The metadata indicates information about this individual may be found in Paragraph #2773 of an unspecified document. Identify the source document. If the source is known, carefully review Paragraph #2773 for any clues regarding birth, marriage, death, or other biographical details. If the source is unknown, attempt to identify the source by searching for unique keywords or phrases present in this profile.",
+      "3. Conduct broad surname and location-based searches. Given the 'GENERATION X: EIGHT GREAT GRANDPARENTS' designation and the lineage information as 'Paternal,' utilize online genealogy databases like Ancestry.com, FamilySearch, or MyHeritage to search for individuals with the same surname (or possible surname variations) in regions known to be associated with the paternal side of the family. Filter by approximate birth year ranges based on the generation to narrow the search and potentially identify related individuals or records."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "8.2.1.1.1.1.2.1",
+    "name": "NOTES:  GMD and GMB; arrived 1630 in Winthrop Fleet; to Windsor overland with Reverend Warham, 1635; among founders of Dorchester in 1630 and Windsor in 1635; also appears at",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Research early passenger lists of the Winthrop Fleet (1630) to attempt identification based on associated individuals and destinations. Focus on potential matches travelling with families or known associates who later resided in Dorchester and Windsor.",
+      "Consult early town records for Dorchester, MA and Windsor, CT (deeds, vital records, church records, probate records). These locations are explicitly mentioned, indicating this person was likely a landowner or member of the community. Look for names related to the linked child (8.2.1.1.1.1.2) to help narrow the search.",
+      "Investigate genealogical databases and published genealogies focused on early New England families, particularly those associated with the Winthrop Fleet, Dorchester, and Windsor. The name format suggests the available profile information may be a truncated note or reference. These sources could reveal the full name and vital statistics."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "1.2.2.1.2.1.2.2",
+    "name": "NOTES:  GMD 46; to New England with brothers, probably 1635 on \u201cDefence\u201d; to Hartford with Hooker; got into trouble and was \u201ccorrected\u201d in the Spring of 1640 for \u201cwanton dalliances, lascivious carriage and foul misdemeanors\u201d with 4 boys in Hartford (incl Nicholas and John Olmstead); was not charged with fornication, but was quickly married off to the older Disborough; appears also as Kingsbury",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Research early Hartford court records and probate records (Connecticut State Library Archives, online databases like Ancestry.com or FamilySearch) to pinpoint the date of the 'corrective' action and the subsequent marriage. These records may provide clues about the individual's age and thus, an estimated birth year and possible place of origin prior to migration.",
+      "Investigate the Disborough and Kingsbury families in New England during the 17th century. Focus on land records, church records, and town histories to determine which Disborough this individual married. Confirming the spouse's identity could reveal information about this individual's death date and location if the spouse remarried or left a will.",
+      "Consult the \"Great Migration Directory\" (GMD) and its associated volumes published by the New England Historic Genealogical Society (NEHGS). The note \"GMD 46\" suggests this person may be listed. This may include more specific information regarding their origins, arrival, and family connections. Utilize subscription databases like American Ancestors, as well as NEHGS' published works for related material. If the individual traveled with their brothers, focus on resources which explore family groupings in New England."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  }
+]
