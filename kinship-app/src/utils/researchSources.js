@@ -20,6 +20,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/publication/761/war-of-1812-pension-files",
         description: "Pension Application Files"
     },
+    "WWI Draft": {
+        label: "WWI Draft Registration",
+        url: "https://www.familysearch.org/search/collection/1968530",
+        description: "Draft cards for 24 million men (1917-1918)"
+    },
 
     // --- CENSUS ---
     "Census": {
@@ -37,11 +42,16 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/1401638",
         description: "First census to list all family members by name"
     },
+    "1880 Census": {
+        label: "1880 US Census",
+        url: "https://www.familysearch.org/search/collection/1417683",
+        description: "Lists relationship to head of household"
+    },
 
     // --- VITAL RECORDS ---
     "FindAGrave": {
         label: "Find A Grave",
-        url: "https://www.findagrave.com/search",
+        url: "https://www.findagrave.com/memorial/search",
         description: "Burial and cemetery records"
     },
     "CT Vital": {
@@ -53,6 +63,23 @@ export const RESEARCH_SOURCES = {
         label: "Massachusetts Vital Records (Tan Books)",
         url: "https://ma-vitalrecords.org/",
         description: "Vital Records of Massachusetts Towns to 1850"
+    },
+    "NJ Vital": {
+        label: "New Jersey State Archives",
+        url: "https://wwwnet-dos.state.nj.us/DOS_ArchivesDBPortal/index.aspx",
+        description: "Searchable birth, marriage, and death records"
+    },
+    "SSDI": {
+        label: "Social Security Death Index",
+        url: "https://www.familysearch.org/search/collection/1202535",
+        description: "Death records for US residents (1962-2014)"
+    },
+
+    // --- LAND & PROPERTY ---
+    "Land Deeds": {
+        label: "Bureau of Land Management (GLO)",
+        url: "https://glorecords.blm.gov/search/default.aspx",
+        description: "Federal land patents and homestead records"
     },
 
     // --- IMMIGRATION ---
@@ -72,6 +99,11 @@ export const RESEARCH_SOURCES = {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
         description: "Historical newspapers search"
+    },
+    "Chronicling America": {
+        label: "Chronicling America (LOC)",
+        url: "https://chroniclingamerica.loc.gov/",
+        description: "Free historical American newspapers"
     },
     "Probate": {
         label: "FamilySearch Wills & Probate",
