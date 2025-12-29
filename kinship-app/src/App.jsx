@@ -1627,7 +1627,49 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 };
 
 export default function App() {
-  const [selectedAncestor, setSelectedAncestor] = useState(null);
+  const [selectedAncestor, setSelectedAncestor] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (id) {
+       return familyData.find(p => String(p.id) === id) || null;
+    }
+    return null;
+  });
+
+  // Sync state to URL
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const currentId = params.get('id');
+    const stateId = selectedAncestor ? String(selectedAncestor.id) : null;
+
+    if (currentId !== stateId) {
+        const url = new URL(window.location);
+        if (stateId) {
+            url.searchParams.set('id', stateId);
+        } else {
+            url.searchParams.delete('id');
+        }
+        window.history.pushState({ id: stateId }, '', url.toString());
+    }
+  }, [selectedAncestor]);
+
+  // Handle Back/Forward
+  React.useEffect(() => {
+    const handlePopState = (event) => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) {
+            const person = familyData.find(p => String(p.id) === id);
+            setSelectedAncestor(person || null);
+        } else {
+            setSelectedAncestor(null);
+        }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const [searchText, setSearchText] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist'
   const [storyMode, setStoryMode] = useState(false);
