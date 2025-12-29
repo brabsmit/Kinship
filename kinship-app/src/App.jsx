@@ -1815,10 +1815,10 @@ export default function App() {
                 : 'shrink-0' // List Mode: dynamic width
             }
         `}
-        style={viewMode === 'list' ? { width: sidebarWidth } : {}}
+        style={(viewMode === 'list' || viewMode === 'threads') ? { width: sidebarWidth } : {}}
       >
         {/* Resize Handle */}
-        {viewMode === 'list' && (
+        {(viewMode === 'list' || viewMode === 'threads') && (
             <div
                 className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
                 onMouseDown={startResizing}
