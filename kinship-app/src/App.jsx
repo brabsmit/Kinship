@@ -12,7 +12,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
 import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
@@ -959,6 +959,30 @@ const TriviaWidget = ({ data, branchName }) => {
     );
 };
 
+const MapUpdater = ({ allPoints, defaultCenter, defaultZoom }) => {
+    const map = useMap();
+    const prevPointsRef = React.useRef();
+
+    React.useEffect(() => {
+        const pointsJson = JSON.stringify(allPoints);
+        if (prevPointsRef.current === pointsJson) return;
+        prevPointsRef.current = pointsJson;
+
+        if (allPoints.length > 1) {
+             const bounds = L.latLngBounds(allPoints);
+             if (bounds.isValid()) {
+                 map.fitBounds(bounds, { padding: [50, 50] });
+             }
+        } else if (allPoints.length === 1) {
+             map.setView(allPoints[0], 10);
+        } else {
+             map.setView(defaultCenter, defaultZoom);
+        }
+    }, [allPoints, defaultCenter, defaultZoom, map]);
+
+    return null;
+};
+
 const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeEvents = [] }) => {
     const bornData = getCoordinates(bornLoc, bornHierarchy);
     const diedData = getCoordinates(diedLoc, diedHierarchy);
@@ -1034,16 +1058,8 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
         polyline = [bornData.pos, diedData.pos];
     }
 
-    if (allPoints.length > 0) {
-        // Simple centroid
-        const avgLat = allPoints.reduce((sum, p) => sum + p[0], 0) / allPoints.length;
-        const avgLng = allPoints.reduce((sum, p) => sum + p[1], 0) / allPoints.length;
-        center = [avgLat, avgLng];
-
-        // Adjust zoom based on spread? (Mock logic)
-        zoom = 8;
-        if (allPoints.length > 2) zoom = 7;
-    }
+    // Logic moved to MapUpdater for dynamic updates
+    // if (allPoints.length > 0) { ... }
 
     return (
         <div className="h-[400px] w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm z-0 relative">
@@ -1054,7 +1070,8 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
                 </div>
             )}
 
-            <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+            <MapContainer center={defaultPosition} zoom={defaultZoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+                <MapUpdater allPoints={allPoints} defaultCenter={defaultPosition} defaultZoom={defaultZoom} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
