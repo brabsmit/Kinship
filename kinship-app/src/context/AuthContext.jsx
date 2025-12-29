@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const login = (username, password) => {
     // Hardcoded credentials for "simple" authentication
     const VALID_USER = 'admin';
-    const VALID_PASS = 'kinship';
+    const VALID_PASS = import.meta.env.VITE_USER_PASSWORD;
 
     if (username === VALID_USER && password === VALID_PASS) {
       setIsAuthenticated(true);

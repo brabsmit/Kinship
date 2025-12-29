@@ -26,3 +26,4 @@ dist-ssr
 # Data files
 src/family_data.json
 src/hitlist_data.json
+.env
