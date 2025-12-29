@@ -1,13 +1,121 @@
 import re
 import json
 import os
+import requests
+import time
+import hashlib
 from docx import Document
 from collections import defaultdict
 
 class GenealogyTextPipeline:
-    def __init__(self, docx_path):
-        self.docx_path = docx_path
+    def __init__(self):
         self.family_data = []
+        self.image_cache = self.load_cache()
+        self.cache_updated = False
+
+    def load_cache(self):
+        cache_file = "./kinship-app/src/wikimedia_cache.json"
+        if os.path.exists(cache_file):
+            with open(cache_file, "r") as f:
+                try:
+                    return json.load(f)
+                except json.JSONDecodeError:
+                    return {}
+        return {}
+
+    def save_cache(self):
+        if self.cache_updated:
+            with open("./kinship-app/src/wikimedia_cache.json", "w") as f:
+                json.dump(self.image_cache, f, indent=4)
+            print("Wikimedia cache saved.")
+
+    def fetch_wikimedia_image(self, location, year):
+        if not location or location.lower() == "unknown":
+            return None
+
+        # Determine Century
+        century = ""
+        if year:
+            c_val = (year // 100) + 1
+            century = f"{c_val}th century"
+        else:
+            century = "historical"
+
+        # Create a cache key
+        cache_key = f"{location}|{century}"
+        if cache_key in self.image_cache:
+            return self.image_cache[cache_key]
+
+        # Construct Search Queries
+        queries = [
+            f"{location} {century} map",
+            f"{location} historical"
+        ]
+
+        # Clean up location for search (remove detailed parts if too long?)
+        # For now, use as is.
+
+        api_url = "https://commons.wikimedia.org/w/api.php"
+
+        for q in queries:
+            # Check if we need to save cache incrementally
+            if self.cache_updated and len(self.image_cache) % 5 == 0:
+                self.save_cache()
+                self.cache_updated = False
+
+            params = {
+                "action": "query",
+                "generator": "search",
+                "gsrnamespace": "6", # File namespace
+                "gsrsearch": q,
+                "gsrlimit": "1",
+                "prop": "imageinfo",
+                "iiprop": "url|extmetadata",
+                "iiurlwidth": "1024",
+                "format": "json"
+            }
+
+            try:
+                # Be polite
+                time.sleep(0.1)
+                response = requests.get(api_url, params=params, headers={"User-Agent": "GenealogyApp/1.0 (contact@example.com)"}, timeout=5)
+                data = response.json()
+
+                if "query" in data and "pages" in data["query"]:
+                    # Get first result
+                    page_id = list(data["query"]["pages"].keys())[0]
+                    page = data["query"]["pages"][page_id]
+
+                    if "imageinfo" in page:
+                        info = page["imageinfo"][0]
+                        thumb_url = info.get("thumburl", info.get("url"))
+
+                        metadata = info.get("extmetadata", {})
+                        description = metadata.get("ImageDescription", {}).get("value", q)
+                        # Clean HTML from description if needed, or keep it simple
+                        # Simple regex to strip HTML tags
+                        description = re.sub(r'<[^>]+>', '', description)[:150] + "..."
+
+                        result = {
+                            "src": thumb_url,
+                            "alt": f"Historical image of {location}",
+                            "caption": description,
+                            "style": { "filter": "sepia(20%) contrast(110%)" } # Default vintage style
+                        }
+
+                        self.image_cache[cache_key] = result
+                        self.cache_updated = True
+                        print(f"   [Wikimedia] Found image for '{q}'")
+                        return result
+
+            except Exception as e:
+                print(f"   [Wikimedia] Error fetching for '{q}': {e}")
+                continue
+
+        # Cache miss (None) to avoid re-searching
+        self.image_cache[cache_key] = None
+        self.cache_updated = True
+        return None
 
     def _normalize_date(self, raw_date_string):
         """
@@ -156,10 +264,10 @@ class GenealogyTextPipeline:
                 })
         return events
 
-    def parse_document(self):
-        print(f"--- Scanning Narrative Document ({self.docx_path}) ---")
+    def parse_document(self, docx_path, lineage_label):
+        print(f"--- Scanning Narrative Document ({docx_path}) ---")
         try:
-            doc = Document(self.docx_path)
+            doc = Document(docx_path)
         except Exception as e:
             print(f"CRITICAL ERROR: Could not load Word doc. {e}")
             return
@@ -220,6 +328,7 @@ class GenealogyTextPipeline:
                 current_profile = {
                     "id": uid,
                     "name": clean_name,
+                    "lineage": lineage_label,
                     "generation": current_generation,
                     "vital_stats": {
                         "born_date": "Unknown",
@@ -273,6 +382,59 @@ class GenealogyTextPipeline:
             self.family_data.append(current_profile)
 
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
+
+    def extract_tags(self, profile):
+        tags = []
+        notes = profile["story"]["notes"]
+        born_loc = profile["vital_stats"]["born_location"]
+        died_loc = profile["vital_stats"]["died_location"]
+
+        # 1. Immigrant
+        # Heuristic: Born in UK/Europe, Died in USA/MA/CT
+        # Or keyword "immigrant", "came to america"
+        is_immigrant = False
+        if re.search(r'\b(immigrant|emigrated|came to america|arrived in|arrived with)\b', notes, re.IGNORECASE):
+            is_immigrant = True
+
+        # Simple location check
+        uk_locations = ["England", "UK", "Britain", "London", "Dorset", "Essex", "Somerset", "Lincolnshire", "Suffolk", "Kent", "Holland", "Netherlands", "Scotland", "Ireland", "Wales"]
+        us_locations = ["MA", "CT", "NY", "NJ", "USA", "Massachusetts", "Connecticut", "New York", "Pennsylvania", "New Hampshire", "Rhode Island"]
+
+        born_uk = any(l.lower() in born_loc.lower() for l in uk_locations)
+        died_us = any(l.lower() in died_loc.lower() for l in us_locations)
+
+        if born_uk and died_us:
+            is_immigrant = True
+
+        if is_immigrant:
+            tags.append("Immigrant")
+
+        # 2. Mayflower
+        if re.search(r'\bMayflower\b', notes, re.IGNORECASE):
+            tags.append("Mayflower")
+
+        # 3. War Veteran
+        # Keywords: War, Revolution, Army, Regiment, Captain, Lieutenant, General, Soldier, Private
+        if re.search(r'\b(served in|soldier|captain|major|lieutenant|general|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b', notes, re.IGNORECASE):
+             tags.append("War Veteran")
+
+        # 4. Founder / Settler
+        if re.search(r'\b(founder|settler|pioneer|first settler|original proprietor)\b', notes, re.IGNORECASE):
+            tags.append("Founder")
+
+        # 5. Salem Witch Trials
+        if re.search(r'\b(witch|salem trials|accused of witchcraft)\b', notes, re.IGNORECASE):
+            tags.append("Salem Witch Trials")
+
+        # 6. Education
+        if re.search(r'\b(Harvard|Yale|College|University)\b', notes, re.IGNORECASE):
+             tags.append("University Educated")
+
+        # 7. Quaker
+        if re.search(r'\b(Quaker|Friends)\b', notes, re.IGNORECASE):
+            tags.append("Quaker")
+
+        return list(set(tags))
 
     def link_family_members(self):
         print("--- Linking Family Members ---")
@@ -456,21 +618,49 @@ class GenealogyTextPipeline:
         print(f"Ariadne found {count} text-based connections.")
 
     def clean_and_save(self):
+        # Deduplicate profiles based on ID (keep first occurrence)
+        unique_data = {}
+        for p in self.family_data:
+            pid = p['id']
+            if pid not in unique_data:
+                unique_data[pid] = p
+            else:
+                existing_lineage = unique_data[pid].get('lineage')
+                new_lineage = p.get('lineage')
+                # If duplicates across lineages, usually we keep first, but maybe warn
+                if existing_lineage != new_lineage:
+                     print(f"   > Duplicate ID {pid} found across lineages ({existing_lineage} vs {new_lineage}). Keeping {existing_lineage}.")
+
+        self.family_data = list(unique_data.values())
+
         self.link_family_members()
         self._find_mentions()
 
+        print("--- Fetching Hero Images from Wikimedia ---")
         final_list = []
         
         for p in self.family_data:
+            # Fetch Image
+            born_loc = p["vital_stats"]["born_location"]
+            born_year = p["vital_stats"].get("born_year_int")
+
+            hero_image = self.fetch_wikimedia_image(born_loc, born_year)
+
+            # Extract Tags
+            tags = self.extract_tags(p)
+
             final_profile = {
                 "id": p["id"],
                 "name": p["name"],
+                "lineage": p.get("lineage", "Unknown"),
                 "generation": p["generation"],
                 "vital_stats": p["vital_stats"],
                 "story": {
                     "notes": p["story"]["notes"],
-                    "life_events": p["story"].get("life_events", [])
+                    "life_events": p["story"].get("life_events", []),
+                    "tags": tags
                 },
+                "hero_image": hero_image,
                 "relations": p.get("relations", {}),
                 "related_links": p.get("related_links", []),
                 "metadata": {
@@ -480,6 +670,9 @@ class GenealogyTextPipeline:
             }
             final_list.append(final_profile)
 
+        # Save Cache
+        self.save_cache()
+
         output_filename = "kinship-app/src/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:
             json.dump(final_list, f, indent=4, ensure_ascii=True)
@@ -487,11 +680,17 @@ class GenealogyTextPipeline:
         print(f"Data saved to {output_filename}")
 
 if __name__ == "__main__":
-    word_file = "GENEALOGY DSD Paternal Ancestry.docx"
-    
-    if os.path.exists(word_file):
-        pipeline = GenealogyTextPipeline(word_file)
-        pipeline.parse_document()
-        pipeline.clean_and_save()
-    else:
-        print(f"Error: Could not find {word_file}")
+    files = {
+        "Paternal": "GENEALOGY DSD Paternal Ancestry.docx",
+        "Maternal": "GENEALOGY DSD Maternal Ancestry.docx"
+    }
+
+    pipeline = GenealogyTextPipeline()
+
+    for lineage, filename in files.items():
+        if os.path.exists(filename):
+            pipeline.parse_document(filename, lineage)
+        else:
+            print(f"Error: Could not find {filename}")
+
+    pipeline.clean_and_save()

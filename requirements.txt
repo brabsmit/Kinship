@@ -1,1 +1,3 @@
 python-docx
+requests
+google-genai

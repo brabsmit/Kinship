@@ -11,11 +11,16 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, Network, List as ListIcon, Lightbulb, Sparkles, Heart } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
+import RelationshipSelector from './RelationshipSelector';
+import HitlistPanel from './components/HitlistPanel';
+import { fetchResearchSuggestions } from './services/aiReasoning';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -41,6 +46,37 @@ const BRANCHES = {
     6: "Harris",
     7: "Wainwright",
     8: "Coolidge"
+};
+
+const TAG_CONFIG = {
+    "Immigrant": { icon: <Globe size={12} />, color: "bg-blue-100 text-blue-700 border-blue-200" },
+    "War Veteran": { icon: <Shield size={12} />, color: "bg-red-100 text-red-700 border-red-200" },
+    "Mayflower": { icon: <Anchor size={12} />, color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+    "Founder": { icon: <Flag size={12} />, color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    "Salem Witch Trials": { icon: <Flame size={12} />, color: "bg-purple-100 text-purple-700 border-purple-200" },
+    "University Educated": { icon: <GraduationCap size={12} />, color: "bg-amber-100 text-amber-700 border-amber-200" },
+    "Quaker": { icon: <User size={12} />, color: "bg-gray-100 text-gray-700 border-gray-200" },
+    "default": { icon: <Tag size={12} />, color: "bg-gray-50 text-gray-600 border-gray-200" }
+};
+
+const NARRATIVE_THREADS = [
+    { id: "pilgrims", title: "The Mayflower Pilgrims", description: "The brave souls who crossed the Atlantic on the Mayflower in 1620 to establish Plymouth Colony.", keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"], color: "bg-[#8B4513] text-white border-[#5D2E0C]", hex: "#8B4513", icon: <Anchor size={14} /> },
+    { id: "witches", title: "Salem Witch Trials", description: "Those involved in the hysteria of the Salem Witch Trials of 1692, as accused or accusers.", keywords: ["Salem", "Witch", "1692", "Accused"], color: "bg-purple-700 text-white border-purple-900", hex: "#7E22CE", icon: <Flame size={14} /> },
+    { id: "founders", title: "Town Founders", description: "Early settlers who established and incorporated the foundational towns of New England.", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
+    { id: "revolution", title: "The Patriots", description: "Soldiers and supporters who fought for American Independence during the Revolutionary War.", keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"], color: "bg-blue-800 text-white border-blue-950", hex: "#1E40AF", icon: <Shield size={14} /> },
+    { id: "industrialists", title: "The Industrialists", description: "Innovators and laborers who drove the manufacturing boom of the 19th century.", keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"], color: "bg-slate-700 text-white border-slate-900", hex: "#334155", icon: <Hammer size={14} /> },
+    { id: "quakers", title: "The Quakers", description: "Members of the Society of Friends who sought religious freedom and simplicity.", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> }
+];
+
+const detectThreads = (person) => {
+    const notes = (person.story?.notes || "").toLowerCase();
+    const tags = (person.story?.tags || []).map(t => t.toLowerCase());
+
+    return NARRATIVE_THREADS.filter(thread => {
+        return thread.keywords.some(k =>
+            notes.includes(k.toLowerCase()) || tags.includes(k.toLowerCase())
+        );
+    });
 };
 
 const LOCATION_COORDINATES = {
@@ -375,7 +411,7 @@ const generateProfileTrivia = (person, allData) => {
         const eventAt20 = HISTORY_DB.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
         if (eventAt20) {
             facts.push({
-                text: `Was around 20 years old during the ${eventAt20.label}.`,
+                text: `Was around 20 years old when the ${eventAt20.label}.`,
                 icon: <BookOpen size={16} />
             });
         }
@@ -441,18 +477,45 @@ const getPersonalLifeEvents = (lifeEvents, born, died) => {
 };
 
 // --- 2. RELATIONSHIP CALCULATOR ---
-const calculateRelationship = (ancestorId) => {
-    // Dynamic fallback if generation label is missing, otherwise use logic
-    const ancestorGen = ancestorId.split('.').length; 
-    const readerGen = 6; 
-    const diff = readerGen - ancestorGen;
+const calculateRelationship = (ancestorId, userRelation) => {
+    if (!userRelation || userRelation.isGuest) return "Relative";
 
-    if (diff === 0) return "Same Generation (Cousin)";
+    const { anchorId, stepsDown } = userRelation;
+
+    // Logic:
+    // 1. Determine "Generation Index" of Anchor.
+    //    DATASET CONVENTION: ID length correlates with AGE (Older = Longer ID).
+    //    Example: '1' (Child, born 1805) -> '1.1' (Parent, born 1774).
+    //    Therefore: Higher Gen Index = Older Generation.
+
+    // 2. Determine User's Generation Index.
+    //    User is 'stepsDown' generations *below* (younger than) the anchor.
+    //    Since Younger = Lower Index, we SUBTRACT stepsDown.
+    //    User Gen Index = AnchorGenIndex - stepsDown.
+
+    const anchorGenIndex = String(anchorId).split('.').length;
+    const userGenIndex = anchorGenIndex - stepsDown;
+
+    // 3. Determine Target Ancestor's Generation Index.
+    const ancestorGenIndex = String(ancestorId).split('.').length;
+
+    // 4. Calculate Difference (Generations between User and Ancestor)
+    //    Diff = AncestorGenIndex - UserGenIndex
+    //    Positive Diff = Ancestor is Older (Higher Index)
+    const diff = ancestorGenIndex - userGenIndex;
+
+    if (diff === 0) return "Same Generation";
     if (diff === 1) return "Parent / Aunt / Uncle";
     if (diff === 2) return "Grandparent";
     if (diff === 3) return "Great-Grandparent";
-    if (diff >= 4) return `${diff}th Great-Grandparent`;
-    if (diff < 0) return "Descendant";
+    if (diff === 4) return "2nd Great-Grandparent";
+    if (diff === 5) return "3rd Great-Grandparent";
+    if (diff >= 6) return `${diff-2}th Great-Grandparent`;
+
+    if (diff === -1) return "Child";
+    if (diff === -2) return "Grandchild";
+    if (diff <= -3) return "Descendant";
+
     return "Relative";
 };
 
@@ -484,7 +547,7 @@ const getFamilyLinks = (person, allData) => {
 const nodeWidth = 200;
 const nodeHeight = 60;
 
-const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
+const buildGenealogyGraph = (data, searchText = '', storyMode = false, selectedThreadId = null) => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
@@ -499,6 +562,9 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     const hasStory = !!person.story?.notes;
     const isMatch = !searchText || person.name.toLowerCase().includes(searchText.toLowerCase());
 
+    const personThreads = detectThreads(person);
+    const isInThread = selectedThreadId ? personThreads.some(t => t.id === selectedThreadId) : false;
+
     // Visual Logic
     let opacity = 1;
     let border = '1px solid #ddd';
@@ -507,10 +573,12 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     // Dimming logic
     // If search is active and not a match -> Dim
     // If story mode is active, NO search is active, and not a story -> Dim
-    // (If search is active, we prioritize search results visibility even if they don't have a story)
+    // If thread is selected and not in thread -> Dim
     if (searchText && !isMatch) {
         opacity = 0.2;
-    } else if (storyMode && !hasStory && !searchText) {
+    } else if (selectedThreadId && !isInThread) {
+        opacity = 0.2;
+    } else if (storyMode && !hasStory && !searchText && !selectedThreadId) {
         opacity = 0.2;
     }
 
@@ -518,6 +586,15 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     if (storyMode && hasStory) {
         border = '2px solid #F59E0B'; // Gold
         boxShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
+    }
+
+    // Highlighting logic (Thread Mode)
+    if (selectedThreadId && isInThread) {
+        const thread = NARRATIVE_THREADS.find(t => t.id === selectedThreadId);
+        if (thread) {
+            border = `2px solid ${thread.hex}`;
+            boxShadow = `0 0 15px ${thread.hex}40`;
+        }
     }
 
     dagreGraph.setNode(String(person.id), { width: nodeWidth, height: nodeHeight });
@@ -541,6 +618,7 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
 
     // We override the default label in node display, but here we set data
     // ReactFlow default node expects 'label' in data to render text.
+    const tags = person.story?.tags || [];
     nodes[nodes.length - 1].data.label = (
         <div className="relative">
             {hasStory && (
@@ -550,6 +628,18 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
             )}
             <div className="font-bold text-sm text-gray-800 truncate">{person.name}</div>
             <div className="text-xs text-gray-500">b. {bornYear}</div>
+            {tags.length > 0 && (
+                <div className="flex justify-center gap-1 mt-1">
+                    {tags.slice(0, 3).map(tag => {
+                        const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                        return (
+                            <span key={tag} className={`p-0.5 rounded-full ${conf.color}`} title={tag}>
+                                {React.cloneElement(conf.icon, { size: 8 })}
+                            </span>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 
@@ -559,14 +649,24 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
     links.children.forEach(child => {
         const edgeId = `${String(person.id)}-${String(child.id)}`;
         if (!processedEdges.has(edgeId)) {
+            const childThreads = detectThreads(child);
+            const childInThread = selectedThreadId ? childThreads.some(t => t.id === selectedThreadId) : false;
+            const isThreadEdge = selectedThreadId && isInThread && childInThread;
+            const threadColor = selectedThreadId ? NARRATIVE_THREADS.find(t => t.id === selectedThreadId)?.hex : null;
+
             dagreGraph.setEdge(String(person.id), String(child.id));
             edges.push({
                 id: edgeId,
                 source: String(person.id),
                 target: String(child.id),
                 type: 'smoothstep',
-                markerEnd: { type: MarkerType.ArrowClosed },
-                style: { stroke: '#2C3E50' }
+                markerEnd: { type: MarkerType.ArrowClosed, color: isThreadEdge ? threadColor : '#2C3E50' },
+                style: {
+                    stroke: isThreadEdge ? threadColor : '#2C3E50',
+                    strokeWidth: isThreadEdge ? 3 : 1,
+                    opacity: selectedThreadId && !isThreadEdge ? 0.2 : 1
+                },
+                animated: isThreadEdge
             });
             processedEdges.add(edgeId);
         }
@@ -608,8 +708,8 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false) => {
   return { nodes: layoutedNodes, edges };
 };
 
-const GraphView = ({ data, onNodeClick, searchText, storyMode }) => {
-    const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => buildGenealogyGraph(data, searchText, storyMode), [data, searchText, storyMode]);
+const GraphView = ({ data, onNodeClick, searchText, storyMode, selectedThreadId }) => {
+    const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => buildGenealogyGraph(data, searchText, storyMode, selectedThreadId), [data, searchText, storyMode, selectedThreadId]);
 
     // We need to update nodes when props change, but useNodesState manages internal state too.
     // So we use useEffect to sync.
@@ -679,6 +779,91 @@ const ProfileTrivia = ({ person, familyData }) => {
 };
 
 // --- COMPONENTS ---
+
+const GenerationGroup = ({ generation, items, selectedAncestor, onSelect, userRelation, searchText }) => {
+    const [isOpen, setIsOpen] = useState(true);
+
+    React.useEffect(() => {
+        if (searchText) setIsOpen(true);
+    }, [searchText]);
+
+    return (
+        <div className="mb-0 border-b border-gray-100 last:border-0">
+            {/* Sticky Header for Generation */}
+            <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="sticky top-0 bg-gray-50/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors"
+            >
+                <div className="flex items-center gap-2">
+                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    {generation}
+                </div>
+                <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
+            </div>
+
+            {isOpen && (
+                <div className="bg-white">
+                    {items.map(item => {
+                        const born = item.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
+                        const died = item.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
+                        const relation = calculateRelationship(item.id, userRelation);
+                        const isSelected = selectedAncestor?.id === item.id;
+
+                        return (
+                            <div
+                                key={item.id}
+                                onClick={() => onSelect(item)}
+                                className={`
+                                    group py-3 pr-4 cursor-pointer transition-all border-b border-gray-50 last:border-0 border-l-4
+                                    ${isSelected
+                                        ? 'bg-blue-50 border-l-[#2C3E50] pl-3'
+                                        : 'bg-white hover:bg-gray-50 border-l-transparent pl-3'
+                                    }
+                                `}
+                            >
+                                <div className="flex justify-between items-start mb-1">
+                                    <div className="flex items-center gap-1.5 min-w-0">
+                                        {item.story?.notes && (
+                                            <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-[#E67E22]" : "text-[#F59E0B]"}`} />
+                                        )}
+                                        <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-gray-900' : 'text-gray-800'}`}>
+                                            {item.name}
+                                        </h3>
+                                    </div>
+                                    <div className={`text-xs font-mono shrink-0 ${isSelected ? 'text-gray-500' : 'text-gray-400'}`}>
+                                        {born} – {died}
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center mt-1">
+                                     <span className={`text-[10px] font-bold uppercase tracking-wider shrink-0 ${
+                                        isSelected ? 'text-blue-400' : 'text-gray-400'
+                                    }`}>
+                                        {relation}
+                                    </span>
+
+                                    {/* List Item Tags */}
+                                    {item.story.tags && item.story.tags.length > 0 && (
+                                        <div className="flex gap-1">
+                                            {item.story.tags.map(tag => {
+                                                const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                                return (
+                                                    <span key={tag} className={`p-0.5 rounded-full ${conf.color} border-none`} title={tag}>
+                                                        {React.cloneElement(conf.icon, { size: 8 })}
+                                                    </span>
+                                                )
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
 
 const TriviaWidget = ({ data, branchName }) => {
     const triviaItems = useMemo(() => generateTrivia(data, branchName), [data, branchName]);
@@ -875,8 +1060,9 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
     </div>
 );
 
-const HeroImage = ({ location, year }) => {
-    const asset = getHeroImage(location, year);
+const HeroImage = ({ location, year, heroImage }) => {
+    // Priority: heroImage prop > getHeroImage logic
+    const asset = heroImage || getHeroImage(location, year);
     const [imgSrc, setImgSrc] = useState(asset.src);
     const [hasError, setHasError] = useState(false);
 
@@ -922,8 +1108,130 @@ const StatItem = ({ label, value, icon }) => (
     </div>
 );
 
-const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
+const EpicList = ({ threads, onSelect }) => {
+    return (
+        <div className="p-4 space-y-4 overflow-y-auto h-full custom-scrollbar">
+            {threads.map(thread => (
+                <div
+                    key={thread.id}
+                    onClick={() => onSelect(thread.id)}
+                    className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group relative overflow-hidden"
+                >
+                    <div className={`absolute top-0 right-0 p-2 opacity-5 ${thread.color.split(' ')[0]} bg-clip-text text-transparent`}>
+                        {React.cloneElement(thread.icon, { size: 64 })}
+                    </div>
+
+                    <div className="flex items-start gap-3 relative z-10">
+                        <div className={`p-2 rounded-full ${thread.color} border-none`}>
+                            {React.cloneElement(thread.icon, { size: 16 })}
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-gray-800 mb-1">{thread.title}</h3>
+                            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
+                                {thread.description}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#E67E22] group-hover:gap-2 transition-all">
+                        Explore Epic <ChevronRight size={12} />
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const ThreadTimeline = ({ thread, members, onBack, onSelectMember }) => {
+    // Sort members by birth year
+    const sortedMembers = [...members].sort((a, b) => {
+        const aYear = parseInt(a.vital_stats.born_date?.match(/\d{4}/)?.[0] || 9999);
+        const bYear = parseInt(b.vital_stats.born_date?.match(/\d{4}/)?.[0] || 9999);
+        return aYear - bYear;
+    });
+
+    return (
+        <div className="flex flex-col h-full bg-white">
+            {/* Header */}
+            <div className={`p-4 ${thread.color.replace('text-white', 'bg-opacity-10')} border-b border-gray-100`}>
+                <button
+                    onClick={onBack}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-800 mb-3"
+                >
+                    <ChevronLeft size={12} /> Back to Epics
+                </button>
+
+                <div className="flex items-center gap-3 mb-2">
+                    <div className={`p-2 rounded-full ${thread.color}`}>
+                        {React.cloneElement(thread.icon, { size: 18 })}
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 font-display leading-tight">
+                        {thread.title}
+                    </h2>
+                </div>
+
+                <p className="text-xs text-gray-600 leading-relaxed pl-1">
+                    {thread.description}
+                </p>
+            </div>
+
+            {/* Timeline List */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 relative">
+                 {/* Vertical Line */}
+                 <div className="absolute left-7 top-4 bottom-4 w-px bg-gray-200"></div>
+
+                 {sortedMembers.map((member, idx) => {
+                     const born = member.vital_stats.born_date?.match(/\d{4}/)?.[0] || '?';
+                     const died = member.vital_stats.died_date?.match(/\d{4}/)?.[0] || '?';
+
+                     return (
+                        <div key={member.id} className="relative pl-8 pb-8 group last:pb-0">
+                            {/* Dot */}
+                            <div className={`absolute left-[0.3rem] top-1.5 w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 ${thread.hex ? '' : 'bg-gray-400'}`} style={{ backgroundColor: thread.hex }}></div>
+
+                            <div
+                                onClick={() => onSelectMember(member)}
+                                className="bg-white border border-gray-100 rounded-lg p-3 cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all"
+                            >
+                                <div className="flex justify-between items-start mb-1">
+                                    <h3 className="font-bold text-sm text-gray-800 group-hover:text-[#E67E22] transition-colors">
+                                        {member.name}
+                                    </h3>
+                                    <span className="text-xs font-mono text-gray-400">{born}</span>
+                                </div>
+                                <div className="text-xs text-gray-500 line-clamp-2">
+                                    {member.story.notes || "No specific notes available."}
+                                </div>
+                            </div>
+                        </div>
+                     );
+                 })}
+            </div>
+        </div>
+    );
+};
+
+const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation, onSelectThread }) => {
     if (!item) return null;
+
+    const [researchSuggestions, setResearchSuggestions] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    React.useEffect(() => {
+        setResearchSuggestions(null);
+        setIsAnalyzing(false);
+    }, [item]);
+
+    const handleAnalyzeProfile = async () => {
+        setIsAnalyzing(true);
+        try {
+            const suggestions = await fetchResearchSuggestions(item);
+            setResearchSuggestions(suggestions);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
     const diedYear = parseInt(item.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
@@ -938,8 +1246,13 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
     // Merge and sort
     const events = [...historyEvents, ...personalEvents].sort((a, b) => a.year - b.year);
 
-    const relationship = calculateRelationship(item.id);
+    const relationship = calculateRelationship(item.id, userRelation);
     const family = getFamilyLinks(item, familyData);
+
+    const relatedConnections = (item.related_links || []).map(link => {
+        const target = familyData.find(p => p.id === link.target_id);
+        return target ? { target, link } : null;
+    }).filter(Boolean);
 
     // Stats for the bar
     const childrenCount = family.children.length;
@@ -964,7 +1277,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
 
                 {/* HERO HEADER */}
                 <div className="relative">
-                    <HeroImage location={bornLoc} year={bornYear} />
+                    <HeroImage location={bornLoc} year={bornYear} heroImage={item.hero_image} />
                     
                     <div className="absolute bottom-0 left-0 right-0 px-8 pb-12 pt-24 bg-gradient-to-t from-[#fdfbf7] to-transparent z-20 flex flex-col items-center text-center">
                         <h1 className="text-5xl md:text-6xl font-display font-bold text-gray-900 mb-4 drop-shadow-sm leading-tight">
@@ -982,11 +1295,43 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
                 <div className="max-w-3xl mx-auto px-6 pb-24">
 
                     {/* STATS BAR */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-12 bg-white/50 rounded-xl mx-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-8 bg-white/50 rounded-xl mx-4">
                         <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
                         <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
                         <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
                         <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
+                    </div>
+
+                    {/* TAGS & THREADS */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
+                        {item.story.tags && item.story.tags.map(tag => {
+                            const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                            return (
+                                <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
+                                    {conf.icon}
+                                    {tag}
+                                </div>
+                            );
+                        })}
+
+                        {/* Narrative Thread Badges */}
+                        {detectThreads(item).map(thread => (
+                            <button
+                                key={thread.id}
+                                onClick={() => {
+                                    if (onSelectThread) {
+                                        onSelectThread(thread.id);
+                                        // View mode switching is handled in App.jsx but we can hint it here or ensure logic flow
+                                        // The prop is called onSelectThread, which sets state in App
+                                    }
+                                }}
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
+                                title={`View "${thread.title}" Epic`}
+                            >
+                                {thread.icon}
+                                Part of the {thread.title} Epic
+                            </button>
+                        ))}
                     </div>
 
                     {/* PROFILE TRIVIA */}
@@ -1063,6 +1408,116 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
                         </div>
                     </div>
 
+                    {/* STORY CONNECTIONS */}
+                    {relatedConnections.length > 0 && (
+                        <div className="mt-16">
+                             <div className="flex items-center gap-4 mb-8">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Link size={14} strokeWidth={1.5} /> Story Connections
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {relatedConnections.map(({ target, link }, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => onNavigate(target)}
+                                        className="flex items-start gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group"
+                                    >
+                                         <div className="w-10 h-10 shrink-0 rounded-full bg-orange-50/50 border border-orange-100 flex items-center justify-center text-orange-400 font-serif font-bold group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">
+                                            <Link size={16} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-0.5">{link.relation_type}</div>
+                                            <div className="font-display font-bold text-gray-800 group-hover:text-[#E67E22] transition-colors mb-1">{target.name}</div>
+                                            {link.source_text && (
+                                                <div className="text-xs text-gray-500 italic border-l-2 border-orange-100 pl-2 leading-relaxed">
+                                                    "{link.source_text}"
+                                                </div>
+                                            )}
+                                        </div>
+                                        <ChevronRight size={16} className="text-gray-300 mt-2 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* RESEARCH ASSISTANT */}
+                    <div className="mt-16">
+                         <div className="flex items-center gap-4 mb-8">
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <Brain size={14} strokeWidth={1.5} /> Research Assistant
+                            </h2>
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                        </div>
+
+                        {!researchSuggestions && !isAnalyzing && (
+                            <div className="flex flex-col items-center justify-center p-8 bg-white border border-gray-200 rounded-xl text-center">
+                                <div className="bg-blue-50 p-3 rounded-full mb-4">
+                                    <Brain size={24} className="text-blue-500" />
+                                </div>
+                                <h3 className="font-display font-bold text-gray-800 mb-2">Uncover Missing Details</h3>
+                                <p className="text-sm text-gray-500 mb-6 max-w-sm">
+                                    Use AI to analyze this profile and find actionable next steps for your research.
+                                </p>
+                                <button
+                                    onClick={handleAnalyzeProfile}
+                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center gap-2"
+                                >
+                                    <Sparkles size={14} /> Analyze Profile
+                                </button>
+                            </div>
+                        )}
+
+                        {isAnalyzing && (
+                            <div className="flex flex-col items-center justify-center p-12 bg-white border border-gray-200 rounded-xl">
+                                <div className="animate-spin text-blue-500 mb-4">
+                                    <Loader2 size={24} />
+                                </div>
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Analyzing Records...</p>
+                            </div>
+                        )}
+
+                        {researchSuggestions && (
+                            <div className="bg-white border border-blue-100 rounded-xl overflow-hidden shadow-sm">
+                                <div className="bg-blue-50/50 px-6 py-4 border-b border-blue-100 flex justify-between items-center">
+                                     <h3 className="font-bold text-blue-800 text-sm flex items-center gap-2">
+                                        <Sparkles size={14} className="text-blue-500" /> Suggested Research Steps
+                                     </h3>
+                                     <button onClick={() => setResearchSuggestions(null)} className="text-blue-400 hover:text-blue-600">
+                                        <X size={14} />
+                                     </button>
+                                </div>
+                                <div className="divide-y divide-gray-100">
+                                    {researchSuggestions.map((suggestion, idx) => (
+                                        <div key={idx} className="p-4 flex gap-3 hover:bg-gray-50 transition-colors">
+                                            <div className="mt-0.5 text-blue-400 shrink-0">
+                                                <CheckSquare size={16} />
+                                            </div>
+                                            <div className="text-sm text-gray-700 leading-relaxed flex-1">
+                                                <ReactMarkdown
+                                                    remarkPlugins={[remarkGfm]}
+                                                    components={{
+                                                        p: ({node, ...props}) => <p {...props} className="mb-1 last:mb-0" />,
+                                                        a: ({node, ...props}) => <a {...props} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" />,
+                                                        ul: ({node, ...props}) => <ul {...props} className="list-disc list-inside ml-2" />,
+                                                        ol: ({node, ...props}) => <ol {...props} className="list-decimal list-inside ml-2" />
+                                                    }}
+                                                >
+                                                    {suggestion}
+                                                </ReactMarkdown>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
                     {/* META FOOTER */}
                      <div className="mt-16 pt-8 border-t border-gray-200/50 text-center">
                          <div className="inline-flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest font-mono">
@@ -1081,21 +1536,77 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate }) => {
 export default function App() {
   const [selectedAncestor, setSelectedAncestor] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'graph'
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist'
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const [selectedLineage, setSelectedLineage] = useState('Paternal');
+
+  // Sidebar Resizing State
+  const [sidebarWidth, setSidebarWidth] = useState(450);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResizing = useCallback((e) => {
+    e.preventDefault();
+    setIsResizing(true);
+  }, []);
+
+  const stopResizing = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
+  const resize = useCallback((mouseMoveEvent) => {
+    if (isResizing) {
+      // Limit min/max width
+      const newWidth = Math.max(300, Math.min(mouseMoveEvent.clientX, 800));
+      setSidebarWidth(newWidth);
+    }
+  }, [isResizing]);
+
+  React.useEffect(() => {
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseup", stopResizing);
+    return () => {
+      window.removeEventListener("mousemove", resize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [resize, stopResizing]);
+
+  // New State for User Relationship
+  const [userRelation, setUserRelation] = useState(() => {
+    const saved = localStorage.getItem('userRelation');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const handleRelationComplete = (relation) => {
+    setUserRelation(relation);
+    localStorage.setItem('userRelation', JSON.stringify(relation));
+  };
 
   const filteredGraphData = useMemo(() => {
-    return familyData.filter(p => String(p.id).startsWith(String(selectedBranchId)));
-  }, [selectedBranchId]);
+    return familyData.filter(p => {
+        // Lineage Filter: Default to 'Paternal' if field is missing (legacy data)
+        const pLineage = p.lineage || 'Paternal';
+        const matchesLineage = pLineage === selectedLineage;
+
+        const matchesBranch = String(p.id).startsWith(String(selectedBranchId));
+        const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
+        return matchesLineage && matchesBranch && matchesTag;
+    });
+  }, [selectedBranchId, selectedTag, selectedLineage]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
     const groups = {};
-    const filtered = familyData.filter(item => {
+    const filtered = filteredGraphData.filter(item => {
         const matchesSearch = item.name.toLowerCase().includes(searchText.toLowerCase());
         const matchesStory = !storyMode || (item.story?.notes);
-        return matchesSearch && matchesStory;
+
+        // Filter by Epic/Thread if selected (List View Logic: Filter strictly)
+        const threadMatches = !selectedThreadId || detectThreads(item).some(t => t.id === selectedThreadId);
+
+        return matchesSearch && matchesStory && threadMatches;
     });
     
     filtered.forEach(item => {
@@ -1105,20 +1616,37 @@ export default function App() {
     });
 
     return groups;
-  }, [searchText, storyMode]);
+  }, [searchText, storyMode, filteredGraphData]);
 
   return (
     <div className="flex h-screen bg-white font-sans overflow-hidden">
       
+      {/* Relationship Modal */}
+      {!userRelation && (
+          <RelationshipSelector data={familyData} onComplete={handleRelationComplete} />
+      )}
+
       {/* --- LEFT NAVIGATION --- */}
-      <div className={`
-        flex flex-col border-r border-gray-200 bg-white h-full z-10 transition-all duration-300
-        ${selectedAncestor ? 'hidden md:flex' : 'w-full'}
-        ${viewMode === 'graph'
-            ? 'md:flex-1 max-w-full' // Graph Mode: takes available space (flex-1), but max-w-full
-            : 'md:w-[350px] shrink-0' // List Mode: fixed width
-        }
-      `}>
+      <div
+        className={`
+            relative flex flex-col border-r border-gray-200 bg-white h-full z-10
+            ${!isResizing ? 'transition-all duration-300' : ''}
+            ${selectedAncestor ? 'hidden md:flex' : 'w-full'}
+            ${viewMode === 'graph'
+                ? 'md:flex-1 max-w-full' // Graph Mode: takes available space (flex-1), but max-w-full
+                : 'shrink-0' // List Mode: dynamic width
+            }
+        `}
+        style={viewMode === 'list' ? { width: sidebarWidth } : {}}
+      >
+        {/* Resize Handle */}
+        {viewMode === 'list' && (
+            <div
+                className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
+                onMouseDown={startResizing}
+                title="Drag to resize sidebar"
+            />
+        )}
         {/* Header with Title and Controls */}
         <div className="p-4 border-b border-gray-100 bg-white z-20 space-y-4">
             <div className="flex justify-between items-center">
@@ -1140,20 +1668,51 @@ export default function App() {
                  >
                     <Network size={14} /> Graph
                  </button>
+                 <button
+                    onClick={() => setViewMode('threads')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <BookOpen size={14} /> Epics
+                    </button>
+                    <button
+                    onClick={() => setViewMode('hitlist')}
+                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                 >
+                    <AlertTriangle size={14} /> Hitlist
+                 </button>
               </div>
             </div>
 
-            {/* Search or Branch Filter Row */}
-            {viewMode === 'graph' ? (
-                <div className="flex gap-2 items-center">
-                    <div className="flex-1 overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
+            {/* Unified Controls: Branch Filter & Search */}
+            <div className="flex flex-col gap-3">
+                {!['threads', 'hitlist'].includes(viewMode) && (
+                  <>
+                    {/* Lineage Selector */}
+                    <div className="flex gap-2">
+                        {['Paternal', 'Maternal'].map(lin => (
+                            <button
+                                key={lin}
+                                onClick={() => setSelectedLineage(lin)}
+                                className={`flex-1 py-1.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
+                                    selectedLineage === lin
+                                    ? (lin === 'Paternal' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#D946EF] text-[#D946EF]')
+                                    : 'border-transparent text-gray-400 hover:text-gray-600'
+                                }`}
+                            >
+                                {lin} Lineage
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Branch Selector (Horizontal Scroll) */}
+                    <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
                         {Object.entries(BRANCHES).map(([id, name]) => (
                             <button
                                 key={id}
                                 onClick={() => setSelectedBranchId(id)}
                                 className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
                                     selectedBranchId === id
-                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm'
+                                    ? (selectedLineage === 'Paternal' ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm' : 'bg-[#831843] text-white border-[#831843] shadow-sm')
                                     : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                                 }`}
                             >
@@ -1161,46 +1720,113 @@ export default function App() {
                             </button>
                         ))}
                     </div>
-                     <button
-                        onClick={() => setStoryMode(!storyMode)}
-                        className={`px-3 py-1.5 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider h-full
-                            ${storyMode
-                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                            }
-                        `}
-                        title="Toggle Story Mode"
-                    >
-                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                    </button>
-                </div>
-            ) : (
-                <div className="flex gap-2">
-                    <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
-                        <Search size={16} className="text-gray-400" />
-                        <input
-                        type="text"
-                        className="ml-2 flex-1 bg-transparent outline-none text-sm"
-                        placeholder="Find an ancestor..."
-                        value={searchText}
-                        onChange={e => setSearchText(e.target.value)}
-                        />
+
+                    {/* Search & Options Row */}
+                    <div className="flex gap-2">
+                        <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                            <Search size={16} className="text-gray-400" />
+                            <input
+                            type="text"
+                            className="ml-2 flex-1 bg-transparent outline-none text-sm"
+                            placeholder="Find an ancestor..."
+                            value={searchText}
+                            onChange={e => setSearchText(e.target.value)}
+                            />
+                        </div>
+
+                        <button
+                            onClick={() => setStoryMode(!storyMode)}
+                            className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
+                                ${storyMode
+                                    ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
+                                    : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
+                                }
+                            `}
+                            title="Toggle Story Mode"
+                        >
+                            <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
+                        </button>
+
+                         <button
+                            onClick={() => {
+                                setUserRelation(null);
+                                localStorage.removeItem('userRelation');
+                            }}
+                            className="px-3 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all flex items-center justify-center"
+                            title="Reset Identity / Session"
+                        >
+                            <LogOut size={16} />
+                        </button>
                     </div>
 
-                    <button
-                        onClick={() => setStoryMode(!storyMode)}
-                        className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
-                            ${storyMode
-                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                            }
-                        `}
-                        title="Toggle Story Mode"
-                    >
-                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                    </button>
-                </div>
-            )}
+                    {/* Tag Filters */}
+                    <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+                        <button
+                            onClick={() => setSelectedTag(null)}
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
+                                !selectedTag
+                                ? 'bg-gray-800 text-white border-gray-800'
+                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                            }`}
+                        >
+                            All
+                        </button>
+                        {Object.keys(TAG_CONFIG).filter(t => t !== 'default').map(tag => {
+                             const conf = TAG_CONFIG[tag];
+                             const isActive = selectedTag === tag;
+                             return (
+                                <button
+                                    key={tag}
+                                    onClick={() => setSelectedTag(isActive ? null : tag)}
+                                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                        isActive
+                                        ? conf.color + ' ring-1 ring-offset-1'
+                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    {conf.icon} {tag}
+                                </button>
+                             );
+                        })}
+                    </div>
+                  </>
+                )}
+
+                {/* Narrative Epics Selector (Available in both modes) */}
+                {viewMode !== 'hitlist' && (
+                    <div className="flex flex-col gap-1 mt-1">
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
+                        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                            <button
+                                onClick={() => setSelectedThreadId(null)}
+                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                    !selectedThreadId
+                                    ? 'bg-gray-800 text-white border-gray-800'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                }`}
+                            >
+                                <X size={10} /> None
+                            </button>
+                            {NARRATIVE_THREADS.map(thread => {
+                                const isActive = selectedThreadId === thread.id;
+                                return (
+                                    <button
+                                        key={thread.id}
+                                        onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
+                                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                            isActive
+                                            ? thread.color + ' ring-1 ring-offset-1'
+                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {thread.icon} {thread.title}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
 
         {/* TRIVIA WIDGET */}
@@ -1208,61 +1834,61 @@ export default function App() {
             <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
         )}
 
-        {viewMode === 'list' ? (
+        {viewMode === 'list' && (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {Object.entries(groupedData).map(([generation, items]) => (
-                    <div key={generation} className="mb-2">
-                        {/* Sticky Header for Generation */}
-                        <div className="sticky top-0 bg-gray-100/95 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-y border-gray-200 shadow-sm z-10 flex items-center justify-between">
-                            {generation}
-                            <span className="bg-gray-200 text-gray-600 px-1.5 rounded text-[10px]">{items.length}</span>
-                        </div>
-
-                        <div className="px-4 py-2">
-                            {items.map(item => (
-                                <div
-                                    key={item.id}
-                                    onClick={() => setSelectedAncestor(item)}
-                                    className={`
-                                        group p-4 mb-2 rounded-lg cursor-pointer border transition-all
-                                        ${selectedAncestor?.id === item.id
-                                            ? 'bg-[#2C3E50] border-[#2C3E50] text-white shadow-md'
-                                            : 'bg-white border-gray-100 hover:border-[#E67E22] hover:shadow-sm'
-                                        }
-                                    `}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div className="flex items-center gap-2">
-                                            {item.story?.notes && (
-                                                <BookOpen size={12} className={selectedAncestor?.id === item.id ? "text-[#E67E22]" : "text-[#F59E0B]"} />
-                                            )}
-                                            <h3 className={`font-bold text-sm ${selectedAncestor?.id === item.id ? 'text-white' : 'text-gray-800'}`}>
-                                                {item.name}
-                                            </h3>
-                                        </div>
-                                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                                            selectedAncestor?.id === item.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                                        }`}>
-                                            {item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 'Unknown'}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <GenerationGroup
+                        key={generation}
+                        generation={generation}
+                        items={items}
+                        selectedAncestor={selectedAncestor}
+                        onSelect={setSelectedAncestor}
+                        userRelation={userRelation}
+                        searchText={searchText}
+                    />
                 ))}
             </div>
-        ) : (
+        )}
+
+        {viewMode === 'graph' && (
             <div className="flex-1 overflow-hidden relative border-t border-gray-100">
                 <GraphView
                     data={filteredGraphData}
                     searchText={searchText}
                     storyMode={storyMode}
+                    selectedThreadId={selectedThreadId}
                     onNodeClick={(person) => {
                         setSelectedAncestor(person);
                     }}
                 />
             </div>
+        )}
+
+        {viewMode === 'threads' && (
+             <div className="flex-1 overflow-hidden relative border-t border-gray-100 bg-[#FAFAF9]">
+                 {selectedThreadId ? (
+                     <ThreadTimeline
+                        thread={NARRATIVE_THREADS.find(t => t.id === selectedThreadId)}
+                        members={familyData.filter(p => detectThreads(p).some(t => t.id === selectedThreadId))}
+                        onBack={() => setSelectedThreadId(null)}
+                        onSelectMember={setSelectedAncestor}
+                     />
+                 ) : (
+                     <EpicList
+                        threads={NARRATIVE_THREADS}
+                        onSelect={(id) => setSelectedThreadId(id)}
+                     />
+                 )}
+             </div>
+        )}
+
+        {viewMode === 'hitlist' && (
+             <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
+                 <HitlistPanel onSelectProfile={(id) => {
+                     const person = familyData.find(p => String(p.id) === String(id));
+                     if (person) setSelectedAncestor(person);
+                 }} />
+             </div>
         )}
       </div>
 
@@ -1280,6 +1906,11 @@ export default function App() {
                 familyData={familyData}
                 onClose={() => setSelectedAncestor(null)} 
                 onNavigate={setSelectedAncestor}
+                userRelation={userRelation}
+                onSelectThread={(threadId) => {
+                    setSelectedThreadId(threadId);
+                    setViewMode('threads'); // Switch to Threads view to see the timeline
+                }}
              />
           ) : (
              <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
@@ -1287,9 +1918,6 @@ export default function App() {
                      <Info size={48} className="text-gray-400" />
                  </div>
                  <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor</h2>
-                 <p className="max-w-md text-center text-gray-500 px-6">
-                    Discover their stories, see the world through their eyes, and understand how they connect to you.
-                 </p>
              </div>
           )}
       </div>
