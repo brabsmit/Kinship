@@ -2,9 +2,12 @@ import json
 import os
 from google import genai
 import re
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Use environment variable for API key
-API_KEY = os.environ.get("VITE_GEMINI_API_KEY")
+API_KEY = os.getenv("VITE_GEMINI_API_KEY")
 
 DATA_FILE = "kinship-app/src/family_data.json"
 OUTPUT_FILE = "kinship-app/src/hitlist_data.json"
