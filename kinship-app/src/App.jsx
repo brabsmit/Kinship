@@ -1663,141 +1663,147 @@ export default function App() {
 
             {/* Unified Controls: Branch Filter & Search */}
             <div className="flex flex-col gap-3">
-                {/* Lineage Selector */}
-                <div className="flex gap-2">
-                    {['Paternal', 'Maternal'].map(lin => (
-                        <button
-                            key={lin}
-                            onClick={() => setSelectedLineage(lin)}
-                            className={`flex-1 py-1.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
-                                selectedLineage === lin
-                                ? (lin === 'Paternal' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#D946EF] text-[#D946EF]')
-                                : 'border-transparent text-gray-400 hover:text-gray-600'
-                            }`}
-                        >
-                            {lin} Lineage
-                        </button>
-                    ))}
-                </div>
-
-                {/* Branch Selector (Horizontal Scroll) */}
-                <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
-                    {Object.entries(BRANCHES).map(([id, name]) => (
-                        <button
-                            key={id}
-                            onClick={() => setSelectedBranchId(id)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
-                                selectedBranchId === id
-                                ? (selectedLineage === 'Paternal' ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm' : 'bg-[#831843] text-white border-[#831843] shadow-sm')
-                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-                            }`}
-                        >
-                            {id}. {name}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Search & Options Row */}
-                <div className="flex gap-2">
-                    <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
-                        <Search size={16} className="text-gray-400" />
-                        <input
-                        type="text"
-                        className="ml-2 flex-1 bg-transparent outline-none text-sm"
-                        placeholder="Find an ancestor..."
-                        value={searchText}
-                        onChange={e => setSearchText(e.target.value)}
-                        />
-                    </div>
-
-                    <button
-                        onClick={() => setStoryMode(!storyMode)}
-                        className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
-                            ${storyMode
-                                ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                                : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                            }
-                        `}
-                        title="Toggle Story Mode"
-                    >
-                        <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                    </button>
-
-                     <button
-                        onClick={() => {
-                            setUserRelation(null);
-                            localStorage.removeItem('userRelation');
-                        }}
-                        className="px-3 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all flex items-center justify-center"
-                        title="Reset Identity / Session"
-                    >
-                        <LogOut size={16} />
-                    </button>
-                </div>
-
-                {/* Tag Filters */}
-                <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
-                    <button
-                        onClick={() => setSelectedTag(null)}
-                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
-                            !selectedTag
-                            ? 'bg-gray-800 text-white border-gray-800'
-                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                        }`}
-                    >
-                        All
-                    </button>
-                    {Object.keys(TAG_CONFIG).filter(t => t !== 'default').map(tag => {
-                         const conf = TAG_CONFIG[tag];
-                         const isActive = selectedTag === tag;
-                         return (
+                {!['threads', 'hitlist'].includes(viewMode) && (
+                  <>
+                    {/* Lineage Selector */}
+                    <div className="flex gap-2">
+                        {['Paternal', 'Maternal'].map(lin => (
                             <button
-                                key={tag}
-                                onClick={() => setSelectedTag(isActive ? null : tag)}
-                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                    isActive
-                                    ? conf.color + ' ring-1 ring-offset-1'
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                key={lin}
+                                onClick={() => setSelectedLineage(lin)}
+                                className={`flex-1 py-1.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
+                                    selectedLineage === lin
+                                    ? (lin === 'Paternal' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#D946EF] text-[#D946EF]')
+                                    : 'border-transparent text-gray-400 hover:text-gray-600'
                                 }`}
                             >
-                                {conf.icon} {tag}
+                                {lin} Lineage
                             </button>
-                         );
-                    })}
-                </div>
+                        ))}
+                    </div>
 
-                {/* Narrative Epics Selector (Available in both modes) */}
-                <div className="flex flex-col gap-1 mt-1">
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
-                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                    {/* Branch Selector (Horizontal Scroll) */}
+                    <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
+                        {Object.entries(BRANCHES).map(([id, name]) => (
+                            <button
+                                key={id}
+                                onClick={() => setSelectedBranchId(id)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
+                                    selectedBranchId === id
+                                    ? (selectedLineage === 'Paternal' ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm' : 'bg-[#831843] text-white border-[#831843] shadow-sm')
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                                }`}
+                            >
+                                {id}. {name}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Search & Options Row */}
+                    <div className="flex gap-2">
+                        <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                            <Search size={16} className="text-gray-400" />
+                            <input
+                            type="text"
+                            className="ml-2 flex-1 bg-transparent outline-none text-sm"
+                            placeholder="Find an ancestor..."
+                            value={searchText}
+                            onChange={e => setSearchText(e.target.value)}
+                            />
+                        </div>
+
                         <button
-                            onClick={() => setSelectedThreadId(null)}
-                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                !selectedThreadId
+                            onClick={() => setStoryMode(!storyMode)}
+                            className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
+                                ${storyMode
+                                    ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
+                                    : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
+                                }
+                            `}
+                            title="Toggle Story Mode"
+                        >
+                            <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
+                        </button>
+
+                         <button
+                            onClick={() => {
+                                setUserRelation(null);
+                                localStorage.removeItem('userRelation');
+                            }}
+                            className="px-3 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all flex items-center justify-center"
+                            title="Reset Identity / Session"
+                        >
+                            <LogOut size={16} />
+                        </button>
+                    </div>
+
+                    {/* Tag Filters */}
+                    <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+                        <button
+                            onClick={() => setSelectedTag(null)}
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
+                                !selectedTag
                                 ? 'bg-gray-800 text-white border-gray-800'
                                 : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                             }`}
                         >
-                            <X size={10} /> None
+                            All
                         </button>
-                        {NARRATIVE_THREADS.map(thread => {
-                            const isActive = selectedThreadId === thread.id;
-                            return (
+                        {Object.keys(TAG_CONFIG).filter(t => t !== 'default').map(tag => {
+                             const conf = TAG_CONFIG[tag];
+                             const isActive = selectedTag === tag;
+                             return (
                                 <button
-                                    key={thread.id}
-                                    onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
+                                    key={tag}
+                                    onClick={() => setSelectedTag(isActive ? null : tag)}
                                     className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
                                         isActive
-                                        ? thread.color + ' ring-1 ring-offset-1'
+                                        ? conf.color + ' ring-1 ring-offset-1'
                                         : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                     }`}
                                 >
-                                    {thread.icon} {thread.title}
+                                    {conf.icon} {tag}
                                 </button>
-                            );
+                             );
                         })}
                     </div>
-                </div>
+                  </>
+                )}
+
+                {/* Narrative Epics Selector (Available in both modes) */}
+                {viewMode !== 'hitlist' && (
+                    <div className="flex flex-col gap-1 mt-1">
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
+                        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                            <button
+                                onClick={() => setSelectedThreadId(null)}
+                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                    !selectedThreadId
+                                    ? 'bg-gray-800 text-white border-gray-800'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                }`}
+                            >
+                                <X size={10} /> None
+                            </button>
+                            {NARRATIVE_THREADS.map(thread => {
+                                const isActive = selectedThreadId === thread.id;
+                                return (
+                                    <button
+                                        key={thread.id}
+                                        onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
+                                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
+                                            isActive
+                                            ? thread.color + ' ring-1 ring-offset-1'
+                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {thread.icon} {thread.title}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
 
