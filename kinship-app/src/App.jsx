@@ -1851,6 +1851,9 @@ export default function App() {
                         onSelect={(id) => setSelectedThreadId(id)}
                      />
                  )}
+             </div>
+        )}
+
         {viewMode === 'hitlist' && (
              <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
                  <HitlistPanel onSelectProfile={setSelectedAncestor} />
