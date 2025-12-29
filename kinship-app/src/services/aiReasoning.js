@@ -66,9 +66,8 @@ of the data you are looking at.
             contents: prompt,
         });
 
-        // The user sample suggests response.text is directly available.
-        // We will assume it contains the text content.
-        const candidate = response.text();
+        // Handle response.text whether it is a function (standard SDK) or a property (observed behavior)
+        const candidate = typeof response.text === 'function' ? response.text() : response.text;
 
         if (!candidate) {
             throw new Error("No content returned from Gemini");
