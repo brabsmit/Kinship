@@ -18,6 +18,7 @@ import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
 import HitlistPanel from './components/HitlistPanel';
+import FilterMenu from './components/FilterMenu';
 import { fetchResearchSuggestions } from './services/aiReasoning';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -1649,183 +1650,87 @@ export default function App() {
         )}
         {/* Header with Title and Controls */}
         <div className="p-4 border-b border-gray-100 bg-white z-20 space-y-4">
+            {/* Top Row: Title + View Toggles + Logout */}
             <div className="flex justify-between items-center">
               <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
-                <User size={24} className="text-[#E67E22]" /> Ancestry
+                <User size={24} className="text-[#E67E22]" /> Kinship
               </h1>
 
-              {/* View Mode Segmented Control */}
-              <div className="flex bg-gray-100 p-1 rounded-lg">
-                 <button
-                    onClick={() => setViewMode('list')}
-                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                 >
-                    <ListIcon size={14} /> List
-                 </button>
-                 <button
-                    onClick={() => setViewMode('graph')}
-                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                 >
-                    <Network size={14} /> Graph
-                 </button>
-                 <button
-                    onClick={() => setViewMode('threads')}
-                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                 >
-                    <BookOpen size={14} /> Epics
+              <div className="flex items-center gap-3">
+                  {/* View Mode Segmented Control (Subtle) */}
+                  <div className="flex bg-gray-100 p-0.5 rounded-lg">
+                     <button
+                        onClick={() => setViewMode('list')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="List View"
+                     >
+                        <ListIcon size={16} />
+                     </button>
+                     <button
+                        onClick={() => setViewMode('graph')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="Graph View"
+                     >
+                        <Network size={16} />
+                     </button>
+                     <button
+                        onClick={() => setViewMode('threads')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="Epics"
+                     >
+                        <BookOpen size={16} />
+                     </button>
+                     <button
+                        onClick={() => setViewMode('hitlist')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="Hitlist"
+                     >
+                        <AlertTriangle size={16} />
+                     </button>
+                  </div>
+
+                  <button
+                        onClick={() => {
+                            setUserRelation(null);
+                            localStorage.removeItem('userRelation');
+                        }}
+                        className="p-1.5 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-gray-600 transition-all"
+                        title="Reset Identity / Log Out"
+                    >
+                        <LogOut size={16} />
                     </button>
-                    <button
-                    onClick={() => setViewMode('hitlist')}
-                    className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide rounded-md transition-all flex items-center gap-2 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                 >
-                    <AlertTriangle size={14} /> Hitlist
-                 </button>
               </div>
             </div>
 
-            {/* Unified Controls: Branch Filter & Search */}
-            <div className="flex flex-col gap-3">
-                {!['threads', 'hitlist'].includes(viewMode) && (
-                  <>
-                    {/* Lineage Selector */}
-                    <div className="flex gap-2">
-                        {['Paternal', 'Maternal'].map(lin => (
-                            <button
-                                key={lin}
-                                onClick={() => setSelectedLineage(lin)}
-                                className={`flex-1 py-1.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
-                                    selectedLineage === lin
-                                    ? (lin === 'Paternal' ? 'border-[#3B82F6] text-[#3B82F6]' : 'border-[#D946EF] text-[#D946EF]')
-                                    : 'border-transparent text-gray-400 hover:text-gray-600'
-                                }`}
-                            >
-                                {lin} Lineage
-                            </button>
-                        ))}
-                    </div>
+            {/* Second Row: Search + Filter Menu (Consolidated) */}
+            <div className="flex gap-2">
+                <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                    <Search size={16} className="text-gray-400" />
+                    <input
+                        type="text"
+                        className="ml-2 flex-1 bg-transparent outline-none text-sm"
+                        placeholder="Find an ancestor..."
+                        value={searchText}
+                        onChange={e => setSearchText(e.target.value)}
+                    />
+                </div>
 
-                    {/* Branch Selector (Horizontal Scroll) */}
-                    <div className="w-full overflow-x-auto pb-1 -mb-1 custom-scrollbar flex gap-2">
-                        {Object.entries(BRANCHES).map(([id, name]) => (
-                            <button
-                                key={id}
-                                onClick={() => setSelectedBranchId(id)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all ${
-                                    selectedBranchId === id
-                                    ? (selectedLineage === 'Paternal' ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm' : 'bg-[#831843] text-white border-[#831843] shadow-sm')
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-                                }`}
-                            >
-                                {id}. {name}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Search & Options Row */}
-                    <div className="flex gap-2">
-                        <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
-                            <Search size={16} className="text-gray-400" />
-                            <input
-                            type="text"
-                            className="ml-2 flex-1 bg-transparent outline-none text-sm"
-                            placeholder="Find an ancestor..."
-                            value={searchText}
-                            onChange={e => setSearchText(e.target.value)}
-                            />
-                        </div>
-
-                        <button
-                            onClick={() => setStoryMode(!storyMode)}
-                            className={`px-3 rounded-lg border transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider
-                                ${storyMode
-                                    ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
-                                    : 'bg-white border-gray-200 text-gray-400 hover:bg-gray-50'
-                                }
-                            `}
-                            title="Toggle Story Mode"
-                        >
-                            <BookOpen size={16} className={storyMode ? "fill-[#F59E0B]" : ""} />
-                        </button>
-
-                         <button
-                            onClick={() => {
-                                setUserRelation(null);
-                                localStorage.removeItem('userRelation');
-                            }}
-                            className="px-3 rounded-lg border border-gray-200 bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all flex items-center justify-center"
-                            title="Reset Identity / Session"
-                        >
-                            <LogOut size={16} />
-                        </button>
-                    </div>
-
-                    {/* Tag Filters */}
-                    <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
-                        <button
-                            onClick={() => setSelectedTag(null)}
-                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
-                                !selectedTag
-                                ? 'bg-gray-800 text-white border-gray-800'
-                                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                            }`}
-                        >
-                            All
-                        </button>
-                        {Object.keys(TAG_CONFIG).filter(t => t !== 'default').map(tag => {
-                             const conf = TAG_CONFIG[tag];
-                             const isActive = selectedTag === tag;
-                             return (
-                                <button
-                                    key={tag}
-                                    onClick={() => setSelectedTag(isActive ? null : tag)}
-                                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                        isActive
-                                        ? conf.color + ' ring-1 ring-offset-1'
-                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    {conf.icon} {tag}
-                                </button>
-                             );
-                        })}
-                    </div>
-                  </>
-                )}
-
-                {/* Narrative Epics Selector (Available in both modes) */}
-                {viewMode !== 'hitlist' && (
-                    <div className="flex flex-col gap-1 mt-1">
-                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1">Narrative Epics</h3>
-                        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-                            <button
-                                onClick={() => setSelectedThreadId(null)}
-                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                    !selectedThreadId
-                                    ? 'bg-gray-800 text-white border-gray-800'
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                }`}
-                            >
-                                <X size={10} /> None
-                            </button>
-                            {NARRATIVE_THREADS.map(thread => {
-                                const isActive = selectedThreadId === thread.id;
-                                return (
-                                    <button
-                                        key={thread.id}
-                                        onClick={() => setSelectedThreadId(isActive ? null : thread.id)}
-                                        className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all flex items-center gap-1 ${
-                                            isActive
-                                            ? thread.color + ' ring-1 ring-offset-1'
-                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
-                                        }`}
-                                    >
-                                        {thread.icon} {thread.title}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
+                <FilterMenu
+                    storyMode={storyMode}
+                    setStoryMode={setStoryMode}
+                    selectedBranchId={selectedBranchId}
+                    setSelectedBranchId={setSelectedBranchId}
+                    selectedLineage={selectedLineage}
+                    setSelectedLineage={setSelectedLineage}
+                    viewMode={viewMode}
+                    branches={BRANCHES}
+                    selectedTag={selectedTag}
+                    setSelectedTag={setSelectedTag}
+                    tagConfig={TAG_CONFIG}
+                    narrativeThreads={NARRATIVE_THREADS}
+                    selectedThreadId={selectedThreadId}
+                    setSelectedThreadId={setSelectedThreadId}
+                />
             </div>
         </div>
 
