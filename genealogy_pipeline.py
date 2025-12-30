@@ -773,27 +773,45 @@ class GenealogyTextPipeline:
         # Build Name Index
         name_index = defaultdict(list)
 
+        # Track discoveries for the journal
+        self.ariadne_log = {
+            "ambiguous": defaultdict(set),
+            "clusters": defaultdict(int),
+            "new_links": 0
+        }
+
         for p in self.family_data:
             full_name = p['name']
             pid = p['id']
 
             # Normalize: "William E. Dodge" -> "William E. Dodge"
-            # Remove [source: ...] if present (should be clean already but double check)
-            clean_name = full_name.split('{')[0].strip()
+            # Remove [source: ...] if present
+            clean_name = re.sub(r'\[.*?\]', '', full_name).split('{')[0].strip()
+
+            # Index full name
             name_index[clean_name].append(pid)
 
             # Variations
             parts = clean_name.split()
             if len(parts) > 2:
-                # First Last
+                # First Last (William Dodge)
                 short_name = f"{parts[0]} {parts[-1]}"
                 name_index[short_name].append(pid)
+
+            # Handle "Jr", "Sr"
+            if len(parts) > 1 and parts[-1].lower() in ['jr', 'jr.', 'sr', 'sr.', 'iii', 'iv']:
+                 # Index name without suffix
+                 base_name = " ".join(parts[:-1])
+                 name_index[base_name].append(pid)
 
         # Filter ambiguous
         clean_name_index = {}
         for name, ids in name_index.items():
-            if len(set(ids)) == 1:
-                clean_name_index[name] = ids[0]
+            unique_ids = set(ids)
+            if len(unique_ids) == 1:
+                clean_name_index[name] = list(unique_ids)[0]
+            else:
+                self.ariadne_log["ambiguous"][name] = unique_ids
 
         # Optimization: Create a set of names for fast lookup
         known_names = set(clean_name_index.keys())
@@ -803,6 +821,7 @@ class GenealogyTextPipeline:
             "partner": "Business Partner",
             "business": "Business Partner",
             "firm": "Business Partner",
+            "colleague": "Business Partner",
             "married": "Spouse",
             "wife": "Spouse",
             "husband": "Spouse",
@@ -811,7 +830,12 @@ class GenealogyTextPipeline:
             "cousin": "Cousin",
             "friend": "Friend",
             "neighbor": "Neighbor",
-            "associate": "Associate"
+            "associate": "Associate",
+            "classmate": "Classmate",
+            "tutor": "Tutor",
+            "student": "Student",
+            "enemy": "Rival",
+            "rival": "Rival"
         }
 
         count = 0
@@ -822,10 +846,21 @@ class GenealogyTextPipeline:
             notes = p['story']['notes']
             if not notes: continue
 
-            # Optimization: Extract potential name candidates (Capitalized words sequences)
-            # Regex: \b[A-Z][a-z]+(?: [A-Z][a-z\.]+)+\b
-            # Matches "William Dodge", "Mr. Phelps", "Anson G. Phelps"
-            candidates = set(re.findall(r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z\.]+)+\b', notes))
+            # Improved Candidate Extraction
+            # Matches:
+            # - J.P. Morgan
+            # - William E. Dodge
+            # - Anson Phelps
+            # - De Forest (if capitalized)
+
+            # Pattern:
+            # \b (Start)
+            # (?: [A-Z]\.? | [A-Z][a-z]+ )  -> Initial or Word
+            # (?: \s+ (?: [A-Z]\.? | [A-Z][a-z]+ ) )+ -> Space + Initial/Word (one or more times)
+            # \b (End)
+
+            name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
+            candidates = set(re.findall(name_pattern, notes))
 
             # Filter candidates that are known names
             valid_candidates = candidates.intersection(known_names)
@@ -870,7 +905,7 @@ class GenealogyTextPipeline:
 
                     for k, v in keywords.items():
                         if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
-                            if v in ["Spouse", "Business Partner", "Friend"] and not is_contemporary:
+                            if v in ["Spouse", "Business Partner", "Friend", "Classmate"] and not is_contemporary:
                                 rel_type = "Mentioned"
                             else:
                                 rel_type = v
@@ -889,9 +924,29 @@ class GenealogyTextPipeline:
                         "relation_type": rel_type,
                         "source_text": source_sentence.strip()
                     })
+
+                    self.ariadne_log["new_links"] += 1
+
+                    # Log for clustering
+                    # We track how many times a name is mentioned across all notes
+                    self.ariadne_log["clusters"][name] += 1
                     count += 1
 
         print(f"Ariadne found {count} text-based connections.")
+
+        # Log Interesting Findings (Console for now)
+        print("\n--- Ariadne's Notebook ---")
+        if self.ariadne_log["ambiguous"]:
+            print(f"Ambiguous Names Skipped: {len(self.ariadne_log['ambiguous'])}")
+            # Print top 5 ambiguous
+            for k in list(self.ariadne_log["ambiguous"].keys())[:5]:
+                print(f"  - {k}: {self.ariadne_log['ambiguous'][k]}")
+
+        # Check for potential clusters (frequently mentioned names)
+        sorted_clusters = sorted(self.ariadne_log["clusters"].items(), key=lambda x: x[1], reverse=True)
+        print("Top Mentioned People:")
+        for name, freq in sorted_clusters[:5]:
+            print(f"  - {name}: {freq} mentions")
 
     def clean_and_save(self):
         # 1. First pass: separate "Real" profiles from "Child" entries

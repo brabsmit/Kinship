@@ -10,3 +10,13 @@
 2. Intersect these candidates with a set of known unique names (O(1) lookup).
 3. Only perform expensive context and keyword checks for the handful of valid candidates found in each note.
 This drastically reduced the complexity from O(Profiles * Clauses * Names) to O(Profiles * Candidates).
+
+## 2024-05-24 - The Web Grows
+**Discovery:** Found 327 text-based connections. Identified key clusters around "Reverend Samuel Blatchford" (14 mentions) and "Jacob Parish" (10 mentions).
+**Action:** Implemented enhanced `_find_mentions` logic with expanded keywords (Classmate, Tutor, Rival) and improved name normalization.
+**Ambiguity Report:** Several names mapped to multiple IDs and were excluded to prevent false links:
+- William Sr. (3 IDs)
+- William Earl Dodge (2 IDs)
+- David Jr. (2 IDs)
+- David Hoadley (2 IDs)
+- Daniel Parish (2 IDs)
