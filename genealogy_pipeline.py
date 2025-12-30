@@ -762,6 +762,11 @@ class GenealogyTextPipeline:
                  tags.append("Quaker")
                  break
 
+        # 8. Religious Leader
+        # Check Name for "Reverend" or "Deacon"
+        if re.search(r'\b(Reverend|Deacon)\b|\bRev\.?', profile["name"], re.IGNORECASE):
+             tags.append("Religious Leader")
+
         return list(set(tags))
 
     def link_family_members(self):
