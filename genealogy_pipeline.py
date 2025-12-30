@@ -379,11 +379,17 @@ class GenealogyTextPipeline:
 
             # Guard: If the line is actually a Note or Vital Stat line that happens to reference an ID,
             # ignore it as a profile header.
+            # Also exclude cross-reference lines like "See Name..." or relationship pointers "Father of..."
+            see_pattern = re.compile(r"^See\s+", re.IGNORECASE)
+            rel_pointer_pattern = re.compile(r"^(Father|Mother|Parent|Maternal|Paternal)\s+(Grand)?(father|mother|parent|of)\s+", re.IGNORECASE)
+
             is_metadata_line = (
                 born_pattern.match(text) or
                 died_pattern.match(text) or
                 children_pattern.match(text) or
-                notes_start_pattern.match(text)
+                notes_start_pattern.match(text) or
+                see_pattern.match(text) or
+                rel_pointer_pattern.match(text)
             )
 
             if matches and not is_metadata_line:
