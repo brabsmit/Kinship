@@ -60,6 +60,7 @@ const TAG_CONFIG = {
     "Salem Witch Trials": { icon: <Flame size={12} />, color: "bg-purple-100 text-purple-700 border-purple-200" },
     "University Educated": { icon: <GraduationCap size={12} />, color: "bg-amber-100 text-amber-700 border-amber-200" },
     "Quaker": { icon: <User size={12} />, color: "bg-gray-100 text-gray-700 border-gray-200" },
+    "Religious Leader": { icon: <BookOpen size={12} />, color: "bg-sky-100 text-sky-700 border-sky-200" },
     "default": { icon: <Tag size={12} />, color: "bg-gray-50 text-gray-600 border-gray-200" }
 };
 
