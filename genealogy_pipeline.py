@@ -614,6 +614,25 @@ class GenealogyTextPipeline:
 
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
 
+    def _has_exclusion_context(self, text, match_start):
+        # Look at the 50 chars before the match
+        start_search = max(0, match_start - 50)
+        pre_text = text[start_search:match_start].lower()
+
+        exclusions = [
+            "mother of", "father of", "sister of", "brother of",
+            "wife of", "husband of", "widow of", "son of", "daughter of",
+            "child of", "spouse of", "married to", "mother to", "father to",
+            "husband was", "father was", "son was", "daughter was", "wife was",
+            "husband's", "father's", "wife's", "son's", "daughter's",
+            "consort of", "relict of"
+        ]
+
+        for exc in exclusions:
+            if exc in pre_text:
+                return True
+        return False
+
     def extract_tags(self, profile):
         tags = []
         notes = profile["story"]["notes"]
@@ -624,10 +643,13 @@ class GenealogyTextPipeline:
         # Heuristic: Born in UK/Europe, Died in USA/MA/CT
         # Or keyword "immigrant", "came to america"
         is_immigrant = False
-        if re.search(r'\b(immigrant|emigrated|came to america|arrived in|arrived with)\b', notes, re.IGNORECASE):
-            is_immigrant = True
+        immigrant_keywords = r'\b(immigrant|emigrated|came to america|arrived in|arrived with)\b'
+        for match in re.finditer(immigrant_keywords, notes, re.IGNORECASE):
+            if not self._has_exclusion_context(notes, match.start()):
+                is_immigrant = True
+                break
 
-        # Simple location check
+        # Simple location check (Location based check is usually safe from context errors)
         uk_locations = ["England", "UK", "Britain", "London", "Dorset", "Essex", "Somerset", "Lincolnshire", "Suffolk", "Kent", "Holland", "Netherlands", "Scotland", "Ireland", "Wales"]
         us_locations = ["MA", "CT", "NY", "NJ", "USA", "Massachusetts", "Connecticut", "New York", "Pennsylvania", "New Hampshire", "Rhode Island"]
 
@@ -641,31 +663,54 @@ class GenealogyTextPipeline:
             tags.append("Immigrant")
 
         # 2. Mayflower
-        if re.search(r'\bMayflower\b', notes, re.IGNORECASE):
-            tags.append("Mayflower")
+        mayflower_keywords = r'\bMayflower\b'
+        for match in re.finditer(mayflower_keywords, notes, re.IGNORECASE):
+             if not self._has_exclusion_context(notes, match.start()):
+                 tags.append("Mayflower")
+                 break
 
         # 3. War Veteran
         # Keywords: War, Revolution, Army, Regiment, Captain, Lieutenant, General, Soldier, Private
-        if re.search(r'\b(served in|soldier|captain|major|lieutenant|general|ensign|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b', notes, re.IGNORECASE):
-             tags.append("War Veteran")
-        if re.search(r'captain|major|lieutenant|Lt. |general|ensign|private|sergeant|colonel\b', profile["name"], re.IGNORECASE):
-             tags.append("War Veteran")
+        war_keywords = r'\b(served in|soldier|captain|major|lieutenant|general|ensign|private|sergeant|colonel|veteran|war of|revolutionary war|civil war|french and indian war)\b'
+        for match in re.finditer(war_keywords, notes, re.IGNORECASE):
+             if not self._has_exclusion_context(notes, match.start()):
+                 tags.append("War Veteran")
+                 break
+
+        # Name check for rank
+        name_keywords = r'captain|major|lieutenant|Lt\.|general|ensign|private|sergeant|colonel'
+        if re.search(name_keywords, profile["name"], re.IGNORECASE):
+             # Basic check to avoid Mrs. Captain
+             if not re.search(r'\b(mrs|miss|ms)\b', profile["name"], re.IGNORECASE):
+                tags.append("War Veteran")
 
         # 4. Founder / Settler
-        if re.search(r'\b(founder|settler|pioneer|first settler|original proprietor)\b', notes, re.IGNORECASE):
-            tags.append("Founder")
+        founder_keywords = r'\b(founder|settler|pioneer|first settler|original proprietor)\b'
+        for match in re.finditer(founder_keywords, notes, re.IGNORECASE):
+             if not self._has_exclusion_context(notes, match.start()):
+                 tags.append("Founder")
+                 break
 
         # 5. Salem Witch Trials
-        if re.search(r'\b(witch|salem trials|accused of witchcraft)\b', notes, re.IGNORECASE):
-            tags.append("Salem Witch Trials")
+        witch_keywords = r'\b(witch|salem trials|accused of witchcraft)\b'
+        for match in re.finditer(witch_keywords, notes, re.IGNORECASE):
+             if not self._has_exclusion_context(notes, match.start()):
+                 tags.append("Salem Witch Trials")
+                 break
 
         # 6. Education
-        if re.search(r'\b(Harvard|Yale|College|University)\b', notes, re.IGNORECASE):
-             tags.append("University Educated")
+        edu_keywords = r'\b(Harvard|Yale|College|University)\b'
+        for match in re.finditer(edu_keywords, notes, re.IGNORECASE):
+             if not self._has_exclusion_context(notes, match.start()):
+                 tags.append("University Educated")
+                 break
 
         # 7. Quaker
-        if re.search(r'\b(Quaker|Friends)\b', notes, re.IGNORECASE):
-            tags.append("Quaker")
+        quaker_keywords = r'\b(Quaker|Friends)\b'
+        for match in re.finditer(quaker_keywords, notes, re.IGNORECASE):
+             if not self._has_exclusion_context(notes, match.start()):
+                 tags.append("Quaker")
+                 break
 
         return list(set(tags))
 
