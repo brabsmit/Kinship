@@ -10,8 +10,8 @@ const FilterMenu = ({
     setSelectedLineage,
     viewMode,
     branches,
-    selectedTag,
-    setSelectedTag,
+    selectedTags,
+    setSelectedTags,
     tagConfig,
     narrativeThreads,
     selectedThreadId,
@@ -38,7 +38,7 @@ const FilterMenu = ({
 
     const activeFilterCount = [
         storyMode,
-        selectedTag,
+        selectedTags.length > 0,
         selectedThreadId
     ].filter(Boolean).length;
 
@@ -154,9 +154,9 @@ const FilterMenu = ({
                             </label>
                             <div className="flex flex-wrap gap-2">
                                 <button
-                                    onClick={() => setSelectedTag(null)}
+                                    onClick={() => setSelectedTags([])}
                                     className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-all ${
-                                        !selectedTag
+                                        selectedTags.length === 0
                                         ? 'bg-gray-800 text-white border-gray-800'
                                         : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                     }`}
@@ -165,11 +165,17 @@ const FilterMenu = ({
                                 </button>
                                 {tagConfig && Object.keys(tagConfig).filter(t => t !== 'default').map(tag => {
                                      const conf = tagConfig[tag];
-                                     const isActive = selectedTag === tag;
+                                     const isActive = selectedTags.includes(tag);
                                      return (
                                         <button
                                             key={tag}
-                                            onClick={() => setSelectedTag(isActive ? null : tag)}
+                                            onClick={() => {
+                                                if (isActive) {
+                                                    setSelectedTags(selectedTags.filter(t => t !== tag));
+                                                } else {
+                                                    setSelectedTags([...selectedTags, tag]);
+                                                }
+                                            }}
                                             className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-all flex items-center gap-1.5 ${
                                                 isActive
                                                 ? conf.color + ' ring-1 ring-offset-1'

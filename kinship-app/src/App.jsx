@@ -1757,7 +1757,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist'
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
-  const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedLineage, setSelectedLineage] = useState('Paternal');
 
@@ -1809,18 +1809,18 @@ export default function App() {
         const matchesLineage = pLineage === selectedLineage;
 
         const matchesBranch = String(p.id).startsWith(String(selectedBranchId));
-        const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
-        return matchesLineage && matchesBranch && matchesTag;
+        const matchesTags = selectedTags.length === 0 || (p.story.tags && selectedTags.every(t => p.story.tags.includes(t)));
+        return matchesLineage && matchesBranch && matchesTags;
     });
-  }, [selectedBranchId, selectedTag, selectedLineage]);
+  }, [selectedBranchId, selectedTags, selectedLineage]);
 
   const filteredListData = useMemo(() => {
     return familyData.filter(p => {
         // Lineage and Branch Filtering are EXCLUDED for List View as per request
-        const matchesTag = !selectedTag || (p.story.tags && p.story.tags.includes(selectedTag));
-        return matchesTag;
+        const matchesTags = selectedTags.length === 0 || (p.story.tags && selectedTags.every(t => p.story.tags.includes(t)));
+        return matchesTags;
     });
-  }, [selectedTag]);
+  }, [selectedTags]);
 
   // Group data by Generation
   const groupedData = useMemo(() => {
@@ -1949,8 +1949,8 @@ export default function App() {
                     setSelectedLineage={setSelectedLineage}
                     viewMode={viewMode}
                     branches={BRANCHES}
-                    selectedTag={selectedTag}
-                    setSelectedTag={setSelectedTag}
+                    selectedTags={selectedTags}
+                    setSelectedTags={setSelectedTags}
                     tagConfig={TAG_CONFIG}
                     narrativeThreads={NARRATIVE_THREADS}
                     selectedThreadId={selectedThreadId}
