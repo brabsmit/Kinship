@@ -5593,5 +5593,53 @@
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
+    },
+    "Scotland?  France?|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/An_Accurate_Map_of_Scotland_-_Drawn_from_all_the_Particular_Surveys_hitherto_Published%2C_with_many_Additional_Improvements_By_James_Dorret_1761_-_btv1b53057189w.jpg/1024px-thumbnail.jpg",
+        "alt": "Historical image of Scotland?  France?",
+        "caption": "Sujet\u00a0: \u00c9cosse\n\u00c9chelle(s)\u00a0: Italian Miles 60 to a Degree 60 [= 12,8 cm]\nAppartient \u00e0 l\u2019ensemble documentaire\u00a0: AnvilEur\nCouverture\u00a0: Royaume-Uni \u2013 \u00c9co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Rehoboth, MA|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Scotch_Irish_pioneers_in_Ulster_and_America_%28IA_cu31924032772174%29.pdf/page1-1024px-Scotch_Irish_pioneers_in_Ulster_and_America_%28IA_cu31924032772174%29.pdf.jpg",
+        "alt": "Historical image of Rehoboth, MA",
+        "caption": "\nThe metadata below describe the original scanning. Follow the \"All Files: HTTP\" link in the \"View the book\" box to the left to find XML files that co...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Devonshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/John_Speed_-_Map_of_Devonshire_-_1610_-_001.jpg/1024px-John_Speed_-_Map_of_Devonshire_-_1610_-_001.jpg",
+        "alt": "Historical image of Devonshire, England",
+        "caption": "Une carte du Devonshire par John Speed en 1610....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Alford, Lincolnshire, England|historical": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Alford_Market_Place%2C_Alford%2C_Lincolnshire%2C_England._1905_or_before.JPG/1024px-Alford_Market_Place%2C_Alford%2C_Lincolnshire%2C_England._1905_or_before.JPG",
+        "alt": "Historical image of Alford, Lincolnshire, England",
+        "caption": "South Market Place, Alford, Lincolnshire, England. Postcard one of the 'Jay Em Jay' Series', 1905 or before per postal date. The buildings shown on th...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "East Hartland Cemetery, Hartford, CT|historical": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/The_Annual_report_of_the_Connecticut_Historical_Society_%28IA_annualreportofco02conn%29.pdf/page1-1024px-The_Annual_report_of_the_Connecticut_Historical_Society_%28IA_annualreportofco02conn%29.pdf.jpg",
+        "alt": "Historical image of East Hartland Cemetery, Hartford, CT",
+        "caption": "\nReport year ends in May\n\nSubjects: Connecticut Historical Society; Connecticut -- History Periodicals...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Staden, West Flanders, now Belgium|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/On_the_western_front_%28IA_onwesternfront00blan%29.pdf/page1-1024px-On_the_western_front_%28IA_onwesternfront00blan%29.pdf.jpg",
+        "alt": "Historical image of Staden, West Flanders, now Belgium",
+        "caption": "\nSubjects: World War, 1914-1918; World War, 1914-1918...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
     }
 }
