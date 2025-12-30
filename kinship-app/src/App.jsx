@@ -1191,8 +1191,10 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
 );
 
 const HeroImage = ({ location, year, heroImage }) => {
-    // Priority: heroImage prop > getHeroImage logic
-    const asset = heroImage || getHeroImage(location, year);
+    // Priority: Muse Logic (getHeroImage) > Pipeline Data (heroImage)
+    // We prioritize the frontend mapper because it contains the "Muse Overrides" for curated styles.
+    // Since getHeroImage also checks the cache (which powers heroImage), this is safe.
+    const asset = getHeroImage(location, year);
     const [imgSrc, setImgSrc] = useState(asset.src);
     const [hasError, setHasError] = useState(false);
 
