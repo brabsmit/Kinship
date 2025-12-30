@@ -615,17 +615,22 @@ class GenealogyTextPipeline:
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
 
     def _has_exclusion_context(self, text, match_start):
-        # Look at the 50 chars before the match
-        start_search = max(0, match_start - 50)
+        # Look at the 100 chars before the match (increased from 50)
+        start_search = max(0, match_start - 100)
         pre_text = text[start_search:match_start].lower()
 
         exclusions = [
+            # Singular relationships
             "mother of", "father of", "sister of", "brother of",
             "wife of", "husband of", "widow of", "son of", "daughter of",
             "child of", "spouse of", "married to", "mother to", "father to",
             "husband was", "father was", "son was", "daughter was", "wife was",
             "husband's", "father's", "wife's", "son's", "daughter's",
-            "consort of", "relict of"
+            "consort of", "relict of",
+            # Plural relationships
+            "sons of", "daughters of", "children of", "brothers of", "sisters of",
+            # Contextual exclusions for spouse death scenarios
+            "husband died", "wife died", "spouse died"
         ]
 
         for exc in exclusions:
