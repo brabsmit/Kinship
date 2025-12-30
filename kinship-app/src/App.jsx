@@ -534,38 +534,65 @@ const getPersonalLifeEvents = (lifeEvents, born, died) => {
 const calculateRelationship = (ancestorId, userRelation) => {
     if (!userRelation || userRelation.isGuest) return "Relative";
 
-    const { anchorId, stepsDown } = userRelation;
+    const { anchorId, stepsDown, type } = userRelation;
+    const targetId = String(ancestorId);
+    const anchorStr = String(anchorId);
 
-    // Logic:
-    // 1. Determine "Generation Index" of Anchor.
-    //    DATASET CONVENTION: ID length correlates with AGE (Older = Longer ID).
-    //    Example: '1' (Child, born 1805) -> '1.1' (Parent, born 1774).
-    //    Therefore: Higher Gen Index = Older Generation.
-
-    // 2. Determine User's Generation Index.
-    //    User is 'stepsDown' generations *below* (younger than) the anchor.
-    //    Since Younger = Lower Index, we SUBTRACT stepsDown.
-    //    User Gen Index = AnchorGenIndex - stepsDown.
-
-    const anchorGenIndex = String(anchorId).split('.').length;
+    // 1. Generation Difference
+    const anchorGenIndex = anchorStr.split('.').length;
     const userGenIndex = anchorGenIndex - stepsDown;
+    const targetGenIndex = targetId.split('.').length;
+    const diff = targetGenIndex - userGenIndex;
 
-    // 3. Determine Target Ancestor's Generation Index.
-    const ancestorGenIndex = String(ancestorId).split('.').length;
+    // 2. Direct Line Check (Target is Ancestor of Anchor)
+    // Ancestors have IDs that start with the Descendant's ID (reversed d'Aboville)
+    // and typically don't involve collateral suffixes like '_c' in the path relative to the descendant.
+    // Ensure strict segment boundary to avoid matching "1" with "12".
+    const targetIsAncestorOfAnchor = targetId === anchorStr || targetId.startsWith(anchorStr + '.');
+    const suffix = targetId.slice(anchorStr.length);
+    const isCollateralToAnchor = suffix.includes('_c');
+    const anchorToTargetIsDirect = targetIsAncestorOfAnchor && !isCollateralToAnchor;
 
-    // 4. Calculate Difference (Generations between User and Ancestor)
-    //    Diff = AncestorGenIndex - UserGenIndex
-    //    Positive Diff = Ancestor is Older (Higher Index)
-    const diff = ancestorGenIndex - userGenIndex;
+    // 3. Gender Detection
+    const isMale = targetId.endsWith('.1');
+    const isFemale = targetId.endsWith('.2');
 
-    if (diff === 0) return "Same Generation";
-    if (diff === 1) return "Parent / Aunt / Uncle";
-    if (diff === 2) return "Grandparent";
-    if (diff === 3) return "Great-Grandparent";
-    if (diff === 4) return "2nd Great-Grandparent";
-    if (diff === 5) return "3rd Great-Grandparent";
-    if (diff >= 6) return `${diff-2}th Great-Grandparent`;
+    // 4. Logic Mapping
 
+    // Case: Target IS the Anchor
+    if (targetId === anchorStr) {
+        if (type === 'self') return "You";
+        if (type === 'father') return "Father";
+        if (type === 'mother') return "Mother";
+        if (type === 'uncle') return "Uncle";
+        if (type === 'aunt') return "Aunt";
+        if (type === 'grandfather') return "Grandfather";
+        if (type === 'grandmother') return "Grandmother";
+        if (type === 'great-uncle') return "Great Uncle";
+        if (type === 'great-aunt') return "Great Aunt";
+        if (type === 'great-grandfather') return "Great-Grandfather";
+        if (type === 'great-grandmother') return "Great-Grandmother";
+        return "Anchor";
+    }
+
+    if (diff === 0) return "Relative (Same Gen)";
+
+    // If Target is a Direct Ancestor of the Anchor (e.g. Anchor's Parent/GP)
+    // This implies they are also a Direct Ancestor of the User (User -> Anchor -> Target)
+    // (Even if Anchor is Uncle, Uncle's Parent is User's Grandparent).
+    if (anchorToTargetIsDirect) {
+        if (diff === 1) return isMale ? "Father" : (isFemale ? "Mother" : "Parent");
+        if (diff === 2) return isMale ? "Grandfather" : (isFemale ? "Grandmother" : "Grandparent");
+        if (diff === 3) return isMale ? "Great-Grandfather" : (isFemale ? "Great-Grandmother" : "Great-Grandparent");
+        if (diff >= 4) return `${diff-2}th Great-Grandparent`;
+    }
+
+    // If Target is Collateral to Anchor (e.g. Sibling of Anchor, Sibling of Anchor's Parent)
+    if (diff === 1) return isMale ? "Uncle" : (isFemale ? "Aunt" : "Uncle/Aunt");
+    if (diff === 2) return isMale ? "Great Uncle" : (isFemale ? "Great Aunt" : "Great Uncle/Aunt");
+    if (diff === 3) return isMale ? "Great-Grand Uncle" : (isFemale ? "Great-Grand Aunt" : "Great-Grand Uncle/Aunt");
+
+    // Descendants
     if (diff === -1) return "Child";
     if (diff === -2) return "Grandchild";
     if (diff <= -3) return "Descendant";
