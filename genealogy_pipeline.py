@@ -344,7 +344,7 @@ class GenealogyTextPipeline:
         total_paragraphs = len(doc.paragraphs)
         print(f"Total paragraphs in document: {total_paragraphs}")
 
-        current_profile = None
+        current_profiles = []
         seen_ids = set()
         current_generation = "Uncategorized"
         
@@ -370,12 +370,13 @@ class GenealogyTextPipeline:
             if gen_match:
                 current_generation = gen_match.group(1).strip()
                 print(f"   > Detected Section: {current_generation}")
-                if current_profile:
-                    self.family_data.append(current_profile)
-                    current_profile = None
+                if current_profiles:
+                    self.family_data.extend(current_profiles)
+                    current_profiles = []
                 continue
 
-            match = id_pattern.search(text)
+            # Look for multiple IDs in the line
+            matches = list(id_pattern.finditer(text))
 
             # Guard: If the line is actually a Note or Vital Stat line that happens to reference an ID,
             # ignore it as a profile header.
@@ -386,60 +387,91 @@ class GenealogyTextPipeline:
                 notes_start_pattern.match(text)
             )
 
-            if match and not is_metadata_line:
-                if current_profile:
-                    self.family_data.append(current_profile)
-                    current_profile = None
+            if matches and not is_metadata_line:
+                if current_profiles:
+                    self.family_data.extend(current_profiles)
+                    current_profiles = []
 
-                uid = match.group(1)
-
-                if uid in seen_ids:
-                    # print(f"   > Duplicate ID found: {uid}. Skipping new profile creation.")
-                    current_profile = None
-                    continue
-                seen_ids.add(uid)
-                
+                # Extract potential common data (Source ID, Name)
                 source_match = source_tag_pattern.search(text)
                 source_id = source_match.group(1) if source_match else "Unknown"
 
+                # Extract Name (first part of text)
                 raw_name = text.split('{')[0].strip()
                 clean_name = re.sub(r"\[source:.*?\]", "", raw_name).strip()
 
-                current_profile = {
-                    "id": uid,
-                    "name": clean_name,
-                    "lineage": lineage_label,
-                    "generation": current_generation,
-                    "vital_stats": {
-                        "born_date": "Unknown",
-                        "born_location": "Unknown",
-                        "died_date": "Unknown",
-                        "died_location": "Unknown"
-                    },
-                    "story": {
-                        "notes": "",
-                        "life_events": []
-                    },
-                    "metadata": {
-                        "source_id": source_id,
-                        "doc_paragraph_index": index + 1
+                # Process all matches in the line (for aliases like Henry Reddocke {ID1} & {ID2})
+                prev_end = 0
+
+                for i, match in enumerate(matches):
+                    uid = match.group(1)
+
+                    # For the first ID, we always process it.
+                    # For subsequent IDs, check if they are aliases (joined by '&', '/', 'and', or close proximity)
+                    is_valid_alias = True
+                    if i > 0:
+                        # Check text between this match and previous match end
+                        start_curr = match.start()
+                        text_between = text[prev_end:start_curr]
+
+                        # Strict check for alias connectors: whitespace, &, /, and, commas
+                        if not re.match(r'^\s*(&|/|and|,)?\s*$', text_between, re.IGNORECASE):
+                            is_valid_alias = False
+
+                    prev_end = match.end()
+
+                    if not is_valid_alias:
+                        # If we encounter a non-alias ID (e.g. "John {1} son of Bill {2}"), stop processing further IDs as profile headers.
+                        break
+
+                    if uid in seen_ids:
+                        # Duplicate logic: if we see an ID again, we skip creating a NEW profile for it.
+                        continue
+
+                    seen_ids.add(uid)
+
+                    new_profile = {
+                        "id": uid,
+                        "name": clean_name,
+                        "lineage": lineage_label,
+                        "generation": current_generation,
+                        "vital_stats": {
+                            "born_date": "Unknown",
+                            "born_location": "Unknown",
+                            "died_date": "Unknown",
+                            "died_location": "Unknown"
+                        },
+                        "story": {
+                            "notes": "",
+                            "life_events": []
+                        },
+                        "metadata": {
+                            "source_id": source_id,
+                            "doc_paragraph_index": index + 1
+                        }
                     }
-                }
+                    current_profiles.append(new_profile)
+
                 continue
 
-            if current_profile:
+            if current_profiles:
+                # Apply metadata to ALL current profiles (handles aliases)
                 b_match = born_pattern.search(text)
                 if b_match:
                     raw_born = b_match.group(1).strip()
                     b_date, b_loc_raw = self.split_date_location(raw_born)
                     b_loc, b_note = self._extract_location_note(b_loc_raw)
 
-                    current_profile["vital_stats"]["born_date"] = b_date
-                    current_profile["vital_stats"]["born_location"] = b_loc
-                    if b_note:
-                        current_profile["vital_stats"]["born_location_note"] = b_note
-                    current_profile["vital_stats"]["born_year_int"] = self._normalize_date(b_date)
-                    current_profile["vital_stats"]["born_hierarchy"] = self._parse_location_hierarchy(b_loc)
+                    born_year_int = self._normalize_date(b_date)
+                    born_hierarchy = self._parse_location_hierarchy(b_loc)
+
+                    for p in current_profiles:
+                        p["vital_stats"]["born_date"] = b_date
+                        p["vital_stats"]["born_location"] = b_loc
+                        if b_note:
+                            p["vital_stats"]["born_location_note"] = b_note
+                        p["vital_stats"]["born_year_int"] = born_year_int
+                        p["vital_stats"]["born_hierarchy"] = born_hierarchy
 
                 d_match = died_pattern.search(text)
                 if d_match:
@@ -447,28 +479,34 @@ class GenealogyTextPipeline:
                     d_date, d_loc_raw = self.split_date_location(raw_died)
                     d_loc, d_note = self._extract_location_note(d_loc_raw)
 
-                    current_profile["vital_stats"]["died_date"] = d_date
-                    current_profile["vital_stats"]["died_location"] = d_loc
-                    if d_note:
-                        current_profile["vital_stats"]["died_location_note"] = d_note
-                    current_profile["vital_stats"]["died_year_int"] = self._normalize_date(d_date)
-                    current_profile["vital_stats"]["died_hierarchy"] = self._parse_location_hierarchy(d_loc)
+                    died_year_int = self._normalize_date(d_date)
+                    died_hierarchy = self._parse_location_hierarchy(d_loc)
+
+                    for p in current_profiles:
+                        p["vital_stats"]["died_date"] = d_date
+                        p["vital_stats"]["died_location"] = d_loc
+                        if d_note:
+                            p["vital_stats"]["died_location_note"] = d_note
+                        p["vital_stats"]["died_year_int"] = died_year_int
+                        p["vital_stats"]["died_hierarchy"] = died_hierarchy
 
                 n_match = notes_start_pattern.search(text)
                 if n_match:
                     notes_text = n_match.group(1).strip()
-                    current_profile["story"]["notes"] = notes_text
-                    current_profile["story"]["life_events"] = self.extract_events_from_text(notes_text)
+                    events = self.extract_events_from_text(notes_text)
+                    for p in current_profiles:
+                        p["story"]["notes"] = notes_text
+                        p["story"]["life_events"] = events
 
                 c_match = children_pattern.search(text)
                 if c_match:
                     raw_children = c_match.group(1).strip()
-                    # Also check next paragraphs if they look like list items or continuation?
-                    # For now, simplistic parsing of the line
-                    self._parse_children(raw_children, current_profile, lineage_label, current_generation, index)
+                    # Use the first profile as the parent source for linking
+                    # This prevents duplicate child entries for alias profiles
+                    self._parse_children(raw_children, current_profiles[0], lineage_label, current_generation, index)
 
-        if current_profile:
-            self.family_data.append(current_profile)
+        if current_profiles:
+            self.family_data.extend(current_profiles)
 
     def _parse_children(self, text, parent_profile, lineage_label, generation, index):
         """
