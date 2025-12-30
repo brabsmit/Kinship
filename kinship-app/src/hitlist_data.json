@@ -9,31 +9,12 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. **Verify Birth and Death Dates:** Given the impossible birth/death date combination (died before born), prioritize verifying the accuracy of both dates. Begin by consulting the 'Unknown' source reference cited in the metadata (Paragraph #2909) to determine the original record and its reliability. Expand research to include primary sources like church records (baptism, marriage, burial), probate records, and land deeds in Charlestown, MA, and England to corroborate or correct these dates.",
-      "2. **Investigate Charlestown, MA Records:** Focus on records specific to Charlestown, MA, around the death date (1614, if accurate, or a more plausible timeframe). Examine early colonial records, town meeting minutes, and published genealogies focusing on early settlers of Charlestown. These records might reveal information about John Knight's presence in the area and potentially link him to other families or events. This could shed light on his origins, resolve the death date issue, or even provide clues to his birth location.",
-      "3. **Explore English Genealogy Databases:** Given the 'England' indication in the birth date field, systematically search major English genealogy databases (e.g., Ancestry.co.uk, FindMyPast, FamilySearch) for John Knights born circa 1631. Use variations of the name and broaden the search to nearby years (1620-1640). Focus on records from areas that had strong ties to early Massachusetts settlements, such as East Anglia and the West Country. If a potential John Knight is found, carefully evaluate the evidence to determine if they are the same individual by checking for matching family members, occupation, or other connections to Charlestown, MA."
+      "Prioritize resolving the birth and death date conflict. Search vital records (birth, marriage, death) for John Knight in England and Charlestown, MA, around both 1614 and 1631. Focus on digitized records and indexes on sites like Ancestry, Findmypast, FamilySearch, and local historical societies. A transcription error is possible.",
+      "Investigate Charlestown, MA records from the early 17th century. Examine church records, land records, probate records, and town meeting minutes. These records might contain information about John Knight's arrival, occupation, or family relationships that could help establish a more accurate birth year and confirm his death.",
+      "Leverage the 'Relations' data to identify potential family members. Research John Knight's parents, spouse, and children to see if their records contain clues about his birth location or a more accurate birth date. Focus on probate records or family Bibles associated with these individuals, as they could contain vital information."
     ],
     "lineage": "Maternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
-  },
-  {
-    "id": "3.2.1.1.2.1.2",
-    "name": "NOTES:  First appears in the Saybrook area in 1663; Branford by 1666; parents both died in England; second wife appears in Gen VII as",
-    "score": 9,
-    "issues": [
-      "Missing Birth Date",
-      "Missing Birth Location",
-      "Missing Death Date",
-      "Missing Death Location",
-      "No Biographical Notes"
-    ],
-    "recommendations": [
-      "1. **Focus on Saybrook and Branford Records:** Given the profile's note indicating presence in Saybrook (1663) and Branford (1666), prioritize searching vital records, land records, church records, and probate records for these locations and surrounding areas in Connecticut. Specifically look for records created between 1660 and 1730. These may contain information about birth, death, and family relationships.",
-      "2. **Trace the Lineage back from Children & Spouses:** The profile lists children (3.2.1.1.2.1) and spouses (3.2.1.1.2.1.1). Investigate their records to potentially infer information about this individual. For example, the marriage record of a child might list the parent's name and approximate age or death date. Similarly, the spouse's will might reference the individual.",
-      "3. **Research Genealogical Compendia & Published Family Histories Focusing on Early New England Settlers:** Given the mention of 'Gen VII' in the name field, it is possible this individual is recorded in published genealogies or family histories relating to early New England settlers. Search online databases such as Ancestry.com, FamilySearch, and genealogical society websites for published genealogies focusing on families with connections to Saybrook and Branford. Also, examine local historical societies' holdings in these areas."
-    ],
-    "lineage": "Paternal",
-    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
   },
   {
     "id": "3.1.2.2.1.2",
@@ -47,9 +28,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. Focus on the profile of Abigail's child with ID '3.1.2.2.1' and spouse with ID '3.1.2.2.1.1'. Examine all available information on these individuals, including their vital records, census records, and probate records. These records may contain clues about Abigail, such as her approximate birth year or place of residence.",
-      "2. Investigate Beardsley family genealogies and local history resources in areas where the Beardsley family is known to have resided. Many published genealogies contain information on even less well-documented individuals. Local historical societies and libraries may hold unpublished manuscripts or other relevant materials.",
-      "3. Analyze the 'Paragraph #1647' reference in the metadata's 'location_in_doc' field. Determine the source document associated with this reference. The document may provide valuable hints or direct information about Abigail, her family, or her potential location."
+      "**Focus on the spouse and children:** Since we have IDs for Abigail's spouse (3.1.2.2.1.1) and child (3.1.2.2.1), prioritize researching them. Records related to their births, marriages, and deaths (such as vital records, church records, and census records) may provide clues about Abigail's identity, dates, and locations. Specifically look for records that name the parents of the spouse or child.",
+      "**Trace the Beardsley surname:** Systematically search genealogical databases (e.g., Ancestry, FamilySearch, MyHeritage) and online historical records for Beardsleys in the relevant geographic area (if one can be inferred from the spouse or child's records) around the likely time period (estimated based on the child's generation). Look for any Abigail Beardsleys or women with a similar name who might be a match, paying close attention to potential marriage records listing her parents or other family members. Consider variations in the spelling of Beardsley.",
+      "**Examine the 'Source Ref' and 'Location in Doc':** The metadata indicates 'Source Ref: Unknown' and 'Location in Doc: Paragraph #1647'. While the source is currently unknown, reviewing the document (if accessible) where this information originated might offer further context, clues, or previously overlooked details. Pay particular attention to surrounding paragraphs or sections that discuss related individuals or events."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
@@ -66,16 +47,16 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. Prioritize Research on Spouse and Children: Focus research efforts on the profile data for Jane's spouse (ID 5.1.1.2.2.1) and child (ID 5.1.1.2.2). Information gleaned from their records (birth, marriage, death certificates, census records, obituaries, family histories) may provide clues to Jane's identity, approximate birth year, and potential locations where she lived. Examine the relationships recorded in their profiles for leads to Jane.",
-      "2. Analyze the \"location_in_doc\" Metadata: Carefully review Paragraph #1918 of the source document (as identified in the `metadata`). This paragraph may contain contextual clues, even if it doesn't explicitly state Jane's vital information. Look for mentions of relatives, locations, time periods, or events that could be relevant to identifying her. Consider who created the source document and their knowledge of the family.",
-      "3. Explore Common Smith Surnames in Known Locations: Since Jane's maiden name is unknown, and we only have the surname 'Smith', start with the paternal lineage. Systematically research 'Smith' families in regions where her descendants (especially ID 5.1.1.2.2 and their descendants if known) resided. Utilize census records, land records, probate records, and church records to identify potential Jane Smiths who might fit the timeframe and geographic area. Consider name variants and common first names used in the family to narrow down the search."
+      "1. **Focus on the spouse and child's profiles:** Since the profiles for spouse (5.1.1.2.2.1) and child (5.1.1.2.2) exist, prioritize researching them. Their profiles may contain details about Jane (UNKNOWN) Smith, such as marriage records, census records indicating their household composition, or death records that name parents or spouses. Analyzing these related profiles could provide leads for Jane's birth and death information.",
+      "2. **Examine the source reference document in Paragraph #1918:** The `metadata` indicates information was found in 'Paragraph #1918' of an 'Unknown' source. Locate the full document (if possible determine what 'Unknown' refers to), and carefully analyze the surrounding text for any additional details about Jane (UNKNOWN) Smith, her family, or the time period she likely lived in. The context of Paragraph #1918 may offer clues to her identity and life events.",
+      "3. **Conduct targeted searches using surname and lineage:** Given the surname 'Smith' and paternal lineage indicated, perform broad searches on genealogical databases (Ancestry, FamilySearch, MyHeritage, etc.) using variations of 'Jane Smith', 'Smith family genealogy', and focusing on the geographical regions where the descendants (5.1.1.2.2) might have originated. Include search terms like 'seven great grandparents' or 'GENERATION IX' to potentially narrow results and uncover existing family trees or historical records mentioning Jane."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
   },
   {
-    "id": "5.2.2.2.1.1",
-    "name": "NOTES:  See also",
+    "id": "5.2.1.2.1.2.1",
+    "name": "Father of Hannah Reddocke Weekes",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -85,54 +66,16 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. **Examine the source document cited in the metadata ('Paragraph #1960' of 'Unknown' source).** Prioritize identifying the original source document and thoroughly review 'Paragraph #1960' for any clues related to vital statistics (birth, marriage, death) and biographical details for this individual. Even seemingly insignificant information might provide a starting point for further research.",
-      "2. **Trace the descendants listed in the 'relations' section ('5.2.2.2.1').** Researching this individual's child might reveal records (e.g., birth certificates, marriage licenses, death certificates, obituaries) that name the parent and possibly include their birth date or location. Look for family trees created by descendants, as they might contain information not found in official records.",
-      "3. **Investigate the spouse listed in the 'relations' section ('5.2.2.2.1.2').** Focusing on the spouse might uncover marriage records which could list parents, residences or places of birth of both parties. In the event the spouse's profile has more detail, use information found there to possibly locate them and '5.2.2.2.1.1' in census records."
-    ],
-    "lineage": "Paternal",
-    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
-  },
-  {
-    "id": "5.2.2.2.1.2",
-    "name": "NOTES:  See also",
-    "score": 9,
-    "issues": [
-      "Missing Birth Date",
-      "Missing Birth Location",
-      "Missing Death Date",
-      "Missing Death Location",
-      "No Biographical Notes"
-    ],
-    "recommendations": [
-      "**Focus on Parental Records:** Since parent IDs (5.2.2.2.1.2.1 and 5.2.2.2.1.2.2) and child ID (5.2.2.2.1) are provided, prioritize researching their records first. Birth, marriage, and death records for parents or census records listing the child could provide vital information about this individual's birth date/location, and an approximate timeframe for their life. Check family trees and other public records for these individuals which may have been reviewed by others.",
-      "**Analyze 'Source_Ref' and 'Location_in_doc':** The 'metadata' indicates the source is 'Unknown' and the location in the document is 'Paragraph #1965'. Attempt to identify the original document this profile was extracted from based on this paragraph number. Even if the source is initially 'Unknown,' understanding the document's context (e.g., a family history book, a collection of vital records, or a website) could suggest relevant research avenues or identify possible sources to consult. If the document can be identified, meticulously review the surrounding paragraphs for any contextual clues or mentions of this individual.",
-      "**Examine Spouse Record:** ID 5.2.2.2.1.1 is listed as a spouse. Focus research efforts on locating marriage records for this couple. Marriage records frequently include the ages or birthdates of the spouses, their places of residence at the time of marriage (providing a location clue), and possibly parents' names. Additionally, death records for the spouse could potentially mention the subject of the profile (e.g., as a surviving spouse) which would provide more details about the individual, including possible death information."
-    ],
-    "lineage": "Paternal",
-    "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
-  },
-  {
-    "id": "2.2.2.1.2.2.1",
-    "name": "NOTES:  See also",
-    "score": 9,
-    "issues": [
-      "Missing Birth Date",
-      "Missing Birth Location",
-      "Missing Death Date",
-      "Missing Death Location",
-      "No Biographical Notes"
-    ],
-    "recommendations": [
-      "1. Investigate the 'Paragraph #2768' reference in the 'location_in_doc' metadata. The text surrounding this paragraph may contain clues about the individual's identity, birth, death, or location. Analyze the document's content to extract any potentially relevant information that can be used to populate the missing fields.",
-      "2. Examine the profiles of the children ('2.2.2.1.2.2') and spouses ('2.2.2.1.2.2.2') for any information that might shed light on this individual. Their profiles might contain clues about the parents' or spouse's birthdates, birth locations, death dates, or death locations. Look for mentions of this individual in their life events, notes, or related links.",
-      "3. Conduct a search for the name 'NOTES: See also' in combination with the lineage 'Paternal' and generation 'GENERATION X: EIGHT GREAT GRANDPARENTS' across relevant genealogical databases and online resources (e.g., Ancestry.com, FamilySearch, MyHeritage, Google). This search may uncover digitized records, family trees, or published genealogies that contain additional information about this individual."
+      "Research Hannah Reddocke Weekes' profile (ID: 5.2.1.2.1.2) and her spouse's profile (ID: 5.2.1.2.1.2.2). Examine any source documents, biographical details, or records associated with them to identify their parents' names, locations, and approximate dates of birth and death. Focus on records generated during Hannah's life, such as marriage certificates or census records, as these may list parental information.",
+      "Investigate records related to the \"Paragraph #3688\" source reference. This location in the document may contain more information about the father of Hannah Reddocke Weekes. Determine the nature of the document and if it's a primary or secondary source, and then extract any relevant biographical data about this individual. Even fragmentary information (e.g., a place name mentioned in connection with a child's birth) can provide a starting point for further research.",
+      "Conduct broad searches using the name \"Father of Hannah Reddocke Weekes\" in conjunction with her spouse's surname, location, and possible time periods derived from the 'GENERATION X' data. Utilize online genealogical databases like Ancestry, FamilySearch, Findmypast, and MyHeritage. Focus searches on records associated with Weekes families in relevant geographic areas that align with the expected timeframe of Hannah and her spouse's life to identify potential candidates."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
   },
   {
-    "id": "2.2.2.1.2.2.2",
-    "name": "Notes:  See also",
+    "id": "5.2.1.2.1.2.2",
+    "name": "Mother of Hannah Reddocke Weekes",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -142,16 +85,16 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. Examine the profiles of the parents (IDs 2.2.2.1.2.2.2.1 and 2.2.2.1.2.2.2.2) and spouse (ID 2.2.2.1.2.2.1) for clues regarding this individual's name, dates, and locations of birth and death. Focus on any familial relationships, shared locations, or common surnames. Pay close attention to any source citations listed in their metadata and follow up on those sources.",
-      "2. Review the document cited in `metadata.location_in_doc` (Paragraph #2773) and expand the search within that document. Look for surrounding paragraphs that might contain information related to this individual or their family members. Analyze the document's type and content (e.g., family history, census record, local history) to guide further research strategies. Given the name field is 'Notes: See also', investigate what the 'see also' refers to.",
-      "3. Using the child's profile (ID 2.2.2.1.2.2) and the generation information (\"GENERATION X: EIGHT GREAT GRANDPARENTS\"), estimate a possible birth range for the individual. Then, conduct broad online searches using variations of the individual's name, potential locations derived from the parent/spouse profiles, and that estimated birth range. Utilize online genealogy databases (Ancestry, FamilySearch, MyHeritage) and historical record collections to potentially identify relevant birth, marriage, death, census, or other records."
+      "Examine the profile of her daughter, Hannah Reddocke Weekes (ID: 5.2.1.2.1.2), and Hannah's spouse (if known), to infer possible birth and death timeframes and locations for Hannah's mother. Focus on records related to Hannah such as birth records, marriage records, census records, and death records. These records may mention Hannah's mother's name or state of residence, providing clues to her identity and vital events.",
+      "Investigate available records related to the spouse of 'Mother of Hannah Reddocke Weekes' (ID: 5.2.1.2.1.2.1). Focus on marriage records, wills, probate records, land deeds, and census records. These records may contain information about his spouse, including her given name, maiden name (if applicable), potential birth and death dates/locations, and familial relationships.",
+      "Consult genealogical databases and online family trees for individuals named 'Hannah Reddocke Weekes' and related surnames. Search for potential matches or linked profiles that may contain information about Hannah's mother, including her given name, vital statistics, and family relationships. Pay close attention to the source citations provided in these databases to verify the accuracy of any found information. The \"location_in_doc\" metadata may provide context to help identify the correct Hannah Reddocke Weekes in the document."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
   },
   {
-    "id": "8.2.1.1.1.1.2.1",
-    "name": "NOTES:  GMD and GMB; arrived 1630 in Winthrop Fleet; to Windsor overland with Reverend Warham, 1635; among founders of Dorchester in 1630 and Windsor in 1635; also appears at",
+    "id": "5.1.2.1.2.2.2",
+    "name": "See Mabel Burroughs Reddocke",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -161,16 +104,16 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "**Focus on Early Settler Resources:** Given the mention of the Winthrop Fleet (1630), Dorchester (1630), and Windsor (1635), prioritize searching published passenger lists, town records (births, deaths, land records, church records) for Dorchester, Massachusetts and Windsor, Connecticut. Key sources include the 'Great Migration' series by Robert Charles Anderson and early town histories.",
-      "**Investigate Reverend Warham's Records:** The note about traveling overland with Reverend Warham provides a valuable clue. Research Warham's biography, sermons, and any records associated with his ministry. These records may contain information about individuals who traveled with him or were part of his congregations in Dorchester and Windsor. Also look for associated family records that might give a spouse's name or other supporting information.",
-      "**Consult Genealogical Databases and Societies:** Search major genealogical databases like Ancestry.com, FamilySearch, and Findmypast, utilizing keywords extracted from the existing notes such as 'Winthrop Fleet,' 'Dorchester,' 'Windsor,' and 'Reverend Warham.' Additionally, contact the Connecticut Society of Genealogists and the New England Historic Genealogical Society (NEHGS) for assistance and access to their collections, which may contain unpublished records or specialized resources relevant to early New England settlers."
+      "1. **Focus on her name and potential family connections:** Since the profile name includes 'See Mabel Burroughs Reddocke,' this strongly suggests a married name. Prioritize searching genealogical databases (Ancestry, FamilySearch, MyHeritage, Findmypast) using variations of both 'Mabel Burroughs' and 'Mabel Reddocke' coupled with the ancestor's generation (8th great-grandparent). Search for marriage records for Mabel Burroughs to a Reddocke, as these often include birthdates and locations.",
+      "2. **Leverage the Child Relationship:** The profile lists '5.1.2.1.2.2' as a child. Examine that child's profile extensively. Even if *that* profile also has missing data, it may contain clues like a spouse's name, obituaries, or location information which can be used as a starting point to find records related to Mabel. If the child's profile has source references, examine those documents for mentions of Mabel. This tracing of descendants may yield valuable clues about Mabel.",
+      "3. **Investigate Source References:** The 'metadata' indicates 'Source Ref: Unknown' and 'Location in Doc: Paragraph #3691.' While the source is unknown, try to identify what the potential source document *could* be based on the paragraph number. Is it a published family history, a local history book, or an index? Searching online catalogs of local libraries and historical societies, using keywords derived from the family names, generation, and geographic assumptions based on the child relationship, may help identify the original document. Even without the document, understanding its likely nature can guide further research strategies."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
   },
   {
-    "id": "1.2.2.1.2.1.2.2",
-    "name": "NOTES:  GMD 46; to New England with brothers, probably 1635 on \u201cDefence\u201d; to Hartford with Hooker; got into trouble and was \u201ccorrected\u201d in the Spring of 1640 for \u201cwanton dalliances, lascivious carriage and foul misdemeanors\u201d with 4 boys in Hartford (incl Nicholas and John Olmstead); was not charged with fornication, but was quickly married off to the older Disborough; appears also as Kingsbury",
+    "id": "5.2.1.2.2.1.2",
+    "name": "(Unknown) (Unknown) Alling",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -180,9 +123,66 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. **Consult Genealogical Databases and Published Resources:** Given the name and notes referencing \"GMD 46\" and arrival in New England around 1635, search prominent genealogical databases like Ancestry.com, FamilySearch, AmericanAncestors.org (NEHGS), and Findmypast for records related to this individual, particularly focusing on passenger lists (Defence arrival), Hartford, Connecticut records, and any published genealogical works on families like Kingsbury, Disborough, or related Olmstead families. GMD 46 may refer to \"Genealogical and Memorial History of the State of Massachusetts\", which should be checked.",
-      "2. **Investigate Hartford Court Records and Colonial Legal Documents:** The profile mentions being \"corrected\" for \"wanton dalliances.\" Search the Hartford County Court records and Connecticut Colonial legal records for details of this 1640 incident. These records may provide the individual's name, age (which can estimate birth year), and potentially a location of origin. They may also mention the Disborough marriage and further clarify the individual's identity and connection to the Olmstead family. Look for any associated land records or other documents generated by the court's handling of the case.",
-      "3. **Examine Disborough Family Records and Marriage Records:** Since the individual was \"quickly married off\" to a Disborough, locate Disborough family genealogies and marriage records in Hartford and surrounding areas for the relevant time period (1640s). Focusing on older Disborough individuals who married around that time may reveal the name of the individual in question. Marriage records, if available, may provide the wife's maiden name or clues to her origins. Explore probate records for the Disborough spouse to identify potential heirs, which could provide additional names or relationships to confirm the individual's identity."
+      "Examine the profile of child '5.2.1.2.2.1' and spouse '5.2.1.2.2.1.1' for clues about the subject's possible birth and death dates and locations. Even approximate dates or locations associated with the child or spouse can provide starting points for further research.",
+      "Consult the 'Source Ref: Unknown' and 'location_in_doc: Paragraph #3699' mentioned in the metadata. Identifying and reviewing the original source document may contain additional information about this individual, even if it was not initially extracted.",
+      "Search online genealogical databases (such as Ancestry.com, FamilySearch, FindAGrave, etc.) using the child's and spouse's names, potential surnames, and any keywords derived from the 'Paragraph #3699' reference. This may uncover existing records or family trees containing information about this (Unknown) (Unknown) Alling."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "5.2.2.2.1.2.1",
+    "name": "Maternal Grandfather of Martha Powell Keene\u2019s Father",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "**Targeted Record Search for Child (5.2.2.2.1.2):** Begin by focusing research on the profile of this individual's child (ID: 5.2.2.2.1.2). Vital records (birth, marriage, death certificates) for the child may list parents' names and potentially a birthplace or other clues for this individual. Census records where the child is living with their parents can also provide age estimates and location information. Focus on records created closest to the estimated birth year of the child to find the most useful results.",
+      "**Examine Spouse's Profile (5.2.2.2.1.2.2) and Associated Records:** Investigate the profile of the spouse (ID: 5.2.2.2.1.2.2) and search for associated records like marriage certificates, census records, and obituaries. These records may contain information about the individual, such as their name (if different from the profile's current descriptor), birthplace, and parents' names. Pay close attention to marriage records as they frequently list the birth location and ages of the bride and groom.",
+      "**Leverage the 'Location in Doc' Metadata (Paragraph #3703) for Contextual Clues:** Carefully review the document identified in the 'location_in_doc' field (Paragraph #3703). Given the genealogical context, this paragraph might contain references to this individual, their family, or events that can help establish a timeline, location, or other biographical details. Even seemingly insignificant details in the paragraph could prove valuable in identifying further research avenues."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "5.2.2.2.1.2.2",
+    "name": "Maternal Grandmother of Martha Powell Keene\u2019s Father",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Begin by focusing on the profile of her child (ID: 5.2.2.2.1.2). Analyze their birth certificate, marriage certificate, death certificate, and any census records to ascertain the mother's name, approximate birth year, and possible locations of residence. These records often list parents' names and birthplaces, providing valuable clues.",
+      "Investigate the marriage record of the individual represented by profile ID 5.2.2.2.1.2.1 (her spouse). Marriage records often include the bride and groom's parents' names and residences, potentially offering more information about this individual's identity and location. Search available online databases and relevant archives for marriage records associated with the identified child and spouse.",
+      "Thoroughly analyze 'Paragraph #3705' of the 'Unknown' source document cited in the metadata. Even with limited information, this paragraph might contain a name, approximate dates, locations, or contextual clues related to this individual. Carefully examine the surrounding paragraphs for additional supporting information or potential leads."
+    ],
+    "lineage": "Paternal",
+    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
+  },
+  {
+    "id": "5.2.2.2.2.1.1",
+    "name": "Paternal Grandfather of Martha Powell Keene\u2019s Mother",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Utilize the profile ID of the listed child (5.2.2.2.2.1) to locate that individual's profile. From there, analyze any biographical information, records, or associated family members to potentially infer the subject's name, birth and death details. Focus on sources cited in the child's profile.",
+      "Leverage the genealogical context provided in the 'generation' field (EIGHT GREAT GRANDPARENTS of Martha Powell Keene's Mother) and the 'paternal' lineage designation. Search online genealogy databases like Ancestry, FamilySearch, or MyHeritage, using Martha Powell Keene's known family tree information to identify possible candidates for this specific 8th great-grandfather on the paternal side. Prioritize searches with parental or spousal name filters if available.",
+      "Investigate the 'location_in_doc' metadata. Paragraph #3707 within the 'Unknown' source reference might contain clues regarding this individual. Attempt to identify the source document and directly examine paragraph #3707 for any pertinent information about the subject, his spouse (ID 5.2.2.2.2.1.2), or their child (ID 5.2.2.2.2.1). This could potentially reveal names, dates, or locations associated with this ancestor."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
