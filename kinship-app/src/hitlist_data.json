@@ -9,9 +9,7 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Prioritize resolving the birth and death date discrepancy. Conduct a thorough search of Charlestown, MA vital records (church records, town records, probate records) and early Massachusetts Bay Colony records (court records, land records) for John Knight, aiming to confirm the death date and uncover any information about his birth or arrival in the colony. Focus on timeframe +- 10 years of both dates.",
-      "Investigate English parish registers and probate records from the 1600-1650 period, concentrating on regions from which other early Massachusetts settlers originated. Given the stated 'c. 1631 England' birth date, explore relevant records from that period. Start with online databases like Ancestry.com, Findmypast, and FamilySearch, and if necessary, consult with a professional genealogist specializing in English records.",
-      "Explore sources related to other individuals listed as 'children,' 'parents,' and 'spouses' in the 'relations' field. Cross-referencing information with these linked profiles might provide clues to John Knight's origins, life events, and/or accurate birth and death details. Start with any profiles that have documented source citations or biographical information."
+      "Error generating AI recommendations."
     ],
     "lineage": "Maternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
@@ -28,9 +26,7 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. Prioritize researching the spouse (ID: 3.1.2.2.1.1) and child (ID: 3.1.2.2.1) listed in the 'relations' field. Information about their lives (birth, marriage, death) may contain clues or direct references to Abigail Beardsley, such as marriage records, census records listing all family members, or probate records mentioning her as a widow or mother.",
-      "2. Investigate the 'metadata' source reference: 'Unknown, Location in Doc: Paragraph #1647'. Even though the source is currently listed as 'Unknown,' the reference to 'Paragraph #1647' suggests an original document or record was consulted. Attempt to identify the source material where this paragraph is located. This could involve searching digital archives, contacting local historical societies, or examining family papers if any exist. Re-examining the original context surrounding paragraph #1647 might reveal details about Abigail's life, even if it's just a mention of her name or family connection.",
-      "3. Conduct a targeted search of online genealogy databases (e.g., Ancestry.com, FamilySearch, MyHeritage) using the name 'Abigail Beardsley' (including variations and misspellings). Focus on records related to the geographic region where her spouse and child lived, and filter by possible time periods based on the generational context (Generation IX). Look for census records, marriage records, wills, probate records, and land deeds that may mention her or provide clues about her origins and life events. Consider searching for maiden names for her spouse, as this may lead to additional Beardsley family records."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
@@ -47,31 +43,10 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. Prioritize research on the linked spouse (ID: 5.1.1.2.2.1) and child (ID: 5.1.1.2.2). Their records (birth, marriage, death) may contain clues about Jane (UNKNOWN) Smith's vital statistics, such as her approximate birth year or place of residence. Focus on census records, marriage records, and death certificates for these individuals, as they often include parental information.",
-      "2. Investigate the source document indicated by `metadata.location_in_doc: Paragraph #1918`. Determine the nature of this document (e.g., family history book, historical record) and carefully examine the surrounding text for any information related to Jane (UNKNOWN) Smith. Even seemingly minor details, like the names of neighbors or associated locations, can be helpful for further research.",
-      "3. Conduct a broader surname-based search using variations of 'Smith' and any potential maiden names or nicknames associated with 'UNKNOWN'. Utilize online genealogy databases (Ancestry, FamilySearch, MyHeritage) and historical record collections to identify potential matches. Filter results based on the geographical location of the known child (ID: 5.1.1.2.2) or spouse (ID: 5.1.1.2.2.1) to narrow down the search."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
-  },
-  {
-    "id": "5.1.2.1.2.2.2",
-    "name": "See Mabel Burroughs Reddocke",
-    "score": 9,
-    "issues": [
-      "Missing Birth Date",
-      "Missing Birth Location",
-      "Missing Death Date",
-      "Missing Death Location",
-      "No Biographical Notes"
-    ],
-    "recommendations": [
-      "1. **Focus on Daughter's Records:** Since the profile lists a child (ID: 5.1.2.1.2.2), prioritize researching that individual's records (birth certificate, marriage certificate, death certificate, census records, obituaries). These records often contain information about the parents, including birthdates, birthplaces, and even mother's maiden names, which can provide clues to Mabel's identity.",
-      "2. **Investigate \"Reddocke\" Surname Variations and Local Records:** The unusual surname \"Reddocke\" suggests it may be misspelled or have variations (e.g., Reddock, Reddocke, Reddox). Search census records, land records, probate records, and local history archives (newspapers, church records, county records) in areas where individuals with similar surnames were found. Look for mentions of \"Mabel Burroughs\" in association with these names, even if the spelling isn't exact. Consider name indexes to these records if available.",
-      "3. **Trace Lineage Backwards from Known Relatives:** Examine the lineage context (\"GENERATION X: EIGHT GREAT GRANDPARENTS\", \"Paternal\") to identify other known ancestors in this paternal line. Researching their lives and families may uncover clues about siblings, in-laws, or associates of Mabel Burroughs Reddocke, potentially leading to records pertaining to her birth, marriage, or death through indirect evidence like wills, family letters, or shared residences in census records."
-    ],
-    "lineage": "Paternal",
-    "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
   },
   {
     "id": "5.2.1.2.2.1.2",
@@ -85,9 +60,7 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. **Focus on the children:** The profile indicates one child (ID: 5.2.1.2.2.1) and one spouse (ID: 5.2.1.2.2.1.1). Researching these individuals might reveal information about this individual, such as marriage records (potentially listing parents or a birth location) or census records including their household.",
-      "2. **Leverage the 'Paragraph #3699' location and 'Unknown' source reference:** Investigate the document mentioned in `metadata.location_in_doc`. Determine if the 'Unknown' `source_ref` can be identified. This could potentially uncover the original source, providing context or direct data about the individual.",
-      "3. **Broaden the search with surname and lineage:** Search online genealogical databases (e.g., Ancestry, FamilySearch, MyHeritage) using the surname 'Alling' combined with the 'Paternal' lineage information and 'EIGHT GREAT GRANDPARENTS' generation. Include searches for variations of the name or common misspellings. Focus on records from the geographic area where other relatives in this tree are known to have lived, as determined from other individuals' profiles."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
@@ -104,9 +77,7 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Research the children and spouse's profiles (IDs 6.1.1.1.1.1 and 6.1.1.1.1.1.1, respectively) for clues about this individual's life events, locations, and dates. Vital records or biographical information about the children or spouse may provide leads to the individual's information, even if only approximate dates or locations.",
-      "Examine the document referenced in 'metadata.source_ref' (Unknown) and 'metadata.location_in_doc' (Paragraph #3718) more closely. While the source is currently listed as 'Unknown', careful review of the specified paragraph and surrounding text may reveal details such as names, dates, or locations relevant to this individual. Broaden the search to the entire document if needed.",
-      "Utilize genealogical databases and online resources (e.g., Ancestry.com, FamilySearch, MyHeritage) to search for this individual's descendants (using ID 6.1.1.1.1.1's family tree). Even without a known name, searching for individuals in the related lineage and generation may uncover family trees where this ancestor is present, potentially with more information."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
@@ -123,16 +94,14 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. **Targeted Surname Research:** Conduct a comprehensive search for 'Pitts' in records relevant to the lineage's geographical area (if known based on descendants or other ancestral branches). Focus on census records, vital records (birth, marriage, death), probate records, and land records. Given the unknown date and location, cast a wide net initially, narrowing the search as potential matches emerge. Prioritize records from the era likely spanning the individual's lifetime based on their placement as a 9th great-grandparent.",
-      "2. **Spouse & Children Analysis:** Thoroughly investigate the records of the identified spouse (ID: 1.1.2.2.2.2.2.2) and children (IDs: 1.1.2.2.2.2.2.1_c0 and 1.1.2.2.2.2.2). These records (birth certificates, marriage licenses, death certificates, census entries, obituaries, wills) often provide clues about the parents' or spouses' names, dates, and places of birth, marriage, and death. Pay particular attention to maiden names of female spouses and any records mentioning the individual in question.",
-      "3. **Document Analysis of Source Reference:** Carefully examine the original document cited in 'metadata.source_ref' ('Unknown', but located in 'Paragraph #4461'). While currently listed as 'Unknown,' try to identify the document. If found, analyze the surrounding paragraphs (before and after #4461) for any additional context or clues about this individual. Even a seemingly unrelated paragraph might contain valuable information that helps contextualize the initial reference. If the document remains unidentified, attempt to determine the nature of the original document (e.g., family history manuscript, local history book, etc.) based on the source where the information was found (e.g., online genealogy database, historical society collection) and then broaden the search."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS"
   },
   {
-    "id": "1.2.2.1.2.2.2.1",
-    "name": "Father of Hester Hyde Post",
+    "id": "4.2.2.2.1.1.2.1",
+    "name": "William Bradley",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -142,16 +111,14 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Research the profile of Hester Hyde Post (ID: 1.2.2.1.2.2.2) and her spouse (ID: 1.2.2.1.2.2.2.2). Her profile, or the profile of her spouse, may contain clues, such as parental names, birthplaces, or marriage locations, that could lead to the discovery of this individual's vital information.",
-      "Search genealogical databases (e.g., Ancestry, FamilySearch, MyHeritage) using the name \"Father of Hester Hyde Post\" in conjunction with her name and any known information about her descendants. Cast a wide net, checking census records, marriage records, and other vital records for any potential matches.",
-      "Analyze Paragraph #4607 of the source document referenced in the metadata. This location may contain direct or indirect information about this individual, even if not explicitly stated. Look for familial relationships, place names, or time periods mentioned in the paragraph that could provide leads for further research."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS"
   },
   {
-    "id": "1.2.2.1.2.2.2.2",
-    "name": "Mother of Hester Hyde Post",
+    "id": "4.2.2.2.1.1.2.2",
+    "name": "Alice Prichard",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -161,16 +128,14 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Consult records associated with her identified child, Hester Hyde Post (ID: 1.2.2.1.2.2.2), and her spouse (ID: 1.2.2.1.2.2.2.1). Search for vital records (birth, marriage, death), census records, probate records, land records, and church records mentioning Hester Hyde Post and her spouse. These records may contain the mother's name, approximate birth year, or place of residence, offering clues to her identity and vital statistics.",
-      "Examine the \"Unknown\" source reference mentioned in the metadata and the document location \"Paragraph #4610\". Even if the source is currently unknown, thoroughly analyze the surrounding text and context in Paragraph #4610. Look for any clues about the mother of Hester Hyde Post, such as family names, locations, or events that might provide leads for further research. Attempt to identify the source document; is it a family history, local history book, or other record?",
-      "Explore genealogical databases and online resources, such as Ancestry.com, FamilySearch, Findmypast, and MyHeritage, using the name \"Mother of Hester Hyde Post\" along with any other known information, such as the names of her child and spouse. Experiment with different search strategies using wildcard characters (*) to account for potential variations in spelling or missing information. Additionally, utilize geographical filters based on the lineage's possible location."
+      "Error generating AI recommendations."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS"
   },
   {
-    "id": "1.2.2.2.2.2.1.1",
-    "name": "Father of John Post",
+    "id": "9.2.1.1.2",
+    "name": "Janet Crawford Young",
     "score": 9,
     "issues": [
       "Missing Birth Date",
@@ -180,11 +145,26 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "1. Conduct targeted searches utilizing the provided child's profile (ID: 1.2.2.2.2.2.1). Search for the child's birth records, marriage records, and death records, as these may list the parents' names and potentially their approximate ages or birthplaces. Start with indexed databases like Ancestry, FamilySearch, and MyHeritage, using variations of the child's name and known locations for the child and any other known relatives in the lineage.",
-      "2. Analyze the \"Paragraph #4670\" reference and the unknown source. Attempt to locate the original document or information mentioned in the metadata. This could be a family history, a local history book, or other genealogical record. Even a partial sentence from paragraph #4670 could provide valuable clues, like a surname, place, or associated event to search for. If the source remains unknown, attempt to determine the likely type of record based on the context (e.g., will, deed, vital record abstract) and search relevant repositories (e.g., county courthouses, state archives) for records created in the time period the person would have lived. Consider also looking at digitized collections of local historical societies near the location where John Post (child) lived.",
-      "3. Implement a Cluster Research approach focusing on collateral relatives. Identify potential siblings, aunts, uncles, and cousins of 'Father of John Post' and systematically search for their records. Information found about these individuals may provide clues about the parentage, birthplace, and timeline of the target individual. Look for probate records, land records, and census records related to these relatives as they may mention other family members, even those with missing vital statistics."
+      "Error generating AI recommendations."
     ],
-    "lineage": "Paternal",
-    "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS"
+    "lineage": "Maternal",
+    "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS"
+  },
+  {
+    "id": "12.1.2.1.2",
+    "name": "Mary (UNKNOWN) Hinds",
+    "score": 9,
+    "issues": [
+      "Missing Birth Date",
+      "Missing Birth Location",
+      "Missing Death Date",
+      "Missing Death Location",
+      "No Biographical Notes"
+    ],
+    "recommendations": [
+      "Error generating AI recommendations."
+    ],
+    "lineage": "Maternal",
+    "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS"
   }
 ]
