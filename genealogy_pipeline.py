@@ -123,11 +123,13 @@ class GenealogyTextPipeline:
         Parses a raw date string and returns a best-guess integer year.
         Returns None if no valid year is found.
         """
-        if not raw_date_string or raw_date_string.lower() == "unknown":
+        if not raw_date_string:
             return None
 
         # Clean up the string
         s = raw_date_string.strip().lower()
+        if s == "unknown" or s == "?" or s == "uncertain":
+            return None
 
         # Extract the first 4-digit year candidate to work with
         # (1000-2999).
@@ -164,23 +166,66 @@ class GenealogyTextPipeline:
         if not text or text.lower() == "unknown":
             return "Unknown", "Unknown"
 
-        # Check for " in " separator
+        # 1. " in " separator (Strongest)
+        # Handles: "May 1, 1850 in Hartford" -> "May 1, 1850", "Hartford"
         in_sep = re.search(r"\s+in\s+", text, re.IGNORECASE)
         if in_sep:
             parts = re.split(r"\s+in\s+", text, flags=re.IGNORECASE, maxsplit=1)
             return parts[0].strip(), parts[1].strip()
 
-        # Check for "," separator
-        if "," in text:
-            parts = text.split(",", 1)
-            return parts[0].strip(), parts[1].strip()
+        # 2. Look for a Year (1000-2999)
+        # Find the LAST occurrence of a year to handle ranges like 1750-1752, but ensure we don't accidentally
+        # split "1850" from "1860" if both are in the date field (e.g. range).
+        # Strategy: Find the last year. If text follows it that looks like a location (starts with comma/semicolon/letters), split.
 
-        # No separator found
-        # Heuristic: If it contains digits, it's likely a date. Otherwise, location.
-        if any(char.isdigit() for char in text):
+        years = list(re.finditer(r'\b(1[0-9]{3}|20[0-2][0-9])\b', text))
+
+        if years:
+            last_year = years[-1]
+            end_of_year = last_year.end()
+
+            # Check what comes after
+            after = text[end_of_year:].strip()
+
+            # Case: "1850" -> All date
+            if not after:
+                return text.strip(), "Unknown"
+
+            # Case: "1850, Hartford" -> Split
+            if after.startswith(",") or after.startswith(";"):
+                date_part = text[:end_of_year].strip()
+                loc_part = after.lstrip(",; ").strip()
+                return date_part, loc_part
+
+            # Case: "1850 Hartford" -> Implicit split (rare but possible)
+            # Check if it starts with letters (Location name)
+            # Avoid splitting "1774/5" where "/5" is not a location
+            if after[0].isalpha():
+                 date_part = text[:end_of_year].strip()
+                 loc_part = after.strip()
+                 return date_part, loc_part
+
+            # Fallback: If after is just symbols like "/5" or "-1752" (Wait, if -1752, it would be caught as a year match)
+            # If we are here, "after" does NOT contain a year (because we picked the last one).
+            # So if it's "/5" it stays with date.
+
             return text.strip(), "Unknown"
+
+        # 3. No year found
+        # Heuristics for "No Year"
+
+        # If text is keywords like "Unknown", "?", "Disappeared"
+        keywords = ["unknown", "?", "disappeared", "uncertain", "infant"]
+        if any(k in text.lower() for k in keywords):
+             return text.strip(), "Unknown"
+
+        # If it contains digits, assume Date (e.g. "May 1", "aged 5")
+        if any(char.isdigit() for char in text):
+             return text.strip(), "Unknown"
         else:
-            return "Unknown", text.strip()
+             # No digits. "Hartford, CT". "New York".
+             # Treat as Location.
+             return "Unknown", text.strip()
 
     def _parse_location_hierarchy(self, location_string):
         """
