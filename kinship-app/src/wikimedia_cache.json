@@ -5569,5 +5569,29 @@
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
+    },
+    "Barnham, Suffolk, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf/page1-1024px-The_place-names_of_Suffolk_%28IA_placenamesofsuff00skearich%29.pdf.jpg",
+        "alt": "Historical image of Barnham, Suffolk, England",
+        "caption": "\nBibliography: p.2-3\n\nSubjects: Names, Geographical -- England Suffolk; English language -- Etymology Names...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Settrington, Yorkshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/The_naturalist_%28IA_natural12812920032004west%29.pdf/page1-1024px-The_naturalist_%28IA_natural12812920032004west%29.pdf.jpg",
+        "alt": "Historical image of Settrington, Yorkshire, England",
+        "caption": "\nImprint varies\nVol. t.p. for v. 3, issued separately, has title: The Naturalist, and field club journal\nTitle from caption\nSuspended May 1867-1874\nJo...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Bradford, Yorkshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Medieval_Font_with_17th_Century_Cover_-_All_Saints_Church_-_geograph.org.uk_-_1981459.jpg",
+        "alt": "Historical image of Bradford, Yorkshire, England",
+        "caption": "Medieval Font with 17th Century Cover - All Saints Church\u00a0...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
     }
 }

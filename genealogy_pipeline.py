@@ -376,7 +376,17 @@ class GenealogyTextPipeline:
                 continue
 
             match = id_pattern.search(text)
-            if match:
+
+            # Guard: If the line is actually a Note or Vital Stat line that happens to reference an ID,
+            # ignore it as a profile header.
+            is_metadata_line = (
+                born_pattern.match(text) or
+                died_pattern.match(text) or
+                children_pattern.match(text) or
+                notes_start_pattern.match(text)
+            )
+
+            if match and not is_metadata_line:
                 if current_profile:
                     self.family_data.append(current_profile)
                     current_profile = None
