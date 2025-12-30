@@ -12,7 +12,7 @@ def verify_hitlist():
         page = context.new_page()
 
         # 1. Navigate to the app (adjust port if needed, assuming 5173 based on Vite)
-        page.goto("http://localhost:5173")
+        page.goto("http://localhost:4000")
 
         # 2. Skip the relationship modal if it appears
         # Look for the 'Skip for now' button

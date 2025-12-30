@@ -624,7 +624,9 @@ class GenealogyTextPipeline:
                     "spouses": []
                 }
 
-            if '.' in pid:
+            # Skip implicit linking for child entries (IDs with '_c')
+            # because they don't follow the strict structural hierarchy
+            if '.' in pid and '_c' not in pid:
                 child_id = pid.rsplit('.', 1)[0]
                 if child_id in id_map:
                     if child_id not in p['relations']['children']:
@@ -822,7 +824,11 @@ class GenealogyTextPipeline:
 
             # Simple normalization
             c_name = re.sub(r'\[.*?\]', '', child['name']) # remove spouses in brackets
-            c_name = re.sub(r'\(.*?\)', '', c_name).strip().lower()
+            c_name = re.sub(r'\(.*?\)', '', c_name)
+            # Remove suffixes like ", 1st son", ", 2nd daughter", etc.
+            c_name = re.sub(r',\s*\d+(?:st|nd|rd|th)?\s+(?:son|daughter|child)', '', c_name, flags=re.IGNORECASE)
+            c_name = re.sub(r',\s+(?:son|daughter|child)', '', c_name, flags=re.IGNORECASE)
+            c_name = c_name.strip().lower()
 
             match_found = False
             for real_name, real_id in real_name_map.items():
@@ -840,8 +846,11 @@ class GenealogyTextPipeline:
 
                     real_p = real_profiles[real_id]
                     if 'relations' not in real_p: real_p['relations'] = {"children": [], "parents": [], "spouses": []}
-                    if parent_id not in real_p['relations']['parents']:
-                        real_p['relations']['parents'].append(parent_id)
+
+                    # Prevent linking self as parent (e.g. if child name matches parent name)
+                    if parent_id != real_id:
+                        if parent_id not in real_p['relations']['parents']:
+                            real_p['relations']['parents'].append(parent_id)
 
                     match_found = True
                     break
