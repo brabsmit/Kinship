@@ -15,6 +15,12 @@ export const ASSETS = {
         caption: "The English Countryside (17th Century)",
         style: { filter: "sepia(40%) contrast(95%)" }
     },
+    london_visscher: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Panorama_of_London_by_Claes_Van_Visscher%2C_1616.jpg/1280px-Panorama_of_London_by_Claes_Van_Visscher%2C_1616.jpg",
+        alt: "Visscher's Panorama of London (1616)",
+        caption: "London Before the Great Fire (1616)",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
 
     // New England
     new_england_1600: {
@@ -23,11 +29,23 @@ export const ASSETS = {
         caption: "Early Settlement of New England",
         style: { filter: "sepia(20%)" }
     },
+    ne_map_1634: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Southern_New_England_in_1634.jpg",
+        alt: "William Wood's Map of New England (1634)",
+        caption: "The Southern Part of New England (1634)",
+        style: { filter: "sepia(25%) contrast(110%)" }
+    },
+    puritan_life: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
+        alt: "Pilgrims Going to Church by George Henry Boughton",
+        caption: "Life in the Early Colonies",
+        style: { filter: "sepia(15%) contrast(100%)" }
+    },
     new_england_pilgrims: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Map_of_New_England_by_Captain_John_Smith_%281616%29.jpg/1024px-Map_of_New_England_by_Captain_John_Smith_%281616%29.jpg",
-        alt: "Map of New England by Captain John Smith (1616)",
-        caption: "The World of the Pilgrims",
-        style: { filter: "sepia(15%) contrast(110%)" }
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
+        alt: "Pilgrims Going to Church (Boughton)",
+        caption: "The Pilgrim Experience",
+        style: { filter: "sepia(15%)" }
     },
     boston_old: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Bonner_Map_of_Boston_1722.jpg/1024px-Bonner_Map_of_Boston_1722.jpg",
@@ -37,6 +55,12 @@ export const ASSETS = {
     },
 
     // Connecticut
+    new_haven_1641: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Atwater1881_p10_Map_New_Haven_in_1641.jpg/1024px-Atwater1881_p10_Map_New_Haven_in_1641.jpg",
+        alt: "Map of New Haven in 1641",
+        caption: "The Nine Squares of New Haven (1641)",
+        style: { filter: "sepia(30%) contrast(110%)" }
+    },
     ct_1700: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Plan_of_the_Colony_of_Connecticut,_Moses_Park,_1766.jpg/1024px-Plan_of_the_Colony_of_Connecticut,_Moses_Park,_1766.jpg",
         alt: "Map of the Colony of Connecticut (1766)",
@@ -74,19 +98,37 @@ export const getHeroImage = (location, year) => {
     const y = parseInt(year) || 0;
 
     // 1. Special Overrides (Muse Logic for known cache gaps or quality issues)
-    // Boston < 1750: Cache often has 1850 map or hyper-local street map. Bonner Map is better for "Early Boston".
+
+    // New Haven Colonial (1638-1750)
+    if (loc.includes("new haven") && y >= 1638 && y < 1750) {
+        return ASSETS.new_haven_1641;
+    }
+
+    // London Pre-Fire (< 1666)
+    if ((loc.includes("london") || loc === "england") && y < 1666) {
+        return ASSETS.london_visscher;
+    }
+
+    // Boston < 1750
     if (loc.includes("boston") && y < 1750 && y > 1630) {
         return ASSETS.boston_old;
     }
 
-    // New England Pilgrim Era: Cache for "New England" or "Plymouth" might be a map. User wants "Pilgrim Life".
-    // We target generic "New England" queries or "Plymouth" specifically for this era.
-    if ((loc === "new england" || loc.includes("plymouth")) && y >= 1600 && y < 1650) {
-        return ASSETS.new_england_pilgrims;
+    // Massachusetts / CT Early Settlers (1620-1660)
+    // Towns: Watertown, Sudbury, Ipswich, Windsor, Hartford, Wethersfield
+    // Use "Puritan Life" engraving for a more immersive feel than a map
+    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
+    if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
+        return ASSETS.puritan_life;
     }
 
-    // England Pre-1650: Cache might be a map. User wants "Woodcut".
-    if ((loc === "england" || loc === "uk") && y < 1650) {
+    // New England Pilgrim Era (General)
+    if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts")) && y >= 1620 && y < 1650) {
+        return ASSETS.ne_map_1634;
+    }
+
+    // England Pre-1650 (General Countryside)
+    if ((loc === "england" || loc === "uk" || loc.includes("britain")) && y < 1650) {
         return ASSETS.england_countryside;
     }
 
@@ -110,19 +152,18 @@ export const getHeroImage = (location, year) => {
     // New York
     if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {
         if (y >= 1800) return ASSETS.ny_1800;
-        return ASSETS.new_england_1600; // Fallback to regional map
+        return ASSETS.ne_map_1634; // Fallback to regional map
     }
 
     // Connecticut
     if (loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford") || loc.includes("new haven")) {
         if (y >= 1700) return ASSETS.ct_1700;
-        return ASSETS.new_england_1600;
+        return ASSETS.ne_map_1634;
     }
 
     // Massachusetts / New England (Broader catch)
     if (loc.includes("ma") || loc.includes("massachusetts") || loc.includes("boston") || loc.includes("new england") || loc.includes("rhode island") || loc.includes("ri")) {
-        if (y >= 1600 && y < 1700) return ASSETS.new_england_pilgrims;
-        return ASSETS.new_england_1600;
+        return ASSETS.ne_map_1634;
     }
 
     // UK / England
