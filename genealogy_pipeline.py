@@ -52,10 +52,6 @@ class GenealogyTextPipeline:
             f"{location} historical"
         ]
 
-        # Clean up location for search (remove detailed parts if too long?)
-        # For now, use as is.
-
-
         api_url = "https://commons.wikimedia.org/w/api.php"
 
         for q in queries:
@@ -823,55 +819,77 @@ class GenealogyTextPipeline:
             return int(match.group(0))
         return None
 
-    def _find_mentions(self):
-        print("--- Ariadne: Weaving Connections ---")
-        # Build Name Index
+    def _build_name_index(self):
+        """
+        Builds a comprehensive index of names to profile IDs, handling
+        variations like suffixes (Jr., Sr.) and middle names.
+        """
         name_index = defaultdict(list)
 
-        # Track discoveries for the journal
-        self.ariadne_log = {
-            "ambiguous": defaultdict(set),
-            "clusters": defaultdict(int),
-            "new_links": 0
-        }
-
         for p in self.family_data:
-            full_name = p['name']
             pid = p['id']
+            full_name = p['name']
 
-            # Normalize: "William E. Dodge" -> "William E. Dodge"
-            # Remove [source: ...] if present
+            # Clean: remove [source], {id}, and trailing punctuation
             clean_name = re.sub(r'\[.*?\]', '', full_name).split('{')[0].strip()
+            # Remove trailing comma if present (e.g. from "Dodge, Sr.")
+            clean_name = clean_name.rstrip(",.")
 
-            # Index full name
+            # 1. Full Name
             name_index[clean_name].append(pid)
 
-            # Variations
-            parts = clean_name.split()
+            # 2. Base Name (remove suffix)
+            # Handle "Jr", "Sr", "III", "IV", "Esq."
+            # Using regex to remove suffix at the end
+            base_name = re.sub(r',?\s+(Jr\.?|Sr\.?|III|IV|Esq\.?)$', '', clean_name, flags=re.IGNORECASE)
+            if base_name != clean_name:
+                name_index[base_name].append(pid)
+
+            # 3. Variations on Base Name
+            # "William Earl Dodge" -> "William Dodge"
+            # "William E. Dodge" -> "William Dodge"
+            # "William E. Dodge" -> "William E. Dodge" (Already covered by base_name if no suffix)
+
+            parts = base_name.split()
+
+            # If name has middle parts (more than 2 words)
             if len(parts) > 2:
-                # First Last (William Dodge)
+                # First Last
                 short_name = f"{parts[0]} {parts[-1]}"
                 name_index[short_name].append(pid)
 
-            # Handle "Jr", "Sr"
-            if len(parts) > 1 and parts[-1].lower() in ['jr', 'jr.', 'sr', 'sr.', 'iii', 'iv']:
-                 # Index name without suffix
-                 base_name = " ".join(parts[:-1])
-                 name_index[base_name].append(pid)
+                # If middle initial is used in text "William E. Dodge", we want that to match
+                # "William Earl Dodge" from database.
+                # So if DB has "William Earl Dodge", we can index "William E. Dodge" too?
+                # No, we index the full name. We rely on text scanning to pick up "William E. Dodge"
+                # and then we need to match it.
+                # If DB is "William Earl Dodge", and text says "William E. Dodge",
+                # valid_candidates will have "William E. Dodge".
+                # We need "William E. Dodge" in known_names to trigger a match?
+                # Yes.
 
-        # Filter ambiguous
-        clean_name_index = {}
-        for name, ids in name_index.items():
-            unique_ids = set(ids)
-            if len(unique_ids) == 1:
-                clean_name_index[name] = list(unique_ids)[0]
-            else:
-                self.ariadne_log["ambiguous"][name] = unique_ids
+                # Generate Middle Initial Variant
+                # "William Earl Dodge" -> "William E. Dodge"
+                middle_part = parts[1]
+                if len(middle_part) > 1 and middle_part[0].isalpha():
+                    initial_name = f"{parts[0]} {middle_part[0]}. {parts[-1]}"
+                    name_index[initial_name].append(pid)
 
-        # Optimization: Create a set of names for fast lookup
+        return name_index
+
+    def _scan_text_for_mentions(self, text, name_index, clean_name_index, source_profile):
+        """
+        Scans a text block for mentions of names in the index.
+        Returns a list of related_link objects.
+        """
+        if not text:
+            return []
+
+        links = []
         known_names = set(clean_name_index.keys())
 
         # Keywords for relationship types
+        # Added: Uncle, Aunt, Nephew, Niece, Executor, Witness
         keywords = {
             "partner": "Business Partner",
             "business": "Business Partner",
@@ -890,102 +908,125 @@ class GenealogyTextPipeline:
             "tutor": "Tutor",
             "student": "Student",
             "enemy": "Rival",
-            "rival": "Rival"
+            "rival": "Rival",
+            "uncle": "Relative",
+            "aunt": "Relative",
+            "nephew": "Relative",
+            "niece": "Relative",
+            "executor": "Legal Associate",
+            "witness": "Legal Associate",
+            "legacy": "Relative"
         }
 
-        count = 0
+        # Improved Candidate Extraction
+        # Pattern: Capitalized Words sequence
+        # \b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b
+        name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
+        candidates = set(re.findall(name_pattern, text))
+
+        # Filter candidates that are known names
+        valid_candidates = candidates.intersection(known_names)
+
+        if not valid_candidates:
+            return []
+
+        # Verification and Context
+        clauses = re.split(r'[.;,]', text)
+        source_born = self._get_birth_year(source_profile)
+        found_ids = set()
+
         id_map = {p['id']: p for p in self.family_data}
+
+        for clause in clauses:
+            if not clause.strip(): continue
+
+            for name in valid_candidates:
+                if name not in clause: continue # Fast string check
+
+                # Exact word boundary check
+                if not re.search(r'\b' + re.escape(name) + r'\b', clause):
+                    continue
+
+                target_id = clean_name_index[name]
+                if target_id == source_profile['id']: continue
+                if target_id in found_ids: continue
+
+                # Date sanity check
+                target_p = id_map.get(target_id)
+                target_born = self._get_birth_year(target_p) if target_p else None
+
+                is_contemporary = True
+                if source_born and target_born:
+                    diff = abs(source_born - target_born)
+                    if diff > 80:
+                        is_contemporary = False
+
+                found_ids.add(target_id)
+
+                # Determine Type
+                rel_type = "Mentioned"
+                lower_clause = clause.lower()
+
+                for k, v in keywords.items():
+                    if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
+                        # Special handling for Spousal/Partner keywords vs Non-Contemporary matches
+                        if v in ["Spouse", "Business Partner", "Friend", "Classmate"] and not is_contemporary:
+                            rel_type = "Mentioned"
+                        else:
+                            rel_type = v
+                        break
+
+                # Context sentence (find full sentence containing the clause)
+                full_sentences = self.split_sentences(text)
+                source_sentence = clause.strip()
+                for s in full_sentences:
+                    if clause.strip() in s:
+                        source_sentence = s
+                        break
+
+                links.append({
+                    "target_id": target_id,
+                    "relation_type": rel_type,
+                    "source_text": source_sentence.strip()
+                })
+
+                self.ariadne_log["new_links"] += 1
+                self.ariadne_log["clusters"][name] += 1
+
+        return links
+
+    def _find_mentions(self):
+        print("--- Ariadne: Weaving Connections ---")
+
+        # Build Name Index
+        name_index = self._build_name_index()
+
+        # Track discoveries for the journal
+        self.ariadne_log = {
+            "ambiguous": defaultdict(set),
+            "clusters": defaultdict(int),
+            "new_links": 0
+        }
+
+        # Filter ambiguous
+        clean_name_index = {}
+        for name, ids in name_index.items():
+            unique_ids = set(ids)
+            if len(unique_ids) == 1:
+                clean_name_index[name] = list(unique_ids)[0]
+            else:
+                self.ariadne_log["ambiguous"][name] = unique_ids
+
+        count = 0
 
         for p in self.family_data:
             p['related_links'] = []
             notes = p['story']['notes']
             if not notes: continue
 
-            # Improved Candidate Extraction
-            # Matches:
-            # - J.P. Morgan
-            # - William E. Dodge
-            # - Anson Phelps
-            # - De Forest (if capitalized)
-
-            # Pattern:
-            # \b (Start)
-            # (?: [A-Z]\.? | [A-Z][a-z]+ )  -> Initial or Word
-            # (?: \s+ (?: [A-Z]\.? | [A-Z][a-z]+ ) )+ -> Space + Initial/Word (one or more times)
-            # \b (End)
-
-            name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
-            candidates = set(re.findall(name_pattern, notes))
-
-            # Filter candidates that are known names
-            valid_candidates = candidates.intersection(known_names)
-
-            if not valid_candidates:
-                continue
-
-            # Now verify context for valid candidates
-            clauses = re.split(r'[.;,]', notes)
-            source_born = self._get_birth_year(p)
-            found_ids = set()
-
-            for clause in clauses:
-                if not clause.strip(): continue
-
-                for name in valid_candidates:
-                    if name not in clause: continue # Fast string check
-
-                    # Exact word boundary check
-                    if not re.search(r'\b' + re.escape(name) + r'\b', clause):
-                        continue
-
-                    target_id = clean_name_index[name]
-                    if target_id == p['id']: continue
-                    if target_id in found_ids: continue
-
-                    # Date sanity check
-                    target_p = id_map.get(target_id)
-                    target_born = self._get_birth_year(target_p) if target_p else None
-
-                    is_contemporary = True
-                    if source_born and target_born:
-                        diff = abs(source_born - target_born)
-                        if diff > 80:
-                            is_contemporary = False
-
-                    found_ids.add(target_id)
-
-                    # Determine Type
-                    rel_type = "Mentioned"
-                    lower_clause = clause.lower()
-
-                    for k, v in keywords.items():
-                        if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
-                            if v in ["Spouse", "Business Partner", "Friend", "Classmate"] and not is_contemporary:
-                                rel_type = "Mentioned"
-                            else:
-                                rel_type = v
-                            break
-
-                    # Context sentence
-                    full_sentences = self.split_sentences(notes)
-                    source_sentence = clause.strip()
-                    for s in full_sentences:
-                        if clause.strip() in s:
-                            source_sentence = s
-                            break
-
-                    p['related_links'].append({
-                        "target_id": target_id,
-                        "relation_type": rel_type,
-                        "source_text": source_sentence.strip()
-                    })
-
-                    self.ariadne_log["new_links"] += 1
-
-                    # Log for clustering
-                    # We track how many times a name is mentioned across all notes
-                    self.ariadne_log["clusters"][name] += 1
-                    count += 1
+            links = self._scan_text_for_mentions(notes, name_index, clean_name_index, p)
+            p['related_links'].extend(links)
+            count += len(links)
 
         print(f"Ariadne found {count} text-based connections.")
 
