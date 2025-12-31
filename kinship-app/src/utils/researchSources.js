@@ -15,6 +15,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/browse/251/civil-war-collection",
         description: "Service records, pensions, and photos from the US Civil War"
     },
+    "Civil War NPS": {
+        label: "NPS Soldiers and Sailors",
+        url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
+        description: "Free database of Civil War servicemen (Union & Confederate)"
+    },
     "War of 1812": {
         label: "Fold3 War of 1812",
         url: "https://www.fold3.com/publication/761/war-of-1812-pension-files",
@@ -24,6 +29,11 @@ export const RESEARCH_SOURCES = {
         label: "WWI Draft Registration",
         url: "https://www.familysearch.org/search/collection/1968530",
         description: "Draft cards for 24 million men (1917-1918)"
+    },
+    "DAR": {
+        label: "DAR Genealogical Research System",
+        url: "https://services.dar.org/public/dar_research/search/",
+        description: "Revolutionary War Patriots and descendants"
     },
 
     // --- CENSUS ---
@@ -47,6 +57,16 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/1417683",
         description: "Lists relationship to head of household"
     },
+    "1940 Census": {
+        label: "1940 US Census",
+        url: "https://www.familysearch.org/search/collection/2000219",
+        description: "Includes respondents' residence in 1935"
+    },
+    "1950 Census": {
+        label: "1950 US Census",
+        url: "https://www.familysearch.org/search/collection/4464515",
+        description: "Post-WWII era census"
+    },
 
     // --- VITAL RECORDS ---
     "FindAGrave": {
@@ -54,20 +74,30 @@ export const RESEARCH_SOURCES = {
         url: "https://www.findagrave.com/memorial/search",
         description: "Burial and cemetery records"
     },
+    "BillionGraves": {
+        label: "BillionGraves",
+        url: "https://billiongraves.com/search",
+        description: "GPS-tagged cemetery records"
+    },
     "CT Vital": {
         label: "Connecticut Vital Records (Barbour)",
         url: "https://www.ancestry.com/search/collections/1062/",
         description: "The Barbour Collection of Connecticut Town Vital Records"
     },
     "MA Vital": {
-        label: "Massachusetts Vital Records (Tan Books)",
-        url: "https://ma-vitalrecords.org/",
-        description: "Vital Records of Massachusetts Towns to 1850"
+        label: "Massachusetts Town Clerk Records",
+        url: "https://www.familysearch.org/search/collection/2061550",
+        description: "Vital and town records from local town clerks (1626-2001)"
     },
     "NJ Vital": {
         label: "New Jersey State Archives",
         url: "https://wwwnet-dos.state.nj.us/DOS_ArchivesDBPortal/index.aspx",
         description: "Searchable birth, marriage, and death records"
+    },
+    "NYC Vital": {
+        label: "NYC Historical Vital Records",
+        url: "https://a860-historicalvitalrecords.nyc.gov/",
+        description: "Free digitized birth, marriage, and death certificates (NYC)"
     },
     "SSDI": {
         label: "Social Security Death Index",
@@ -81,20 +111,30 @@ export const RESEARCH_SOURCES = {
         url: "https://glorecords.blm.gov/search/default.aspx",
         description: "Federal land patents and homestead records"
     },
+    "Probate": {
+        label: "FamilySearch Wills & Probate",
+        url: "https://www.familysearch.org/search/collection/list?keywords=probate",
+        description: "Wills, guardianships, and estate files"
+    },
 
-    // --- IMMIGRATION ---
+    // --- IMMIGRATION & MINORITY ---
     "Great Migration": {
         label: "Great Migration Project",
         url: "https://www.familysearch.org/en/search/catalog/2550739",
-        description: "authoritative accounts of immigrants to New England (1620-1640)"
+        description: "Authoritative accounts of immigrants to New England (1620-1640)"
     },
     "Passenger List": {
         label: "Ellis Island & Castle Garden",
         url: "https://heritage.statueofliberty.org/",
         description: "Passenger arrival records"
     },
+    "Freedman's Bureau": {
+        label: "Freedman's Bureau Records",
+        url: "https://www.familysearch.org/search/collection/2721171",
+        description: "Records of Freedmen, Refugees, and Abandoned Lands (1865-1872)"
+    },
 
-    // --- NEWSPAPERS ---
+    // --- BOOKS & NEWSPAPERS ---
     "Obituary": {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
@@ -105,10 +145,10 @@ export const RESEARCH_SOURCES = {
         url: "https://chroniclingamerica.loc.gov/",
         description: "Free historical American newspapers"
     },
-    "Probate": {
-        label: "FamilySearch Wills & Probate",
-        url: "https://www.familysearch.org/search/collection/list?keywords=probate",
-        description: "Wills, guardianships, and estate files"
+    "Google Books": {
+        label: "Google Books",
+        url: "https://books.google.com/",
+        description: "Search full-text digitized genealogies and local histories"
     }
 };
 
