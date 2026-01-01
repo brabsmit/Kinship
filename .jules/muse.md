@@ -27,3 +27,13 @@
     - **London (Pre-1666):** *Visscher's Panorama (1616)*. Provides a stunning pre-fire view of the city for 20+ ancestors.
     - **Early Settlements (1620-1660):** *Pilgrims Going to Church* (Boughton). assigned to Watertown, Sudbury, Ipswich, Hartford, Windsor to evoke "Puritan Life" rather than just geography.
     - **New England (General 1620-1650):** *Southern New England in 1634* (William Wood). A more accurate period map than the 1616 Smith map for established colonies.
+
+## 2024-05-26 - The Muse Collection (Visual Curation)
+**Source:** Wikimedia Commons
+**Logic:**
+- Implemented specific requested mappings to solve the "Empty State" problem comprehensively.
+- **Visual Strategy:**
+    - **New England (1600-1700):** Extended the "Puritan Life" (Boughton) and "Southern New England Map" (Wood) to cover the full century, ensuring no settler profile is left with a generic placeholder.
+    - **Connecticut (1700-1800):** Enforced fallback to *Plan of the Colony of Connecticut* (1766) for all CT towns including Norwich, Hartford, and New Haven.
+    - **New York (1800-1900):** Confirmed use of *Bird's Eye Panorama* (1873) for the industrial/urban boom era.
+    - **England (Pre-1650):** Solidified use of *English Countryside* woodcuts for pre-emigration ancestors.
