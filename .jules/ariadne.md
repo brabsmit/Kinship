@@ -20,3 +20,11 @@ This drastically reduced the complexity from O(Profiles * Clauses * Names) to O(
 - David Jr. (2 IDs)
 - David Hoadley (2 IDs)
 - Daniel Parish (2 IDs)
+
+## 2024-05-25 - Enhanced Indexing and Keywords
+**Discovery:** Refined the name indexing to robustly handle suffixes ("Sr.", "Jr.", "III") and middle names. Found 319 high-confidence connections.
+**Action:**
+- Refactored `genealogy_pipeline.py` to modularize `_build_name_index` and `_scan_text_for_mentions`.
+- Added new keywords: "Uncle", "Aunt", "Nephew", "Niece", "Executor", "Witness", "Legacy".
+- Improved handling of "First M. Last" variations.
+- Excluded ambiguous names like "William Earl Dodge" and "David Hoadley" which mapped to multiple IDs (parent/child confusion or duplicates).
