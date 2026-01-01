@@ -1193,6 +1193,7 @@ const FamilyMemberLink = ({ member, role, onClick }) => (
 
 const HeroImage = ({ location, year, heroImage }) => {
     // Priority: Muse Logic (getHeroImage) > Pipeline Data (heroImage)
+    // Muse's Philosophy: "A picture is worth a thousand data points."
     // We prioritize the frontend mapper because it contains the "Muse Overrides" for curated styles.
     // Since getHeroImage also checks the cache (which powers heroImage), this is safe.
     const asset = getHeroImage(location, year);
@@ -1345,6 +1346,7 @@ const ThreadTimeline = ({ thread, members, onBack, onSelectMember }) => {
 };
 
 const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation, onSelectThread }) => {
+    // Muse: Ensure the profile has a visual identity
     if (!item) return null;
 
     const [researchSuggestions, setResearchSuggestions] = useState(null);

@@ -99,13 +99,19 @@ export const getHeroImage = (location, year) => {
 
     // 1. Special Overrides (Muse Logic for known cache gaps or quality issues)
 
+    // Connecticut Colonial (1700-1800) - Overrides cache to ensure consistent Map style
+    // Includes key towns like Norwich, Hartford, New Haven (if not caught by other overrides)
+    if ((loc.includes("ct") || loc.includes("connecticut") || loc.includes("norwich") || loc.includes("hartford")) && y >= 1700 && y < 1800) {
+        return ASSETS.ct_1700;
+    }
+
     // New Haven Colonial (1638-1750)
     if (loc.includes("new haven") && y >= 1638 && y < 1750) {
         return ASSETS.new_haven_1641;
     }
 
-    // London Pre-Fire (< 1666)
-    if ((loc.includes("london") || loc === "england") && y < 1666) {
+    // London Pre-Fire (< 1666) - Removed "england" from here to prevent country-wide override
+    if (loc.includes("london") && y < 1666) {
         return ASSETS.london_visscher;
     }
 
@@ -115,15 +121,18 @@ export const getHeroImage = (location, year) => {
     }
 
     // Massachusetts / CT Early Settlers (1620-1660)
-    // Towns: Watertown, Sudbury, Ipswich, Windsor, Hartford, Wethersfield
+    // Towns: Watertown, Sudbury, Ipswich, Windsor, Hartford, Wethersfield, Roxbury, Dorchester
     // Use "Puritan Life" engraving for a more immersive feel than a map
+    // Note: Norwich is not in this early settlement list usually, but if it is, it fits.
+    // However, we handled Norwich above for 1700-1800. For < 1700, it might fall here or below.
     const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
     if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
         return ASSETS.puritan_life;
     }
 
     // New England Pilgrim Era (General)
-    if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts")) && y >= 1620 && y < 1650) {
+    // Extended to 1700 as per Muse curation
+    if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts") || loc.includes("ma")) && y >= 1620 && y < 1700) {
         return ASSETS.ne_map_1634;
     }
 
@@ -149,21 +158,24 @@ export const getHeroImage = (location, year) => {
 
     // 3. Fallback Logic (If not in cache)
 
-    // New York
+    // New York / NYC (1800-1900)
     if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {
         if (y >= 1800) return ASSETS.ny_1800;
         return ASSETS.ne_map_1634; // Fallback to regional map
     }
 
     // Connecticut
-    if (loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford") || loc.includes("new haven")) {
+    // Fallback for "Norwich" or other CT towns implied if not explicitly caught above
+    if (loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford") || loc.includes("new haven") || loc.includes("norwich")) {
         if (y >= 1700) return ASSETS.ct_1700;
         return ASSETS.ne_map_1634;
     }
 
     // Massachusetts / New England (Broader catch)
     if (loc.includes("ma") || loc.includes("massachusetts") || loc.includes("boston") || loc.includes("new england") || loc.includes("rhode island") || loc.includes("ri")) {
-        return ASSETS.ne_map_1634;
+        // Fallback to Puritan Life for very early records if not caught, or Map
+        if (y < 1700 && y > 1620) return ASSETS.ne_map_1634;
+        return ASSETS.ne_map_1634; // Default regional
     }
 
     // UK / England
