@@ -20,3 +20,9 @@ This drastically reduced the complexity from O(Profiles * Clauses * Names) to O(
 - David Jr. (2 IDs)
 - David Hoadley (2 IDs)
 - Daniel Parish (2 IDs)
+
+## 2026-01-01 - Analysis Run
+**Discovery:** Found 327 text-based connections.
+**Clusters:** Key figures identified: Reverend Samuel Blatchford (14), Reverend John Blatchford (12), Jacob Parish (10).
+**Ambiguity:** Skipped 374 ambiguous names (e.g., William Sr., William Earl Dodge,, David Jr.).
+**Action:** Updated graph with lateral links using expanded keywords (Uncle, Executor, etc).

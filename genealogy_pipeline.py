@@ -890,7 +890,13 @@ class GenealogyTextPipeline:
             "tutor": "Tutor",
             "student": "Student",
             "enemy": "Rival",
-            "rival": "Rival"
+            "rival": "Rival",
+            "uncle": "Uncle",
+            "aunt": "Aunt",
+            "nephew": "Nephew",
+            "niece": "Niece",
+            "executor": "Executor",
+            "witness": "Witness"
         }
 
         count = 0
@@ -902,18 +908,6 @@ class GenealogyTextPipeline:
             if not notes: continue
 
             # Improved Candidate Extraction
-            # Matches:
-            # - J.P. Morgan
-            # - William E. Dodge
-            # - Anson Phelps
-            # - De Forest (if capitalized)
-
-            # Pattern:
-            # \b (Start)
-            # (?: [A-Z]\.? | [A-Z][a-z]+ )  -> Initial or Word
-            # (?: \s+ (?: [A-Z]\.? | [A-Z][a-z]+ ) )+ -> Space + Initial/Word (one or more times)
-            # \b (End)
-
             name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
             candidates = set(re.findall(name_pattern, notes))
 
@@ -923,19 +917,19 @@ class GenealogyTextPipeline:
             if not valid_candidates:
                 continue
 
-            # Now verify context for valid candidates
-            clauses = re.split(r'[.;,]', notes)
+            # Ariadne's Loom: Scan per sentence to keep context intact (e.g. "Mr. Dodge, my partner,")
+            sentences = self.split_sentences(notes)
             source_born = self._get_birth_year(p)
             found_ids = set()
 
-            for clause in clauses:
-                if not clause.strip(): continue
+            for sentence in sentences:
+                if not sentence.strip(): continue
 
                 for name in valid_candidates:
-                    if name not in clause: continue # Fast string check
+                    if name not in sentence: continue # Fast string check
 
                     # Exact word boundary check
-                    if not re.search(r'\b' + re.escape(name) + r'\b', clause):
+                    if not re.search(r'\b' + re.escape(name) + r'\b', sentence):
                         continue
 
                     target_id = clean_name_index[name]
@@ -956,34 +950,24 @@ class GenealogyTextPipeline:
 
                     # Determine Type
                     rel_type = "Mentioned"
-                    lower_clause = clause.lower()
+                    lower_sentence = sentence.lower()
 
+                    # Check for keywords in the SAME sentence
                     for k, v in keywords.items():
-                        if re.search(r'\b' + re.escape(k) + r'\b', lower_clause):
+                        if re.search(r'\b' + re.escape(k) + r'\b', lower_sentence):
                             if v in ["Spouse", "Business Partner", "Friend", "Classmate"] and not is_contemporary:
                                 rel_type = "Mentioned"
                             else:
                                 rel_type = v
                             break
 
-                    # Context sentence
-                    full_sentences = self.split_sentences(notes)
-                    source_sentence = clause.strip()
-                    for s in full_sentences:
-                        if clause.strip() in s:
-                            source_sentence = s
-                            break
-
                     p['related_links'].append({
                         "target_id": target_id,
                         "relation_type": rel_type,
-                        "source_text": source_sentence.strip()
+                        "source_text": sentence.strip()
                     })
 
                     self.ariadne_log["new_links"] += 1
-
-                    # Log for clustering
-                    # We track how many times a name is mentioned across all notes
                     self.ariadne_log["clusters"][name] += 1
                     count += 1
 
@@ -1002,6 +986,38 @@ class GenealogyTextPipeline:
         print("Top Mentioned People:")
         for name, freq in sorted_clusters[:5]:
             print(f"  - {name}: {freq} mentions")
+
+        self.update_ariadne_journal()
+
+    def update_ariadne_journal(self):
+        journal_path = ".jules/ariadne.md"
+        if not os.path.exists(".jules"):
+            os.makedirs(".jules")
+
+        today = time.strftime("%Y-%m-%d")
+
+        new_entry = f"\n## {today} - Analysis Run\n"
+        new_entry += f"**Discovery:** Found {self.ariadne_log['new_links']} text-based connections.\n"
+
+        # Clusters
+        sorted_clusters = sorted(self.ariadne_log["clusters"].items(), key=lambda x: x[1], reverse=True)
+        top_clusters = sorted_clusters[:3]
+        if top_clusters:
+            cluster_text = ", ".join([f"{name} ({freq})" for name, freq in top_clusters])
+            new_entry += f"**Clusters:** Key figures identified: {cluster_text}.\n"
+
+        # Ambiguous
+        if self.ariadne_log["ambiguous"]:
+            amb_count = len(self.ariadne_log["ambiguous"])
+            # Get a sample
+            sample = list(self.ariadne_log['ambiguous'].keys())[:3]
+            new_entry += f"**Ambiguity:** Skipped {amb_count} ambiguous names (e.g., {', '.join(sample)}).\n"
+
+        new_entry += "**Action:** Updated graph with lateral links using expanded keywords (Uncle, Executor, etc).\n"
+
+        with open(journal_path, "a") as f:
+            f.write(new_entry)
+        print("Updated Ariadne's Journal.")
 
     def clean_and_save(self):
         # 1. First pass: separate "Real" profiles from "Child" entries
