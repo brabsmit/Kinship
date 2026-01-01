@@ -142,19 +142,33 @@ class GenealogyTextPipeline:
 
         # 1. Handle "before" / "bef" / "by"
         # Logic: if "bef", "before", or "by" appears in the text preceding the year, return year - 1
+        # Explicit check ensures we process "bef 1800" correctly as 1799
         if re.search(r'\b(bef\.?|before|by)\b', pre_text):
             return year_val - 1
 
         # 2. Handle "after" / "aft"
         # Logic: if "aft" or "after" appears, return year + 1
+        # Explicit check ensures we process "aft 1750" correctly as 1751
         if re.search(r'\b(aft\.?|after)\b', pre_text):
             return year_val + 1
 
         # 3. Handle dual dating like "1774/5" or ranges "1774-1778"
         # The regex picks the first year found, which is standard genealogical practice for sorting (start date).
+        # Logic: The year_match regex above naturally picks the first 4-digit sequence found if multiple exist
+        # (unless we specifically looked for the last one, which we don't here).
+        # For "1774/5", it extracts "1774".
 
         # 4. Handle "living in" or "fl."
         # If "living in 1774", we return 1774 as the best anchor.
+        # Explicit check for clarity, though default returns year_val anyway.
+        if re.search(r'\b(living in|fl\.?)\b', pre_text):
+            return year_val
+
+        # 5. Handle "circa" / "c." / "about" / "abt"
+        # If "c. 1774", we extract 1774. It doesn't trigger bef/aft logic, so it returns 1774.
+        # Explicitly documenting this behavior.
+        if re.search(r'\b(c\.?|ca\.?|circa|about|abt\.?)\b', pre_text):
+            return year_val
 
         return year_val
 
@@ -167,7 +181,16 @@ class GenealogyTextPipeline:
         in_sep = re.search(r"\s+in\s+", text, re.IGNORECASE)
         if in_sep:
             parts = re.split(r"\s+in\s+", text, flags=re.IGNORECASE, maxsplit=1)
-            return parts[0].strip(), parts[1].strip()
+            date_candidate = parts[0].strip()
+            loc_candidate = parts[1].strip()
+
+            # Correction: If location is just a year (e.g. "Disappeared in 1744"),
+            # then the whole thing is likely a date statement, or at least the year belongs to the date.
+            # We treat the whole string as the date, and location as Unknown.
+            if re.match(r'^\d{4}$', loc_candidate):
+                 return text.strip(), "Unknown"
+
+            return date_candidate, loc_candidate
 
         # 2. Look for a Year (1000-2999)
         # Find the LAST occurrence of a year to handle ranges like 1750-1752, but ensure we don't accidentally
