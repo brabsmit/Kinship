@@ -1414,7 +1414,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 title={`View "${thread.title}" Epic`}
                             >
                                 {thread.icon}
-                                Part of the {thread.title} Epic
+                                Part of {thread.title} Epic
                             </button>
                         ))}
                     </div>
