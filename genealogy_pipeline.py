@@ -7,6 +7,189 @@ import hashlib
 from docx import Document
 from collections import defaultdict
 
+class GeocodingService:
+    def __init__(self):
+        self.cache_file = "./kinship-app/src/geocoding_cache.json"
+        self.cache = self.load_cache()
+        self.cache_updated = False
+        self.api_enabled = True
+
+        self.HARDCODED_LOCATIONS = {
+            "Hartford, CT": [41.7658, -72.6734],
+            "Manhattan, NY": [40.7831, -73.9712],
+            "New York, NY": [40.7128, -74.0060],
+            "New York City": [40.7128, -74.0060],
+            "New York": [40.7128, -74.0060],
+            "Waterbury, CT": [41.5582, -73.0515],
+            "New Haven, CT": [41.3083, -72.9279],
+            "Englewood, NJ": [40.8929, -73.9726],
+            "Oyster Bay, Long Island, NY": [40.8653, -73.5324],
+            "Oyster Bay, NY": [40.8653, -73.5324],
+            "Newburgh, NY": [41.5032, -74.0104],
+            "Boston, MA": [42.3601, -71.0589],
+            "Norwich, CT": [41.5243, -72.0759],
+            "Simsbury, CT": [41.8759, -72.8012],
+            "Simsbury CT": [41.8759, -72.8012],
+            "Middletown, CT": [41.5623, -72.6506],
+            "Branford, CT": [41.2795, -72.8151],
+            "Stratford, CT": [41.1845, -73.1332],
+            "Ipswich, MA": [42.6792, -70.8412],
+            "Watertown, MA": [42.3709, -71.1828],
+            "Brooklyn, CT": [41.7884, -71.9495],
+            "Killingly, CT": [41.8537, -71.8795],
+            "Hampton, CT": [41.7834, -72.0531],
+            "East Haddam, CT": [41.4587, -72.4626],
+            "Windsor, CT": [41.8519, -72.6437],
+            "West Hartford, CT": [41.7621, -72.7420],
+            "Wethersfield, CT": [41.7145, -72.6579],
+            "Westbury, Long Island, NY": [40.7557, -73.5876],
+            "Westbury, NY": [40.7557, -73.5876],
+            "Colchester, CT": [41.5734, -72.3331],
+            "New London, CT": [41.3557, -72.0995],
+            "Waltham, MA": [42.3765, -71.2356],
+            "Worcester, MA": [42.2626, -71.8023],
+            "Salem, MA": [42.5195, -70.8967],
+            "Medford, MA": [42.4184, -71.1062],
+            "Woburn, MA": [42.4793, -71.1523],
+            "England": [52.3555, -1.1743],
+            "London, England": [51.5074, -0.1278],
+            "Athens, PA": [41.9529, -76.5163],
+            "Coeymans, NY": [42.4776, -73.7946],
+            "Coxsackie, NY": [42.3601, -73.8068],
+            "Shelton, Fairfield County, CT": [41.3165, -73.0932],
+            "Milford, CT": [41.2307, -73.0640],
+            "Trumbull, CT": [41.2562, -73.1909],
+            "Derby, CT": [41.3207, -73.0890],
+            "Sunderland, MA": [42.4695, -72.5795],
+            "Conway, MA": [42.5106, -72.6976],
+            "Bridport, Dorset, England": [50.7337, -2.7563],
+            "Dorset, England": [50.7483, -2.3452],
+            "Great Limber, Lincolnshire, England": [53.5656, -0.2874],
+            "Lincolnshire, England": [53.2285, -0.5478],
+            "Somerset, England": [51.0109, -3.1029],
+            "Taunton, MA": [41.9001, -71.0898],
+            "Essex, England": [51.7670, 0.4664],
+            "Cambridge, MA": [42.3736, -71.1097],
+            "Hingham, MA": [42.2417, -70.8898],
+            "Marshfield, Plymouth Colony, MA": [42.0917, -70.7056],
+            "Roxbury, MA": [42.3152, -71.0914],
+            "Dedham, MA": [42.2436, -71.1699]
+        }
+
+        self.HISTORICAL_LOCATIONS = {
+            "New Amsterdam": [40.7128, -74.0060],
+            "Massachusetts Bay Colony": [42.3601, -71.0589],
+            "Plymouth Colony": [41.9584, -70.6673],
+            "New Netherland": [42.6526, -73.7562],
+            "Acadia": [44.9667, -64.1333],
+            "Prussia": [52.5200, 13.4050],
+            "British America": [37.4316, -78.6569],
+            "Thirteen Colonies": [39.9526, -75.1652],
+            "New France": [46.8139, -71.2080],
+            "Saybrook Colony": [41.2934, -72.3898],
+            "New Haven Colony": [41.3083, -72.9279],
+            "Connecticut Colony": [41.7658, -72.6734],
+            "Jamestown": [37.2102, -76.7777],
+            "Plymouth": [41.9584, -70.6673],
+            "Danzig": [54.3520, 18.6466],
+        }
+
+        self.REGION_COORDINATES = {
+            "CT": [41.6032, -72.7],
+            "Connecticut": [41.6032, -72.7],
+            "MA": [42.4072, -71.3824],
+            "Massachusetts": [42.4072, -71.3824],
+            "NY": [43.0, -75.0],
+            "New York": [43.0, -75.0],
+            "NJ": [40.0583, -74.4057],
+            "New Jersey": [40.0583, -74.4057],
+            "PA": [41.2033, -77.1945],
+            "Pennsylvania": [41.2033, -77.1945],
+            "USA": [39.8283, -98.5795],
+            "United States": [39.8283, -98.5795],
+            "England": [52.3555, -1.1743],
+            "UK": [52.3555, -1.1743],
+            "United Kingdom": [52.3555, -1.1743],
+            "VA": [37.4316, -78.6569],
+            "Virginia": [37.4316, -78.6569],
+            "RI": [41.5801, -71.4774],
+            "Rhode Island": [41.5801, -71.4774],
+            "VT": [44.5588, -72.5778],
+            "Vermont": [44.5588, -72.5778],
+            "NH": [43.1939, -71.5724],
+            "New Hampshire": [43.1939, -71.5724],
+            "ME": [45.2538, -69.4455],
+            "Maine": [45.2538, -69.4455]
+        }
+
+    def load_cache(self):
+        if os.path.exists(self.cache_file):
+            with open(self.cache_file, "r") as f:
+                try:
+                    return json.load(f)
+                except json.JSONDecodeError:
+                    return {}
+        return {}
+
+    def save_cache(self):
+        if self.cache_updated:
+            with open(self.cache_file, "w") as f:
+                json.dump(self.cache, f, indent=4)
+            print("Geocoding cache saved.")
+
+    def geocode(self, location_name):
+        if not location_name or location_name == "Unknown":
+            return None
+
+        # Tier 1: Hardcoded
+        if location_name in self.HARDCODED_LOCATIONS:
+            return {"lat": self.HARDCODED_LOCATIONS[location_name][0], "lng": self.HARDCODED_LOCATIONS[location_name][1], "tier": 1}
+
+        # Tier 2: Historical
+        if location_name in self.HISTORICAL_LOCATIONS:
+            return {"lat": self.HISTORICAL_LOCATIONS[location_name][0], "lng": self.HISTORICAL_LOCATIONS[location_name][1], "tier": 2}
+
+        # Tier 3: Regions (Exact match)
+        if location_name in self.REGION_COORDINATES:
+            return {"lat": self.REGION_COORDINATES[location_name][0], "lng": self.REGION_COORDINATES[location_name][1], "tier": 3}
+
+        # Check Cache
+        if location_name in self.cache:
+            return self.cache[location_name]
+
+        # Tier 4: API
+        if not self.api_enabled:
+            return None
+
+        try:
+            print(f"   [Geocoding] Querying API for '{location_name}'...")
+            time.sleep(1.1)
+            url = "https://nominatim.openstreetmap.org/search"
+            params = {
+                "q": location_name,
+                "format": "json",
+                "limit": 1
+            }
+            headers = {"User-Agent": "GenealogyApp/1.0 (contact@example.com)"}
+            response = requests.get(url, params=params, headers=headers, timeout=2)
+            data = response.json()
+
+            if data:
+                lat = float(data[0]["lat"])
+                lng = float(data[0]["lon"])
+                result = {"lat": lat, "lng": lng, "tier": 4}
+                self.cache[location_name] = result
+                self.cache_updated = True
+                return result
+            else:
+                self.cache[location_name] = None
+                self.cache_updated = True
+                return None
+        except Exception as e:
+            print(f"   [Geocoding] Error: {e}. Disabling API for this session.")
+            self.api_enabled = False
+            return None
+
 class GenealogyTextPipeline:
     def __init__(self):
         self.family_data = []
@@ -1157,14 +1340,27 @@ class GenealogyTextPipeline:
         self.link_family_members()
         self._find_mentions()
 
-        print("--- Fetching Hero Images from Wikimedia ---")
+        # Initialize Geocoder
+        geocoder = GeocodingService()
+
+        print("--- Fetching Hero Images and Geocoding ---")
         final_list = []
         
         for p in self.family_data:
-            # Fetch Image
+            # Geocode
             born_loc = p["vital_stats"]["born_location"]
-            born_year = p["vital_stats"].get("born_year_int")
+            died_loc = p["vital_stats"]["died_location"]
 
+            p["vital_stats"]["born_coords"] = geocoder.geocode(born_loc)
+            p["vital_stats"]["died_coords"] = geocoder.geocode(died_loc)
+
+            # Geocode Life Events
+            for event in p["story"]["life_events"]:
+                if "location" in event and event["location"] != "Unknown":
+                    event["coords"] = geocoder.geocode(event["location"])
+
+            # Fetch Image
+            born_year = p["vital_stats"].get("born_year_int")
             hero_image = self.fetch_wikimedia_image(born_loc, born_year)
 
             # Extract Tags
@@ -1193,6 +1389,7 @@ class GenealogyTextPipeline:
 
         # Save Cache
         self.save_cache()
+        geocoder.save_cache()
 
         output_filename = "kinship-app/src/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:
