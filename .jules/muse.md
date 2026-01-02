@@ -1,39 +1,10 @@
-## 2024-05-22 - Visual Foundation Pack
+## 2024-05-30 - East Anglia & Long Island Pack
 **Source:** Wikimedia Commons (Public Domain)
 **Logic:**
-- Mapped specific keywords (NY, CT, England) and Year ranges to historical maps/engravings.
-- Fallback to generic "Antique Parchment" for unmatched locations.
-- **Assets Added:**
-    - John Speed's Map of Britain (1610) for UK ancestors.
-    - Captain John Smith's Map of New England (1616) for early settlers.
-    - Park Map of Connecticut (1766) for colonial CT.
-    - Bird's Eye View of NYC (1873) for 19th-century New Yorkers.
+- **East Anglia (Norfolk/Essex/Suffolk):** Mapped to *A Mapp of ye County of Norfolk* (Speed/Hollar, 1670). This provides a specific regional identity for the large cluster of ancestors from Norwich, Dedham, and Hingham, England, distinguishing them from the generic "UK" map.
+- **Long Island (Colonial):** Mapped to *Map of Long Island (1686)*. This captures the unique Dutch/English colonial interface for the Oyster Bay and Hempstead clusters (1650-1750), which previously fell back to generic New England maps.
+- **Norwich, CT:** Explicitly routed to *Puritan Life* (Boughton) for early settlement (<1700) and *Plan of the Colony of Connecticut* (1766) for the 18th century.
 
-## 2024-05-24 - Visual Expansion Pack
-**Source:** Wikimedia Commons (Public Domain / Public Domain Art)
-**Logic:**
-- Refined mappings to introduce more variety for key eras.
-- **Assets Added:**
-    - **England (Pre-1650):** *Albury House, Surrey* (Wenceslaus Hollar, 1645) - Evokes the English countryside life before emigration.
-    - **New England (1600-1700):** *The Mayflower in Plymouth Harbor* (William Halsall) - Replaces the generic map for the Pilgrim era to emphasize the journey.
-    - **Boston (Colonial):** *Bonner Map of Boston (1722)* - Specific urban context for early Bostonians.
-
-## 2024-05-25 - Colonial Foundations Pack
-**Source:** Wikimedia Commons (Public Domain)
-**Logic:**
-- Targeted high-volume "Dry" profiles identified in survey (New Haven, London, Early MA/CT Towns).
-- **Assets Added:**
-    - **New Haven (1638-1750):** *Map of New Haven in 1641* (Atwater 1881). Replaces generic CT map for 75+ profiles.
-    - **London (Pre-1666):** *Visscher's Panorama (1616)*. Provides a stunning pre-fire view of the city for 20+ ancestors.
-    - **Early Settlements (1620-1660):** *Pilgrims Going to Church* (Boughton). assigned to Watertown, Sudbury, Ipswich, Hartford, Windsor to evoke "Puritan Life" rather than just geography.
-    - **New England (General 1620-1650):** *Southern New England in 1634* (William Wood). A more accurate period map than the 1616 Smith map for established colonies.
-
-## 2024-05-26 - The Muse Collection (Visual Curation)
-**Source:** Wikimedia Commons
-**Logic:**
-- Implemented specific requested mappings to solve the "Empty State" problem comprehensively.
-- **Visual Strategy:**
-    - **New England (1600-1700):** Extended the "Puritan Life" (Boughton) and "Southern New England Map" (Wood) to cover the full century, ensuring no settler profile is left with a generic placeholder.
-    - **Connecticut (1700-1800):** Enforced fallback to *Plan of the Colony of Connecticut* (1766) for all CT towns including Norwich, Hartford, and New Haven.
-    - **New York (1800-1900):** Confirmed use of *Bird's Eye Panorama* (1873) for the industrial/urban boom era.
-    - **England (Pre-1650):** Solidified use of *English Countryside* woodcuts for pre-emigration ancestors.
+**Assets Added:**
+- `norfolk_map_1610`: A Mapp of ye County of Norfolk (John Speed/Wenceslaus Hollar)
+- `long_island_1686`: Map of Long Island (1686)
