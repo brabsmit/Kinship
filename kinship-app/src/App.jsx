@@ -26,6 +26,7 @@ import LoginModal from './components/LoginModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CurrencyTooltip from './components/CurrencyTooltip';
+import CircleOfFriends from './components/CircleOfFriends';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
 import { calculateDistance } from './utils/geo';
@@ -1562,6 +1563,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             diedCoords={diedCoords}
                         />
                     </div>
+
+                    {/* CIRCLE OF FRIENDS */}
+                    <CircleOfFriends associates={item.story?.associates} />
 
                     {/* FAMILY CONNECTIONS */}
                     <div>
