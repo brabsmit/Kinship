@@ -6,6 +6,8 @@ import time
 import hashlib
 from docx import Document
 from collections import defaultdict
+import dateparser
+import dateparser.search
 
 class GeocodingService:
     def __init__(self):
@@ -315,7 +317,8 @@ class GenealogyTextPipeline:
         # We capture the group to ensure we get the year digits.
         year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
         if not year_match:
-            return None
+            # Fallback to dateparser if no 4-digit year found (e.g. "Apr 12, '80")
+            return self._normalize_date_fallback(raw_date_string)
 
         year_val = int(year_match.group(1))
         start_index = year_match.start()
@@ -355,6 +358,18 @@ class GenealogyTextPipeline:
 
         return year_val
 
+    def _normalize_date_fallback(self, raw_date_string):
+        """
+        Uses dateparser to attempt to find a year if regex failed.
+        """
+        try:
+            dt = dateparser.parse(raw_date_string)
+            if dt:
+                return dt.year
+        except:
+            pass
+        return None
+
     def split_date_location(self, text):
         if not text or text.lower() == "unknown":
             return "Unknown", "Unknown"
@@ -373,61 +388,86 @@ class GenealogyTextPipeline:
             if re.match(r'^\d{4}$', loc_candidate):
                  return text.strip(), "Unknown"
 
+            # Clean up date_candidate: Remove standard event labels if present
+            # (e.g. "Born: April 12, 1880" -> "April 12, 1880")
+            date_candidate = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', date_candidate, flags=re.IGNORECASE)
+
             return date_candidate, loc_candidate
 
-        # 2. Look for a Year (1000-2999)
-        # Find the LAST occurrence of a year to handle ranges like 1750-1752, but ensure we don't accidentally
-        # split "1850" from "1860" if both are in the date field (e.g. range).
-        # Strategy: Find the last year. If text follows it that looks like a location (starts with comma/semicolon/letters), split.
+        # 2. Fallback: Use dateparser to handle messy formats
+        # e.g., "Springfield, 1880", "Born 1880", "1880 New York"
+        try:
+            dates = dateparser.search.search_dates(text, languages=['en'])
+        except Exception:
+            dates = None
 
-        years = list(re.finditer(r'\b(1[0-9]{3}|20[0-2][0-9])\b', text))
+        if dates:
+            # Found one or more dates.
+            # We want to identify the span of the date substring(s) and treat the rest as location.
 
-        if years:
-            last_year = years[-1]
-            end_of_year = last_year.end()
+            # Start of the first date match
+            first_date_str = dates[0][0]
+            start_idx = text.find(first_date_str)
 
-            # Check what comes after
-            after = text[end_of_year:].strip()
+            # End of the last date match
+            last_date_str = dates[-1][0]
+            # Use rfind to be safe in case of repeated strings, but restrict search after start_idx?
+            # Actually, standard find for last_date_str is fine if we assume chronological parsing order,
+            # but safer to find last occurrence if dateparser returns them in order found in text.
+            # dateparser search_dates returns list in order of appearance.
+            end_idx = text.rfind(last_date_str) + len(last_date_str)
 
-            # Case: "1850" -> All date
-            if not after:
-                return text.strip(), "Unknown"
+            # Expand left to capture modifiers that dateparser might miss (c., Before, etc.)
+            pre_text = text[:start_idx]
+            mod_pattern = r'(?i)\b(?:c\.?|ca\.?|circa|about|abt\.?|before|bef\.?|by|after|aft\.?|bet\.?|between|living\s+in|fl\.?)\s*$'
+            mod_match = re.search(mod_pattern, pre_text)
 
-            # Case: "1850, Hartford" -> Split
-            if after.startswith(",") or after.startswith(";"):
-                date_part = text[:end_of_year].strip()
-                loc_part = after.lstrip(",; ").strip()
-                return date_part, loc_part
+            if mod_match:
+                start_idx = mod_match.start()
 
-            # Case: "1850 Hartford" -> Implicit split (rare but possible)
-            # Check if it starts with letters (Location name)
-            # Avoid splitting "1774/5" where "/5" is not a location
-            if after[0].isalpha():
-                 date_part = text[:end_of_year].strip()
-                 loc_part = after.strip()
-                 return date_part, loc_part
+            date_part = text[start_idx:end_idx].strip()
 
-            # Fallback: If after is just symbols like "/5" or "-1752" (Wait, if -1752, it would be caught as a year match)
-            # If we are here, "after" does NOT contain a year (because we picked the last one).
-            # So if it's "/5" it stays with date.
+            # Clean "in" / "at" from end of date_part if dateparser captured it
+            # e.g. "April 12, 1880 in"
+            date_part = re.sub(r'\s+(in|at|on)$', '', date_part, flags=re.IGNORECASE)
 
-            return text.strip(), "Unknown"
+            # Extract Location (everything else)
+            prefix = text[:start_idx].strip()
+            suffix = text[end_idx:].strip()
 
-        # 3. No year found
-        # Heuristics for "No Year"
+            # Clean up suffix
+            suffix = re.sub(r'^(in|at|on)\b\s*', '', suffix, flags=re.IGNORECASE)
+
+            # Clean up prefix: Remove standard event labels if they were part of the string
+            # (e.g. "Born: April 12" -> Prefix "Born: ")
+            prefix = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', prefix, flags=re.IGNORECASE)
+
+            # Combine prefix and suffix
+            loc_parts = []
+            if prefix.strip(",; "): loc_parts.append(prefix.strip(",; "))
+            if suffix.strip(",; "): loc_parts.append(suffix.strip(",; "))
+
+            location = ", ".join(loc_parts)
+            if not location:
+                location = "Unknown"
+
+            return date_part, location
+
+        # 3. No date found by dateparser
+        # Heuristics for "No Year" or fallbacks
 
         # If text is keywords like "Unknown", "?", "Disappeared"
         keywords = ["unknown", "?", "disappeared", "uncertain", "infant"]
         if any(k in text.lower() for k in keywords):
              return text.strip(), "Unknown"
 
-        # If it contains digits, assume Date (e.g. "May 1", "aged 5")
+        # If text contains digits, it might be a date that dateparser missed? (Unlikely for modern dateparser)
+        # But maybe "aged 5"?
         if any(char.isdigit() for char in text):
              return text.strip(), "Unknown"
-        else:
-             # No digits. "Hartford, CT". "New York".
-             # Treat as Location.
-             return "Unknown", text.strip()
+
+        # Treat as Location if no digits
+        return "Unknown", text.strip()
 
     def _parse_location_hierarchy(self, location_string):
         """
