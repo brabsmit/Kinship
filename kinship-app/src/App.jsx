@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -64,10 +64,13 @@ const TAG_CONFIG = {
     "University Educated": { icon: <GraduationCap size={12} />, color: "bg-amber-100 text-amber-700 border-amber-200" },
     "Quaker": { icon: <User size={12} />, color: "bg-gray-100 text-gray-700 border-gray-200" },
     "Religious Leader": { icon: <BookOpen size={12} />, color: "bg-sky-100 text-sky-700 border-sky-200" },
+    "Westward Pioneer": { icon: <Compass size={12} />, color: "bg-orange-100 text-orange-700 border-orange-200" },
     "default": { icon: <Tag size={12} />, color: "bg-gray-50 text-gray-600 border-gray-200" }
 };
 
 const NARRATIVE_THREADS = [
+    { id: "atlantic_crossers", title: "The Atlantic Crossers", description: "The generation that braved the ocean to establish a new life in America.", keywords: ["Immigrant", "Emigrant", "Arrived in", "Came to America"], color: "bg-teal-700 text-white border-teal-900", hex: "#0F766E", icon: <Ship size={14} /> },
+    { id: "westward_pioneers", title: "The Westward Pioneers", description: "Ancestors who left the established East Coast to settle the expanding frontier.", keywords: ["Westward Pioneer", "Ohio", "Michigan", "Illinois", "California", "Oregon"], color: "bg-orange-700 text-white border-orange-900", hex: "#C2410C", icon: <Compass size={14} /> },
     { id: "pilgrims", title: "The Mayflower Pilgrims", description: "The brave souls who crossed the Atlantic on the Mayflower in 1620 to establish Plymouth Colony.", keywords: ["Mayflower", "Pilgrim", "1620", "Plymouth"], color: "bg-[#8B4513] text-white border-[#5D2E0C]", hex: "#8B4513", icon: <Anchor size={14} /> },
     { id: "witches", title: "Salem Witch Trials", description: "Those involved in the hysteria of the Salem Witch Trials of 1692, as accused or accusers.", keywords: ["Salem", "Witch", "1692", "Accused"], color: "bg-purple-700 text-white border-purple-900", hex: "#7E22CE", icon: <Flame size={14} /> },
     { id: "founders", title: "Town Founders", description: "Early settlers who established and incorporated the foundational towns of New England.", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
