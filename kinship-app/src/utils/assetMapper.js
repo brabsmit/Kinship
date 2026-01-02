@@ -1,5 +1,6 @@
 // src/utils/assetMapper.js
 import wikimediaCache from '../wikimedia_cache.json' with { type: "json" };
+import paperTexture from '../assets/paper-texture.jpg';
 
 export const ASSETS = {
     // UK / England
@@ -90,7 +91,7 @@ export const ASSETS = {
 
     // Fallback
     generic_antique: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Old_Paper_%286950274296%29.jpg/1280px-Old_Paper_%286950274296%29.jpg",
+        src: paperTexture,
         alt: "Antique Parchment Background",
         caption: "Historical Record",
         style: { opacity: 0.8 }
