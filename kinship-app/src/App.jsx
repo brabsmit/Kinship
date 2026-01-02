@@ -25,6 +25,8 @@ import { useAuth } from './context/AuthContext';
 import LoginModal from './components/LoginModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import CurrencyTooltip from './components/CurrencyTooltip';
+import CircleOfFriends from './components/CircleOfFriends';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
 import { calculateDistance } from './utils/geo';
@@ -1319,6 +1321,90 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
     const diedYear = parseInt(item.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
 
+    // Helper: Parse text for currency
+    const renderNoteWithCurrency = (text) => {
+        if (!text) return null;
+
+        // Regex for $ or £ followed by numbers OR "X pounds" / "X dollars"
+        // Groups: 1=Symbol/Word, 2=Amount
+
+        // We need a more complex regex loop to handle both cases or multiple regexes.
+        // Let's iterate through matches of either pattern.
+
+        // Pattern 1: $500 or £50
+        // Pattern 2: 500 dollars or 50 pounds
+
+        // Combined Regex:
+        // ([$£])([\d,]+(?:\.\d{2})?)   -> Match 1: Symbol, Match 2: Amount
+        // ([\d,]+(?:\.\d{2})?)\s+(dollars|pounds) -> Match 3: Amount, Match 4: Word
+
+        const regex = /([$£])([\d,]+(?:\.\d{2})?)|([\d,]+(?:\.\d{2})?)\s+(dollars|pounds)/gi;
+
+        const parts = [];
+        let lastIndex = 0;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+            // Push text before match
+            if (match.index > lastIndex) {
+                parts.push(text.substring(lastIndex, match.index));
+            }
+
+            let symbol, amountStr, currencyCode;
+
+            if (match[1]) {
+                // Case: $500
+                symbol = match[1];
+                amountStr = match[2];
+                currencyCode = symbol === '£' ? 'GBP' : 'USD';
+            } else {
+                // Case: 500 dollars
+                amountStr = match[3];
+                const word = match[4].toLowerCase();
+                currencyCode = word === 'pounds' ? 'GBP' : 'USD';
+                symbol = ''; // No prefix symbol
+            }
+
+            const originalText = match[0];
+            const amount = parseFloat(amountStr.replace(/,/g, ''));
+
+            // Determine Context Year
+            // 1. Look for year in surrounding text (roughly 50 chars before/after)
+            const contextStart = Math.max(0, match.index - 50);
+            const contextEnd = Math.min(text.length, match.index + 50);
+            const contextStr = text.substring(contextStart, contextEnd);
+            const yearMatch = contextStr.match(/\b(1[6-9]\d{2}|20\d{2})\b/);
+
+            let contextYear = yearMatch ? parseInt(yearMatch[0]) : null;
+
+            // 2. Fallback: Died Year (often wills/probate) or Born + 30
+            if (!contextYear) {
+                if (diedYear > 0) contextYear = diedYear;
+                else if (bornYear > 0) contextYear = bornYear + 30;
+                else contextYear = 1900; // Total fallback
+            }
+
+            parts.push(
+                <CurrencyTooltip
+                    key={match.index}
+                    originalText={originalText}
+                    amount={amount}
+                    currency={currencyCode}
+                    year={contextYear}
+                />
+            );
+
+            lastIndex = regex.lastIndex;
+        }
+
+        // Push remaining text
+        if (lastIndex < text.length) {
+            parts.push(text.substring(lastIndex));
+        }
+
+        return parts;
+    };
+
     const bornLoc = item.vital_stats.born_location || "Unknown";
     const diedLoc = item.vital_stats.died_location || "Unknown";
 
@@ -1491,7 +1577,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
                             <p className="text-lg md:text-xl font-body-serif text-gray-800 leading-loose first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
-                                {item.story.notes}
+                                {renderNoteWithCurrency(item.story.notes)}
                             </p>
                         </div>
                     )}
