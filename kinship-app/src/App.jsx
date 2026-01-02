@@ -1,6 +1,6 @@
 
 import familyData from './family_data.json';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -757,12 +757,8 @@ const ProfileTrivia = ({ person, familyData }) => {
 
     if (triviaItems.length === 0) return null;
 
-    // Just show the first relevant one for now, or maybe map them?
-    // Let's show one primary interesting fact to keep it clean, or a small list.
-    // The design requests a "Did you know" section.
-
     return (
-        <div className="mb-12 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-6 border border-orange-100/50">
+        <div className="mb-12 bg-white/80 backdrop-blur-md rounded-xl p-6 border border-orange-100/50 shadow-sm">
              <div className="flex items-center gap-4 mb-4">
                 <div className="h-px bg-orange-200 flex-1"></div>
                 <h2 className="text-xs font-bold text-orange-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -914,31 +910,37 @@ const TriviaWidget = ({ data, branchName }) => {
     );
 };
 
-const MapUpdater = ({ allPoints, defaultCenter, defaultZoom }) => {
+const MapUpdater = ({ allPoints, focus, defaultCenter, defaultZoom }) => {
     const map = useMap();
-    const prevPointsRef = React.useRef();
+    const prevFocusRef = React.useRef();
 
     React.useEffect(() => {
-        const pointsJson = JSON.stringify(allPoints);
-        if (prevPointsRef.current === pointsJson) return;
-        prevPointsRef.current = pointsJson;
-
-        if (allPoints.length > 1) {
-             const bounds = L.latLngBounds(allPoints);
-             if (bounds.isValid()) {
-                 map.fitBounds(bounds, { padding: [50, 50] });
-             }
-        } else if (allPoints.length === 1) {
-             map.setView(allPoints[0], 10);
+        // Handle Focus (Flight)
+        if (focus) {
+            const focusKey = `${focus.center[0]},${focus.center[1]},${focus.zoom}`;
+            if (prevFocusRef.current !== focusKey) {
+                map.flyTo(focus.center, focus.zoom, { duration: 2.0, easeLinearity: 0.25 });
+                prevFocusRef.current = focusKey;
+            }
         } else {
-             map.setView(defaultCenter, defaultZoom);
+            // Default Bounds Logic (only if no focus)
+             if (allPoints.length > 1) {
+                 const bounds = L.latLngBounds(allPoints);
+                 if (bounds.isValid()) {
+                     map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+                 }
+            } else if (allPoints.length === 1) {
+                 map.setView(allPoints[0], 10);
+            } else {
+                 map.setView(defaultCenter, defaultZoom);
+            }
         }
-    }, [allPoints, defaultCenter, defaultZoom, map]);
+    }, [allPoints, focus, defaultCenter, defaultZoom, map]);
 
     return null;
 };
 
-const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeEvents = [], bornCoords, diedCoords }) => {
+const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeEvents = [], bornCoords, diedCoords, focus, className }) => {
     const bornData = getCoordinates(bornLoc, bornHierarchy, bornCoords);
     const diedData = getCoordinates(diedLoc, diedHierarchy, diedCoords);
 
@@ -970,8 +972,6 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
     const defaultPosition = [41.7658, -72.6734];
     const defaultZoom = 7;
 
-    let center = defaultPosition;
-    let zoom = defaultZoom;
     const markers = [];
     let polyline = null;
 
@@ -1013,11 +1013,8 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
         polyline = [bornData.pos, diedData.pos];
     }
 
-    // Logic moved to MapUpdater for dynamic updates
-    // if (allPoints.length > 0) { ... }
-
     return (
-        <div className="h-[400px] w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm z-0 relative">
+        <div className={`rounded-xl overflow-hidden border border-gray-200 shadow-sm relative ${className || 'h-[400px] w-full'}`}>
             {/* Unknown Location Badge */}
             {missingLocations.length > 0 && (
                 <div className="absolute top-2 right-2 z-[1000] bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wide">
@@ -1025,8 +1022,8 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
                 </div>
             )}
 
-            <MapContainer center={defaultPosition} zoom={defaultZoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
-                <MapUpdater allPoints={allPoints} defaultCenter={defaultPosition} defaultZoom={defaultZoom} />
+            <MapContainer center={defaultPosition} zoom={defaultZoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }} zoomControl={false}>
+                <MapUpdater allPoints={allPoints} focus={focus} defaultCenter={defaultPosition} defaultZoom={defaultZoom} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -1051,11 +1048,26 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
     );
 };
 
-const TimelineEvent = ({ event, age, isFirst }) => {
+const TimelineEvent = ({ event, age, onVisible }) => {
     const isPersonal = event.region === "Personal";
+    const ref = useRef(null);
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && onVisible) {
+                    onVisible(event);
+                }
+            },
+            { threshold: 0.5, rootMargin: '-20% 0px -20% 0px' }
+        );
+
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+    }, [event, onVisible]);
 
     return (
-        <div className="timeline-event group flex gap-6 relative">
+        <div ref={ref} className="timeline-event group flex gap-6 relative">
              {/* Line */}
              <div className="absolute left-[3.25rem] top-0 bottom-0 w-px bg-gray-200 group-last:bottom-auto group-last:h-6"></div>
 
@@ -1142,7 +1154,7 @@ const HeroImage = ({ location, year, heroImage }) => {
     };
 
     return (
-        <div className="relative w-full h-80 md:h-96 overflow-hidden">
+        <div className="relative w-full h-80 md:h-96 overflow-hidden rounded-b-xl shadow-md">
             {/* Gradient Overlay for Texture Blend */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#fdfbf7] via-transparent to-black/30 z-10"></div>
 
@@ -1280,6 +1292,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const { isAuthenticated } = useAuth();
+    const [mapFocus, setMapFocus] = useState(null);
 
     React.useEffect(() => {
         setResearchSuggestions(null);
@@ -1335,8 +1348,36 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const childrenCount = family.children.length;
     const spousesCount = family.spouses.length;
 
+    // --- SCROLLYTELLING LOGIC ---
+    // Initial Focus: Birth Location (or None)
+    React.useEffect(() => {
+        const bornData = getCoordinates(bornLoc, bornHierarchy, bornCoords);
+        if (bornData.pos) {
+            setMapFocus({ center: bornData.pos, zoom: 10 });
+        } else {
+            setMapFocus(null); // Will trigger default bounds fit
+        }
+    }, [item]);
+
+    const handleEventVisible = useCallback((event) => {
+        // Determine coordinates for the event
+        let pos = null;
+        if (event.coords && event.coords.lat) {
+            pos = [event.coords.lat, event.coords.lng];
+        } else if (event.lat && event.lon) {
+            pos = [event.lat, event.lon];
+        } else if (event.location) {
+            const data = getCoordinates(event.location, null, event.coords);
+            if (data.pos) pos = data.pos;
+        }
+
+        if (pos) {
+             setMapFocus({ center: pos, zoom: 11 });
+        }
+    }, []);
+
     return (
-        <div className="h-full bg-texture-paper flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl relative">
+        <div className="h-full bg-[#F9F5F0] flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl relative">
 
             <LoginModal
                 isOpen={showLoginModal}
@@ -1345,6 +1386,25 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     handleAnalyzeProfile();
                 }}
             />
+
+            {/* MAP BACKGROUND (Fixed) */}
+            <div className="absolute inset-0 z-0">
+                <KeyLocationsMap
+                    bornLoc={bornLoc}
+                    diedLoc={diedLoc}
+                    bornHierarchy={bornHierarchy}
+                    diedHierarchy={diedHierarchy}
+                    lifeEvents={personalEvents}
+                    bornCoords={bornCoords}
+                    diedCoords={diedCoords}
+                    focus={mapFocus}
+                    className="h-full w-full"
+                />
+                {/* Overlay to make text readable (top gradient for header) */}
+                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/90 to-transparent pointer-events-none z-10"></div>
+                {/* Overlay for bottom to fade out map if needed, or global tint */}
+                <div className="absolute inset-0 bg-white/30 pointer-events-none z-0"></div>
+            </div>
 
             {/* Sticky Close / Nav Bar */}
             <div className="absolute top-0 left-0 right-0 z-50 p-6 flex justify-between items-start pointer-events-none">
@@ -1358,82 +1418,87 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div className="relative z-10 flex-1 overflow-y-auto custom-scrollbar">
 
-                {/* HERO HEADER */}
-                <div className="relative">
-                    <HeroImage location={bornLoc} year={bornYear} heroImage={item.hero_image} />
-                    
-                    <div className="absolute bottom-0 left-0 right-0 px-8 pb-12 pt-24 bg-gradient-to-t from-[#fdfbf7] to-transparent z-20 flex flex-col items-center text-center">
-                        <h1 className="text-5xl md:text-6xl font-display font-bold text-gray-900 mb-4 drop-shadow-sm leading-tight">
-                            {item.name}
-                        </h1>
-                        <div className="flex items-center gap-4 text-gray-500 font-mono text-sm uppercase tracking-widest">
-                            <span>{bornYear || '?'}</span>
-                            <span className="w-8 h-px bg-gray-300"></span>
-                            <span>{diedYear || '?'}</span>
+                {/* HERO SPACER - Shows Map Initially */}
+                <div className="h-[40vh] w-full pointer-events-none"></div>
+
+                {/* MAIN CONTENT CARD STREAM */}
+                <div className="max-w-3xl mx-auto px-4 pb-24 space-y-8">
+
+                     {/* PROFILE CARD */}
+                     <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/50">
+                        <HeroImage location={bornLoc} year={bornYear} heroImage={item.hero_image} />
+
+                        <div className="px-8 pb-8 pt-6 flex flex-col items-center text-center">
+                            <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-2 drop-shadow-sm leading-tight">
+                                {item.name}
+                            </h1>
+                            <div className="flex items-center gap-4 text-gray-500 font-mono text-sm uppercase tracking-widest mb-6">
+                                <span>{bornYear || '?'}</span>
+                                <span className="w-8 h-px bg-gray-300"></span>
+                                <span>{diedYear || '?'}</span>
+                            </div>
+
+                            {/* TAGS & THREADS */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-6">
+                                {item.story.tags && item.story.tags.map(tag => {
+                                    const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
+                                    return (
+                                        <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
+                                            {conf.icon}
+                                            {tag}
+                                        </div>
+                                    );
+                                })}
+                                {/* Narrative Thread Badges */}
+                                {detectThreads(item).map(thread => (
+                                    <button
+                                        key={thread.id}
+                                        onClick={() => onSelectThread && onSelectThread(thread.id)}
+                                        className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
+                                        title={`View "${thread.title}" Epic`}
+                                    >
+                                        {thread.icon}
+                                        Part of {thread.title} Epic
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* STATS BAR */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 w-full border-t border-gray-100">
+                                <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
+                                <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
+                                <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
+                                <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* MAIN CONTENT CONTAINER */}
-                <div className="max-w-3xl mx-auto px-6 pb-24">
-
-                    {/* STATS BAR */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200/60 mb-8 bg-white/50 rounded-xl mx-4">
-                        <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
-                        <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
-                        <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
-                        <StatItem label="Children" value={childrenCount > 0 ? childrenCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
+                    {/* TRIVIA CARD */}
+                    <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-6 border border-white/50">
+                        <ProfileTrivia person={item} familyData={familyData} />
                     </div>
 
-                    {/* TAGS & THREADS */}
-                    <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
-                        {item.story.tags && item.story.tags.map(tag => {
-                            const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
-                            return (
-                                <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
-                                    {conf.icon}
-                                    {tag}
-                                </div>
-                            );
-                        })}
-
-                        {/* Narrative Thread Badges */}
-                        {detectThreads(item).map(thread => (
-                            <button
-                                key={thread.id}
-                                onClick={() => {
-                                    if (onSelectThread) {
-                                        onSelectThread(thread.id);
-                                        // View mode switching is handled in App.jsx but we can hint it here or ensure logic flow
-                                        // The prop is called onSelectThread, which sets state in App
-                                    }
-                                }}
-                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
-                                title={`View "${thread.title}" Epic`}
-                            >
-                                {thread.icon}
-                                Part of {thread.title} Epic
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* PROFILE TRIVIA */}
-                    <ProfileTrivia person={item} familyData={familyData} />
-
-                    {/* STORY / BIO */}
+                    {/* STORY / BIO CARD */}
                     {item.story?.notes && (
-                        <div className="mb-16">
+                        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
+                             <div className="flex items-center gap-4 mb-6">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <BookOpen size={14} strokeWidth={1.5} /> Biography
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
                             <p className="text-lg md:text-xl font-body-serif text-gray-800 leading-loose first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
                                 {item.story.notes}
                             </p>
                         </div>
                     )}
 
-                    {/* UNIFIED TIMELINE */}
+                    {/* UNIFIED TIMELINE (SCROLLYTELLING DRIVER) */}
                     {bornYear > 0 && (
-                        <div className="mb-16">
+                        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-px bg-gray-200 flex-1"></div>
                                 <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1443,43 +1508,40 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
 
                             <div className="pl-4 md:pl-8">
-                                <TimelineEvent event={{
-                                    year: bornYear,
-                                    label: `Born in ${bornLoc}${item.vital_stats.born_location_note ? ` (${item.vital_stats.born_location_note})` : ''}`,
-                                    region: "Personal"
-                                }} age={0} />
-                                {events.map((e, i) => <TimelineEvent key={i} event={e} age={e.year - bornYear} />)}
-                                <TimelineEvent event={{
-                                    year: diedYear,
-                                    label: `Died in ${diedLoc}${item.vital_stats.died_location_note ? ` (${item.vital_stats.died_location_note})` : ''}`,
-                                    region: "Personal"
-                                }} age={diedYear - bornYear} />
+                                <TimelineEvent
+                                    event={{
+                                        year: bornYear,
+                                        label: `Born in ${bornLoc}${item.vital_stats.born_location_note ? ` (${item.vital_stats.born_location_note})` : ''}`,
+                                        region: "Personal",
+                                        location: bornLoc // Ensure location is passed for fallback
+                                    }}
+                                    age={0}
+                                    onVisible={handleEventVisible}
+                                />
+                                {events.map((e, i) => (
+                                    <TimelineEvent
+                                        key={i}
+                                        event={e}
+                                        age={e.year - bornYear}
+                                        onVisible={handleEventVisible}
+                                    />
+                                ))}
+                                <TimelineEvent
+                                    event={{
+                                        year: diedYear,
+                                        label: `Died in ${diedLoc}${item.vital_stats.died_location_note ? ` (${item.vital_stats.died_location_note})` : ''}`,
+                                        region: "Personal",
+                                        location: diedLoc
+                                    }}
+                                    age={diedYear - bornYear}
+                                    onVisible={handleEventVisible}
+                                />
                             </div>
                         </div>
                     )}
 
-                    {/* LOCATIONS MAP */}
-                    <div className="mb-16">
-                         <div className="flex items-center gap-4 mb-8">
-                            <div className="h-px bg-gray-200 flex-1"></div>
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                <MapPin size={14} strokeWidth={1.5} /> Journey
-                            </h2>
-                            <div className="h-px bg-gray-200 flex-1"></div>
-                        </div>
-                        <KeyLocationsMap
-                            bornLoc={bornLoc}
-                            diedLoc={diedLoc}
-                            bornHierarchy={bornHierarchy}
-                            diedHierarchy={diedHierarchy}
-                            lifeEvents={personalEvents}
-                            bornCoords={bornCoords}
-                            diedCoords={diedCoords}
-                        />
-                    </div>
-
-                    {/* FAMILY CONNECTIONS */}
-                    <div>
+                    {/* FAMILY CONNECTIONS CARD */}
+                    <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
                          <div className="flex items-center gap-4 mb-8">
                             <div className="h-px bg-gray-200 flex-1"></div>
                             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1503,7 +1565,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                     {/* STORY CONNECTIONS */}
                     {relatedConnections.length > 0 && (
-                        <div className="mt-16">
+                        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
                              <div className="flex items-center gap-4 mb-8">
                                 <div className="h-px bg-gray-200 flex-1"></div>
                                 <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1539,7 +1601,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     )}
 
                     {/* RESEARCH ASSISTANT */}
-                    <div className="mt-16">
+                    <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
                          <div className="flex items-center gap-4 mb-8">
                             <div className="h-px bg-gray-200 flex-1"></div>
                             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
