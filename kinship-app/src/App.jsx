@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -76,17 +76,36 @@ const NARRATIVE_THREADS = [
     { id: "founders", title: "Town Founders", description: "Early settlers who established and incorporated the foundational towns of New England.", keywords: ["Founder", "Settler", "Established", "Incorporated", "First Settler"], color: "bg-emerald-700 text-white border-emerald-900", hex: "#047857", icon: <Flag size={14} /> },
     { id: "revolution", title: "The Patriots", description: "Soldiers and supporters who fought for American Independence during the Revolutionary War.", keywords: ["Revolutionary War", "1776", "Independence", "Continental Army"], color: "bg-blue-800 text-white border-blue-950", hex: "#1E40AF", icon: <Shield size={14} /> },
     { id: "industrialists", title: "The Industrialists", description: "Innovators and laborers who drove the manufacturing boom of the 19th century.", keywords: ["Factory", "Mill", "Industry", "Inventor", "Manufacturing", "Railroad"], color: "bg-slate-700 text-white border-slate-900", hex: "#334155", icon: <Hammer size={14} /> },
-    { id: "quakers", title: "The Quakers", description: "Members of the Society of Friends who sought religious freedom and simplicity.", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> }
+    { id: "quakers", title: "The Quakers", description: "Members of the Society of Friends who sought religious freedom and simplicity.", keywords: ["Quaker", "Society of Friends", "Persecuted"], color: "bg-amber-700 text-white border-amber-900", hex: "#B45309", icon: <Scroll size={14} /> },
+    { id: "victorian_era", title: "The Victorian Era", description: "Ancestors who lived during the reign of Queen Victoria (1837-1901).", keywords: [], dateRange: { start: 1837, end: 1901 }, color: "bg-fuchsia-800 text-white border-fuchsia-950", hex: "#86198F", icon: <Crown size={14} /> },
+    { id: "pandemic_survivors", title: "The Pandemic Survivors", description: "Ancestors who lived through the 1918 Flu Pandemic or earlier plagues.", keywords: ["Spanish Flu", "Plague", "Yellow Fever", "Cholera", "Smallpox", "Pandemic"], dateRange: { start: 1918, end: 1919 }, color: "bg-stone-600 text-white border-stone-800", hex: "#57534E", icon: <Activity size={14} /> }
 ];
 
 const detectThreads = (person) => {
     const notes = (person.story?.notes || "").toLowerCase();
     const tags = (person.story?.tags || []).map(t => t.toLowerCase());
 
+    // Safe extraction of years
+    let born = person.vital_stats?.born_year_int;
+    let died = person.vital_stats?.died_year_int;
+
+    if (!born) born = parseInt(person.vital_stats?.born_date?.match(/\d{4}/)?.[0] || 0);
+    if (!died) died = parseInt(person.vital_stats?.died_date?.match(/\d{4}/)?.[0] || 0);
+
     return NARRATIVE_THREADS.filter(thread => {
-        return thread.keywords.some(k =>
+        // Keyword Match
+        const keywordMatch = thread.keywords && thread.keywords.some(k =>
             notes.includes(k.toLowerCase()) || tags.includes(k.toLowerCase())
         );
+
+        // Date Range Match
+        let dateMatch = false;
+        if (thread.dateRange && born > 0 && died > 0) {
+            // Alive during the range: Born before end AND Died after start
+            dateMatch = (born <= thread.dateRange.end) && (died >= thread.dateRange.start);
+        }
+
+        return keywordMatch || dateMatch;
     });
 };
 
