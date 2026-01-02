@@ -25,6 +25,8 @@ import LoginModal from './components/LoginModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
+import historyData from './history_data.json';
+import { calculateDistance } from './utils/geo';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -84,75 +86,13 @@ const detectThreads = (person) => {
     });
 };
 
-const LOCATION_COORDINATES = {
-    "Hartford, CT": [41.7658, -72.6734],
-    "Manhattan, NY": [40.7831, -73.9712],
-    "New York, NY": [40.7128, -74.0060],
-    "New York City": [40.7128, -74.0060],
-    "New York": [40.7128, -74.0060],
-    "Waterbury, CT": [41.5582, -73.0515],
-    "New Haven, CT": [41.3083, -72.9279],
-    "Englewood, NJ": [40.8929, -73.9726],
-    "Oyster Bay, Long Island, NY": [40.8653, -73.5324],
-    "Oyster Bay, NY": [40.8653, -73.5324],
-    "Newburgh, NY": [41.5032, -74.0104],
-    "Boston, MA": [42.3601, -71.0589],
-    "Norwich, CT": [41.5243, -72.0759],
-    "Simsbury, CT": [41.8759, -72.8012],
-    "Simsbury CT": [41.8759, -72.8012],
-    "Middletown, CT": [41.5623, -72.6506],
-    "Branford, CT": [41.2795, -72.8151],
-    "Stratford, CT": [41.1845, -73.1332],
-    "Ipswich, MA": [42.6792, -70.8412],
-    "Watertown, MA": [42.3709, -71.1828],
-    "Brooklyn, CT": [41.7884, -71.9495],
-    "Killingly, CT": [41.8537, -71.8795],
-    "Hampton, CT": [41.7834, -72.0531],
-    "East Haddam, CT": [41.4587, -72.4626],
-    "Windsor, CT": [41.8519, -72.6437],
-    "West Hartford, CT": [41.7621, -72.7420],
-    "Wethersfield, CT": [41.7145, -72.6579],
-    "Westbury, Long Island, NY": [40.7557, -73.5876],
-    "Westbury, NY": [40.7557, -73.5876],
-    "Colchester, CT": [41.5734, -72.3331],
-    "New London, CT": [41.3557, -72.0995],
-    "Waltham, MA": [42.3765, -71.2356],
-    "Worcester, MA": [42.2626, -71.8023],
-    "Salem, MA": [42.5195, -70.8967],
-    "Medford, MA": [42.4184, -71.1062],
-    "Woburn, MA": [42.4793, -71.1523],
-    "England": [52.3555, -1.1743],
-    "London, England": [51.5074, -0.1278],
-    "Athens, PA": [41.9529, -76.5163],
-    "Coeymans, NY": [42.4776, -73.7946],
-    "Coxsackie, NY": [42.3601, -73.8068],
-    "Shelton, Fairfield County, CT": [41.3165, -73.0932],
-    "Milford, CT": [41.2307, -73.0640],
-    "Trumbull, CT": [41.2562, -73.1909],
-    "Derby, CT": [41.3207, -73.0890],
-    "Sunderland, MA": [42.4695, -72.5795],
-    "Conway, MA": [42.5106, -72.6976],
-    "Bridport, Dorset, England": [50.7337, -2.7563],
-    "Dorset, England": [50.7483, -2.3452],
-    "Great Limber, Lincolnshire, England": [53.5656, -0.2874],
-    "Lincolnshire, England": [53.2285, -0.5478],
-    "Somerset, England": [51.0109, -3.1029],
-    "Taunton, MA": [41.9001, -71.0898],
-    "Essex, England": [51.7670, 0.4664],
-    "Cambridge, MA": [42.3736, -71.1097],
-    "Hingham, MA": [42.2417, -70.8898],
-    "Marshfield, Plymouth Colony, MA": [42.0917, -70.7056],
-    "Roxbury, MA": [42.3152, -71.0914],
-    "Dedham, MA": [42.2436, -71.1699]
-};
-
-const getCoordinates = (locationName, hierarchy = null) => {
-    if (!locationName) return { pos: null, tier: 4 };
-
-    // Tier 1: Exact Match
-    if (LOCATION_COORDINATES[locationName]) {
-        return { pos: LOCATION_COORDINATES[locationName], tier: 1, label: "Exact" };
+const getCoordinates = (locationName, hierarchy = null, coords = null) => {
+    // 1. Use Pre-Calculated Coords from Pipeline if available
+    if (coords && coords.lat && coords.lng) {
+        return { pos: [coords.lat, coords.lng], tier: coords.tier || 1, label: "Exact" };
     }
+
+    if (!locationName) return { pos: null, tier: 4 };
 
     // Tier 2: Historical
     if (HISTORICAL_LOCATIONS[locationName]) {
@@ -213,65 +153,6 @@ const createMarkerIcon = (color, tier) => {
     popupAnchor: [0, -32]
 });
 };
-
-// --- 1. HISTORICAL CONTEXT ENGINE ---
-const HISTORY_DB = [
-    { year: 1603, label: "Queen Elizabeth I dies", region: "UK", type: "political" },
-    { year: 1605, label: "Gunpowder Plot", region: "UK", type: "political" },
-    { year: 1607, label: "Jamestown Founded", region: "USA", type: "era" },
-    { year: 1611, label: "King James Bible Published", region: "UK", type: "culture" },
-    { year: 1616, label: "Shakespeare dies", region: "UK", type: "culture" },
-    { year: 1620, label: "Mayflower Arrives", region: "USA", type: "era" },
-    { year: 1625, label: "Charles I becomes King", region: "UK", type: "political" },
-    { year: 1630, label: "Boston Founded", region: "USA", type: "era" },
-    { year: 1636, label: "Harvard College Founded", region: "USA", type: "education" },
-    { year: 1642, label: "English Civil War Begins", region: "UK", type: "war" },
-    { year: 1649, label: "Charles I Executed", region: "UK", type: "political" },
-    { year: 1660, label: "The Restoration", region: "UK", type: "political" },
-    { year: 1664, label: "New Amsterdam becomes New York", region: "USA", type: "political" },
-    { year: 1665, label: "Great Plague of London", region: "UK", type: "health" },
-    { year: 1666, label: "Great Fire of London", region: "UK", type: "disaster" },
-    { year: 1675, label: "King Philip's War", region: "USA", type: "war" },
-    { year: 1688, label: "Glorious Revolution", region: "UK", type: "political" },
-    { year: 1692, label: "Salem Witch Trials", region: "USA", type: "event" },
-    { year: 1707, label: "Act of Union (Great Britain)", region: "UK", type: "political" },
-    { year: 1714, label: "George I becomes King", region: "UK", type: "political" },
-    { year: 1754, label: "French and Indian War Begins", region: "USA", type: "war" },
-    { year: 1760, label: "Industrial Revolution Begins", region: "UK", type: "economy" },
-    { year: 1765, label: "Stamp Act", region: "USA", type: "political" },
-    { year: 1770, label: "Boston Massacre", region: "USA", type: "event" },
-    { year: 1773, label: "Boston Tea Party", region: "USA", type: "event" },
-    { year: 1775, label: "Revolutionary War Begins", region: "USA", type: "war" },
-    { year: 1776, label: "Declaration of Independence", region: "USA", type: "political" },
-    { year: 1781, label: "Battle of Yorktown", region: "USA", type: "war" },
-    { year: 1787, label: "US Constitution Signed", region: "USA", type: "political" },
-    { year: 1789, label: "Washington becomes President", region: "USA", type: "politics" },
-    { year: 1789, label: "French Revolution Begins", region: "Europe", type: "political" },
-    { year: 1793, label: "Cotton Gin Invented", region: "USA", type: "tech" },
-    { year: 1801, label: "United Kingdom formed", region: "UK", type: "political" },
-    { year: 1803, label: "Louisiana Purchase", region: "USA", type: "politics" },
-    { year: 1804, label: "Napoleon becomes Emperor", region: "Global", type: "political" },
-    { year: 1805, label: "Battle of Trafalgar", region: "UK", type: "war" },
-    { year: 1812, label: "War of 1812", region: "USA", type: "war" },
-    { year: 1815, label: "Battle of Waterloo", region: "Global", type: "war" },
-    { year: 1825, label: "Erie Canal Opens", region: "USA", type: "economy" },
-    { year: 1830, label: "Liverpool and Manchester Railway", region: "UK", type: "tech" },
-    { year: 1837, label: "Queen Victoria Crowned", region: "UK", type: "political" },
-    { year: 1837, label: "Panic of 1837", region: "USA", type: "economy" },
-    { year: 1845, label: "Irish Potato Famine", region: "Global", type: "disaster" },
-    { year: 1848, label: "California Gold Rush", region: "USA", type: "era" },
-    { year: 1851, label: "The Great Exhibition", region: "UK", type: "culture" },
-    { year: 1854, label: "Crimean War", region: "Global", type: "war" },
-    { year: 1859, label: "On the Origin of Species", region: "Global", type: "science" },
-    { year: 1861, label: "Civil War Begins", region: "USA", type: "war" },
-    { year: 1863, label: "Emancipation Proclamation", region: "USA", type: "politics" },
-    { year: 1865, label: "Lincoln Assassinated", region: "USA", type: "politics" },
-    { year: 1869, label: "Transcontinental Railroad", region: "USA", type: "tech" },
-    { year: 1876, label: "Telephone Invented", region: "USA", type: "tech" },
-    { year: 1879, label: "Lightbulb Invented", region: "USA", type: "tech" },
-    { year: 1888, label: "Jack the Ripper Murders", region: "UK", type: "event" },
-    { year: 1893, label: "Panic of 1893", region: "USA", type: "economy" }
-];
 
 const detectRegion = (locationString) => {
     if (!locationString) return "Global";
@@ -414,7 +295,7 @@ const generateTrivia = (data, branchName) => {
 
     // 5. War Veterans (Lived through major wars between ages 18-40)
     let veteranCount = 0;
-    const warEvents = HISTORY_DB.filter(e => e.type === 'war');
+    const warEvents = historyData.filter(e => e.type === 'war');
 
     data.forEach(p => {
         const born = parseInt(p.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -463,7 +344,7 @@ const generateProfileTrivia = (person, allData) => {
     // Find an event they were alive for (around 20 years old)
     if (born) {
         const age20 = born + 20;
-        const eventAt20 = HISTORY_DB.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
+        const eventAt20 = historyData.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
         if (eventAt20) {
             facts.push({
                 text: `Was around 20 years old when the ${eventAt20.label}.`,
@@ -505,14 +386,37 @@ const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
     const died = parseInt(diedDate?.match(/\d{4}/)?.[0] || 0);
     if (!born || !died) return [];
 
-    // Determine Ancestor's Region
-    // Priority: Birth Location -> Death Location
-    const region = detectRegion(bornLoc) !== "Global" ? detectRegion(bornLoc) : detectRegion(diedLoc);
+    // 1. Determine Reference Location for Distance Calculation
+    // Use Death Location primarily (as requested: "ancestor's death location"), fallback to Birth.
+    const refLoc = diedLoc && diedLoc !== "Unknown" ? diedLoc : bornLoc;
+    const refCoords = getCoordinates(refLoc);
 
-    return HISTORY_DB.filter(e => {
+    return historyData.filter(e => {
+        // Temporal Filter
         const inTime = e.year >= born && e.year <= died;
-        const matchesRegion = e.region === "Global" || e.region === region;
-        return inTime && matchesRegion;
+        if (!inTime) return false;
+
+        // Global Event Exception
+        if (e.global) return true;
+
+        // Radius of Relevance Filter
+        if (e.lat && e.lon && refCoords.pos) {
+            const distance = calculateDistance(refCoords.pos[0], refCoords.pos[1], e.lat, e.lon);
+            if (distance !== null && distance <= 500) {
+                return true;
+            }
+        }
+
+        // Fallback: If event has no coords or ancestor has no coords,
+        // use legacy Region Matching (e.g. USA vs UK) to catch generic region matches
+        // But suppress if it has coords and distance check failed (implied by above logic flow)
+        if (!e.lat || !e.lon || !refCoords.pos) {
+             const region = detectRegion(bornLoc) !== "Global" ? detectRegion(bornLoc) : detectRegion(diedLoc);
+             const matchesRegion = e.region === "Global" || e.region === region;
+             return matchesRegion;
+        }
+
+        return false;
     });
 };
 
@@ -1011,9 +915,9 @@ const MapUpdater = ({ allPoints, defaultCenter, defaultZoom }) => {
     return null;
 };
 
-const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeEvents = [] }) => {
-    const bornData = getCoordinates(bornLoc, bornHierarchy);
-    const diedData = getCoordinates(diedLoc, diedHierarchy);
+const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeEvents = [], bornCoords, diedCoords }) => {
+    const bornData = getCoordinates(bornLoc, bornHierarchy, bornCoords);
+    const diedData = getCoordinates(diedLoc, diedHierarchy, diedCoords);
 
     const missingLocations = [];
     if (bornLoc && bornLoc !== "Unknown" && !bornData.pos) missingLocations.push(bornLoc);
@@ -1023,7 +927,7 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
     const eventMarkers = lifeEvents
         .filter(e => e.location && e.location !== "Unknown")
         .map(e => {
-            const data = getCoordinates(e.location);
+            const data = getCoordinates(e.location, null, e.coords);
             if (!data.pos) {
                 if (!missingLocations.includes(e.location)) missingLocations.push(e.location);
                 return null;
@@ -1389,6 +1293,10 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const bornHierarchy = item.vital_stats.born_hierarchy;
     const diedHierarchy = item.vital_stats.died_hierarchy;
 
+    // Get Coords
+    const bornCoords = item.vital_stats.born_coords;
+    const diedCoords = item.vital_stats.died_coords;
+
     // Merge and sort
     const events = [...historyEvents, ...personalEvents].sort((a, b) => a.year - b.year);
 
@@ -1542,6 +1450,8 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             bornHierarchy={bornHierarchy}
                             diedHierarchy={diedHierarchy}
                             lifeEvents={personalEvents}
+                            bornCoords={bornCoords}
+                            diedCoords={diedCoords}
                         />
                     </div>
 

@@ -6,6 +6,191 @@ import time
 import hashlib
 from docx import Document
 from collections import defaultdict
+import dateparser
+import dateparser.search
+
+class GeocodingService:
+    def __init__(self):
+        self.cache_file = "./kinship-app/src/geocoding_cache.json"
+        self.cache = self.load_cache()
+        self.cache_updated = False
+        self.api_enabled = True
+
+        self.HARDCODED_LOCATIONS = {
+            "Hartford, CT": [41.7658, -72.6734],
+            "Manhattan, NY": [40.7831, -73.9712],
+            "New York, NY": [40.7128, -74.0060],
+            "New York City": [40.7128, -74.0060],
+            "New York": [40.7128, -74.0060],
+            "Waterbury, CT": [41.5582, -73.0515],
+            "New Haven, CT": [41.3083, -72.9279],
+            "Englewood, NJ": [40.8929, -73.9726],
+            "Oyster Bay, Long Island, NY": [40.8653, -73.5324],
+            "Oyster Bay, NY": [40.8653, -73.5324],
+            "Newburgh, NY": [41.5032, -74.0104],
+            "Boston, MA": [42.3601, -71.0589],
+            "Norwich, CT": [41.5243, -72.0759],
+            "Simsbury, CT": [41.8759, -72.8012],
+            "Simsbury CT": [41.8759, -72.8012],
+            "Middletown, CT": [41.5623, -72.6506],
+            "Branford, CT": [41.2795, -72.8151],
+            "Stratford, CT": [41.1845, -73.1332],
+            "Ipswich, MA": [42.6792, -70.8412],
+            "Watertown, MA": [42.3709, -71.1828],
+            "Brooklyn, CT": [41.7884, -71.9495],
+            "Killingly, CT": [41.8537, -71.8795],
+            "Hampton, CT": [41.7834, -72.0531],
+            "East Haddam, CT": [41.4587, -72.4626],
+            "Windsor, CT": [41.8519, -72.6437],
+            "West Hartford, CT": [41.7621, -72.7420],
+            "Wethersfield, CT": [41.7145, -72.6579],
+            "Westbury, Long Island, NY": [40.7557, -73.5876],
+            "Westbury, NY": [40.7557, -73.5876],
+            "Colchester, CT": [41.5734, -72.3331],
+            "New London, CT": [41.3557, -72.0995],
+            "Waltham, MA": [42.3765, -71.2356],
+            "Worcester, MA": [42.2626, -71.8023],
+            "Salem, MA": [42.5195, -70.8967],
+            "Medford, MA": [42.4184, -71.1062],
+            "Woburn, MA": [42.4793, -71.1523],
+            "England": [52.3555, -1.1743],
+            "London, England": [51.5074, -0.1278],
+            "Athens, PA": [41.9529, -76.5163],
+            "Coeymans, NY": [42.4776, -73.7946],
+            "Coxsackie, NY": [42.3601, -73.8068],
+            "Shelton, Fairfield County, CT": [41.3165, -73.0932],
+            "Milford, CT": [41.2307, -73.0640],
+            "Trumbull, CT": [41.2562, -73.1909],
+            "Derby, CT": [41.3207, -73.0890],
+            "Sunderland, MA": [42.4695, -72.5795],
+            "Conway, MA": [42.5106, -72.6976],
+            "Bridport, Dorset, England": [50.7337, -2.7563],
+            "Dorset, England": [50.7483, -2.3452],
+            "Great Limber, Lincolnshire, England": [53.5656, -0.2874],
+            "Lincolnshire, England": [53.2285, -0.5478],
+            "Somerset, England": [51.0109, -3.1029],
+            "Taunton, MA": [41.9001, -71.0898],
+            "Essex, England": [51.7670, 0.4664],
+            "Cambridge, MA": [42.3736, -71.1097],
+            "Hingham, MA": [42.2417, -70.8898],
+            "Marshfield, Plymouth Colony, MA": [42.0917, -70.7056],
+            "Roxbury, MA": [42.3152, -71.0914],
+            "Dedham, MA": [42.2436, -71.1699]
+        }
+
+        self.HISTORICAL_LOCATIONS = {
+            "New Amsterdam": [40.7128, -74.0060],
+            "Massachusetts Bay Colony": [42.3601, -71.0589],
+            "Plymouth Colony": [41.9584, -70.6673],
+            "New Netherland": [42.6526, -73.7562],
+            "Acadia": [44.9667, -64.1333],
+            "Prussia": [52.5200, 13.4050],
+            "British America": [37.4316, -78.6569],
+            "Thirteen Colonies": [39.9526, -75.1652],
+            "New France": [46.8139, -71.2080],
+            "Saybrook Colony": [41.2934, -72.3898],
+            "New Haven Colony": [41.3083, -72.9279],
+            "Connecticut Colony": [41.7658, -72.6734],
+            "Jamestown": [37.2102, -76.7777],
+            "Plymouth": [41.9584, -70.6673],
+            "Danzig": [54.3520, 18.6466],
+        }
+
+        self.REGION_COORDINATES = {
+            "CT": [41.6032, -72.7],
+            "Connecticut": [41.6032, -72.7],
+            "MA": [42.4072, -71.3824],
+            "Massachusetts": [42.4072, -71.3824],
+            "NY": [43.0, -75.0],
+            "New York": [43.0, -75.0],
+            "NJ": [40.0583, -74.4057],
+            "New Jersey": [40.0583, -74.4057],
+            "PA": [41.2033, -77.1945],
+            "Pennsylvania": [41.2033, -77.1945],
+            "USA": [39.8283, -98.5795],
+            "United States": [39.8283, -98.5795],
+            "England": [52.3555, -1.1743],
+            "UK": [52.3555, -1.1743],
+            "United Kingdom": [52.3555, -1.1743],
+            "VA": [37.4316, -78.6569],
+            "Virginia": [37.4316, -78.6569],
+            "RI": [41.5801, -71.4774],
+            "Rhode Island": [41.5801, -71.4774],
+            "VT": [44.5588, -72.5778],
+            "Vermont": [44.5588, -72.5778],
+            "NH": [43.1939, -71.5724],
+            "New Hampshire": [43.1939, -71.5724],
+            "ME": [45.2538, -69.4455],
+            "Maine": [45.2538, -69.4455]
+        }
+
+    def load_cache(self):
+        if os.path.exists(self.cache_file):
+            with open(self.cache_file, "r") as f:
+                try:
+                    return json.load(f)
+                except json.JSONDecodeError:
+                    return {}
+        return {}
+
+    def save_cache(self):
+        if self.cache_updated:
+            with open(self.cache_file, "w") as f:
+                json.dump(self.cache, f, indent=4)
+            print("Geocoding cache saved.")
+
+    def geocode(self, location_name):
+        if not location_name or location_name == "Unknown":
+            return None
+
+        # Tier 1: Hardcoded
+        if location_name in self.HARDCODED_LOCATIONS:
+            return {"lat": self.HARDCODED_LOCATIONS[location_name][0], "lng": self.HARDCODED_LOCATIONS[location_name][1], "tier": 1}
+
+        # Tier 2: Historical
+        if location_name in self.HISTORICAL_LOCATIONS:
+            return {"lat": self.HISTORICAL_LOCATIONS[location_name][0], "lng": self.HISTORICAL_LOCATIONS[location_name][1], "tier": 2}
+
+        # Tier 3: Regions (Exact match)
+        if location_name in self.REGION_COORDINATES:
+            return {"lat": self.REGION_COORDINATES[location_name][0], "lng": self.REGION_COORDINATES[location_name][1], "tier": 3}
+
+        # Check Cache
+        if location_name in self.cache:
+            return self.cache[location_name]
+
+        # Tier 4: API
+        if not self.api_enabled:
+            return None
+
+        try:
+            print(f"   [Geocoding] Querying API for '{location_name}'...")
+            time.sleep(1.1)
+            url = "https://nominatim.openstreetmap.org/search"
+            params = {
+                "q": location_name,
+                "format": "json",
+                "limit": 1
+            }
+            headers = {"User-Agent": "GenealogyApp/1.0 (contact@example.com)"}
+            response = requests.get(url, params=params, headers=headers, timeout=2)
+            data = response.json()
+
+            if data:
+                lat = float(data[0]["lat"])
+                lng = float(data[0]["lon"])
+                result = {"lat": lat, "lng": lng, "tier": 4}
+                self.cache[location_name] = result
+                self.cache_updated = True
+                return result
+            else:
+                self.cache[location_name] = None
+                self.cache_updated = True
+                return None
+        except Exception as e:
+            print(f"   [Geocoding] Error: {e}. Disabling API for this session.")
+            self.api_enabled = False
+            return None
 
 class GenealogyTextPipeline:
     def __init__(self):
@@ -132,7 +317,8 @@ class GenealogyTextPipeline:
         # We capture the group to ensure we get the year digits.
         year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
         if not year_match:
-            return None
+            # Fallback to dateparser if no 4-digit year found (e.g. "Apr 12, '80")
+            return self._normalize_date_fallback(raw_date_string)
 
         year_val = int(year_match.group(1))
         start_index = year_match.start()
@@ -172,6 +358,18 @@ class GenealogyTextPipeline:
 
         return year_val
 
+    def _normalize_date_fallback(self, raw_date_string):
+        """
+        Uses dateparser to attempt to find a year if regex failed.
+        """
+        try:
+            dt = dateparser.parse(raw_date_string)
+            if dt:
+                return dt.year
+        except:
+            pass
+        return None
+
     def split_date_location(self, text):
         if not text or text.lower() == "unknown":
             return "Unknown", "Unknown"
@@ -190,61 +388,86 @@ class GenealogyTextPipeline:
             if re.match(r'^\d{4}$', loc_candidate):
                  return text.strip(), "Unknown"
 
+            # Clean up date_candidate: Remove standard event labels if present
+            # (e.g. "Born: April 12, 1880" -> "April 12, 1880")
+            date_candidate = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', date_candidate, flags=re.IGNORECASE)
+
             return date_candidate, loc_candidate
 
-        # 2. Look for a Year (1000-2999)
-        # Find the LAST occurrence of a year to handle ranges like 1750-1752, but ensure we don't accidentally
-        # split "1850" from "1860" if both are in the date field (e.g. range).
-        # Strategy: Find the last year. If text follows it that looks like a location (starts with comma/semicolon/letters), split.
+        # 2. Fallback: Use dateparser to handle messy formats
+        # e.g., "Springfield, 1880", "Born 1880", "1880 New York"
+        try:
+            dates = dateparser.search.search_dates(text, languages=['en'])
+        except Exception:
+            dates = None
 
-        years = list(re.finditer(r'\b(1[0-9]{3}|20[0-2][0-9])\b', text))
+        if dates:
+            # Found one or more dates.
+            # We want to identify the span of the date substring(s) and treat the rest as location.
 
-        if years:
-            last_year = years[-1]
-            end_of_year = last_year.end()
+            # Start of the first date match
+            first_date_str = dates[0][0]
+            start_idx = text.find(first_date_str)
 
-            # Check what comes after
-            after = text[end_of_year:].strip()
+            # End of the last date match
+            last_date_str = dates[-1][0]
+            # Use rfind to be safe in case of repeated strings, but restrict search after start_idx?
+            # Actually, standard find for last_date_str is fine if we assume chronological parsing order,
+            # but safer to find last occurrence if dateparser returns them in order found in text.
+            # dateparser search_dates returns list in order of appearance.
+            end_idx = text.rfind(last_date_str) + len(last_date_str)
 
-            # Case: "1850" -> All date
-            if not after:
-                return text.strip(), "Unknown"
+            # Expand left to capture modifiers that dateparser might miss (c., Before, etc.)
+            pre_text = text[:start_idx]
+            mod_pattern = r'(?i)\b(?:c\.?|ca\.?|circa|about|abt\.?|before|bef\.?|by|after|aft\.?|bet\.?|between|living\s+in|fl\.?)\s*$'
+            mod_match = re.search(mod_pattern, pre_text)
 
-            # Case: "1850, Hartford" -> Split
-            if after.startswith(",") or after.startswith(";"):
-                date_part = text[:end_of_year].strip()
-                loc_part = after.lstrip(",; ").strip()
-                return date_part, loc_part
+            if mod_match:
+                start_idx = mod_match.start()
 
-            # Case: "1850 Hartford" -> Implicit split (rare but possible)
-            # Check if it starts with letters (Location name)
-            # Avoid splitting "1774/5" where "/5" is not a location
-            if after[0].isalpha():
-                 date_part = text[:end_of_year].strip()
-                 loc_part = after.strip()
-                 return date_part, loc_part
+            date_part = text[start_idx:end_idx].strip()
 
-            # Fallback: If after is just symbols like "/5" or "-1752" (Wait, if -1752, it would be caught as a year match)
-            # If we are here, "after" does NOT contain a year (because we picked the last one).
-            # So if it's "/5" it stays with date.
+            # Clean "in" / "at" from end of date_part if dateparser captured it
+            # e.g. "April 12, 1880 in"
+            date_part = re.sub(r'\s+(in|at|on)$', '', date_part, flags=re.IGNORECASE)
 
-            return text.strip(), "Unknown"
+            # Extract Location (everything else)
+            prefix = text[:start_idx].strip()
+            suffix = text[end_idx:].strip()
 
-        # 3. No year found
-        # Heuristics for "No Year"
+            # Clean up suffix
+            suffix = re.sub(r'^(in|at|on)\b\s*', '', suffix, flags=re.IGNORECASE)
+
+            # Clean up prefix: Remove standard event labels if they were part of the string
+            # (e.g. "Born: April 12" -> Prefix "Born: ")
+            prefix = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', prefix, flags=re.IGNORECASE)
+
+            # Combine prefix and suffix
+            loc_parts = []
+            if prefix.strip(",; "): loc_parts.append(prefix.strip(",; "))
+            if suffix.strip(",; "): loc_parts.append(suffix.strip(",; "))
+
+            location = ", ".join(loc_parts)
+            if not location:
+                location = "Unknown"
+
+            return date_part, location
+
+        # 3. No date found by dateparser
+        # Heuristics for "No Year" or fallbacks
 
         # If text is keywords like "Unknown", "?", "Disappeared"
         keywords = ["unknown", "?", "disappeared", "uncertain", "infant"]
         if any(k in text.lower() for k in keywords):
              return text.strip(), "Unknown"
 
-        # If it contains digits, assume Date (e.g. "May 1", "aged 5")
+        # If text contains digits, it might be a date that dateparser missed? (Unlikely for modern dateparser)
+        # But maybe "aged 5"?
         if any(char.isdigit() for char in text):
              return text.strip(), "Unknown"
-        else:
-             # No digits. "Hartford, CT". "New York".
-             # Treat as Location.
-             return "Unknown", text.strip()
+
+        # Treat as Location if no digits
+        return "Unknown", text.strip()
 
     def _parse_location_hierarchy(self, location_string):
         """
@@ -1157,14 +1380,27 @@ class GenealogyTextPipeline:
         self.link_family_members()
         self._find_mentions()
 
-        print("--- Fetching Hero Images from Wikimedia ---")
+        # Initialize Geocoder
+        geocoder = GeocodingService()
+
+        print("--- Fetching Hero Images and Geocoding ---")
         final_list = []
         
         for p in self.family_data:
-            # Fetch Image
+            # Geocode
             born_loc = p["vital_stats"]["born_location"]
-            born_year = p["vital_stats"].get("born_year_int")
+            died_loc = p["vital_stats"]["died_location"]
 
+            p["vital_stats"]["born_coords"] = geocoder.geocode(born_loc)
+            p["vital_stats"]["died_coords"] = geocoder.geocode(died_loc)
+
+            # Geocode Life Events
+            for event in p["story"]["life_events"]:
+                if "location" in event and event["location"] != "Unknown":
+                    event["coords"] = geocoder.geocode(event["location"])
+
+            # Fetch Image
+            born_year = p["vital_stats"].get("born_year_int")
             hero_image = self.fetch_wikimedia_image(born_loc, born_year)
 
             # Extract Tags
@@ -1193,6 +1429,7 @@ class GenealogyTextPipeline:
 
         # Save Cache
         self.save_cache()
+        geocoder.save_cache()
 
         output_filename = "kinship-app/src/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:
