@@ -1142,7 +1142,7 @@ class GenealogyTextPipeline:
 
         return name_index
 
-    def _scan_text_for_mentions(self, text, name_index, clean_name_index, source_profile):
+    def _scan_text_for_mentions(self, text, name_index, source_profile):
         """
         Scans a text block for mentions of names in the index.
         Returns a list of related_link objects.
@@ -1151,7 +1151,7 @@ class GenealogyTextPipeline:
             return []
 
         links = []
-        known_names = set(clean_name_index.keys())
+        # known_names = set(name_index.keys())
 
         # Keywords for relationship types
         # Added: Uncle, Aunt, Nephew, Niece, Executor, Witness
@@ -1180,7 +1180,26 @@ class GenealogyTextPipeline:
             "niece": "Relative",
             "executor": "Legal Associate",
             "witness": "Legal Associate",
-            "legacy": "Relative"
+            "legacy": "Relative",
+            "mother-in-law": "In-Law",
+            "father-in-law": "In-Law",
+            "son-in-law": "In-Law",
+            "daughter-in-law": "In-Law",
+            "brother-in-law": "In-Law",
+            "sister-in-law": "In-Law",
+            "step-mother": "Step-Parent",
+            "step-father": "Step-Parent",
+            "step-son": "Step-Child",
+            "step-daughter": "Step-Child",
+            "fiancé": "Fiancé",
+            "fiancee": "Fiancé",
+            "betrothed": "Fiancé",
+            "mentor": "Professional",
+            "apprentice": "Professional",
+            "godfather": "Godparent",
+            "godmother": "Godparent",
+            "godson": "Godparent",
+            "goddaughter": "Godparent"
         }
 
         # Improved Candidate Extraction
@@ -1190,7 +1209,8 @@ class GenealogyTextPipeline:
         candidates = set(re.findall(name_pattern, text))
 
         # Filter candidates that are known names
-        valid_candidates = candidates.intersection(known_names)
+        # Use name_index.keys() which contains all variations
+        valid_candidates = candidates.intersection(set(name_index.keys()))
 
         if not valid_candidates:
             return []
@@ -1212,21 +1232,59 @@ class GenealogyTextPipeline:
                 if not re.search(r'\b' + re.escape(name) + r'\b', clause):
                     continue
 
-                target_id = clean_name_index[name]
-                if target_id == source_profile['id']: continue
+                # Ambiguity Resolution Strategy
+                # 1. Get all potential IDs for this name
+                potential_ids = name_index[name]
+
+                # 2. Filter out self
+                potential_ids = [pid for pid in potential_ids if pid != source_profile['id']]
+
+                # 3. Decision Logic
+                target_id = None
+
+                if len(potential_ids) == 1:
+                    # Unambiguous (only 1 candidate) - Accept it regardless of date (could be ancestor)
+                    target_id = potential_ids[0]
+                else:
+                    # Ambiguous (multiple candidates) - Apply Strict Date Filter
+                    candidates_in_range = []
+                    for pid in potential_ids:
+                        target_p = id_map.get(pid)
+                        if not target_p: continue
+
+                        target_born = self._get_birth_year(target_p)
+
+                        # Strict check for disambiguation (must be within 60 years)
+                        if source_born and target_born:
+                            diff = abs(source_born - target_born)
+                            if diff <= 60:
+                                candidates_in_range.append(pid)
+                        else:
+                            # If dates unknown, we can't safely disambiguate by date
+                            # Treat as ambiguous unless it's the only one?
+                            # Safe bet: skip if date unknown and ambiguous
+                            pass
+
+                    if len(candidates_in_range) == 1:
+                        target_id = candidates_in_range[0]
+                    else:
+                        # Still ambiguous (0 or >1 candidates in range)
+                        self.ariadne_log["ambiguous"][name].update(potential_ids)
+                        continue
+
                 if target_id in found_ids: continue
 
-                # Date sanity check
-                target_p = id_map.get(target_id)
-                target_born = self._get_birth_year(target_p) if target_p else None
+                found_ids.add(target_id)
 
+                # 4. Contemporary Check for Relation Type (Loose Check)
+                # Now that we have the target, we check if they are "contemporary" for the purpose
+                # of inferring "Friend", "Partner", etc. vs just "Mentioned".
+                target_p = id_map.get(target_id)
+                target_born = self._get_birth_year(target_p)
                 is_contemporary = True
                 if source_born and target_born:
-                    diff = abs(source_born - target_born)
-                    if diff > 80:
-                        is_contemporary = False
-
-                found_ids.add(target_id)
+                     if abs(source_born - target_born) > 80: # Keep loose check for 'Mentioned' fallback
+                         is_contemporary = False
 
                 # Determine Type
                 rel_type = "Mentioned"
@@ -1273,15 +1331,6 @@ class GenealogyTextPipeline:
             "new_links": 0
         }
 
-        # Filter ambiguous
-        clean_name_index = {}
-        for name, ids in name_index.items():
-            unique_ids = set(ids)
-            if len(unique_ids) == 1:
-                clean_name_index[name] = list(unique_ids)[0]
-            else:
-                self.ariadne_log["ambiguous"][name] = unique_ids
-
         count = 0
 
         for p in self.family_data:
@@ -1289,7 +1338,8 @@ class GenealogyTextPipeline:
             notes = p['story']['notes']
             if not notes: continue
 
-            links = self._scan_text_for_mentions(notes, name_index, clean_name_index, p)
+            # Pass the full name_index (with ambiguities)
+            links = self._scan_text_for_mentions(notes, name_index, p)
             p['related_links'].extend(links)
             count += len(links)
 
