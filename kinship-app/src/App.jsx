@@ -914,15 +914,29 @@ const TriviaWidget = ({ data, branchName }) => {
 
 const MapUpdater = ({ allPoints, focus, defaultCenter, defaultZoom }) => {
     const map = useMap();
-    const prevFocusRef = React.useRef();
+    const prevCenterRef = React.useRef(null);
 
     React.useEffect(() => {
         // Handle Focus (Flight)
-        if (focus) {
-            const focusKey = `${focus.center[0]},${focus.center[1]},${focus.zoom}`;
-            if (prevFocusRef.current !== focusKey) {
+        if (focus && focus.center) {
+            const newCenter = L.latLng(focus.center);
+            let shouldMove = true;
+
+            if (prevCenterRef.current) {
+                const currentCenter = L.latLng(prevCenterRef.current);
+                const distMeters = currentCenter.distanceTo(newCenter);
+                const distMiles = distMeters / 1609.34; // Convert meters to miles
+
+                // Threshold Rule: If distance < 50 miles AND point is visible, do not fly/pan.
+                // This prevents "micro-jitters" but ensures off-screen points are still shown.
+                if (distMiles < 50 && map.getBounds().contains(newCenter)) {
+                    shouldMove = false;
+                }
+            }
+
+            if (shouldMove) {
                 map.flyTo(focus.center, focus.zoom, { duration: 2.0, easeLinearity: 0.25 });
-                prevFocusRef.current = focusKey;
+                prevCenterRef.current = focus.center;
             }
         } else {
             // Default Bounds Logic (only if no focus)
@@ -1463,7 +1477,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     }, []);
 
     return (
-        <div className="h-full bg-[#F9F5F0] flex flex-col animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-[#F9F5F0] flex flex-col lg:flex-row animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl">
 
             <LoginModal
                 isOpen={showLoginModal}
@@ -1473,51 +1487,29 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                 }}
             />
 
-            {/* MAP BACKGROUND (Fixed) */}
-            <div className="absolute inset-0 z-0">
-                <KeyLocationsMap
-                    bornLoc={bornLoc}
-                    diedLoc={diedLoc}
-                    bornHierarchy={bornHierarchy}
-                    diedHierarchy={diedHierarchy}
-                    lifeEvents={personalEvents}
-                    bornCoords={bornCoords}
-                    diedCoords={diedCoords}
-                    focus={mapFocus}
-                    className="h-full w-full"
-                />
-                {/* Overlay to make text readable (top gradient for header) */}
-                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/90 to-transparent pointer-events-none z-10"></div>
-                {/* Overlay for bottom to fade out map if needed, or global tint */}
-                <div className="absolute inset-0 bg-white/30 pointer-events-none z-0"></div>
-            </div>
+            {/* LEFT COLUMN: NARRATIVE (Scrollable) */}
+            <div className="w-full lg:w-[45%] h-[60%] lg:h-full order-2 lg:order-1 overflow-y-auto custom-scrollbar bg-white shadow-2xl z-10 relative flex flex-col border-r border-gray-200">
 
-            {/* Sticky Close / Nav Bar */}
-            <div className="absolute top-0 left-0 right-0 z-50 p-6 flex justify-between items-start pointer-events-none">
-                 <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-100 shadow-sm pointer-events-auto flex items-center gap-2">
-                    <Anchor size={12} className="text-[#E67E22]" strokeWidth={1.5} />
-                    <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{relationship}</span>
-                 </div>
-                 <button onClick={onClose} className="pointer-events-auto p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full text-gray-400 hover:text-gray-800 shadow-sm border border-gray-100 transition-all">
-                    <X size={20} strokeWidth={1.5} />
-                </button>
-            </div>
+                {/* Sticky Header inside Left Column */}
+                 <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md p-4 border-b border-gray-100 flex justify-between items-center shadow-sm">
+                     <div className="flex items-center gap-2">
+                         <div className="bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 flex items-center gap-2">
+                            <Anchor size={12} className="text-[#E67E22]" strokeWidth={1.5} />
+                            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{relationship}</span>
+                         </div>
+                     </div>
+                     <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200">
+                        <X size={20} strokeWidth={1.5} />
+                    </button>
+                </div>
 
-            {/* Scrollable Content */}
-            <div className="relative z-10 flex-1 overflow-y-auto custom-scrollbar">
-
-                {/* HERO SPACER - Shows Map Initially */}
-                <div className="h-[40vh] w-full pointer-events-none"></div>
-
-                {/* MAIN CONTENT CARD STREAM */}
-                <div className="max-w-3xl mx-auto px-4 pb-24 space-y-8">
-
-                     {/* PROFILE CARD */}
-                     <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/50">
+                <div className="p-8 space-y-8 pb-24">
+                     {/* PROFILE CARD - Simplified for white background */}
+                     <div className="rounded-xl overflow-hidden border border-gray-100 bg-white">
                         <HeroImage location={bornLoc} year={bornYear} heroImage={item.hero_image} />
 
                         <div className="px-8 pb-8 pt-6 flex flex-col items-center text-center">
-                            <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-2 drop-shadow-sm leading-tight">
+                            <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-2 leading-tight">
                                 {item.name}
                             </h1>
                             <div className="flex items-center gap-4 text-gray-500 font-mono text-sm uppercase tracking-widest mb-6">
@@ -1561,14 +1553,12 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                         </div>
                     </div>
 
-                    {/* TRIVIA CARD */}
-                    <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-6 border border-white/50">
-                        <ProfileTrivia person={item} familyData={familyData} />
-                    </div>
+                    {/* TRIVIA */}
+                    <ProfileTrivia person={item} familyData={familyData} />
 
-                    {/* STORY / BIO CARD */}
+                    {/* STORY / BIO */}
                     {item.story?.notes && (
-                        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
+                        <div className="bg-white rounded-xl p-0">
                              <div className="flex items-center gap-4 mb-6">
                                 <div className="h-px bg-gray-200 flex-1"></div>
                                 <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1584,7 +1574,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                     {/* UNIFIED TIMELINE (SCROLLYTELLING DRIVER) */}
                     {bornYear > 0 && (
-                        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
+                        <div className="bg-white rounded-xl p-0">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-px bg-gray-200 flex-1"></div>
                                 <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1593,13 +1583,13 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
 
-                            <div className="pl-4 md:pl-8">
+                            <div className="pl-4 md:pl-8 border-l border-gray-100 ml-4">
                                 <TimelineEvent
                                     event={{
                                         year: bornYear,
                                         label: `Born in ${bornLoc}${item.vital_stats.born_location_note ? ` (${item.vital_stats.born_location_note})` : ''}`,
                                         region: "Personal",
-                                        location: bornLoc // Ensure location is passed for fallback
+                                        location: bornLoc
                                     }}
                                     age={0}
                                     onVisible={handleEventVisible}
@@ -1626,8 +1616,8 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                         </div>
                     )}
 
-                    {/* FAMILY CONNECTIONS CARD */}
-                    <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
+                    {/* FAMILY CONNECTIONS */}
+                    <div className="bg-white rounded-xl p-0">
                          <div className="flex items-center gap-4 mb-8">
                             <div className="h-px bg-gray-200 flex-1"></div>
                             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1636,7 +1626,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             <div className="h-px bg-gray-200 flex-1"></div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-3">
                             {family.parents.map(p => (
                                 <FamilyMemberLink key={p.id} member={p} role="Parent" onClick={onNavigate} />
                             ))}
@@ -1651,7 +1641,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                     {/* STORY CONNECTIONS */}
                     {relatedConnections.length > 0 && (
-                        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
+                        <div className="bg-white rounded-xl p-0">
                              <div className="flex items-center gap-4 mb-8">
                                 <div className="h-px bg-gray-200 flex-1"></div>
                                 <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1687,7 +1677,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     )}
 
                     {/* RESEARCH ASSISTANT */}
-                    <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md p-8 border border-white/50">
+                    <div className="bg-white rounded-xl p-0">
                          <div className="flex items-center gap-4 mb-8">
                             <div className="h-px bg-gray-200 flex-1"></div>
                             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -1789,6 +1779,22 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                 </div>
             </div>
+
+            {/* RIGHT COLUMN: MAP (Sticky/Fixed) */}
+            <div className="w-full lg:w-[55%] h-[40%] lg:h-full order-1 lg:order-2 bg-gray-100 relative">
+                <KeyLocationsMap
+                    bornLoc={bornLoc}
+                    diedLoc={diedLoc}
+                    bornHierarchy={bornHierarchy}
+                    diedHierarchy={diedHierarchy}
+                    lifeEvents={personalEvents}
+                    bornCoords={bornCoords}
+                    diedCoords={diedCoords}
+                    focus={mapFocus}
+                    className="h-full w-full absolute inset-0"
+                />
+            </div>
+
         </div>
     );
 };
