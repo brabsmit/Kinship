@@ -1009,6 +1009,25 @@ class GenealogyTextPipeline:
         if re.search(r'\b(Reverend|Deacon)\b|\bRev\.?', profile["name"], re.IGNORECASE):
              tags.append("Religious Leader")
 
+        # 9. Westward Pioneer
+        # Born in East Coast, Died in Midwest/West
+        east_coast = ["CT", "MA", "NY", "NJ", "PA", "VA", "RI", "VT", "NH", "ME", "DE", "MD", "Connecticut", "Massachusetts", "New York", "New Jersey", "Pennsylvania", "Virginia", "Rhode Island", "Vermont", "New Hampshire", "Maine"]
+        westward_states = ["OH", "IL", "MI", "IN", "WI", "MN", "IA", "MO", "KS", "NE", "SD", "ND", "CA", "OR", "WA", "NV", "AZ", "NM", "UT", "CO", "WY", "ID", "MT", "Ohio", "Illinois", "Michigan", "Indiana", "Wisconsin", "Minnesota", "Iowa", "Missouri", "Kansas", "Nebraska", "California", "Oregon", "Washington", "Nevada", "Arizona", "Utah", "Colorado"]
+
+        # Check if born in East Coast and Died in West
+        def is_in_region(loc, region_list):
+            if not loc or loc == "Unknown": return False
+            for r in region_list:
+                # Check for full name or abbreviation with boundary
+                if len(r) == 2:
+                    if re.search(r'\b' + r + r'\b', loc): return True
+                else:
+                    if r.lower() in loc.lower(): return True
+            return False
+
+        if is_in_region(born_loc, east_coast) and is_in_region(died_loc, westward_states):
+            tags.append("Westward Pioneer")
+
         return list(set(tags))
 
     def link_family_members(self):
