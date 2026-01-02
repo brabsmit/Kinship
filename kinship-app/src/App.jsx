@@ -11,13 +11,14 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
 import HitlistPanel from './components/HitlistPanel';
+import OutliersDashboard from './components/OutliersDashboard';
 import FilterMenu from './components/FilterMenu';
 import { fetchResearchSuggestions } from './services/aiReasoning';
 import { useAuth } from './context/AuthContext';
@@ -1825,6 +1826,13 @@ export default function App() {
                      >
                         <AlertTriangle size={16} />
                      </button>
+                     <button
+                        onClick={() => setViewMode('outliers')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="Outliers"
+                     >
+                        <Trophy size={16} />
+                     </button>
                   </div>
 
                   <button
@@ -1931,6 +1939,18 @@ export default function App() {
                      const person = familyData.find(p => String(p.id) === String(id));
                      if (person) setSelectedAncestor(person);
                  }} />
+             </div>
+        )}
+
+        {viewMode === 'outliers' && (
+             <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
+                 <OutliersDashboard
+                    data={familyData}
+                    onSelectProfile={(id) => {
+                        const person = familyData.find(p => String(p.id) === String(id));
+                        if (person) setSelectedAncestor(person);
+                    }}
+                 />
              </div>
         )}
       </div>
