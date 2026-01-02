@@ -21,6 +21,12 @@ export const ASSETS = {
         caption: "London Before the Great Fire (1616)",
         style: { filter: "sepia(20%) contrast(105%)" }
     },
+    norfolk_map_1610: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_Mapp_of_ye_County_of_Norfolk_with_its_Hundreds_%28BM_1864%2C1114.38%29.jpg/1280px-A_Mapp_of_ye_County_of_Norfolk_with_its_Hundreds_%28BM_1864%2C1114.38%29.jpg",
+        alt: "A Mapp of ye County of Norfolk (John Speed/Wenceslaus Hollar, 1670)",
+        caption: "The County of Norfolk & East Anglia (17th Century)",
+        style: { filter: "sepia(25%) contrast(100%)" }
+    },
 
     // New England
     new_england_1600: {
@@ -75,6 +81,12 @@ export const ASSETS = {
         caption: "The Bustling Metropolis of the 19th Century",
         style: { filter: "sepia(10%)" }
     },
+    long_island_1686: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Long_Island_1686.jpg",
+        alt: "Map of Long Island (1686)",
+        caption: "Colonial Long Island & Oyster Bay",
+        style: { filter: "sepia(20%) contrast(110%)" }
+    },
 
     // Fallback
     generic_antique: {
@@ -99,10 +111,17 @@ export const getHeroImage = (location, year) => {
 
     // 1. Special Overrides (Muse Logic for known cache gaps or quality issues)
 
-    // Connecticut Colonial (1700-1800) - Overrides cache to ensure consistent Map style
-    // Includes key towns like Norwich, Hartford, New Haven (if not caught by other overrides)
-    if ((loc.includes("ct") || loc.includes("connecticut") || loc.includes("norwich") || loc.includes("hartford")) && y >= 1700 && y < 1800) {
+    // Connecticut Colonial (1700-1800)
+    // Map "Norwich" < 1800 specifically to CT Colony if not New Haven
+    if ((loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford")) && y >= 1700 && y < 1800) {
         return ASSETS.ct_1700;
+    }
+    // Norwich Logic:
+    // If Norwich, CT -> 1700-1800 use CT map.
+    // If Norwich, CT -> 1600-1700 use Puritan Life or CT map. Let's use Puritan Life for early settlement vibe.
+    if (loc.includes("norwich") && loc.includes("ct")) {
+        if (y >= 1700) return ASSETS.ct_1700;
+        return ASSETS.puritan_life; // Early settlers
     }
 
     // New Haven Colonial (1638-1750)
@@ -110,7 +129,20 @@ export const getHeroImage = (location, year) => {
         return ASSETS.new_haven_1641;
     }
 
-    // London Pre-Fire (< 1666) - Removed "england" from here to prevent country-wide override
+    // Long Island / Oyster Bay Colonial (< 1800)
+    if ((loc.includes("oyster bay") || loc.includes("long island") || loc.includes("hempstead") || loc.includes("jamaica") || loc.includes("southold")) && y < 1800) {
+        return ASSETS.long_island_1686;
+    }
+
+    // East Anglia (Norfolk, Suffolk, Essex, Norwich England)
+    // Note: Must distinguish Norwich England from Norwich CT (handled above if 'ct' present)
+    // But 'norwich' alone could be ambiguous? Usually data has 'Norwich, Norfolk, England'.
+    if ((loc.includes("norfolk") || loc.includes("suffolk") || loc.includes("essex") || (loc.includes("norwich") && !loc.includes("ct"))) && loc.includes("england")) {
+        // Use East Anglia map for 1600s/1700s
+        if (y < 1750) return ASSETS.norfolk_map_1610;
+    }
+
+    // London Pre-Fire (< 1666)
     if (loc.includes("london") && y < 1666) {
         return ASSETS.london_visscher;
     }
@@ -121,17 +153,12 @@ export const getHeroImage = (location, year) => {
     }
 
     // Massachusetts / CT Early Settlers (1620-1660)
-    // Towns: Watertown, Sudbury, Ipswich, Windsor, Hartford, Wethersfield, Roxbury, Dorchester
-    // Use "Puritan Life" engraving for a more immersive feel than a map
-    // Note: Norwich is not in this early settlement list usually, but if it is, it fits.
-    // However, we handled Norwich above for 1700-1800. For < 1700, it might fall here or below.
     const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
     if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
         return ASSETS.puritan_life;
     }
 
     // New England Pilgrim Era (General)
-    // Extended to 1700 as per Muse curation
     if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts") || loc.includes("ma")) && y >= 1620 && y < 1700) {
         return ASSETS.ne_map_1634;
     }
@@ -165,15 +192,13 @@ export const getHeroImage = (location, year) => {
     }
 
     // Connecticut
-    // Fallback for "Norwich" or other CT towns implied if not explicitly caught above
-    if (loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford") || loc.includes("new haven") || loc.includes("norwich")) {
+    if (loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford") || loc.includes("new haven")) {
         if (y >= 1700) return ASSETS.ct_1700;
         return ASSETS.ne_map_1634;
     }
 
     // Massachusetts / New England (Broader catch)
     if (loc.includes("ma") || loc.includes("massachusetts") || loc.includes("boston") || loc.includes("new england") || loc.includes("rhode island") || loc.includes("ri")) {
-        // Fallback to Puritan Life for very early records if not caught, or Map
         if (y < 1700 && y > 1620) return ASSETS.ne_map_1634;
         return ASSETS.ne_map_1634; // Default regional
     }
