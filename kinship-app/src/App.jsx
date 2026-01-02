@@ -25,6 +25,8 @@ import LoginModal from './components/LoginModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
+import historyData from './history_data.json';
+import { calculateDistance } from './utils/geo';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -214,65 +216,6 @@ const createMarkerIcon = (color, tier) => {
 });
 };
 
-// --- 1. HISTORICAL CONTEXT ENGINE ---
-const HISTORY_DB = [
-    { year: 1603, label: "Queen Elizabeth I dies", region: "UK", type: "political" },
-    { year: 1605, label: "Gunpowder Plot", region: "UK", type: "political" },
-    { year: 1607, label: "Jamestown Founded", region: "USA", type: "era" },
-    { year: 1611, label: "King James Bible Published", region: "UK", type: "culture" },
-    { year: 1616, label: "Shakespeare dies", region: "UK", type: "culture" },
-    { year: 1620, label: "Mayflower Arrives", region: "USA", type: "era" },
-    { year: 1625, label: "Charles I becomes King", region: "UK", type: "political" },
-    { year: 1630, label: "Boston Founded", region: "USA", type: "era" },
-    { year: 1636, label: "Harvard College Founded", region: "USA", type: "education" },
-    { year: 1642, label: "English Civil War Begins", region: "UK", type: "war" },
-    { year: 1649, label: "Charles I Executed", region: "UK", type: "political" },
-    { year: 1660, label: "The Restoration", region: "UK", type: "political" },
-    { year: 1664, label: "New Amsterdam becomes New York", region: "USA", type: "political" },
-    { year: 1665, label: "Great Plague of London", region: "UK", type: "health" },
-    { year: 1666, label: "Great Fire of London", region: "UK", type: "disaster" },
-    { year: 1675, label: "King Philip's War", region: "USA", type: "war" },
-    { year: 1688, label: "Glorious Revolution", region: "UK", type: "political" },
-    { year: 1692, label: "Salem Witch Trials", region: "USA", type: "event" },
-    { year: 1707, label: "Act of Union (Great Britain)", region: "UK", type: "political" },
-    { year: 1714, label: "George I becomes King", region: "UK", type: "political" },
-    { year: 1754, label: "French and Indian War Begins", region: "USA", type: "war" },
-    { year: 1760, label: "Industrial Revolution Begins", region: "UK", type: "economy" },
-    { year: 1765, label: "Stamp Act", region: "USA", type: "political" },
-    { year: 1770, label: "Boston Massacre", region: "USA", type: "event" },
-    { year: 1773, label: "Boston Tea Party", region: "USA", type: "event" },
-    { year: 1775, label: "Revolutionary War Begins", region: "USA", type: "war" },
-    { year: 1776, label: "Declaration of Independence", region: "USA", type: "political" },
-    { year: 1781, label: "Battle of Yorktown", region: "USA", type: "war" },
-    { year: 1787, label: "US Constitution Signed", region: "USA", type: "political" },
-    { year: 1789, label: "Washington becomes President", region: "USA", type: "politics" },
-    { year: 1789, label: "French Revolution Begins", region: "Europe", type: "political" },
-    { year: 1793, label: "Cotton Gin Invented", region: "USA", type: "tech" },
-    { year: 1801, label: "United Kingdom formed", region: "UK", type: "political" },
-    { year: 1803, label: "Louisiana Purchase", region: "USA", type: "politics" },
-    { year: 1804, label: "Napoleon becomes Emperor", region: "Global", type: "political" },
-    { year: 1805, label: "Battle of Trafalgar", region: "UK", type: "war" },
-    { year: 1812, label: "War of 1812", region: "USA", type: "war" },
-    { year: 1815, label: "Battle of Waterloo", region: "Global", type: "war" },
-    { year: 1825, label: "Erie Canal Opens", region: "USA", type: "economy" },
-    { year: 1830, label: "Liverpool and Manchester Railway", region: "UK", type: "tech" },
-    { year: 1837, label: "Queen Victoria Crowned", region: "UK", type: "political" },
-    { year: 1837, label: "Panic of 1837", region: "USA", type: "economy" },
-    { year: 1845, label: "Irish Potato Famine", region: "Global", type: "disaster" },
-    { year: 1848, label: "California Gold Rush", region: "USA", type: "era" },
-    { year: 1851, label: "The Great Exhibition", region: "UK", type: "culture" },
-    { year: 1854, label: "Crimean War", region: "Global", type: "war" },
-    { year: 1859, label: "On the Origin of Species", region: "Global", type: "science" },
-    { year: 1861, label: "Civil War Begins", region: "USA", type: "war" },
-    { year: 1863, label: "Emancipation Proclamation", region: "USA", type: "politics" },
-    { year: 1865, label: "Lincoln Assassinated", region: "USA", type: "politics" },
-    { year: 1869, label: "Transcontinental Railroad", region: "USA", type: "tech" },
-    { year: 1876, label: "Telephone Invented", region: "USA", type: "tech" },
-    { year: 1879, label: "Lightbulb Invented", region: "USA", type: "tech" },
-    { year: 1888, label: "Jack the Ripper Murders", region: "UK", type: "event" },
-    { year: 1893, label: "Panic of 1893", region: "USA", type: "economy" }
-];
-
 const detectRegion = (locationString) => {
     if (!locationString) return "Global";
     const loc = locationString.toLowerCase();
@@ -414,7 +357,7 @@ const generateTrivia = (data, branchName) => {
 
     // 5. War Veterans (Lived through major wars between ages 18-40)
     let veteranCount = 0;
-    const warEvents = HISTORY_DB.filter(e => e.type === 'war');
+    const warEvents = historyData.filter(e => e.type === 'war');
 
     data.forEach(p => {
         const born = parseInt(p.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -463,7 +406,7 @@ const generateProfileTrivia = (person, allData) => {
     // Find an event they were alive for (around 20 years old)
     if (born) {
         const age20 = born + 20;
-        const eventAt20 = HISTORY_DB.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
+        const eventAt20 = historyData.find(e => Math.abs(e.year - age20) <= 2 && e.region !== 'Global');
         if (eventAt20) {
             facts.push({
                 text: `Was around 20 years old when the ${eventAt20.label}.`,
@@ -505,14 +448,37 @@ const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
     const died = parseInt(diedDate?.match(/\d{4}/)?.[0] || 0);
     if (!born || !died) return [];
 
-    // Determine Ancestor's Region
-    // Priority: Birth Location -> Death Location
-    const region = detectRegion(bornLoc) !== "Global" ? detectRegion(bornLoc) : detectRegion(diedLoc);
+    // 1. Determine Reference Location for Distance Calculation
+    // Use Death Location primarily (as requested: "ancestor's death location"), fallback to Birth.
+    const refLoc = diedLoc && diedLoc !== "Unknown" ? diedLoc : bornLoc;
+    const refCoords = getCoordinates(refLoc);
 
-    return HISTORY_DB.filter(e => {
+    return historyData.filter(e => {
+        // Temporal Filter
         const inTime = e.year >= born && e.year <= died;
-        const matchesRegion = e.region === "Global" || e.region === region;
-        return inTime && matchesRegion;
+        if (!inTime) return false;
+
+        // Global Event Exception
+        if (e.global) return true;
+
+        // Radius of Relevance Filter
+        if (e.lat && e.lon && refCoords.pos) {
+            const distance = calculateDistance(refCoords.pos[0], refCoords.pos[1], e.lat, e.lon);
+            if (distance !== null && distance <= 500) {
+                return true;
+            }
+        }
+
+        // Fallback: If event has no coords or ancestor has no coords,
+        // use legacy Region Matching (e.g. USA vs UK) to catch generic region matches
+        // But suppress if it has coords and distance check failed (implied by above logic flow)
+        if (!e.lat || !e.lon || !refCoords.pos) {
+             const region = detectRegion(bornLoc) !== "Global" ? detectRegion(bornLoc) : detectRegion(diedLoc);
+             const matchesRegion = e.region === "Global" || e.region === region;
+             return matchesRegion;
+        }
+
+        return false;
     });
 };
 
