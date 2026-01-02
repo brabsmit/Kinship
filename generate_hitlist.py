@@ -90,11 +90,11 @@ Return ONLY a JSON object with a "recommendations" key containing a list of 3 st
 """
 
     try:
-        #client = genai.Client(api_key=API_KEY)
-        #response = client.models.generate_content(
-        #    model="gemini-2.0-flash",
-        #    contents=prompt
-        #)
+        client = genai.Client(api_key=API_KEY)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
 
         text = response.text
         # Clean markdown

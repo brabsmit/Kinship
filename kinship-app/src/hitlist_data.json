@@ -9,7 +9,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "1. **Address the impossible birth/death date conflict:** Prioritize verifying the 'born_date' and 'died_date'. Conduct targeted searches for John Knight in Charlestown, MA records (vital records, church records, land records) during the early 17th century. Focus on narrowing the death date first as it's more specific, then adjust the birth date accordingly, ensuring consistency with available records. Consider potential transcription errors in the 'died_date'.",
+      "2. **Investigate potential birth location:** Expand the search beyond 'England' to identify a more specific birth location. Search parish records, probate records, and apprenticeship records from various regions of England for individuals named John Knight born around 1631. Pay attention to any connections to Charlestown, MA, or known associated families in the profile to narrow down possibilities. The unknown 'source_ref' should be investigated to see if it has information about his birth.",
+      "3. **Develop biographical information:** Given the lack of 'story.notes', use the identified parents, spouse, and children records to build a biographical sketch. Search for records associated with these relatives (census records, probate records, land records, church records) to uncover information about John Knight's life, occupation, and social standing. Look for mentions of him in other individuals' records or local histories."
     ],
     "lineage": "Maternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
@@ -26,7 +28,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "1. **Focus on the spouse and child IDs (3.1.2.2.1.1 and 3.1.2.2.1):** Research the identified spouse and child to establish approximate birth and death dates and locations for Abigail Beardsley. Analyze their profiles and associated documents for clues such as marriage records, census records, obituaries, and cemetery records that might mention Abigail or provide hints about her life. Even an estimated birth year based on the spouse's birth year would be a significant improvement.",
+      "2. **Leverage the 'Paragraph #1647' metadata:** The 'location_in_doc' field suggests the existence of a source document. Locate and analyze this document. The document may contain more information about Abigail, her family, or her life events. This could be anything from a family history book to a digitized archive document. This is the single most promising lead.",
+      "3. **Conduct broader Beardsley family research:** Search genealogical databases (e.g., Ancestry.com, FamilySearch, MyHeritage) for Beardsley families contemporary with the identified child and spouse. Use wildcards or flexible search criteria to account for potential variations in spelling or inaccurate initial data. Focus on geographic regions where Beardsleys are known to have lived during that time period. Prioritize record types known to contain maiden names, such as marriage records and probate records."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
@@ -43,7 +47,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "Research spouse's (5.1.1.2.2.1) and children's (5.1.1.2.2) profiles. Look for birth, marriage, and death records associated with them that may provide clues about Jane's dates and locations. Pay close attention to census records, church records, and wills.",
+      "Review the document referenced in metadata (Paragraph #1918). Analyze the surrounding paragraphs for any mentions of Jane Smith, her family, or related events. The document's type and purpose should be considered to assess the reliability of any information found.",
+      "Search online genealogy databases (e.g., Ancestry.com, FamilySearch.org, MyHeritage.com) using the partial information available: 'Smith' surname, likely timeframe based on generation (VII Great-Grandparent), and known children and spouse IDs. Explore variations of the name and broaden the search geographically if initial searches are unfruitful."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION IX:  SEVEN GREAT GRANDPARENTS"
@@ -60,7 +66,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "Research the profile IDs of the children (5.2.1.2.2.1) and spouse (5.2.1.2.2.1.1) to determine their names, dates, and locations. Examining the associated records for these individuals may provide clues or directly state the information for the unknown Alling.",
+      "Analyze Paragraph #3699 of the 'Unknown' source document. Even if the primary information is missing, contextual clues within the surrounding text may suggest a timeframe or geographic area for the individual's life, allowing for more targeted record searches.",
+      "Conduct a broad surname search for 'Alling' within the paternal lineage's geographic region during the likely timeframe of 'GENERATION X: EIGHT GREAT GRANDPARENTS'. Utilize online genealogy databases (e.g., Ancestry, FamilySearch, MyHeritage) and focus on census records, vital records, and probate records."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
@@ -77,7 +85,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "Review the profile of the child (ID: 6.1.1.1.1.1) and spouse (ID: 6.1.1.1.1.1.1). Determine if their profiles contain any information, even approximate dates or locations, for this ancestor. The child's profile might provide clues to the parent's vital information. Similarly, information about the spouse may reveal details about the subject's life and origins.",
+      "Analyze the 'Paragraph #3718' reference in 'metadata.location_in_doc'. If possible, access the original document to see the context surrounding this individual's mention. This might provide clues to their name, location, or time period, even if the source is of questionable reliability. Consider exploring alternative transcriptions or interpretations of the paragraph.",
+      "Given the 'GENERATION X: EIGHT GREAT GRANDPARENTS' designation and 'Paternal' lineage, attempt to reconstruct the paternal family tree. Utilizing online genealogical databases (e.g., Ancestry.com, FamilySearch.org) and surname-based searches, explore possible matches that fit the generation and lineage indicated, focusing on the geographical areas where later descendants lived. This may help narrow down the possibilities and identify potential candidates."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION X:  EIGHT GREAT GRANDPARENTS"
@@ -94,7 +104,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "1. Prioritize research on the individual's children (IDs '1.1.2.2.2.2.2.1_c0' and '1.1.2.2.2.2.2') and spouse (ID '1.1.2.2.2.2.2.2'). Information on these individuals, such as birth and death dates, locations, and family names, may provide clues about the identity and vital statistics of this 'Pitts' ancestor. Begin by searching census records, vital records (birth, marriage, death certificates), and obituaries for these individuals, noting any clues about their parentage and spouses.",
+      "2. Analyze the document associated with 'location_in_doc': 'Paragraph #4461' in the identified 'source_ref': 'Unknown'. Although the source is listed as 'Unknown', attempt to identify the original source document (e.g., family history book, genealogy website, etc.) and carefully examine the surrounding text in paragraph #4461 and nearby sections. This context may reveal further information about the individual's name, dates, locations, and family relationships. Search online genealogy databases for the text in paragraph #4461 to see if it is from a known source.",
+      "3. Given the 'lineage' is 'Paternal' and the generation is 'GENERATION XI: NINE GREAT GRAND PARENTS', systematically trace the paternal lineage back from known descendants (if any) to attempt to identify this individual. This can involve researching census records, church records, land records, and probate records for each generation, looking for mentions of 'Pitts' family members or individuals who might fit the profile. Consider the possibility of name variations or misspellings, and use wildcards in your searches."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS"
@@ -128,7 +140,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "1. **Targeted Record Searches:** Given the child's ID (4.2.2.2.1.1.2) and spouse's ID (4.2.2.2.1.1.2.1), initiate targeted searches for marriage records related to the child and/or spouse. These records may contain Alice Prichard's maiden name, and even parent's names, which can then be used to find birth or death records. Start with jurisdictions related to those individuals.",
+      "2. **Utilize Genealogical Databases and Online Resources:** Search major genealogical databases (e.g., Ancestry.com, FamilySearch, MyHeritage, FindAGrave) using the individual's name ('Alice Prichard') in conjunction with any known related individuals (child and/or spouse mentioned above). Implement wildcards (*) in searches to broaden the scope and account for potential name variations or transcription errors. Prioritize databases known to cover areas or populations where the family is suspected to have originated.",
+      "3. **Examine Source Reference and Location:** Review the document referenced in the 'metadata' ('Paragraph #5271' in an 'Unknown' source) for any contextual clues regarding Alice Prichard. Even if the source itself is unidentified, the surrounding text might provide hints about her approximate lifespan, geographic location, or family connections that could lead to further research avenues. Determine the format of the original document (e.g., a book, a collection of letters, an index), which may offer clues for identifying the original source itself."
     ],
     "lineage": "Paternal",
     "generation": "GENERATION XI:  NINE GREAT GRAND PARENTS"
@@ -145,7 +159,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "1. **Targeted Record Search based on Identified Relatives:** Begin by focusing on the profiles of Janet Crawford Young's child (ID: 9.2.1.1) and spouse (ID: 9.2.1.1.1). Search census records, vital records (birth, marriage, death), obituaries, and family trees for these individuals. Information from their records may contain details about Janet, such as her birth date, place, or death information, or clues to where these events might have occurred. Prioritize records from the time period contemporary to the child and spouse.",
+      "2. **Document Source Review and Expansion:** The profile's metadata indicates 'Paragraph #812' of an 'Unknown' source. Attempt to identify this document and thoroughly analyze the surrounding paragraphs for any additional information related to Janet Crawford Young. If the original source can be identified, evaluate its reliability and search for other related primary and secondary sources that corroborate or expand upon the information within the document. This may involve searching online genealogical databases, historical societies, and archives, using search terms such as 'Crawford' and 'Young' in conjunction with the lineage information (Maternal side; Great-Great-Grandparent).",
+      "3. **Cluster Research using Surname and Location Clues:** Given the 'Crawford' and 'Young' surnames, conduct a cluster research approach. Identify common locations associated with these surnames during the likely timeframe Janet Crawford Young would have lived (estimate based on her generation as a great-great-grandparent). Search for Janet Crawford Young, or similar variations of her name, in local historical records, church records, land records, probate records, and local history publications within those identified regions. This approach can uncover indirect evidence, such as mentions in local newspapers, associations with other family members, or property ownership, which could provide clues to her vital statistics."
     ],
     "lineage": "Maternal",
     "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS"
@@ -162,7 +178,9 @@
       "No Biographical Notes"
     ],
     "recommendations": [
-      "Error generating AI recommendations."
+      "**Focus on the children and spouse:** Using the profile's `relations` data, research the profile '12.1.2.1' (a child) and '12.1.2.1.1' (spouse). Gathering birth, marriage, and death information on these individuals may provide clues about Mary (UNKNOWN) Hinds's lifespan and possible locations through associated records such as marriage certificates, census records listing household members, and probate documents.",
+      "**Leverage the 'Paragraph #1016' location in document:** The `metadata` indicates this individual is mentioned in 'Paragraph #1016' of an 'Unknown' source document. Prioritize identifying and accessing this document. If the source is known, locate the document and carefully analyze the surrounding text in paragraph #1016 for any contextual information about Mary Hinds, such as her estimated age, family relationships, or location of residence. This could be a will, a family history, or even a local newspaper article.",
+      "**Explore Common Hinds Family Locations and Records:** Given the 'Hinds' surname, conduct a broad search for Hinds families in relevant geographical areas. Since birthplace and death place are unknown, start by researching locations associated with descendants or the spouse. Utilize online genealogy databases like Ancestry.com, FamilySearch, Findmypast, and MyHeritage. Focus on census records, vital records (birth, marriage, death), land records, probate records, and church records that might mention Mary Hinds or her close relatives."
     ],
     "lineage": "Maternal",
     "generation": "GENERATION VIII:  SIX GREAT GRANDPARENTS"
