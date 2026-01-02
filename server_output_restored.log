@@ -2,12 +2,36 @@
 > kinship-app@0.0.0 dev
 > vite
 
-Port 5173 is in use, trying another one...
-Port 5174 is in use, trying another one...
 
-  VITE v7.3.0  ready in 261 ms
+  VITE v7.3.0  ready in 365 ms
 
-  ➜  Local:   http://localhost:5175/
-  ➜  Network: use --host to expose
-12:59:12 PM [vite] (client) ✨ new dependencies optimized: react-dom/client, reactflow, dagre, lucide-react, react-leaflet, leaflet, react-markdown, remark-gfm, @google/genai
-12:59:12 PM [vite] (client) ✨ optimized dependencies changed. reloading
+  ➜  Local:   http://localhost:4000/
+  ➜  Network: http://192.168.0.2:4000/
+5:48:24 PM [vite] Internal server error: Failed to resolve import "./family_data.json" from "src/App.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /app/kinship-app/src/App.jsx:2:23
+  1  |  import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
+  2  |  var _s = $RefreshSig$(), _s2 = $RefreshSig$(), _s3 = $RefreshSig$(), _s4 = $RefreshSig$(), _s5 = $RefreshSig$(), _s6 ...
+  3  |  import familyData from "./family_data.json";
+     |                          ^
+  4  |  import React, { useState, useMemo, useCallback, useRef } from "react";
+  5  |  import ReactFlow, {
+      at TransformPluginContext._formatLog (file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:28998:43)
+      at TransformPluginContext.error (file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:28995:14)
+      at normalizeUrl (file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:27118:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:27176:32
+      at async Promise.all (index 1)
+      at async TransformPluginContext.transform (file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:27144:4)
+      at async EnvironmentPluginContainer.transform (file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:28796:14)
+      at async loadAndTransform (file:///app/kinship-app/node_modules/vite/dist/node/chunks/config.js:22669:26)
+5:48:24 PM [vite] (client) Pre-transform error: Failed to resolve import "./family_data.json" from "src/App.jsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /app/kinship-app/src/App.jsx:2:23
+  1  |  import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
+  2  |  var _s = $RefreshSig$(), _s2 = $RefreshSig$(), _s3 = $RefreshSig$(), _s4 = $RefreshSig$(), _s5 = $RefreshSig$(), _s6 ...
+  3  |  import familyData from "./family_data.json";
+     |                          ^
+  4  |  import React, { useState, useMemo, useCallback, useRef } from "react";
+  5  |  import ReactFlow, {
+5:49:38 PM [vite] (client) page reload src/family_data.json

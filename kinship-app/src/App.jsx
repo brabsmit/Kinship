@@ -1459,25 +1459,8 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
         }
     }, [item]);
 
-    const handleEventVisible = useCallback((event) => {
-        // Determine coordinates for the event
-        let pos = null;
-        if (event.coords && event.coords.lat) {
-            pos = [event.coords.lat, event.coords.lng];
-        } else if (event.lat && event.lon) {
-            pos = [event.lat, event.lon];
-        } else if (event.location) {
-            const data = getCoordinates(event.location, null, event.coords);
-            if (data.pos) pos = data.pos;
-        }
-
-        if (pos) {
-             setMapFocus({ center: pos, zoom: 11 });
-        }
-    }, []);
-
     return (
-        <div className="fixed inset-0 z-50 bg-[#F9F5F0] flex flex-col lg:flex-row animate-in slide-in-from-right duration-500 overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-[#F9F5F0] animate-in slide-in-from-right duration-500 overflow-y-auto custom-scrollbar">
 
             <LoginModal
                 isOpen={showLoginModal}
@@ -1487,10 +1470,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                 }}
             />
 
-            {/* LEFT COLUMN: NARRATIVE (Scrollable) */}
-            <div className="w-full lg:w-[45%] h-[60%] lg:h-full order-2 lg:order-1 overflow-y-auto custom-scrollbar bg-white shadow-2xl z-10 relative flex flex-col border-r border-gray-200">
+            <div className="max-w-4xl mx-auto bg-white min-h-screen shadow-2xl relative flex flex-col">
 
-                {/* Sticky Header inside Left Column */}
+                {/* Sticky Header */}
                  <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md p-4 border-b border-gray-100 flex justify-between items-center shadow-sm">
                      <div className="flex items-center gap-2">
                          <div className="bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 flex items-center gap-2">
@@ -1572,7 +1554,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                         </div>
                     )}
 
-                    {/* UNIFIED TIMELINE (SCROLLYTELLING DRIVER) */}
+                    {/* UNIFIED TIMELINE */}
                     {bornYear > 0 && (
                         <div className="bg-white rounded-xl p-0">
                             <div className="flex items-center gap-4 mb-8">
@@ -1592,14 +1574,12 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                         location: bornLoc
                                     }}
                                     age={0}
-                                    onVisible={handleEventVisible}
                                 />
                                 {events.map((e, i) => (
                                     <TimelineEvent
                                         key={i}
                                         event={e}
                                         age={e.year - bornYear}
-                                        onVisible={handleEventVisible}
                                     />
                                 ))}
                                 <TimelineEvent
@@ -1610,11 +1590,33 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                         location: diedLoc
                                     }}
                                     age={diedYear - bornYear}
-                                    onVisible={handleEventVisible}
                                 />
                             </div>
                         </div>
                     )}
+
+                    {/* KEY LOCATIONS MAP (Static) */}
+                    <div className="bg-white rounded-xl p-0">
+                         <div className="flex items-center gap-4 mb-8">
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <MapPin size={14} strokeWidth={1.5} /> Key Locations
+                            </h2>
+                            <div className="h-px bg-gray-200 flex-1"></div>
+                        </div>
+
+                        <KeyLocationsMap
+                            bornLoc={bornLoc}
+                            diedLoc={diedLoc}
+                            bornHierarchy={bornHierarchy}
+                            diedHierarchy={diedHierarchy}
+                            lifeEvents={personalEvents}
+                            bornCoords={bornCoords}
+                            diedCoords={diedCoords}
+                            focus={mapFocus}
+                            className="h-[400px] w-full rounded-xl shadow-inner bg-gray-50 border border-gray-200"
+                        />
+                    </div>
 
                     {/* FAMILY CONNECTIONS */}
                     <div className="bg-white rounded-xl p-0">
@@ -1778,21 +1780,6 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                      </div>
 
                 </div>
-            </div>
-
-            {/* RIGHT COLUMN: MAP (Sticky/Fixed) */}
-            <div className="w-full lg:w-[55%] h-[40%] lg:h-full order-1 lg:order-2 bg-gray-100 relative">
-                <KeyLocationsMap
-                    bornLoc={bornLoc}
-                    diedLoc={diedLoc}
-                    bornHierarchy={bornHierarchy}
-                    diedHierarchy={diedHierarchy}
-                    lifeEvents={personalEvents}
-                    bornCoords={bornCoords}
-                    diedCoords={diedCoords}
-                    focus={mapFocus}
-                    className="h-full w-full absolute inset-0"
-                />
             </div>
 
         </div>
