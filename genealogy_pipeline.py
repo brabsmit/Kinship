@@ -309,7 +309,7 @@ class GenealogyTextPipeline:
 
         # Clean up the string
         s = raw_date_string.strip().lower()
-        if s == "unknown" or s == "?" or s == "uncertain":
+        if s in ["unknown", "?", "uncertain", "possibly", ""]:
             return None
 
         # Extract the first 4-digit year candidate to work with
@@ -392,6 +392,10 @@ class GenealogyTextPipeline:
             # (e.g. "Born: April 12, 1880" -> "April 12, 1880")
             date_candidate = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', date_candidate, flags=re.IGNORECASE)
 
+            # Cleanup for "possibly" or garbage
+            if date_candidate.strip().lower() in ["possibly", "unknown", "?", ""]:
+                 date_candidate = "Unknown"
+
             return date_candidate, loc_candidate
 
         # 2. Fallback: Use dateparser to handle messy formats
@@ -456,15 +460,44 @@ class GenealogyTextPipeline:
         # 3. No date found by dateparser
         # Heuristics for "No Year" or fallbacks
 
-        # If text is keywords like "Unknown", "?", "Disappeared"
+        lower_text = text.lower()
+
+        # Specific cleanup for "Unknown date, assume..."
+        if "unknown date" in lower_text or "date unknown" in lower_text:
+             # Strip that part out
+             cleaned = re.sub(r'\b(unknown date|date unknown)\b', '', text, flags=re.IGNORECASE).strip(" ,;.")
+             # Assume the rest is location if it has content
+             if cleaned:
+                  return "Unknown", cleaned
+
+        # Explicitly suppress non-location garbage words if they appear alone
+        garbage_words = ["possibly", "unknown", "uncertain", "?", ""]
+        if lower_text.strip(" .,;") in garbage_words:
+             return "Unknown", "Unknown"
+
+        # General Keyword Check
         keywords = ["unknown", "?", "disappeared", "uncertain", "infant"]
-        if any(k in text.lower() for k in keywords):
+        has_keyword = any(k in lower_text for k in keywords)
+
+        has_digits = any(char.isdigit() for char in text)
+
+        if has_digits:
+             # Likely a date that dateparser missed?
              return text.strip(), "Unknown"
 
-        # If text contains digits, it might be a date that dateparser missed? (Unlikely for modern dateparser)
-        # But maybe "aged 5"?
-        if any(char.isdigit() for char in text):
-             return text.strip(), "Unknown"
+        if has_keyword:
+             # It has a keyword like "?". Is it "England?" or "?"
+             # If it has valid words (length > 3), treat as location?
+             # "England?" -> Location: England?
+             # "?" -> Date: ?, Loc: Unknown
+
+             clean_text = text.strip(" ?.")
+             if len(clean_text) > 3:
+                  # Likely a location with a question mark
+                  return "Unknown", text.strip()
+             else:
+                  # Just "?" or "Unk"
+                  return text.strip(), "Unknown"
 
         # Treat as Location if no digits
         return "Unknown", text.strip()
@@ -894,6 +927,12 @@ class GenealogyTextPipeline:
                     child_profile["vital_stats"]["born_date"] = parts[0].strip()
                     child_profile["vital_stats"]["died_date"] = parts[1].strip()
 
+            # Clean child dates if they are garbage
+            if child_profile["vital_stats"]["born_date"].strip() in ["?", ""]:
+                 child_profile["vital_stats"]["born_date"] = "Unknown"
+            if child_profile["vital_stats"]["died_date"].strip() in ["?", ""]:
+                 child_profile["vital_stats"]["died_date"] = "Unknown"
+
             child_profile["vital_stats"]["born_year_int"] = self._normalize_date(child_profile["vital_stats"]["born_date"])
             child_profile["vital_stats"]["died_year_int"] = self._normalize_date(child_profile["vital_stats"]["died_date"])
 
@@ -1142,7 +1181,7 @@ class GenealogyTextPipeline:
 
         return name_index
 
-    def _scan_text_for_mentions(self, text, name_index, clean_name_index, source_profile):
+    def _scan_text_for_mentions(self, text, name_index, source_profile):
         """
         Scans a text block for mentions of names in the index.
         Returns a list of related_link objects.
@@ -1151,7 +1190,7 @@ class GenealogyTextPipeline:
             return []
 
         links = []
-        known_names = set(clean_name_index.keys())
+        # known_names = set(name_index.keys())
 
         # Keywords for relationship types
         # Added: Uncle, Aunt, Nephew, Niece, Executor, Witness
@@ -1180,7 +1219,26 @@ class GenealogyTextPipeline:
             "niece": "Relative",
             "executor": "Legal Associate",
             "witness": "Legal Associate",
-            "legacy": "Relative"
+            "legacy": "Relative",
+            "mother-in-law": "In-Law",
+            "father-in-law": "In-Law",
+            "son-in-law": "In-Law",
+            "daughter-in-law": "In-Law",
+            "brother-in-law": "In-Law",
+            "sister-in-law": "In-Law",
+            "step-mother": "Step-Parent",
+            "step-father": "Step-Parent",
+            "step-son": "Step-Child",
+            "step-daughter": "Step-Child",
+            "fiancé": "Fiancé",
+            "fiancee": "Fiancé",
+            "betrothed": "Fiancé",
+            "mentor": "Professional",
+            "apprentice": "Professional",
+            "godfather": "Godparent",
+            "godmother": "Godparent",
+            "godson": "Godparent",
+            "goddaughter": "Godparent"
         }
 
         # Improved Candidate Extraction
@@ -1190,7 +1248,8 @@ class GenealogyTextPipeline:
         candidates = set(re.findall(name_pattern, text))
 
         # Filter candidates that are known names
-        valid_candidates = candidates.intersection(known_names)
+        # Use name_index.keys() which contains all variations
+        valid_candidates = candidates.intersection(set(name_index.keys()))
 
         if not valid_candidates:
             return []
@@ -1212,21 +1271,59 @@ class GenealogyTextPipeline:
                 if not re.search(r'\b' + re.escape(name) + r'\b', clause):
                     continue
 
-                target_id = clean_name_index[name]
-                if target_id == source_profile['id']: continue
+                # Ambiguity Resolution Strategy
+                # 1. Get all potential IDs for this name
+                potential_ids = name_index[name]
+
+                # 2. Filter out self
+                potential_ids = [pid for pid in potential_ids if pid != source_profile['id']]
+
+                # 3. Decision Logic
+                target_id = None
+
+                if len(potential_ids) == 1:
+                    # Unambiguous (only 1 candidate) - Accept it regardless of date (could be ancestor)
+                    target_id = potential_ids[0]
+                else:
+                    # Ambiguous (multiple candidates) - Apply Strict Date Filter
+                    candidates_in_range = []
+                    for pid in potential_ids:
+                        target_p = id_map.get(pid)
+                        if not target_p: continue
+
+                        target_born = self._get_birth_year(target_p)
+
+                        # Strict check for disambiguation (must be within 60 years)
+                        if source_born and target_born:
+                            diff = abs(source_born - target_born)
+                            if diff <= 60:
+                                candidates_in_range.append(pid)
+                        else:
+                            # If dates unknown, we can't safely disambiguate by date
+                            # Treat as ambiguous unless it's the only one?
+                            # Safe bet: skip if date unknown and ambiguous
+                            pass
+
+                    if len(candidates_in_range) == 1:
+                        target_id = candidates_in_range[0]
+                    else:
+                        # Still ambiguous (0 or >1 candidates in range)
+                        self.ariadne_log["ambiguous"][name].update(potential_ids)
+                        continue
+
                 if target_id in found_ids: continue
 
-                # Date sanity check
-                target_p = id_map.get(target_id)
-                target_born = self._get_birth_year(target_p) if target_p else None
+                found_ids.add(target_id)
 
+                # 4. Contemporary Check for Relation Type (Loose Check)
+                # Now that we have the target, we check if they are "contemporary" for the purpose
+                # of inferring "Friend", "Partner", etc. vs just "Mentioned".
+                target_p = id_map.get(target_id)
+                target_born = self._get_birth_year(target_p)
                 is_contemporary = True
                 if source_born and target_born:
-                    diff = abs(source_born - target_born)
-                    if diff > 80:
-                        is_contemporary = False
-
-                found_ids.add(target_id)
+                     if abs(source_born - target_born) > 80: # Keep loose check for 'Mentioned' fallback
+                         is_contemporary = False
 
                 # Determine Type
                 rel_type = "Mentioned"
@@ -1273,15 +1370,6 @@ class GenealogyTextPipeline:
             "new_links": 0
         }
 
-        # Filter ambiguous
-        clean_name_index = {}
-        for name, ids in name_index.items():
-            unique_ids = set(ids)
-            if len(unique_ids) == 1:
-                clean_name_index[name] = list(unique_ids)[0]
-            else:
-                self.ariadne_log["ambiguous"][name] = unique_ids
-
         count = 0
 
         for p in self.family_data:
@@ -1289,7 +1377,8 @@ class GenealogyTextPipeline:
             notes = p['story']['notes']
             if not notes: continue
 
-            links = self._scan_text_for_mentions(notes, name_index, clean_name_index, p)
+            # Pass the full name_index (with ambiguities)
+            links = self._scan_text_for_mentions(notes, name_index, p)
             p['related_links'].extend(links)
             count += len(links)
 

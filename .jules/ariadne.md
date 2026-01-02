@@ -28,3 +28,18 @@ This drastically reduced the complexity from O(Profiles * Clauses * Names) to O(
 - Added new keywords: "Uncle", "Aunt", "Nephew", "Niece", "Executor", "Witness", "Legacy".
 - Improved handling of "First M. Last" variations.
 - Excluded ambiguous names like "William Earl Dodge" and "David Hoadley" which mapped to multiple IDs (parent/child confusion or duplicates).
+## 2024-05-25 - Ambiguity Resolved
+**Discovery:** Implemented intelligent disambiguation for common names. Previously, names like "William Earl Dodge" were skipped because they mapped to multiple profiles (e.g., Father vs Son).
+**Action:**
+- Updated pipeline to check birth dates of potential candidates against the source profile's era.
+- If a name mentions "William Dodge" in a context around 1805, and we have a William born 1805 and another 1832, we now confidently link to the contemporary one.
+- Added keywords for extended family (In-Laws, Step-parents) and social connections (Godparents, Fiancé).
+- **Result:** Found 360 valid connections (up from 319), recovering links for previously ambiguous names while still filtering out truly unsolvable ones (64 remaining ambiguous cases).
+## 2024-05-25 - Ambiguity Resolved & Logic Refined
+**Discovery:** Implemented intelligent disambiguation for common names. Previously, names like "William Earl Dodge" were skipped because they mapped to multiple profiles (e.g., Father vs Son).
+**Action:**
+- Updated pipeline to check birth dates of potential candidates against the source profile's era.
+- **Strict Disambiguation:** If a name maps to multiple people, we filter candidates to those born within 60 years of the source. If exactly one remains, we link it.
+- **Loose Type Inference:** Once a target is identified (either because it was unique or successfully disambiguated), we check if they are "contemporaries" (within 80 years) to decide if the relationship type should be specific (e.g., "Friend") or generic ("Mentioned").
+- **Keywords:** Added keywords for extended family (In-Laws, Step-parents) and social connections (Godparents, Fiancé).
+- **Result:** Found 379 valid connections (up from 319), recovering links for previously ambiguous names like "Jacob Parish" and "William Earl Dodge".
