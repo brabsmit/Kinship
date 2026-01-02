@@ -653,6 +653,33 @@ class GenealogyTextPipeline:
                 })
         return events
 
+    def _extract_explicit_associates(self, text):
+        associates = []
+        # Pattern: [Role: Name (Context)]
+        # Supported Roles: Associate, Witness, Neighbor, Partner, Friend
+        pattern = r'\[(Associate|Witness|Neighbor|Partner|Friend)\s*:\s*([^\]]+)\]'
+
+        matches = re.finditer(pattern, text, re.IGNORECASE)
+        for m in matches:
+            role = m.group(1).title()
+            content = m.group(2).strip()
+
+            # Split name and optional paren context
+            name_match = re.search(r'^(.*?)\s*\(([^)]+)\)$', content)
+            if name_match:
+                name = name_match.group(1).strip()
+                context = name_match.group(2).strip()
+            else:
+                name = content
+                context = None
+
+            associates.append({
+                "name": name,
+                "role": role,
+                "context": context
+            })
+        return associates
+
     def parse_document(self, docx_path, lineage_label):
         print(f"--- Scanning Narrative Document ({docx_path}) ---")
         try:
@@ -828,6 +855,7 @@ class GenealogyTextPipeline:
                         notes_text = n_match.group(1).strip()
                         current_profile["story"]["notes"] = notes_text
                         current_profile["story"]["life_events"] = self.extract_events_from_text(notes_text)
+                        current_profile["story"]["associates"] = self._extract_explicit_associates(notes_text)
 
                     if c_match:
                         raw_children = c_match.group(1).strip()
@@ -1492,9 +1520,23 @@ class GenealogyTextPipeline:
         geocoder = GeocodingService()
 
         print("--- Fetching Hero Images and Geocoding ---")
+
+        # Calculate Associate Social Capital (Frequency)
+        associate_counts = defaultdict(int)
+        for p in self.family_data:
+            if "associates" in p["story"]:
+                for assoc in p["story"]["associates"]:
+                    # Normalize name for counting (simple case-insensitive)
+                    associate_counts[assoc["name"].lower()] += 1
+
         final_list = []
         
         for p in self.family_data:
+            # Inject Associate Frequency
+            if "associates" in p["story"]:
+                for assoc in p["story"]["associates"]:
+                    assoc["count"] = associate_counts.get(assoc["name"].lower(), 1)
+
             # Geocode
             born_loc = p["vital_stats"]["born_location"]
             died_loc = p["vital_stats"]["died_location"]
@@ -1523,7 +1565,8 @@ class GenealogyTextPipeline:
                 "story": {
                     "notes": p["story"]["notes"],
                     "life_events": p["story"].get("life_events", []),
-                    "tags": tags
+                    "tags": tags,
+                    "associates": p["story"].get("associates", [])
                 },
                 "hero_image": hero_image,
                 "relations": p.get("relations", {}),
