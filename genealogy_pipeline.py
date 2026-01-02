@@ -309,7 +309,7 @@ class GenealogyTextPipeline:
 
         # Clean up the string
         s = raw_date_string.strip().lower()
-        if s == "unknown" or s == "?" or s == "uncertain":
+        if s in ["unknown", "?", "uncertain", "possibly", ""]:
             return None
 
         # Extract the first 4-digit year candidate to work with
@@ -392,6 +392,10 @@ class GenealogyTextPipeline:
             # (e.g. "Born: April 12, 1880" -> "April 12, 1880")
             date_candidate = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', date_candidate, flags=re.IGNORECASE)
 
+            # Cleanup for "possibly" or garbage
+            if date_candidate.strip().lower() in ["possibly", "unknown", "?", ""]:
+                 date_candidate = "Unknown"
+
             return date_candidate, loc_candidate
 
         # 2. Fallback: Use dateparser to handle messy formats
@@ -456,15 +460,44 @@ class GenealogyTextPipeline:
         # 3. No date found by dateparser
         # Heuristics for "No Year" or fallbacks
 
-        # If text is keywords like "Unknown", "?", "Disappeared"
+        lower_text = text.lower()
+
+        # Specific cleanup for "Unknown date, assume..."
+        if "unknown date" in lower_text or "date unknown" in lower_text:
+             # Strip that part out
+             cleaned = re.sub(r'\b(unknown date|date unknown)\b', '', text, flags=re.IGNORECASE).strip(" ,;.")
+             # Assume the rest is location if it has content
+             if cleaned:
+                  return "Unknown", cleaned
+
+        # Explicitly suppress non-location garbage words if they appear alone
+        garbage_words = ["possibly", "unknown", "uncertain", "?", ""]
+        if lower_text.strip(" .,;") in garbage_words:
+             return "Unknown", "Unknown"
+
+        # General Keyword Check
         keywords = ["unknown", "?", "disappeared", "uncertain", "infant"]
-        if any(k in text.lower() for k in keywords):
+        has_keyword = any(k in lower_text for k in keywords)
+
+        has_digits = any(char.isdigit() for char in text)
+
+        if has_digits:
+             # Likely a date that dateparser missed?
              return text.strip(), "Unknown"
 
-        # If text contains digits, it might be a date that dateparser missed? (Unlikely for modern dateparser)
-        # But maybe "aged 5"?
-        if any(char.isdigit() for char in text):
-             return text.strip(), "Unknown"
+        if has_keyword:
+             # It has a keyword like "?". Is it "England?" or "?"
+             # If it has valid words (length > 3), treat as location?
+             # "England?" -> Location: England?
+             # "?" -> Date: ?, Loc: Unknown
+
+             clean_text = text.strip(" ?.")
+             if len(clean_text) > 3:
+                  # Likely a location with a question mark
+                  return "Unknown", text.strip()
+             else:
+                  # Just "?" or "Unk"
+                  return text.strip(), "Unknown"
 
         # Treat as Location if no digits
         return "Unknown", text.strip()
@@ -893,6 +926,12 @@ class GenealogyTextPipeline:
                 if len(parts) >= 2:
                     child_profile["vital_stats"]["born_date"] = parts[0].strip()
                     child_profile["vital_stats"]["died_date"] = parts[1].strip()
+
+            # Clean child dates if they are garbage
+            if child_profile["vital_stats"]["born_date"].strip() in ["?", ""]:
+                 child_profile["vital_stats"]["born_date"] = "Unknown"
+            if child_profile["vital_stats"]["died_date"].strip() in ["?", ""]:
+                 child_profile["vital_stats"]["died_date"] = "Unknown"
 
             child_profile["vital_stats"]["born_year_int"] = self._normalize_date(child_profile["vital_stats"]["born_date"])
             child_profile["vital_stats"]["died_year_int"] = self._normalize_date(child_profile["vital_stats"]["died_date"])
