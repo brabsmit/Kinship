@@ -1560,9 +1560,6 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     {/* TECHNOLOGY CONTEXT */}
                     <TechnologyContext bornYear={bornYear} diedYear={diedYear} />
 
-                    {/* GENERATIONAL HANDSHAKE */}
-                    <GenerationalHandshake person={item} familyData={familyData} />
-
                     {/* STORY / BIO */}
                     {item.story?.notes && (
                         <div className="bg-white rounded-xl p-0">
