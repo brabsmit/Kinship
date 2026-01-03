@@ -28,6 +28,7 @@ import remarkGfm from 'remark-gfm';
 import CurrencyTooltip from './components/CurrencyTooltip';
 import GenerationalHandshake from './components/GenerationalHandshake';
 import CircleOfFriends from './components/CircleOfFriends';
+import VoyageCard from './components/VoyageCard';
 import TechnologyContext from './components/TechnologyContext';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
@@ -1536,6 +1537,22 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
                         </div>
                     </div>
+
+                    {/* VOYAGES */}
+                    {item.story.voyages && item.story.voyages.length > 0 && (
+                        <div>
+                             <div className="flex items-center gap-4 mb-4">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Ship size={14} strokeWidth={1.5} /> Voyages
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+                            {item.story.voyages.map((voyage, idx) => (
+                                <VoyageCard key={idx} voyage={voyage} />
+                            ))}
+                        </div>
+                    )}
 
                     {/* TRIVIA */}
                     <ProfileTrivia person={item} familyData={familyData} />
