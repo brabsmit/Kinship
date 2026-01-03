@@ -1,45 +1,99 @@
 import React from 'react';
-import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler, Users } from 'lucide-react';
+import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler, Users, Info } from 'lucide-react';
 import { ASSETS } from '../utils/assetMapper';
+import { detectRegion } from '../utils/geo';
 
-const getVoyageContext = (year, departure, arrival) => {
-    // Normalize inputs
-    const y = parseInt(year, 10);
-    const dep = (departure || "").toLowerCase();
-    const arr = (arrival || "").toLowerCase();
+const getVoyageContext = (year, departure, arrival, profile = null) => {
+    // 1. Normalize explicit voyage inputs
+    let y = parseInt(year, 10);
+    let dep = (departure || "").toLowerCase();
+    let arr = (arrival || "").toLowerCase();
+    let isEstimated = false;
+
+    // 2. Inference Logic (if details missing)
+    if (profile && profile.vital_stats) {
+        let bornLoc = (profile.vital_stats.born_location || "").toLowerCase();
+        let diedLoc = (profile.vital_stats.died_location || "").toLowerCase();
+
+        // Fallback: Attempt to extract location from date string if location is Unknown
+        // (Handles cases where pipeline failed to split "Date, Location")
+        if ((!bornLoc || bornLoc === "unknown") && profile.vital_stats.born_date) {
+             const parts = profile.vital_stats.born_date.split(',');
+             if (parts.length > 1) bornLoc = parts.slice(1).join(',').trim().toLowerCase();
+        }
+        if ((!diedLoc || diedLoc === "unknown") && profile.vital_stats.died_date) {
+             const parts = profile.vital_stats.died_date.split(',');
+             if (parts.length > 1) diedLoc = parts.slice(1).join(',').trim().toLowerCase();
+        }
+
+        const bornYear = parseInt(profile.vital_stats.born_year_int || profile.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
+        const diedYear = parseInt(profile.vital_stats.died_year_int || profile.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
+
+        // Infer Departure from Birth Location if missing
+        if ((!dep || dep === "unknown") && bornLoc && bornLoc !== "unknown") {
+            dep = bornLoc;
+        }
+
+        // Infer Arrival from Death Location if missing
+        if ((!arr || arr === "unknown") && diedLoc && diedLoc !== "unknown") {
+            arr = diedLoc;
+        }
+
+        // Infer Year if missing
+        // Strategy: If migration, it happened between birth and death.
+        // If we know it's a migration (different regions), estimate "Mid-Life" or "Migration Era"
+        if ((!y || isNaN(y)) && bornYear > 0) {
+             // If we have a departure/arrival mismatch (e.g. UK -> USA), assume migration.
+             const regionDep = detectRegion(dep);
+             const regionArr = detectRegion(arr);
+
+             if (regionDep !== "Global" && regionArr !== "Global" && regionDep !== regionArr) {
+                 // It's a migration.
+                 // Heuristic: If died in new land, they moved sometime.
+                 // Let's approximate to "Mid-19th Century" etc based on lifespan.
+                 y = Math.floor((bornYear + (diedYear || bornYear + 60)) / 2);
+                 isEstimated = true;
+             }
+        }
+    }
 
     // Helper for route detection
-    const isUK = dep.includes("england") || dep.includes("uk") || dep.includes("britain") || dep.includes("london") || dep.includes("liverpool") || dep.includes("plymouth") || dep.includes("bristol") || dep.includes("southampton");
-    const isUS = arr.includes("america") || arr.includes("usa") || arr.includes("united states") || arr.includes("mass") || arr.includes("connecticut") || arr.includes("new york") || arr.includes("virginia") || arr.includes("boston") || arr.includes("salem") || arr.includes("hartford") || arr.includes("new england");
+    const isUK = dep.includes("england") || dep.includes("uk") || dep.includes("britain") || dep.includes("london") || dep.includes("liverpool") || dep.includes("plymouth") || dep.includes("bristol") || dep.includes("southampton") || dep.includes("hertfordshire") || dep.includes("suffolk") || dep.includes("essex") || dep.includes("kent");
+    const isUS = arr.includes("america") || arr.includes("usa") || arr.includes("united states") || arr.includes("mass") || arr.includes("connecticut") || arr.includes("new york") || arr.includes("virginia") || arr.includes("boston") || arr.includes("salem") || arr.includes("hartford") || arr.includes("new england") || arr.includes("ohio") || arr.includes("michigan") || arr.includes("pennsylvania");
 
-    // Default return
+    // Default return if we still don't have a year
     if (!y || isNaN(y)) return null;
 
     // Trans-Atlantic Route (UK/Europe -> US)
+    // Note: If inferred, y is a number.
     if (isUK && isUS) {
         if (y < 1700) {
              return {
                  duration: "6-12 weeks",
                  conditions: "Extremely hazardous. Scurvy common. High mortality rate (20%).",
-                 context: "The Early Colonial Era"
+                 context: "The Early Colonial Era",
+                 isEstimated
              };
         } else if (y < 1800) {
              return {
                  duration: "8-10 weeks",
                  conditions: "Crowded steerage, limited fresh water, disease outbreaks.",
-                 context: "The Colonial Expansion"
+                 context: "The Colonial Expansion",
+                 isEstimated
              };
         } else if (y < 1860) {
              return {
                  duration: "4-6 weeks",
                  conditions: "Improved navigation, but 'coffin ships' common during famines.",
-                 context: "The Age of Sail"
+                 context: "The Age of Sail",
+                 isEstimated
              };
         } else {
              return {
                  duration: "10-14 days",
                  conditions: "Steamships provided faster, safer passage, though steerage remained cramped.",
-                 context: "The Steam Age"
+                 context: "The Steam Age",
+                 isEstimated
              };
         }
     }
@@ -47,10 +101,35 @@ const getVoyageContext = (year, departure, arrival) => {
     return null; // No context available for this route/year
 };
 
-const VoyageCard = ({ voyage }) => {
+const VoyageCard = ({ voyage, profile }) => {
   if (!voyage) return null;
 
-  const context = getVoyageContext(voyage.year, voyage.departure, voyage.arrival);
+  const context = getVoyageContext(voyage.year, voyage.departure, voyage.arrival, profile);
+
+  // Display Helpers
+  let displayDeparture = voyage.departure;
+  let displayArrival = voyage.arrival;
+
+  // Update display values if inferred
+  if ((!displayDeparture || displayDeparture === "Unknown") && profile?.vital_stats) {
+      const bornLoc = profile.vital_stats.born_location;
+      // Fallback extract
+      if ((!bornLoc || bornLoc === "Unknown") && profile.vital_stats.born_date && profile.vital_stats.born_date.includes(',')) {
+           displayDeparture = profile.vital_stats.born_date.split(',').slice(1).join(',').trim() + "*";
+      } else if (bornLoc && bornLoc !== "Unknown") {
+           displayDeparture = bornLoc + "*";
+      }
+  }
+
+  if ((!displayArrival || displayArrival === "Unknown") && profile?.vital_stats) {
+      const diedLoc = profile.vital_stats.died_location;
+      // Fallback extract
+      if ((!diedLoc || diedLoc === "Unknown") && profile.vital_stats.died_date && profile.vital_stats.died_date.includes(',')) {
+           displayArrival = profile.vital_stats.died_date.split(',').slice(1).join(',').trim() + "*";
+      } else if (diedLoc && diedLoc !== "Unknown") {
+           displayArrival = diedLoc + "*";
+      }
+  }
 
   return (
     <div className="relative w-full max-w-md mx-auto my-6 bg-[#f4e4bc] text-[#3e3221] font-serif border-2 border-[#3e3221] shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
@@ -67,18 +146,22 @@ const VoyageCard = ({ voyage }) => {
         <div className="grid grid-cols-2 gap-4 text-sm mb-4">
              <div className="border-r border-[#3e3221] pr-2">
                 <span className="block text-[10px] uppercase tracking-wide opacity-70 mb-0.5">Departure</span>
-                <span className="font-bold block leading-tight">{voyage.departure}</span>
+                <span className="font-bold block leading-tight truncate" title={displayDeparture && displayDeparture.includes('*') ? "Inferred from Birth/Death Data" : ""}>
+                    {displayDeparture || "Unknown"}
+                </span>
              </div>
              <div className="text-right pl-2">
                 <span className="block text-[10px] uppercase tracking-wide opacity-70 mb-0.5">Arrival</span>
-                <span className="font-bold block leading-tight">{voyage.arrival}</span>
+                <span className="font-bold block leading-tight truncate" title={displayArrival && displayArrival.includes('*') ? "Inferred from Birth/Death Data" : ""}>
+                    {displayArrival || "Unknown"}
+                </span>
              </div>
         </div>
 
         {context && (
             <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed text-center">
                 <h4 className="text-[10px] uppercase font-bold opacity-60 mb-1 flex items-center justify-center gap-1">
-                     <Wind size={10} /> {context.context}
+                     <Wind size={10} /> {context.context} {context.isEstimated && <Info size={10} className="text-[#3e3221]/50" title="Context inferred from ancestor's lifespan and migration pattern." />}
                 </h4>
                 <div className="text-xs mb-2">
                     <span className="font-bold">Avg. Duration:</span> {context.duration}

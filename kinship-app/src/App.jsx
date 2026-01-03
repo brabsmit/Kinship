@@ -50,7 +50,7 @@ import VoyageCard from './components/VoyageCard';
 import TechnologyContext from './components/TechnologyContext';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
-import { calculateDistance } from './utils/geo';
+import { calculateDistance, detectRegion } from './utils/geo';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -198,32 +198,6 @@ const createMarkerIcon = (color, tier) => {
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
 });
-};
-
-const detectRegion = (locationString) => {
-    if (!locationString) return "Global";
-    const loc = locationString.toLowerCase();
-
-    // USA
-    if (loc.includes("usa") || loc.includes("united states") ||
-        loc.includes("ct") || loc.includes("connecticut") ||
-        loc.includes("ma") || loc.includes("massachusetts") ||
-        loc.includes("ny") || loc.includes("new york") ||
-        loc.includes("nj") || loc.includes("new jersey") ||
-        loc.includes("pa") || loc.includes("pennsylvania") ||
-        loc.includes("va") || loc.includes("virginia")) {
-        return "USA";
-    }
-
-    // UK
-    if (loc.includes("uk") || loc.includes("united kingdom") ||
-        loc.includes("england") || loc.includes("britain") ||
-        loc.includes("london") || loc.includes("scotland") ||
-        loc.includes("wales")) {
-        return "UK";
-    }
-
-    return "Global";
 };
 
 const generateTrivia = (data, branchName) => {
@@ -1583,7 +1557,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
                             {item.story.voyages.map((voyage, idx) => (
-                                <VoyageCard key={idx} voyage={voyage} />
+                                <VoyageCard key={idx} voyage={voyage} profile={item} />
                             ))}
                         </div>
                     )}
