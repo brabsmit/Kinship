@@ -8,6 +8,92 @@ from docx import Document
 from collections import defaultdict
 import dateparser
 import dateparser.search
+from google import genai
+from google.genai import types
+
+class ShipEnrichmentService:
+    def __init__(self):
+        self.cache_file = "./kinship-app/src/ship_cache.json"
+        self.cache = self.load_cache()
+        self.cache_updated = False
+        self.api_key = os.environ.get("VITE_GEMINI_API_KEY")
+        self.client = None
+        if self.api_key:
+            try:
+                self.client = genai.Client(api_key=self.api_key)
+            except Exception as e:
+                print(f"Warning: Failed to initialize Google GenAI client: {e}")
+
+    def load_cache(self):
+        if os.path.exists(self.cache_file):
+            with open(self.cache_file, "r") as f:
+                try:
+                    return json.load(f)
+                except json.JSONDecodeError:
+                    return {}
+        return {}
+
+    def save_cache(self):
+        if self.cache_updated:
+            with open(self.cache_file, "w") as f:
+                json.dump(self.cache, f, indent=4)
+            print("Ship cache saved.")
+
+    def enrich_ship(self, ship_name):
+        if not ship_name:
+            return None
+
+        # Check Cache
+        if ship_name in self.cache:
+            return self.cache[ship_name]
+
+        if not self.client:
+            return None
+
+        print(f"   [ShipInfo] Querying AI for '{ship_name}'...")
+        try:
+            prompt = f"""
+            Provide historical specifications for the ship named '{ship_name}' (likely 17th-19th century context).
+            Return ONLY a JSON object with the following keys. If specific data is unknown, use "Unknown".
+
+            Keys:
+            - year_built (string)
+            - location_built (string)
+            - deck_length (string)
+            - beam (string)
+            - gross_tonnage (string)
+            - masts (string or int)
+            - owner (string)
+            - description (short string, max 20 words)
+            """
+
+            response = self.client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
+            )
+
+            if response.text:
+                data = json.loads(response.text)
+                # Handle potential list response
+                if isinstance(data, list) and len(data) > 0:
+                    data = data[0]
+
+                self.cache[ship_name] = data
+                self.cache_updated = True
+                # Polite delay
+                time.sleep(1)
+                return data
+
+        except Exception as e:
+            print(f"   [ShipInfo] Error enriching '{ship_name}': {e}")
+
+        # Cache miss as None if failed, or maybe we want to retry later?
+        # For now, let's not cache failures permanently, or maybe cache a 'checked' state.
+        # But for simplicity, we just return None.
+        return None
 
 class GeocodingService:
     def __init__(self):
@@ -1690,10 +1776,11 @@ class GenealogyTextPipeline:
         self.link_family_members()
         self._find_mentions()
 
-        # Initialize Geocoder
+        # Initialize Services
         geocoder = GeocodingService()
+        ship_service = ShipEnrichmentService()
 
-        print("--- Fetching Hero Images and Geocoding ---")
+        print("--- Fetching Hero Images, Geocoding, and Ship Info ---")
 
         # Calculate Associate Social Capital (Frequency)
         associate_counts = defaultdict(int)
@@ -1722,6 +1809,15 @@ class GenealogyTextPipeline:
             for event in p["story"]["life_events"]:
                 if "location" in event and event["location"] != "Unknown":
                     event["coords"] = geocoder.geocode(event["location"])
+
+            # Enrich Voyage Data
+            if "voyages" in p["story"]:
+                for voyage in p["story"]["voyages"]:
+                    ship_name = voyage.get("ship_name")
+                    if ship_name and ship_name != "Unknown":
+                        specs = ship_service.enrich_ship(ship_name)
+                        if specs:
+                            voyage["specs"] = specs
 
             # Fetch Image
             born_year = p["vital_stats"].get("born_year_int")
@@ -1756,6 +1852,7 @@ class GenealogyTextPipeline:
         # Save Cache
         self.save_cache()
         geocoder.save_cache()
+        ship_service.save_cache()
 
         output_filename = "kinship-app/src/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:
