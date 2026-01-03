@@ -1539,9 +1539,6 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     {/* TRIVIA */}
                     <ProfileTrivia person={item} familyData={familyData} />
 
-                    {/* GENERATIONAL HANDSHAKE */}
-                    <GenerationalHandshake person={item} familyData={familyData} />
-
                     {/* STORY / BIO */}
                     {item.story?.notes && (
                         <div className="bg-white rounded-xl p-0">
@@ -1598,6 +1595,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
                         </div>
                     )}
+
+                    {/* GENERATIONAL HANDSHAKE */}
+                    <GenerationalHandshake person={item} familyData={familyData} />
 
                     {/* KEY LOCATIONS MAP (Static) */}
                     <div className="bg-white rounded-xl p-0">
