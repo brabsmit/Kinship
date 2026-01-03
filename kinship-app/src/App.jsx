@@ -1,5 +1,23 @@
 
-import familyData from './family_data.json';
+import familyDataRaw from './family_data.json';
+import shipCacheRaw from './ship_cache.json'; // Optional import
+
+// Safe merge logic for ship cache (runtime integration fallback)
+// If the pipeline ran, familyData already has specs.
+// If pipeline didn't run with cache, this adds it at runtime.
+const familyData = familyDataRaw.map(p => {
+    if (p.story && p.story.voyages) {
+        const enrichedVoyages = p.story.voyages.map(v => {
+            if (!v.specs && v.ship_name && shipCacheRaw[v.ship_name]) {
+                return { ...v, specs: shipCacheRaw[v.ship_name] };
+            }
+            return v;
+        });
+        return { ...p, story: { ...p.story, voyages: enrichedVoyages } };
+    }
+    return p;
+});
+
 import React, { useState, useMemo, useCallback, useRef } from 'react';
 import ReactFlow, {
   MiniMap,
