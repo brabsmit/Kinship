@@ -3,7 +3,22 @@ import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler
 import { ASSETS } from '../utils/assetMapper';
 import { detectRegion } from '../utils/geo';
 
-const getVoyageContext = (year, departure, arrival, profile = null) => {
+const getVoyageContext = (voyage, profile = null) => {
+    // Prefer server-side context if available and valid
+    if (voyage.context && voyage.context.duration !== "Unknown") {
+        return {
+            duration: voyage.context.duration,
+            conditions: voyage.context.conditions,
+            context: voyage.context.era_label,
+            isEstimated: voyage.context.is_estimated
+        };
+    }
+
+    // Client-side inference fallback (legacy support)
+    let year = voyage.year;
+    let departure = voyage.departure;
+    let arrival = voyage.arrival;
+
     // 1. Normalize explicit voyage inputs
     let y = parseInt(year, 10);
     let dep = (departure || "").toLowerCase();
@@ -104,7 +119,7 @@ const getVoyageContext = (year, departure, arrival, profile = null) => {
 const VoyageCard = ({ voyage, profile }) => {
   if (!voyage) return null;
 
-  const context = getVoyageContext(voyage.year, voyage.departure, voyage.arrival, profile);
+  const context = getVoyageContext(voyage, profile);
 
   // Display Helpers
   let displayDeparture = voyage.departure;
