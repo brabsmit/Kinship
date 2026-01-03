@@ -1,0 +1,58 @@
+[
+    {
+        "id": "electricity",
+        "name": "Electricity",
+        "year": 1880,
+        "iconName": "Zap",
+        "category": "amenity"
+    },
+    {
+        "id": "antibiotics",
+        "name": "Antibiotics",
+        "year": 1928,
+        "iconName": "Pill",
+        "category": "health"
+    },
+    {
+        "id": "plumbing",
+        "name": "Indoor Plumbing",
+        "year": 1880,
+        "iconName": "Droplet",
+        "category": "amenity"
+    },
+    {
+        "id": "automobiles",
+        "name": "Automobiles",
+        "year": 1908,
+        "iconName": "Car",
+        "category": "transport"
+    },
+    {
+        "id": "flight",
+        "name": "Air Travel",
+        "year": 1903,
+        "iconName": "Plane",
+        "category": "transport"
+    },
+    {
+        "id": "telephone",
+        "name": "Telephone",
+        "year": 1876,
+        "iconName": "Phone",
+        "category": "communication"
+    },
+    {
+        "id": "radio",
+        "name": "Radio",
+        "year": 1920,
+        "iconName": "Radio",
+        "category": "communication"
+    },
+    {
+        "id": "refrigeration",
+        "name": "Refrigeration",
+        "year": 1913,
+        "iconName": "Snowflake",
+        "category": "amenity"
+    }
+]
