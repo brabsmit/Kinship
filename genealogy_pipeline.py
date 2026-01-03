@@ -10,19 +10,27 @@ import dateparser
 import dateparser.search
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
 
 class ShipEnrichmentService:
     def __init__(self):
+        print("Initializing GenAI API...")
+        load_dotenv()
         self.cache_file = "./kinship-app/src/ship_cache.json"
         self.cache = self.load_cache()
         self.cache_updated = False
         self.api_key = os.environ.get("VITE_GEMINI_API_KEY")
+        if self.api_key == None:
+            self.api_key = os.getenv("VITE_GEMINI_API_KEY")
         self.client = None
         if self.api_key:
             try:
                 self.client = genai.Client(api_key=self.api_key)
+                print("successfully initialized GenAI API")
             except Exception as e:
                 print(f"Warning: Failed to initialize Google GenAI client: {e}")
+        else:
+            print("Failed to load API key")
 
     def load_cache(self):
         if os.path.exists(self.cache_file):
@@ -250,6 +258,7 @@ class GeocodingService:
             return None
 
         try:
+            return None
             print(f"   [Geocoding] Querying API for '{location_name}'...")
             time.sleep(1.1)
             url = "https://nominatim.openstreetmap.org/search"
@@ -274,8 +283,6 @@ class GeocodingService:
                 self.cache_updated = True
                 return None
         except Exception as e:
-            print(f"   [Geocoding] Error: {e}. Disabling API for this session.")
-            self.api_enabled = False
             return None
 
 class GenealogyTextPipeline:
