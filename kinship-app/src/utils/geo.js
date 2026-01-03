@@ -16,3 +16,29 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 };
+
+export const detectRegion = (locationString) => {
+    if (!locationString) return "Global";
+    const loc = locationString.toLowerCase();
+
+    // USA
+    if (loc.includes("usa") || loc.includes("united states") ||
+        loc.includes("ct") || loc.includes("connecticut") ||
+        loc.includes("ma") || loc.includes("massachusetts") ||
+        loc.includes("ny") || loc.includes("new york") ||
+        loc.includes("nj") || loc.includes("new jersey") ||
+        loc.includes("pa") || loc.includes("pennsylvania") ||
+        loc.includes("va") || loc.includes("virginia")) {
+        return "USA";
+    }
+
+    // UK
+    if (loc.includes("uk") || loc.includes("united kingdom") ||
+        loc.includes("england") || loc.includes("britain") ||
+        loc.includes("london") || loc.includes("scotland") ||
+        loc.includes("wales")) {
+        return "UK";
+    }
+
+    return "Global";
+};
