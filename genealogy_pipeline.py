@@ -1394,6 +1394,9 @@ class GenealogyTextPipeline:
                 # 2. Filter out self
                 potential_ids = [pid for pid in potential_ids if pid != source_profile['id']]
 
+                if not potential_ids:
+                    continue
+
                 # 3. Decision Logic
                 target_id = None
 
@@ -1423,9 +1426,14 @@ class GenealogyTextPipeline:
                     if len(candidates_in_range) == 1:
                         target_id = candidates_in_range[0]
                     else:
-                        # Still ambiguous (0 or >1 candidates in range)
-                        self.ariadne_log["ambiguous"][name].update(potential_ids)
-                        continue
+                         # Priority: Real Profile over Child Entry
+                        real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
+                        if len(real_candidates) == 1:
+                             target_id = real_candidates[0]
+                        else:
+                            # Still ambiguous
+                            self.ariadne_log["ambiguous"][name].update(potential_ids)
+                            continue
 
                 if target_id in found_ids: continue
 
@@ -1499,6 +1507,68 @@ class GenealogyTextPipeline:
             count += len(links)
 
         print(f"Ariadne found {count} text-based connections.")
+
+        # ---------------------------
+        # Post-Processing: Symmetry
+        # ---------------------------
+        print("--- Ariadne: Stitching Reverse Links ---")
+        reverse_count = 0
+        id_map = {p['id']: p for p in self.family_data}
+
+        for p in self.family_data:
+            source_id = p['id']
+            source_name = p['name']
+
+            # Iterate over a copy of links
+            for link in list(p['related_links']):
+                target_id = link['target_id']
+                rel_type = link['relation_type']
+                source_text = link['source_text']
+
+                target_p = id_map.get(target_id)
+                if not target_p: continue
+
+                if 'related_links' not in target_p:
+                    target_p['related_links'] = []
+
+                # Check if reverse link already exists (to prevent duplicates)
+                exists = False
+                for r_link in target_p['related_links']:
+                    if r_link['target_id'] == source_id:
+                        # Check context - if it's already linked, maybe we don't need another?
+                        # Or checking source_text match might be too specific if text differs?
+                        # Let's say if A linked to B, B should link to A.
+                        # If B already links to A, we skip.
+                        exists = True
+                        break
+
+                if not exists:
+                    # Determine reverse type
+                    rev_type = rel_type
+
+                    if rel_type == "Mentioned":
+                        rev_type = "Mentioned by"
+                    elif rel_type == "Parent":
+                        rev_type = "Child"
+                    elif rel_type == "Child":
+                        rev_type = "Parent"
+                    elif rel_type == "In-Law":
+                        rev_type = "In-Law" # Could be specific, but In-Law is safe generic
+                    elif rel_type == "Step-Parent":
+                        rev_type = "Step-Child"
+                    elif rel_type == "Step-Child":
+                        rev_type = "Step-Parent"
+                    elif rel_type == "Godparent":
+                        rev_type = "Godchild"
+
+                    target_p['related_links'].append({
+                        "target_id": source_id,
+                        "relation_type": rev_type,
+                        "source_text": f"Mentioned in {source_name}'s notes: \"{source_text[:50]}...\""
+                    })
+                    reverse_count += 1
+
+        print(f"Ariadne added {reverse_count} reverse connections.")
 
         # Log Interesting Findings (Console for now)
         print("\n--- Ariadne's Notebook ---")
