@@ -1797,6 +1797,18 @@ class GenealogyTextPipeline:
                     # Normalize name for counting (simple case-insensitive)
                     associate_counts[assoc["name"].lower()] += 1
 
+        # --- Shipmates Logic ---
+        ship_manifest = defaultdict(list)
+        for p in self.family_data:
+            if "voyages" in p["story"]:
+                for voyage in p["story"]["voyages"]:
+                    s_name = voyage.get("ship_name")
+                    if s_name and s_name != "Unknown":
+                        ship_manifest[s_name].append({
+                            "id": p["id"],
+                            "name": p["name"]
+                        })
+
         final_list = []
         
         for p in self.family_data:
@@ -1825,6 +1837,12 @@ class GenealogyTextPipeline:
                         specs = ship_service.enrich_ship(ship_name)
                         if specs:
                             voyage["specs"] = specs
+
+                        # Add Shipmates
+                        if ship_name in ship_manifest:
+                            mates = [m for m in ship_manifest[ship_name] if m["id"] != p["id"]]
+                            if mates:
+                                voyage["shipmates"] = mates
 
             # Fetch Image
             born_year = p["vital_stats"].get("born_year_int")
