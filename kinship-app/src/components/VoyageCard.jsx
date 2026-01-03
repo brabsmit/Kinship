@@ -50,7 +50,8 @@ const getVoyageContext = (year, departure, arrival) => {
 const VoyageCard = ({ voyage }) => {
   if (!voyage) return null;
 
-  const context = getVoyageContext(voyage.year, voyage.departure, voyage.arrival);
+  // Use pre-calculated context if available (Visionary Layer), otherwise fallback to local calculation
+  const context = voyage.context || getVoyageContext(voyage.year, voyage.departure, voyage.arrival);
 
   return (
     <div className="relative w-full max-w-md mx-auto my-6 bg-[#f4e4bc] text-[#3e3221] font-serif border-2 border-[#3e3221] shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">

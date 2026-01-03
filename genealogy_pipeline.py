@@ -336,11 +336,22 @@ class GenealogyTextPipeline:
 
         for m in re.finditer(quote_pattern, new_text, re.IGNORECASE):
             ship_name = m.group(1).strip()
+
+            # Look for year in the same sentence/match context
+            # We look at the full match string or surrounding text
+            # Get the surrounding text (up to 50 chars before and after match)
+            start_idx = max(0, m.start() - 50)
+            end_idx = min(len(new_text), m.end() + 50)
+            context_text = new_text[start_idx:end_idx]
+
+            year_match = re.search(r'\b(16|17|18|19)\d{2}\b', context_text)
+            year_val = year_match.group(0) if year_match else "Unknown"
+
             if not any(v['ship_name'] == ship_name for v in voyages):
                  voyages.append({
                     "ship_name": ship_name,
                     "type": "Unknown",
-                    "year": "Unknown",
+                    "year": year_val,
                     "departure": "Unknown",
                     "arrival": "Unknown",
                     "class": "Passenger"
@@ -361,11 +372,19 @@ class GenealogyTextPipeline:
             ignored = ["May", "June", "July", "August", "September", "October", "November", "December", "Monday", "Sunday", "Christmas", "Easter", "Board"]
             if ship_name in ignored: continue
 
+            # Look for year in context
+            start_idx = max(0, m.start() - 50)
+            end_idx = min(len(new_text), m.end() + 50)
+            context_text = new_text[start_idx:end_idx]
+
+            year_match = re.search(r'\b(16|17|18|19)\d{2}\b', context_text)
+            year_val = year_match.group(0) if year_match else "Unknown"
+
             if not any(v['ship_name'] == ship_name for v in voyages):
                  voyages.append({
                     "ship_name": ship_name,
                     "type": "Unknown",
-                    "year": "Unknown",
+                    "year": year_val,
                     "departure": "Unknown",
                     "arrival": "Unknown",
                     "class": "Passenger"
@@ -1165,6 +1184,128 @@ class GenealogyTextPipeline:
 
         print(f"Successfully extracted {len(self.family_data)} profiles from text.")
 
+    def _get_voyage_context(self, year, departure, arrival):
+        """
+        Calculates historical context for the voyage based on year and route.
+        Returns a dictionary or None.
+        """
+        try:
+            y = int(year)
+        except:
+            return None
+
+        dep = departure.lower()
+        arr = arrival.lower()
+
+        # Helper for route detection
+        # Strict checking to avoid "New London" matches
+        is_uk = any(x in dep for x in ["england", "uk", "britain", "london", "liverpool", "plymouth", "bristol", "southampton", "dorset", "essex", "suffolk", "kent"])
+        is_eu = is_uk or any(x in dep for x in ["holland", "netherlands", "germany", "france"])
+
+        is_us = any(x in arr for x in ["america", "usa", "united states", "mass", "connecticut", "new york", "virginia", "boston", "salem", "hartford", "new england"])
+
+        # Trans-Atlantic Route (UK/Europe -> US)
+        if is_eu and is_us:
+            if y < 1700:
+                 return {
+                     "duration": "6-12 weeks",
+                     "conditions": "Extremely hazardous. Scurvy common. High mortality rate (20%).",
+                     "context": "The Early Colonial Era"
+                 }
+            elif y < 1800:
+                 return {
+                     "duration": "8-10 weeks",
+                     "conditions": "Crowded steerage, limited fresh water, disease outbreaks.",
+                     "context": "The Colonial Expansion"
+                 }
+            elif y < 1860:
+                 return {
+                     "duration": "4-6 weeks",
+                     "conditions": "Improved navigation, but 'coffin ships' common during famines.",
+                     "context": "The Age of Sail"
+                 }
+            else:
+                 return {
+                     "duration": "10-14 days",
+                     "conditions": "Steamships provided faster, safer passage, though steerage remained cramped.",
+                     "context": "The Steam Age"
+                 }
+        return None
+
+    def _infer_voyage_details(self, profile):
+        """
+        Infers missing voyage details (Year, Departure, Arrival) based on profile context
+        and injects 'Visionary' historical facts.
+        """
+        if "voyages" not in profile["story"] or not profile["story"]["voyages"]:
+            return
+
+        born_loc = profile["vital_stats"]["born_location"]
+        died_loc = profile["vital_stats"]["died_location"]
+
+        # Strict Location Parsing using hierarchy to avoid "New London" issues
+        # We look for explicit country markers or state patterns
+
+        # 1. Determine Origin Region
+        origin_region = None
+        uk_markers = ["England", "UK", "Britain", "Scotland", "Ireland", "Wales"]
+        nl_markers = ["Holland", "Netherlands"]
+
+        # Check end of string for Country or specific Counties
+        # e.g. "Bocking, Essex, England" -> Ends in England
+        # "Otham, Kent" -> Ends in Kent (Risk of "Kent, CT"?) -> Check US states
+
+        us_states_long = ["Massachusetts", "Connecticut", "New York", "Pennsylvania", "New Hampshire", "Rhode Island", "Virginia", "New Jersey", "Maryland"]
+        us_states_short = ["MA", "CT", "NY", "NJ", "PA", "VA", "NH", "RI", "MD"]
+
+        def get_region(loc_str):
+            if not loc_str or loc_str == "Unknown": return None
+
+            # Check for US first (exclusion)
+            for state in us_states_long:
+                if state in loc_str: return "USA"
+            for state in us_states_short:
+                # regex for word boundary to avoid partial matches
+                if re.search(r'\b' + state + r'\b', loc_str): return "USA"
+
+            # Check for UK/EU
+            for m in uk_markers:
+                if m in loc_str: return "UK"
+            for m in nl_markers:
+                if m in loc_str: return "Netherlands"
+
+            # County/City fallback (Dangerous but necessary for "Otham, Kent")
+            # Only if NOT USA
+            if "Kent" in loc_str and "USA" not in loc_str and "CT" not in loc_str: return "UK"
+            if "Essex" in loc_str and "USA" not in loc_str and "MA" not in loc_str: return "UK"
+            if "Suffolk" in loc_str and "USA" not in loc_str and "MA" not in loc_str: return "UK"
+            if "Dorset" in loc_str: return "UK"
+
+            return None
+
+        origin = get_region(born_loc)
+        dest = get_region(died_loc)
+
+        is_immigrant_route = (origin in ["UK", "Netherlands"]) and (dest == "USA")
+
+        for voyage in profile["story"]["voyages"]:
+            # Infer Route
+            if is_immigrant_route:
+                if voyage["departure"] == "Unknown":
+                    voyage["departure"] = "England" if origin == "UK" else origin
+                if voyage["arrival"] == "Unknown":
+                    # Try to be specific if died_loc is specific
+                    if "MA" in died_loc or "Massachusetts" in died_loc: voyage["arrival"] = "Massachusetts Bay"
+                    elif "CT" in died_loc or "Connecticut" in died_loc: voyage["arrival"] = "Connecticut Colony"
+                    else: voyage["arrival"] = "New England"
+
+            # Inject Visionary Context (Theater)
+            # Only if we have year and route (now potentially inferred)
+            if voyage["year"] != "Unknown" and voyage["departure"] != "Unknown" and voyage["arrival"] != "Unknown":
+                context = self._get_voyage_context(voyage["year"], voyage["departure"], voyage["arrival"])
+                if context:
+                    voyage["context"] = context
+
     def _has_exclusion_context(self, text, match_start):
         # Look at the 100 chars before the match (increased from 50)
         start_search = max(0, match_start - 100)
@@ -1818,6 +1959,8 @@ class GenealogyTextPipeline:
                     event["coords"] = geocoder.geocode(event["location"])
 
             # Enrich Voyage Data
+            self._infer_voyage_details(p)
+
             if "voyages" in p["story"]:
                 for voyage in p["story"]["voyages"]:
                     ship_name = voyage.get("ship_name")
