@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity, LayoutGrid } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -19,6 +19,7 @@ import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
 import HitlistPanel from './components/HitlistPanel';
 import OutliersDashboard from './components/OutliersDashboard';
+import CrosswordTrivia from './components/CrosswordTrivia';
 import FilterMenu from './components/FilterMenu';
 import { fetchResearchSuggestions } from './services/aiReasoning';
 import { useAuth } from './context/AuthContext';
@@ -2018,6 +2019,13 @@ export default function App() {
                      >
                         <Trophy size={16} />
                      </button>
+                     <button
+                        onClick={() => setViewMode('crossword')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'crossword' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="Crossword Trivia"
+                     >
+                        <LayoutGrid size={16} />
+                     </button>
                   </div>
 
                   <button
@@ -2121,6 +2129,17 @@ export default function App() {
                     onSelectProfile={(id) => {
                         const person = familyData.find(p => String(p.id) === String(id));
                         if (person) setSelectedAncestor(person);
+                    }}
+                 />
+             </div>
+        )}
+
+        {viewMode === 'crossword' && (
+             <div className="flex-1 overflow-y-auto relative border-t border-gray-100 bg-[#F9F5F0]">
+                 <CrosswordTrivia
+                    onSelectAncestor={(id) => {
+                         const person = familyData.find(p => String(p.id) === String(id));
+                         if (person) setSelectedAncestor(person);
                     }}
                  />
              </div>
