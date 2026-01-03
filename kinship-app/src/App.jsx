@@ -1538,6 +1538,22 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                         </div>
                     </div>
 
+                    {/* STORY / BIO */}
+                    {item.story?.notes && (
+                        <div className="bg-white rounded-xl p-0">
+                             <div className="flex items-center gap-4 mb-6">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <BookOpen size={14} strokeWidth={1.5} /> Biography
+                                </h2>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+                            <p className="text-lg md:text-xl font-body-serif text-gray-800 leading-loose first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
+                                {renderNoteWithCurrency(item.story.notes)}
+                            </p>
+                        </div>
+                    )}
+
                     {/* VOYAGES */}
                     {item.story.voyages && item.story.voyages.length > 0 && (
                         <div>
@@ -1559,22 +1575,6 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                     {/* TECHNOLOGY CONTEXT */}
                     <TechnologyContext bornYear={bornYear} diedYear={diedYear} />
-
-                    {/* STORY / BIO */}
-                    {item.story?.notes && (
-                        <div className="bg-white rounded-xl p-0">
-                             <div className="flex items-center gap-4 mb-6">
-                                <div className="h-px bg-gray-200 flex-1"></div>
-                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                    <BookOpen size={14} strokeWidth={1.5} /> Biography
-                                </h2>
-                                <div className="h-px bg-gray-200 flex-1"></div>
-                            </div>
-                            <p className="text-lg md:text-xl font-body-serif text-gray-800 leading-loose first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
-                                {renderNoteWithCurrency(item.story.notes)}
-                            </p>
-                        </div>
-                    )}
 
                     {/* UNIFIED TIMELINE */}
                     {bornYear > 0 && (
