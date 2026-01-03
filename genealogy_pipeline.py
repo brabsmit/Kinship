@@ -235,11 +235,39 @@ class GenealogyTextPipeline:
 
         new_text = re.sub(tag_pattern, replace_tag, text, flags=re.IGNORECASE)
 
-        # Pattern 2: Natural Language
-        nl_pattern = r'(?:arrived|sailed|came) on the ([A-Z][a-z]+(?: [A-Z][a-z]+)*)'
-        matches = re.finditer(nl_pattern, new_text)
-        for m in matches:
-            ship_name = m.group(1)
+        # Pattern 2: Natural Language (Improved)
+        # Strategy: Find "arrived/sailed/came ... on/aboard ... [ShipName]"
+
+        # 2a. Quoted Ship Name (Strongest, handles "Hector", "Mayflower")
+        quote_pattern = r'(?:arrived|sailed|came|passage|travelled)\b[^.;]*?\b(?:on|aboard)\b(?:\s+(?:the|a)\b)?(?:\s*ship)?\s*[“"\'‘]([^”"\'’]+)[”"\'’]'
+
+        for m in re.finditer(quote_pattern, new_text, re.IGNORECASE):
+            ship_name = m.group(1).strip()
+            if not any(v['ship_name'] == ship_name for v in voyages):
+                 voyages.append({
+                    "ship_name": ship_name,
+                    "type": "Unknown",
+                    "year": "Unknown",
+                    "departure": "Unknown",
+                    "arrival": "Unknown",
+                    "class": "Passenger"
+                })
+
+        # 2b. Unquoted Capitalized Ship Name (Context aware)
+        # Regex Explanation:
+        # (?i:...) Group: Case-insensitive context (verbs, prepositions)
+        # ([A-Z]...): Case-sensitive Ship Name (must be capitalized)
+        prefix = r'(?i:(?:arrived|sailed|came|passage|travelled)\b[^.;]*?\b(?:on|aboard)\b(?:\s+(?:the|a)\b)?(?:\s*ship)?\s+)'
+        name_part = r'([A-Z][a-z]+(?:(?:\s+(?:and|&)\s+|\s+)[A-Z][a-z]+)*)'
+        cap_pattern = prefix + name_part
+
+        for m in re.finditer(cap_pattern, new_text):
+            ship_name = m.group(1).strip()
+
+            # Validation: Ignore common capitalized words that might follow "on"
+            ignored = ["May", "June", "July", "August", "September", "October", "November", "December", "Monday", "Sunday", "Christmas", "Easter", "Board"]
+            if ship_name in ignored: continue
+
             if not any(v['ship_name'] == ship_name for v in voyages):
                  voyages.append({
                     "ship_name": ship_name,
