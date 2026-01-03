@@ -36,7 +36,7 @@ export const RESEARCH_SOURCES = {
         description: "Revolutionary War Patriots and descendants"
     },
 
-    // --- CENSUS ---
+    // --- CENSUS (US) ---
     "Census": {
         label: "FamilySearch Census Records",
         url: "https://www.familysearch.org/search/collection/list?keywords=census",
@@ -47,15 +47,70 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/1515908",
         description: "First Census of the United States"
     },
+    "1800 Census": {
+        label: "1800 US Census",
+        url: "https://www.familysearch.org/search/collection/1804228",
+        description: "Second Census of the United States"
+    },
+    "1810 Census": {
+        label: "1810 US Census",
+        url: "https://www.familysearch.org/search/collection/1803765",
+        description: "Third Census of the United States"
+    },
+    "1820 Census": {
+        label: "1820 US Census",
+        url: "https://www.familysearch.org/search/collection/1803955",
+        description: "Fourth Census of the United States"
+    },
+    "1830 Census": {
+        label: "1830 US Census",
+        url: "https://www.familysearch.org/search/collection/1803958",
+        description: "Fifth Census of the United States"
+    },
+    "1840 Census": {
+        label: "1840 US Census",
+        url: "https://www.familysearch.org/search/collection/1786457",
+        description: "Sixth Census (and Rev War Pensioners)"
+    },
     "1850 Census": {
         label: "1850 US Census",
         url: "https://www.familysearch.org/search/collection/1401638",
         description: "First census to list all family members by name"
     },
+    "1860 Census": {
+        label: "1860 US Census",
+        url: "https://www.familysearch.org/search/collection/1473181",
+        description: "US Census on the eve of the Civil War"
+    },
+    "1870 Census": {
+        label: "1870 US Census",
+        url: "https://www.familysearch.org/search/collection/1438024",
+        description: "First census after the abolition of slavery"
+    },
     "1880 Census": {
         label: "1880 US Census",
         url: "https://www.familysearch.org/search/collection/1417683",
         description: "Lists relationship to head of household"
+    },
+    "1900 Census": {
+        label: "1900 US Census",
+        url: "https://www.familysearch.org/search/collection/1325221",
+        description: "Includes month/year of birth and immigration details"
+    },
+    "1910 Census": {
+        label: "1910 US Census",
+        url: "https://www.familysearch.org/search/collection/1727033",
+        description: "Includes questions on Civil War service"
+    },
+    "1920 Census": {
+        label: "1920 US Census",
+        url: "https://www.familysearch.org/search/collection/1488411",
+        description: "Population schedule"
+    },
+    "1930 Census": {
+        label: "1930 US Census",
+        url: "https://www.familysearch.org/search/collection/1810731",
+        description: "Great Depression era census"
     },
     "1940 Census": {
         label: "1940 US Census",
@@ -68,7 +123,64 @@ export const RESEARCH_SOURCES = {
         description: "Post-WWII era census"
     },
 
+    // --- CENSUS (UK) ---
+    "1841 UK Census": {
+        label: "1841 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/1493745",
+        description: "Earliest UK census with partial names"
+    },
+    "1851 UK Census": {
+        label: "1851 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/2563939",
+        description: "Includes exact parish of birth"
+    },
+    "1861 UK Census": {
+        label: "1861 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/1493747",
+        description: "Population schedule"
+    },
+    "1871 UK Census": {
+        label: "1871 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/1538354",
+        description: "Population schedule"
+    },
+    "1881 UK Census": {
+        label: "1881 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/2562194",
+        description: "Comprehensive census index"
+    },
+    "1891 UK Census": {
+        label: "1891 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/1865747",
+        description: "Population schedule"
+    },
+    "1901 UK Census": {
+        label: "1901 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/1888129",
+        description: "Population schedule"
+    },
+    "1911 UK Census": {
+        label: "1911 England & Wales Census",
+        url: "https://www.familysearch.org/search/collection/1921547",
+        description: "First census filled out by the householder"
+    },
+
     // --- VITAL RECORDS ---
+    "Birth Records": {
+        label: "FamilySearch Birth Records",
+        url: "https://www.familysearch.org/search/collection/list?keywords=birth",
+        description: "Search for birth and christening records"
+    },
+    "Marriage Records": {
+        label: "FamilySearch Marriage Records",
+        url: "https://www.familysearch.org/search/collection/list?keywords=marriage",
+        description: "Search for marriage and divorce records"
+    },
+    "Death Records": {
+        label: "FamilySearch Death Records",
+        url: "https://www.familysearch.org/search/collection/list?keywords=death",
+        description: "Search for death and burial records"
+    },
     "FindAGrave": {
         label: "Find A Grave",
         url: "https://www.findagrave.com/memorial/search",
@@ -104,6 +216,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/1202535",
         description: "Death records for US residents (1962-2014)"
     },
+    "FreeBMD": {
+        label: "FreeBMD (UK)",
+        url: "https://www.freebmd.org.uk/cgi/search.pl",
+        description: "Civil Registration index of births, marriages, and deaths for England & Wales"
+    },
 
     // --- LAND & PROPERTY ---
     "Land Deeds": {
@@ -112,6 +229,11 @@ export const RESEARCH_SOURCES = {
         description: "Federal land patents and homestead records"
     },
     "Probate": {
+        label: "FamilySearch Wills & Probate",
+        url: "https://www.familysearch.org/search/collection/list?keywords=probate",
+        description: "Wills, guardianships, and estate files"
+    },
+    "Wills": {
         label: "FamilySearch Wills & Probate",
         url: "https://www.familysearch.org/search/collection/list?keywords=probate",
         description: "Wills, guardianships, and estate files"
@@ -149,6 +271,21 @@ export const RESEARCH_SOURCES = {
         label: "Google Books",
         url: "https://books.google.com/",
         description: "Search full-text digitized genealogies and local histories"
+    },
+    "Archive.org": {
+        label: "Internet Archive Genealogy",
+        url: "https://archive.org/details/genealogy",
+        description: "Free digital library of genealogy books and records"
+    },
+    "HathiTrust": {
+        label: "HathiTrust Digital Library",
+        url: "https://www.hathitrust.org/",
+        description: "Searchable digital library of books and journals"
+    },
+    "WikiTree": {
+        label: "WikiTree",
+        url: "https://www.wikitree.com/wiki/Special:SearchPerson",
+        description: "Free, shared social networking genealogy website"
     }
 };
 
