@@ -27,11 +27,11 @@ const HandshakeCard = ({ person, relative }) => {
     if (relative.relationType.includes("Grandparent") || relative.relationType.includes("Ancestor")) {
         // Person is Descendant (e.g. Grandson)
         // "You were 8 years old when your Grandfather passed away."
-        narrative = `${person.name.split(' ')[0]} was ${relative.overlap} years old when his ${relative.label.toLowerCase()} ${relative.name.split(' ')[0]} died.`;
+        narrative = `${person.name.split(' ')[0]} was ${relative.overlap} years old when their ${relative.label.toLowerCase()} ${relative.name.split(' ')[0]} died.`;
     } else {
         // Person is Ancestor (e.g. Grandfather)
         // "William lived long enough to see his grandson turn 8."
-        narrative = `${person.name.split(' ')[0]} lived long enough to see his ${relative.label.toLowerCase()} turn ${relative.overlap}.`;
+        narrative = `${person.name.split(' ')[0]} lived long enough to see their ${relative.label.toLowerCase()} turn ${relative.overlap}.`;
     }
 
     return (
