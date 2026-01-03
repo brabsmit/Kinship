@@ -47,6 +47,7 @@ import CurrencyTooltip from './components/CurrencyTooltip';
 import GenerationalHandshake from './components/GenerationalHandshake';
 import CircleOfFriends from './components/CircleOfFriends';
 import VoyageCard from './components/VoyageCard';
+import TheFleet from './components/TheFleet';
 import TechnologyContext from './components/TechnologyContext';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
@@ -1990,6 +1991,13 @@ export default function App() {
                         <Network size={16} />
                      </button>
                      <button
+                        onClick={() => setViewMode('fleet')}
+                        className={`p-1.5 rounded-md transition-all ${viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                        title="The Fleet"
+                     >
+                        <Ship size={16} />
+                     </button>
+                     <button
                         onClick={() => setViewMode('threads')}
                         className={`p-1.5 rounded-md transition-all ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                         title="Epics"
@@ -2137,6 +2145,13 @@ export default function App() {
              </div>
           )}
 
+          {/* Fleet View */}
+          {viewMode === 'fleet' && (
+              <div className="absolute inset-0 z-0 bg-[#F9F5F0]">
+                  <TheFleet familyData={familyData} onSelectProfile={setSelectedAncestor} />
+              </div>
+          )}
+
           {selectedAncestor ? (
              <ImmersiveProfile 
                 item={selectedAncestor} 
@@ -2150,8 +2165,8 @@ export default function App() {
                 }}
              />
           ) : (
-             // Placeholder (Only if NOT graph mode)
-             viewMode !== 'graph' && (
+             // Placeholder (Only if NOT graph mode or fleet mode)
+             viewMode !== 'graph' && viewMode !== 'fleet' && (
                  <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
                      <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6 animate-pulse">
                          <Info size={48} className="text-gray-400" />
