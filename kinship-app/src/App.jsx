@@ -1645,6 +1645,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                         </div>
                     </div>
 
+                    {/* CIRCLE OF FRIENDS */}
+                    <CircleOfFriends associates={item.story?.associates} />
+
                     {/* STORY CONNECTIONS */}
                     {relatedConnections.length > 0 && (
                         <div className="bg-white rounded-xl p-0">
