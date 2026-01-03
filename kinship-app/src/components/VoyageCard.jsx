@@ -1,9 +1,56 @@
 import React from 'react';
-import { Ship, Anchor, MapPin, Calendar, Wind } from 'lucide-react';
+import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink } from 'lucide-react';
 import { ASSETS } from '../utils/assetMapper';
+
+const getVoyageContext = (year, departure, arrival) => {
+    // Normalize inputs
+    const y = parseInt(year, 10);
+    const dep = (departure || "").toLowerCase();
+    const arr = (arrival || "").toLowerCase();
+
+    // Helper for route detection
+    const isUK = dep.includes("england") || dep.includes("uk") || dep.includes("britain") || dep.includes("london") || dep.includes("liverpool") || dep.includes("plymouth") || dep.includes("bristol") || dep.includes("southampton");
+    const isUS = arr.includes("america") || arr.includes("usa") || arr.includes("united states") || arr.includes("mass") || arr.includes("connecticut") || arr.includes("new york") || arr.includes("virginia") || arr.includes("boston") || arr.includes("salem") || arr.includes("hartford") || arr.includes("new england");
+
+    // Default return
+    if (!y || isNaN(y)) return null;
+
+    // Trans-Atlantic Route (UK/Europe -> US)
+    if (isUK && isUS) {
+        if (y < 1700) {
+             return {
+                 duration: "6-12 weeks",
+                 conditions: "Extremely hazardous. Scurvy common. High mortality rate (20%).",
+                 context: "The Early Colonial Era"
+             };
+        } else if (y < 1800) {
+             return {
+                 duration: "8-10 weeks",
+                 conditions: "Crowded steerage, limited fresh water, disease outbreaks.",
+                 context: "The Colonial Expansion"
+             };
+        } else if (y < 1860) {
+             return {
+                 duration: "4-6 weeks",
+                 conditions: "Improved navigation, but 'coffin ships' common during famines.",
+                 context: "The Age of Sail"
+             };
+        } else {
+             return {
+                 duration: "10-14 days",
+                 conditions: "Steamships provided faster, safer passage, though steerage remained cramped.",
+                 context: "The Steam Age"
+             };
+        }
+    }
+
+    return null; // No context available for this route/year
+};
 
 const VoyageCard = ({ voyage }) => {
   if (!voyage) return null;
+
+  const context = getVoyageContext(voyage.year, voyage.departure, voyage.arrival);
 
   return (
     <div className="relative w-full max-w-md mx-auto my-6 bg-[#f4e4bc] text-[#3e3221] font-serif border-2 border-[#3e3221] shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
@@ -28,7 +75,21 @@ const VoyageCard = ({ voyage }) => {
              </div>
         </div>
 
-        <div className="flex justify-between items-center border-t-2 border-[#3e3221] pt-2">
+        {context && (
+            <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed text-center">
+                <h4 className="text-[10px] uppercase font-bold opacity-60 mb-1 flex items-center justify-center gap-1">
+                     <Wind size={10} /> {context.context}
+                </h4>
+                <div className="text-xs mb-2">
+                    <span className="font-bold">Avg. Duration:</span> {context.duration}
+                </div>
+                <div className="text-xs italic opacity-90 px-4">
+                     "{context.conditions}"
+                </div>
+            </div>
+        )}
+
+        <div className="flex justify-between items-center border-t-2 border-[#3e3221] pt-2 mt-4">
              <div className="flex items-center gap-2">
                 <Calendar size={14} />
                 <div className="text-lg font-bold">{voyage.year !== "Unknown" ? voyage.year : ""}</div>
@@ -37,6 +98,15 @@ const VoyageCard = ({ voyage }) => {
                 {voyage.class || "Passenger"}
              </div>
         </div>
+      </div>
+
+      <div className="text-center pb-2">
+          <a href={`https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(voyage.ship_name + " ship")}`}
+             target="_blank"
+             rel="noopener noreferrer"
+             className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest border-b border-[#3e3221] border-opacity-50 hover:text-red-800 hover:border-red-800 transition-colors">
+             <Ship size={10} /> View Ship History <ExternalLink size={8} />
+          </a>
       </div>
 
       {/* Stamp Effect */}
