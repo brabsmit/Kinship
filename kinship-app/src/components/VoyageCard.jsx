@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink } from 'lucide-react';
+import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler } from 'lucide-react';
 import { ASSETS } from '../utils/assetMapper';
 
 const getVoyageContext = (year, departure, arrival) => {
@@ -87,6 +87,96 @@ const VoyageCard = ({ voyage }) => {
                      "{context.conditions}"
                 </div>
             </div>
+        )}
+
+        {/* Ship Specifications (Enriched Data) */}
+        {voyage.specs && (
+             <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed">
+                <h4 className="text-[10px] uppercase font-bold opacity-60 mb-2 flex items-center justify-center gap-1">
+                     <Ship size={10} /> Vessel Specifications
+                </h4>
+
+                {voyage.specs.description && (
+                     <div className="text-xs italic opacity-90 mb-3 px-2 text-center leading-relaxed">
+                        "{voyage.specs.description}"
+                     </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px] px-2">
+                    {voyage.specs.year_built && voyage.specs.year_built !== "Unknown" && (
+                        <div className="flex items-start gap-1.5">
+                            <Hammer size={10} className="mt-0.5 opacity-60 shrink-0" />
+                            <div>
+                                <span className="opacity-70 block text-[9px] uppercase">Built</span>
+                                <span className="font-bold leading-tight block">{voyage.specs.year_built}</span>
+                            </div>
+                        </div>
+                    )}
+
+                     {voyage.specs.location_built && voyage.specs.location_built !== "Unknown" && (
+                        <div className="flex items-start gap-1.5 text-right justify-end">
+                            <div className="flex-1">
+                                <span className="opacity-70 block text-[9px] uppercase">Origin</span>
+                                <span className="font-bold leading-tight block">{voyage.specs.location_built}</span>
+                            </div>
+                            <MapPin size={10} className="mt-0.5 opacity-60 shrink-0" />
+                        </div>
+                    )}
+
+                    {voyage.specs.owner && voyage.specs.owner !== "Unknown" && (
+                        <div className="col-span-2 flex items-start gap-1.5 border-t border-[#3e3221]/20 pt-1 mt-0.5">
+                            <User size={10} className="mt-0.5 opacity-60 shrink-0" />
+                            <div className="flex-1">
+                                <span className="opacity-70 block text-[9px] uppercase">Owner</span>
+                                <span className="font-bold leading-tight block">{voyage.specs.owner}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Technical Stats Row 1 */}
+                    {(voyage.specs.gross_tonnage !== "Unknown" || voyage.specs.masts !== "Unknown") && (
+                        <div className="col-span-2 grid grid-cols-2 gap-3 border-t border-[#3e3221]/20 pt-1 mt-0.5">
+                             {voyage.specs.gross_tonnage !== "Unknown" && (
+                                <div className="flex items-center gap-1.5">
+                                    <Anchor size={10} className="opacity-60 shrink-0" />
+                                    <div>
+                                        <span className="font-bold">{voyage.specs.gross_tonnage}</span>
+                                    </div>
+                                </div>
+                             )}
+                             {voyage.specs.masts !== "Unknown" && (
+                                <div className="flex items-center gap-1.5 justify-end">
+                                    <span className="font-bold">{voyage.specs.masts} Masts</span>
+                                    <Wind size={10} className="opacity-60 shrink-0" />
+                                </div>
+                             )}
+                        </div>
+                    )}
+
+                     {/* Technical Stats Row 2 */}
+                    {(voyage.specs.deck_length !== "Unknown" || voyage.specs.beam !== "Unknown") && (
+                        <div className="col-span-2 grid grid-cols-2 gap-3 pt-0.5">
+                             {voyage.specs.deck_length !== "Unknown" && (
+                                <div className="flex items-center gap-1.5">
+                                    <Ruler size={10} className="opacity-60 shrink-0" />
+                                    <div>
+                                        <span className="opacity-70 text-[9px] uppercase mr-1">L:</span>
+                                        <span className="font-bold">{voyage.specs.deck_length}</span>
+                                    </div>
+                                </div>
+                             )}
+                             {voyage.specs.beam !== "Unknown" && (
+                                <div className="flex items-center gap-1.5 justify-end">
+                                     <span className="opacity-70 text-[9px] uppercase mr-1">Beam:</span>
+                                    <span className="font-bold">{voyage.specs.beam}</span>
+                                    <Ruler size={10} className="opacity-60 shrink-0 transform rotate-90" />
+                                </div>
+                             )}
+                        </div>
+                    )}
+
+                </div>
+             </div>
         )}
 
         <div className="flex justify-between items-center border-t-2 border-[#3e3221] pt-2 mt-4">
