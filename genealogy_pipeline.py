@@ -400,7 +400,19 @@ class GenealogyTextPipeline:
         # (1000-2999).
         # We capture the group to ensure we get the year digits.
         year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
+
+        # 0. Handle "century" logic if no specific year found
         if not year_match:
+            # "18th century" -> 1700
+            # "17th century" -> 1600
+            century_match = re.search(r'\b(\d{2})(?:th|nd|st|rd)\s+century\b', s)
+            if century_match:
+                try:
+                    c_val = int(century_match.group(1))
+                    return (c_val - 1) * 100
+                except:
+                    pass
+
             # Fallback to dateparser if no 4-digit year found (e.g. "Apr 12, '80")
             return self._normalize_date_fallback(raw_date_string)
 
@@ -412,31 +424,35 @@ class GenealogyTextPipeline:
 
         # 1. Handle "before" / "bef" / "by"
         # Logic: if "bef", "before", or "by" appears in the text preceding the year, return year - 1
-        # Explicit check ensures we process "bef 1800" correctly as 1799
+        # e.g., "bef 1800" -> 1799
         if re.search(r'\b(bef\.?|before|by)\b', pre_text):
             return year_val - 1
 
         # 2. Handle "after" / "aft"
         # Logic: if "aft" or "after" appears, return year + 1
-        # Explicit check ensures we process "aft 1750" correctly as 1751
+        # e.g., "aft 1750" -> 1751
         if re.search(r'\b(aft\.?|after)\b', pre_text):
             return year_val + 1
 
-        # 3. Handle dual dating like "1774/5" or ranges "1774-1778"
+        # 3. Handle "between"
+        # Logic: "between 1770 and 1780" -> 1770 (Start date).
+        # This falls through to the default return of year_val because regex found the first year.
+        # But we verify no "bef" / "aft" modifiers confuse it.
+        # "between" in pre_text -> simply return year_val.
+        if re.search(r'\bbetween\b', pre_text):
+            return year_val
+
+        # 4. Handle dual dating like "1774/5" or ranges "1774-1778"
         # The regex picks the first year found, which is standard genealogical practice for sorting (start date).
-        # Logic: The year_match regex above naturally picks the first 4-digit sequence found if multiple exist
-        # (unless we specifically looked for the last one, which we don't here).
         # For "1774/5", it extracts "1774".
 
-        # 4. Handle "living in" or "fl."
+        # 5. Handle "living in" or "fl."
         # If "living in 1774", we return 1774 as the best anchor.
-        # Explicit check for clarity, though default returns year_val anyway.
         if re.search(r'\b(living in|fl\.?)\b', pre_text):
             return year_val
 
-        # 5. Handle "circa" / "c." / "about" / "abt"
-        # If "c. 1774", we extract 1774. It doesn't trigger bef/aft logic, so it returns 1774.
-        # Explicitly documenting this behavior.
+        # 6. Handle "circa" / "c." / "about" / "abt"
+        # If "c. 1774", we extract 1774.
         if re.search(r'\b(c\.?|ca\.?|circa|about|abt\.?)\b', pre_text):
             return year_val
 
