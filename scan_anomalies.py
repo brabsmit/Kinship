@@ -1,51 +1,37 @@
 import json
 import re
 
-def scan_data():
-    try:
-        with open("kinship-app/src/family_data.json", "r") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        print("family_data.json not found")
-        return
+def scan_anomalies():
+    with open("kinship-app/src/family_data.json", "r") as f:
+        data = json.load(f)
 
-    anomalies = []
-    formats = set()
-
-    total = len(data)
-    missing_int_count = 0
-
-    print(f"Scanning {total} records...")
+    unique_dates = {}
+    unknown_count = 0
 
     for p in data:
-        vs = p.get("vital_stats", {})
+        stats = p.get("vital_stats", {})
+        b_date = stats.get("born_date", "Unknown")
+        d_date = stats.get("died_date", "Unknown")
 
-        # Check Born
-        b_date = vs.get("born_date", "Unknown")
-        b_int = vs.get("born_year_int")
+        if b_date == "Unknown": unknown_count += 1
+        else: unique_dates[b_date] = stats.get("born_year_int")
 
-        if b_date != "Unknown" and b_int is None:
-            anomalies.append(f"ID {p['id']}: Born '{b_date}' -> Int None")
-            formats.add(b_date)
-            missing_int_count += 1
+        if d_date == "Unknown": unknown_count += 1
+        else: unique_dates[d_date] = stats.get("died_year_int")
 
-        # Check Died
-        d_date = vs.get("died_date", "Unknown")
-        d_int = vs.get("died_year_int")
+    print(f"Total 'Unknown' dates: {unknown_count}")
+    print(f"Total Unique Date Strings: {len(unique_dates)}")
 
-        if d_date != "Unknown" and d_int is None:
-            anomalies.append(f"ID {p['id']}: Died '{d_date}' -> Int None")
-            formats.add(d_date)
-            missing_int_count += 1
+    # Filter for interesting ones
+    # exclude simple "YYYY" or "M/D/YYYY"
+    interesting = []
+    for d, i in unique_dates.items():
+        if not re.match(r'^\d{4}$', d) and not re.match(r'^\d{1,2}/\d{1,2}/\d{4}$', d):
+            interesting.append((d, i))
 
-    print(f"Found {missing_int_count} fields with date strings but missing integer years.")
-    print("\n--- Unique Unparsed Formats ---")
-    for f in sorted(list(formats))[:50]:
-        print(f)
-
-    print("\n--- Sample Anomalies ---")
-    for a in anomalies[:20]:
-        print(a)
+    print(f"Interesting Date Formats found: {len(interesting)}")
+    for d, i in sorted(interesting, key=lambda x: x[0])[:50]:
+        print(f"  '{d}' -> {i}")
 
 if __name__ == "__main__":
-    scan_data()
+    scan_anomalies()
