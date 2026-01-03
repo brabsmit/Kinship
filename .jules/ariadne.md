@@ -1,45 +1,8 @@
-# ARIADNE'S JOURNAL - CONNECTION LOG
-## 2024-05-22 - Ambiguous Links
-**Discovery:** "Sarah Dodge" is a common name mapping to multiple IDs (1.2, 5.1.2.2).
-**Action:** Filtered out ambiguous name mappings from the index to prevent incorrect linking.
+## 2024-05-24 - The Weaving of Threads
+**Discovery:** Found that many "Child" entries in the genealogy text were actually duplicates of full profiles defined elsewhere. For example, "Thomas Powell" appeared as a child entry multiple times but also as a main profile.
+**Action:** Implemented logic to prioritize "Real" profiles over "Child" entries (`_c` IDs) when resolving ambiguous names. This reduced ambiguous name logs from 273 to 58.
 
-## 2024-05-24 - Performance Optimization
-**Discovery:** The initial implementation of `_find_mentions` was iterating over thousands of names for every clause in every profile note, causing severe performance bottlenecks and timeouts.
-**Action:** Refactored the search logic to:
-1. Extract potential name candidates (capitalized word sequences) from the text using regex.
-2. Intersect these candidates with a set of known unique names (O(1) lookup).
-3. Only perform expensive context and keyword checks for the handful of valid candidates found in each note.
-This drastically reduced the complexity from O(Profiles * Clauses * Names) to O(Profiles * Candidates).
+**Discovery:** Relationships in text were often one-sided. If "John Skinner" mentioned "Deacon Joseph Olmstead" as a cousin, Joseph didn't know about John.
+**Action:** Implemented a "Stitching" phase to create symmetrical reverse links (e.g., "Cousin" -> "Cousin", "Mentioned" -> "Mentioned by"). Added 392 reverse connections.
 
-## 2024-05-24 - The Web Grows
-**Discovery:** Found 327 text-based connections. Identified key clusters around "Reverend Samuel Blatchford" (14 mentions) and "Jacob Parish" (10 mentions).
-**Action:** Implemented enhanced `_find_mentions` logic with expanded keywords (Classmate, Tutor, Rival) and improved name normalization.
-**Ambiguity Report:** Several names mapped to multiple IDs and were excluded to prevent false links:
-- William Sr. (3 IDs)
-- William Earl Dodge (2 IDs)
-- David Jr. (2 IDs)
-- David Hoadley (2 IDs)
-- Daniel Parish (2 IDs)
-
-## 2024-05-25 - Enhanced Indexing and Keywords
-**Discovery:** Refined the name indexing to robustly handle suffixes ("Sr.", "Jr.", "III") and middle names. Found 319 high-confidence connections.
-**Action:**
-- Refactored `genealogy_pipeline.py` to modularize `_build_name_index` and `_scan_text_for_mentions`.
-- Added new keywords: "Uncle", "Aunt", "Nephew", "Niece", "Executor", "Witness", "Legacy".
-- Improved handling of "First M. Last" variations.
-- Excluded ambiguous names like "William Earl Dodge" and "David Hoadley" which mapped to multiple IDs (parent/child confusion or duplicates).
-## 2024-05-25 - Ambiguity Resolved
-**Discovery:** Implemented intelligent disambiguation for common names. Previously, names like "William Earl Dodge" were skipped because they mapped to multiple profiles (e.g., Father vs Son).
-**Action:**
-- Updated pipeline to check birth dates of potential candidates against the source profile's era.
-- If a name mentions "William Dodge" in a context around 1805, and we have a William born 1805 and another 1832, we now confidently link to the contemporary one.
-- Added keywords for extended family (In-Laws, Step-parents) and social connections (Godparents, Fiancé).
-- **Result:** Found 360 valid connections (up from 319), recovering links for previously ambiguous names while still filtering out truly unsolvable ones (64 remaining ambiguous cases).
-## 2024-05-25 - Ambiguity Resolved & Logic Refined
-**Discovery:** Implemented intelligent disambiguation for common names. Previously, names like "William Earl Dodge" were skipped because they mapped to multiple profiles (e.g., Father vs Son).
-**Action:**
-- Updated pipeline to check birth dates of potential candidates against the source profile's era.
-- **Strict Disambiguation:** If a name maps to multiple people, we filter candidates to those born within 60 years of the source. If exactly one remains, we link it.
-- **Loose Type Inference:** Once a target is identified (either because it was unique or successfully disambiguated), we check if they are "contemporaries" (within 80 years) to decide if the relationship type should be specific (e.g., "Friend") or generic ("Mentioned").
-- **Keywords:** Added keywords for extended family (In-Laws, Step-parents) and social connections (Godparents, Fiancé).
-- **Result:** Found 379 valid connections (up from 319), recovering links for previously ambiguous names like "Jacob Parish" and "William Earl Dodge".
+**Discovery:** Significant clustering around "Reverend Samuel Blatchford" (14 mentions) and "Solomon Bliss" (13 mentions), indicating they were central figures in the family narrative.
