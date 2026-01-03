@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler } from 'lucide-react';
+import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler, Users } from 'lucide-react';
 import { ASSETS } from '../utils/assetMapper';
 
 const getVoyageContext = (year, departure, arrival) => {
@@ -85,6 +85,18 @@ const VoyageCard = ({ voyage }) => {
                 </div>
                 <div className="text-xs italic opacity-90 px-4">
                      "{context.conditions}"
+                </div>
+            </div>
+        )}
+
+        {/* Shipmates Section */}
+        {voyage.shipmates && voyage.shipmates.length > 0 && (
+             <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed text-center">
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-[#3e3221]" title={voyage.shipmates.map(m => m.name).join(", ")}>
+                    <Users size={14} />
+                    <span>
+                        {voyage.shipmates.length} other ancestor{voyage.shipmates.length > 1 ? 's' : ''} also arrived on {voyage.ship_name}
+                    </span>
                 </div>
             </div>
         )}
