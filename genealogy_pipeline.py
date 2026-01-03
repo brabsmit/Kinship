@@ -400,7 +400,19 @@ class GenealogyTextPipeline:
         # (1000-2999).
         # We capture the group to ensure we get the year digits.
         year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
+
+        # 0. Handle "century" logic if no specific year found
         if not year_match:
+            # "18th century" -> 1700
+            # "17th century" -> 1600
+            century_match = re.search(r'\b(\d{2})(?:th|nd|st|rd)\s+century\b', s)
+            if century_match:
+                try:
+                    c_val = int(century_match.group(1))
+                    return (c_val - 1) * 100
+                except:
+                    pass
+
             # Fallback to dateparser if no 4-digit year found (e.g. "Apr 12, '80")
             return self._normalize_date_fallback(raw_date_string)
 
@@ -412,31 +424,35 @@ class GenealogyTextPipeline:
 
         # 1. Handle "before" / "bef" / "by"
         # Logic: if "bef", "before", or "by" appears in the text preceding the year, return year - 1
-        # Explicit check ensures we process "bef 1800" correctly as 1799
+        # e.g., "bef 1800" -> 1799
         if re.search(r'\b(bef\.?|before|by)\b', pre_text):
             return year_val - 1
 
         # 2. Handle "after" / "aft"
         # Logic: if "aft" or "after" appears, return year + 1
-        # Explicit check ensures we process "aft 1750" correctly as 1751
+        # e.g., "aft 1750" -> 1751
         if re.search(r'\b(aft\.?|after)\b', pre_text):
             return year_val + 1
 
-        # 3. Handle dual dating like "1774/5" or ranges "1774-1778"
+        # 3. Handle "between"
+        # Logic: "between 1770 and 1780" -> 1770 (Start date).
+        # This falls through to the default return of year_val because regex found the first year.
+        # But we verify no "bef" / "aft" modifiers confuse it.
+        # "between" in pre_text -> simply return year_val.
+        if re.search(r'\bbetween\b', pre_text):
+            return year_val
+
+        # 4. Handle dual dating like "1774/5" or ranges "1774-1778"
         # The regex picks the first year found, which is standard genealogical practice for sorting (start date).
-        # Logic: The year_match regex above naturally picks the first 4-digit sequence found if multiple exist
-        # (unless we specifically looked for the last one, which we don't here).
         # For "1774/5", it extracts "1774".
 
-        # 4. Handle "living in" or "fl."
+        # 5. Handle "living in" or "fl."
         # If "living in 1774", we return 1774 as the best anchor.
-        # Explicit check for clarity, though default returns year_val anyway.
         if re.search(r'\b(living in|fl\.?)\b', pre_text):
             return year_val
 
-        # 5. Handle "circa" / "c." / "about" / "abt"
-        # If "c. 1774", we extract 1774. It doesn't trigger bef/aft logic, so it returns 1774.
-        # Explicitly documenting this behavior.
+        # 6. Handle "circa" / "c." / "about" / "abt"
+        # If "c. 1774", we extract 1774.
         if re.search(r'\b(c\.?|ca\.?|circa|about|abt\.?)\b', pre_text):
             return year_val
 
@@ -1394,6 +1410,9 @@ class GenealogyTextPipeline:
                 # 2. Filter out self
                 potential_ids = [pid for pid in potential_ids if pid != source_profile['id']]
 
+                if not potential_ids:
+                    continue
+
                 # 3. Decision Logic
                 target_id = None
 
@@ -1423,9 +1442,14 @@ class GenealogyTextPipeline:
                     if len(candidates_in_range) == 1:
                         target_id = candidates_in_range[0]
                     else:
-                        # Still ambiguous (0 or >1 candidates in range)
-                        self.ariadne_log["ambiguous"][name].update(potential_ids)
-                        continue
+                         # Priority: Real Profile over Child Entry
+                        real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
+                        if len(real_candidates) == 1:
+                             target_id = real_candidates[0]
+                        else:
+                            # Still ambiguous
+                            self.ariadne_log["ambiguous"][name].update(potential_ids)
+                            continue
 
                 if target_id in found_ids: continue
 
@@ -1499,6 +1523,68 @@ class GenealogyTextPipeline:
             count += len(links)
 
         print(f"Ariadne found {count} text-based connections.")
+
+        # ---------------------------
+        # Post-Processing: Symmetry
+        # ---------------------------
+        print("--- Ariadne: Stitching Reverse Links ---")
+        reverse_count = 0
+        id_map = {p['id']: p for p in self.family_data}
+
+        for p in self.family_data:
+            source_id = p['id']
+            source_name = p['name']
+
+            # Iterate over a copy of links
+            for link in list(p['related_links']):
+                target_id = link['target_id']
+                rel_type = link['relation_type']
+                source_text = link['source_text']
+
+                target_p = id_map.get(target_id)
+                if not target_p: continue
+
+                if 'related_links' not in target_p:
+                    target_p['related_links'] = []
+
+                # Check if reverse link already exists (to prevent duplicates)
+                exists = False
+                for r_link in target_p['related_links']:
+                    if r_link['target_id'] == source_id:
+                        # Check context - if it's already linked, maybe we don't need another?
+                        # Or checking source_text match might be too specific if text differs?
+                        # Let's say if A linked to B, B should link to A.
+                        # If B already links to A, we skip.
+                        exists = True
+                        break
+
+                if not exists:
+                    # Determine reverse type
+                    rev_type = rel_type
+
+                    if rel_type == "Mentioned":
+                        rev_type = "Mentioned by"
+                    elif rel_type == "Parent":
+                        rev_type = "Child"
+                    elif rel_type == "Child":
+                        rev_type = "Parent"
+                    elif rel_type == "In-Law":
+                        rev_type = "In-Law" # Could be specific, but In-Law is safe generic
+                    elif rel_type == "Step-Parent":
+                        rev_type = "Step-Child"
+                    elif rel_type == "Step-Child":
+                        rev_type = "Step-Parent"
+                    elif rel_type == "Godparent":
+                        rev_type = "Godchild"
+
+                    target_p['related_links'].append({
+                        "target_id": source_id,
+                        "relation_type": rev_type,
+                        "source_text": f"Mentioned in {source_name}'s notes: \"{source_text[:50]}...\""
+                    })
+                    reverse_count += 1
+
+        print(f"Ariadne added {reverse_count} reverse connections.")
 
         # Log Interesting Findings (Console for now)
         print("\n--- Ariadne's Notebook ---")
