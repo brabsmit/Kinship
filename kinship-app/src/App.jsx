@@ -26,6 +26,7 @@ import LoginModal from './components/LoginModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CurrencyTooltip from './components/CurrencyTooltip';
+import GenerationalHandshake from './components/GenerationalHandshake';
 import CircleOfFriends from './components/CircleOfFriends';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
@@ -1537,6 +1538,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                     {/* TRIVIA */}
                     <ProfileTrivia person={item} familyData={familyData} />
+
+                    {/* GENERATIONAL HANDSHAKE */}
+                    <GenerationalHandshake person={item} familyData={familyData} />
 
                     {/* STORY / BIO */}
                     {item.story?.notes && (
