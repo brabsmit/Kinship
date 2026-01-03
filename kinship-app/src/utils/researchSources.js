@@ -30,6 +30,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/1968530",
         description: "Draft cards for 24 million men (1917-1918)"
     },
+    "WWII Draft": {
+        label: "WWII Draft Registration",
+        url: "https://www.familysearch.org/search/collection/2124476",
+        description: "Draft cards for men born 1877-1897 (The 'Old Man's Draft')"
+    },
     "DAR": {
         label: "DAR Genealogical Research System",
         url: "https://services.dar.org/public/dar_research/search/",
@@ -165,6 +170,23 @@ export const RESEARCH_SOURCES = {
         description: "First census filled out by the householder"
     },
 
+    // --- INTERNATIONAL ---
+    "Irish Civil": {
+        label: "Irish Civil Registration",
+        url: "https://www.irishgenealogy.ie/en/",
+        description: "Free Birth, Marriage, and Death records for Ireland"
+    },
+    "Irish Census": {
+        label: "National Archives of Ireland",
+        url: "http://www.census.nationalarchives.ie/",
+        description: "Free 1901 and 1911 Census records"
+    },
+    "Canada Census": {
+        label: "Library and Archives Canada",
+        url: "https://www.bac-lac.gc.ca/eng/census/Pages/census.aspx",
+        description: "Free Canadian Census records (1825-1921)"
+    },
+
     // --- VITAL RECORDS ---
     "Birth Records": {
         label: "FamilySearch Birth Records",
@@ -222,6 +244,18 @@ export const RESEARCH_SOURCES = {
         description: "Civil Registration index of births, marriages, and deaths for England & Wales"
     },
 
+    // --- MAPS ---
+    "Sanborn Maps": {
+        label: "Sanborn Fire Insurance Maps",
+        url: "https://www.loc.gov/collections/sanborn-maps",
+        description: "Detailed maps of US cities and towns (1867-1970)"
+    },
+    "Land Ownership Maps": {
+        label: "LOC Land Ownership Maps",
+        url: "https://www.loc.gov/collections/land-ownership-maps",
+        description: "19th-century county maps showing landowner names"
+    },
+
     // --- LAND & PROPERTY ---
     "Land Deeds": {
         label: "Bureau of Land Management (GLO)",
@@ -255,6 +289,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/2721171",
         description: "Records of Freedmen, Refugees, and Abandoned Lands (1865-1872)"
     },
+    "Naturalization": {
+        label: "FamilySearch Naturalization",
+        url: "https://www.familysearch.org/search/collection/list?keywords=naturalization",
+        description: "Search US Naturalization and Citizenship records"
+    },
 
     // --- BOOKS & NEWSPAPERS ---
     "Obituary": {
@@ -286,6 +325,11 @@ export const RESEARCH_SOURCES = {
         label: "WikiTree",
         url: "https://www.wikitree.com/wiki/Special:SearchPerson",
         description: "Free, shared social networking genealogy website"
+    },
+    "USGenWeb": {
+        label: "USGenWeb Project",
+        url: "https://www.usgenweb.org/",
+        description: "Free genealogy websites for every county in the US"
     }
 };
 
