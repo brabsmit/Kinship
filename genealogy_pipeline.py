@@ -23,6 +23,8 @@ class ShipEnrichmentService:
                 self.client = genai.Client(api_key=self.api_key)
             except Exception as e:
                 print(f"Warning: Failed to initialize Google GenAI client: {e}")
+        else:
+            print("Warning: VITE_GEMINI_API_KEY is not set.")
 
     def load_cache(self):
         if os.path.exists(self.cache_file):
@@ -385,6 +387,8 @@ class GenealogyTextPipeline:
             print("Wikimedia cache saved.")
 
     def fetch_wikimedia_image(self, location, year):
+        return None  # Disable wikimedia API for now
+
         if not location or location.lower() == "unknown":
             return None
 

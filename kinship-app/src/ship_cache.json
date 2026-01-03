@@ -1,0 +1,422 @@
+{
+    "Mayflower": {
+        "year_built": "c. 1606-1615",
+        "location_built": "Possibly Harwich, England",
+        "deck_length": "90-110 feet (estimated)",
+        "beam": "25 feet (estimated)",
+        "gross_tonnage": "180 tons (estimated)",
+        "masts": "3",
+        "owner": "Christopher Jones (at time of voyage to America)",
+        "description": "English merchant ship famous for transporting the Pilgrims to North America in 1620."
+    },
+    "Planter": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifics for a ship named 'Planter' during the 17th-19th century are unavailable. Data is assumed to be lost."
+    },
+    "Angel Gabriel": {
+        "year_built": "1669",
+        "location_built": "New England, USA",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Lost at sea in a storm on August 15, 1669, off the coast of Maine."
+    },
+    "Abigail": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "No specific historical record exists to provide details for a ship named 'Abigail'."
+    },
+    "Marygold": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details for the ship 'Marygold' are not available in the existing historical records or databases."
+    },
+    "Ellen/Elizabeth and Dorcas": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "No specific historical records found for a ship precisely named 'Ellen/Elizabeth and Dorcas'."
+    },
+    "Recovery": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Without further details, specifications for the 'Recovery' ship are unknown."
+    },
+    "Mary and John": {
+        "year_built": "1630",
+        "location_built": "England",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "400 tons (est.)",
+        "masts": "3",
+        "owner": "Roger Ludlow, et al.",
+        "description": "Sailed from Plymouth, England, to Dorchester, Massachusetts in 1630. Carried settlers, livestock, and supplies."
+    },
+    "Lyon": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Information on ships named 'Lyon' is too limited to provide specifications. Details vary greatly by era and origin."
+    },
+    "Griffin": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'Griffin' are insufficient to generate specifications, details are unknown."
+    },
+    "Susan and Ellen": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications for the ship 'Susan and Ellen' are currently unavailable in known historical records."
+    },
+    "Truelove": {
+        "year_built": "1764",
+        "location_built": "Philadelphia, Pennsylvania",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "153 tons",
+        "masts": "2",
+        "owner": "Various Quaker merchants",
+        "description": "Brig used in the whaling trade and later in general commerce, owned by Quaker merchants."
+    },
+    "Hector": {
+        "year_built": "1774",
+        "location_built": "Liverpool, England",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "3",
+        "owner": "John Hector & Co.",
+        "description": "Merchant ship involved in early immigration to Nova Scotia, Canada. Became a transport in 1778."
+    },
+    "St. John": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical information for ships named 'St. John' in the 17th-19th centuries is too broad to specify."
+    },
+    "Elizabeth and Ann": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details of this ship named 'Elizabeth and Ann' are currently unknown. Historical records are unavailable."
+    },
+    "Christian": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details for a ship named 'Christian' from the 17th-19th century are currently unavailable."
+    },
+    "Increase": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details for a ship named 'Increase' from the 17th-19th century are currently unavailable."
+    },
+    "James": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications for ships named 'James' vary greatly. Exact details require specifying a particular ship, which is unknown."
+    },
+    "Elizabeth": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications for ships named 'Elizabeth' vary greatly depending on the specific vessel and time period. Details are not available."
+    },
+    "John and Dorothy": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details for the 'John and Dorothy' ship from 17th-19th century are currently unavailable; specifications are unknown."
+    },
+    "Frances": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'Frances' from the 17th-19th century are currently unavailable."
+    },
+    "Rebecca": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications for the ship 'Rebecca' from the 17th-19th century are currently unavailable in known records."
+    },
+    "Francis": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications unavailable. The 'Francis' ship's details from the 17th-19th century are not known."
+    },
+    "Bevis": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications for a ship named 'Bevis' from the 17th-19th century are not available."
+    },
+    "Recovery of London": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "No information found for a ship named 'Recovery of London' within the specified timeframe."
+    },
+    "Arabella": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical ship named Arabella; specifications unknown due to limited historical data."
+    },
+    "Defense": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'Defense' during 17th-19th century are currently unavailable."
+    },
+    "True Love": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details of a ship named 'True Love' from the 17th-19th century are currently unknown."
+    },
+    "Batcheler": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'Batcheler' are unavailable. Specifics are therefore unknown."
+    },
+    "Defence": {
+        "year_built": "1763",
+        "location_built": "Plymouth, England",
+        "deck_length": "159 ft 6 in (48.6 m)",
+        "beam": "44 ft 4 in (13.5 m)",
+        "gross_tonnage": "1507 tons burthen",
+        "masts": "3",
+        "owner": "Royal Navy",
+        "description": "A 74-gun third-rate ship of the line, rebuilt in 1784, and broken up in 1816."
+    },
+    "Saint John": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details are not available for a specific ship named 'Saint John' within the given parameters."
+    },
+    "Confidence": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'Confidence' are insufficient to provide specifications."
+    },
+    "Jonathan": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Details for a ship named 'Jonathan' from the 17th-19th century are currently unavailable."
+    },
+    "Den Eichenboom": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical data for a ship named 'Den Eichenboom' is currently unavailable in existing databases."
+    },
+    "Weymouth": {
+        "year_built": "1693",
+        "location_built": "England",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Royal Navy",
+        "description": "A 48-gun fourth rate ship of the English Royal Navy, later rebuilt and renamed."
+    },
+    "Jewell": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Specifications for the 'Jewell' ship of the 17th-19th century are currently unavailable."
+    },
+    "John and London": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'John and London' are scarce, specifics are largely unknown."
+    },
+    "John & Dorothy": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "No specific historical data found for a ship named 'John & Dorothy' in the 17th-19th centuries."
+    },
+    "Mary and Jane": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Historical records for a ship named 'Mary and Jane' are unavailable. Specifics unknown."
+    },
+    "Mary & John": {
+        "year_built": "1630",
+        "location_built": "England",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "400 tons (est.)",
+        "masts": "3",
+        "owner": "Roger Ludlow, et al. (investors)",
+        "description": "Sailed from Plymouth, England, to the Massachusetts Bay Colony in 1630 with settlers."
+    },
+    "John of London": {
+        "year_built": "Unknown",
+        "location_built": "London, England (Likely)",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Likely a merchant or naval vessel operating from London, specifics largely unrecorded."
+    },
+    "Anne": {
+        "year_built": "Unknown",
+        "location_built": "Unknown",
+        "deck_length": "Unknown",
+        "beam": "Unknown",
+        "gross_tonnage": "Unknown",
+        "masts": "Unknown",
+        "owner": "Unknown",
+        "description": "Without further context, specifications for a ship named 'Anne' are unknown. Many ships shared common names."
+    }
+}
