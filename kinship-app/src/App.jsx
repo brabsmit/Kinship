@@ -1460,7 +1460,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     }, [item]);
 
     return (
-        <div className="fixed inset-0 z-50 bg-[#F9F5F0] animate-in slide-in-from-right duration-500 overflow-y-auto custom-scrollbar">
+        <div className="absolute inset-0 z-30 bg-[#F9F5F0] animate-in slide-in-from-right duration-500 overflow-y-auto custom-scrollbar">
 
             <LoginModal
                 isOpen={showLoginModal}
@@ -1929,27 +1929,21 @@ export default function App() {
           <RelationshipSelector data={familyData} onComplete={handleRelationComplete} />
       )}
 
-      {/* --- LEFT NAVIGATION --- */}
+      {/* --- LEFT NAVIGATION (Persistent Sidebar) --- */}
       <div
         className={`
-            relative flex flex-col border-r border-gray-200 bg-white h-full z-10
+            relative flex flex-col border-r border-gray-200 bg-white h-full z-10 shrink-0
             ${!isResizing ? 'transition-all duration-300' : ''}
-            ${selectedAncestor ? 'hidden md:flex' : 'w-full'}
-            ${viewMode === 'graph'
-                ? 'md:flex-1 max-w-full' // Graph Mode: takes available space (flex-1), but max-w-full
-                : 'shrink-0' // List Mode: dynamic width
-            }
+            ${selectedAncestor ? 'hidden lg:flex' : 'flex'}
         `}
-        style={(viewMode === 'list' || viewMode === 'threads') ? { width: sidebarWidth } : {}}
+        style={{ width: sidebarWidth }}
       >
-        {/* Resize Handle */}
-        {(viewMode === 'list' || viewMode === 'threads') && (
-            <div
-                className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
-                onMouseDown={startResizing}
-                title="Drag to resize sidebar"
-            />
-        )}
+        {/* Resize Handle (Always Active) */}
+        <div
+            className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
+            onMouseDown={startResizing}
+            title="Drag to resize sidebar"
+        />
         {/* Header with Title and Controls */}
         <div className="p-4 border-b border-gray-100 bg-white z-20 space-y-4">
             {/* Top Row: Title + View Toggles + Logout */}
@@ -2048,7 +2042,8 @@ export default function App() {
             <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
         )}
 
-        {viewMode === 'list' && (
+        {/* LIST VIEW (Shows in 'list' AND 'graph' modes) */}
+        {(viewMode === 'list' || viewMode === 'graph') && (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {Object.entries(groupedData).map(([generation, items]) => (
                     <GenerationGroup
@@ -2061,20 +2056,6 @@ export default function App() {
                         searchText={searchText}
                     />
                 ))}
-            </div>
-        )}
-
-        {viewMode === 'graph' && (
-            <div className="flex-1 overflow-hidden relative border-t border-gray-100">
-                <GraphView
-                    data={filteredGraphData}
-                    searchText={searchText}
-                    storyMode={storyMode}
-                    selectedThreadId={selectedThreadId}
-                    onNodeClick={(person) => {
-                        setSelectedAncestor(person);
-                    }}
-                />
             </div>
         )}
 
@@ -2118,14 +2099,24 @@ export default function App() {
         )}
       </div>
 
-      {/* --- RIGHT PANEL --- */}
-      <div className={`
-        bg-[#F9F5F0] relative transition-all duration-300
-        ${selectedAncestor
-            ? 'flex-1 block'
-            : (viewMode === 'graph' ? 'hidden' : 'flex-1 hidden md:block')
-        }
-      `}>
+      {/* --- RIGHT PANEL (Main Content) --- */}
+      <div className="flex-1 relative bg-[#F9F5F0] h-full overflow-hidden">
+
+          {/* Graph View (Rendered in Main Content) */}
+          {viewMode === 'graph' && (
+             <div className="absolute inset-0 z-0">
+                <GraphView
+                    data={filteredGraphData}
+                    searchText={searchText}
+                    storyMode={storyMode}
+                    selectedThreadId={selectedThreadId}
+                    onNodeClick={(person) => {
+                        setSelectedAncestor(person);
+                    }}
+                />
+             </div>
+          )}
+
           {selectedAncestor ? (
              <ImmersiveProfile 
                 item={selectedAncestor} 
@@ -2139,12 +2130,15 @@ export default function App() {
                 }}
              />
           ) : (
-             <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
-                 <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6 animate-pulse">
-                     <Info size={48} className="text-gray-400" />
+             // Placeholder (Only if NOT graph mode)
+             viewMode !== 'graph' && (
+                 <div className="h-full flex flex-col items-center justify-center text-gray-400 bg-gray-50/50">
+                     <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6 animate-pulse">
+                         <Info size={48} className="text-gray-400" />
+                     </div>
+                     <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor</h2>
                  </div>
-                 <h2 className="text-2xl font-serif text-gray-800 mb-2">Select an Ancestor</h2>
-             </div>
+             )
           )}
       </div>
 
