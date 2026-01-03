@@ -1693,6 +1693,119 @@ class GenealogyTextPipeline:
         for name, freq in sorted_clusters[:5]:
             print(f"  - {name}: {freq} mentions")
 
+    def _get_country_from_location(self, location):
+        if not location or location == "Unknown":
+            return "Unknown"
+
+        loc_lower = location.lower()
+
+        # UK/Europe
+        if any(x in loc_lower for x in ["england", "uk", "britain", "london", "liverpool", "plymouth", "bristol", "southampton", "dorset", "essex", "suffolk", "kent", "somerset", "lincolnshire", "yarmouth", "cowes", "gravesend"]):
+            return "UK"
+        if "france" in loc_lower: return "France"
+        if "germany" in loc_lower or "prussia" in loc_lower: return "Germany"
+        if "holland" in loc_lower or "netherlands" in loc_lower or "amsterdam" in loc_lower or "leyden" in loc_lower or "leiden" in loc_lower: return "Netherlands"
+
+        # USA/America
+        # Keywords
+        usa_keywords = [
+            "america", "usa", "united states", "new england",
+            "massachusetts", "mass", "connecticut", "new york", "virginia", "pennsylvania", "new jersey", "maryland", "carolina", "georgia", "vermont", "new hampshire", "rhode island", "maine", "ohio", "illinois", "michigan",
+            "boston", "salem", "hartford", "jamestown", "plymouth", "new haven", "windsor", "wethersfield", "watertown", "dorchester", "roxbury"
+        ]
+        if any(x in loc_lower for x in usa_keywords):
+            return "USA"
+
+        # State Abbreviations (with boundary checks to avoid false positives like 'me', 'pa')
+        # We look for " CT", ",CT", " CT " or end of string.
+        # Simplest is regex for \b(CT|MA|NY|NJ|PA|VA|RI|VT|NH|ME|DE|MD|SC|NC|GA|OH|IL|MI)\b
+        if re.search(r'\b(ct|ma|ny|nj|pa|va|ri|vt|nh|me|de|md|sc|nc|ga|oh|il|mi)\b', loc_lower):
+            return "USA"
+
+        return "Unknown"
+
+    def _generate_voyage_context(self, voyage, profile):
+        # Determine effective year for context
+        year = None
+
+        # 1. Try explicit voyage year
+        if voyage.get("year") and voyage["year"] != "Unknown":
+            try:
+                year = int(voyage["year"])
+            except:
+                pass
+
+        # 2. Try Ship Year Built (as approximation of era)
+        if not year and voyage.get("specs") and voyage["specs"].get("year_built"):
+             try:
+                 # "1630" or "c. 1630"
+                 yb_str = str(voyage["specs"]["year_built"])
+                 match = re.search(r'\d{4}', yb_str)
+                 if match:
+                     year = int(match.group(0)) + 5 # Assume voyage is slightly after build
+             except:
+                 pass
+
+        # 3. Try Ancestor Migration Logic (Birth/Death)
+        is_estimated = False
+        if not year:
+            b_year = profile["vital_stats"].get("born_year_int")
+            d_year = profile["vital_stats"].get("died_year_int")
+            if b_year:
+                # Assume migration happened in early adulthood or childhood?
+                # If we don't know, Mid-Life is a safe statistical guess for "Era" context
+                if d_year:
+                    year = int((b_year + d_year) / 2)
+                else:
+                    year = b_year + 30
+                is_estimated = True
+
+        if not year:
+            return None
+
+        # Determine Route
+        dep_country = self._get_country_from_location(voyage.get("departure", ""))
+        if dep_country == "Unknown":
+             dep_country = self._get_country_from_location(profile["vital_stats"].get("born_location", ""))
+
+        arr_country = self._get_country_from_location(voyage.get("arrival", ""))
+        if arr_country == "Unknown":
+             arr_country = self._get_country_from_location(profile["vital_stats"].get("died_location", ""))
+
+        # Context Logic
+        context = {
+            "year_used": year,
+            "is_estimated": is_estimated,
+            "duration": "Unknown",
+            "conditions": "Unknown",
+            "era_label": "Unknown"
+        }
+
+        # Trans-Atlantic (UK/Europe -> USA)
+        if (dep_country in ["UK", "Netherlands", "Germany", "France"]) and (arr_country == "USA"):
+            if year < 1650: # Great Migration Era
+                context["duration"] = "8-12 weeks"
+                context["conditions"] = "Extremely cramped and hazardous. High risk of scurvy and infectious disease. Passengers slept in 'tween decks' with little ventilation."
+                context["era_label"] = "The Great Migration"
+            elif year < 1700:
+                context["duration"] = "8-10 weeks"
+                context["conditions"] = "Slightly larger vessels but still dangerous. Poor sanitation and limited rations were standard."
+                context["era_label"] = "Colonial Era"
+            elif year < 1800:
+                context["duration"] = "6-8 weeks"
+                context["conditions"] = "Regular packet ships began to operate. Conditions improved slightly but storms remained a major threat."
+                context["era_label"] = "18th Century Passage"
+            elif year < 1850:
+                context["duration"] = "4-6 weeks"
+                context["conditions"] = "The era of fast clipper ships and packets. Steerage conditions remained poor/crowded for immigrants."
+                context["era_label"] = "Age of Sail"
+            else:
+                context["duration"] = "10-14 days"
+                context["conditions"] = "Early steamships offered consistent travel times. Steerage was still crowded, but the journey was significantly shorter and safer."
+                context["era_label"] = "Steamship Era"
+
+        return context
+
     def clean_and_save(self):
         # 1. First pass: separate "Real" profiles from "Child" entries
         real_profiles = {}
@@ -1832,6 +1945,16 @@ class GenealogyTextPipeline:
             # Enrich Voyage Data
             if "voyages" in p["story"]:
                 for voyage in p["story"]["voyages"]:
+                    # 1. Generalize Route (add country fields)
+                    voyage["departure_country"] = self._get_country_from_location(voyage.get("departure"))
+                    if voyage["departure_country"] == "Unknown":
+                        voyage["departure_country"] = self._get_country_from_location(p["vital_stats"].get("born_location"))
+
+                    voyage["arrival_country"] = self._get_country_from_location(voyage.get("arrival"))
+                    if voyage["arrival_country"] == "Unknown":
+                        voyage["arrival_country"] = self._get_country_from_location(p["vital_stats"].get("died_location"))
+
+                    # 2. Enrich Ship Specs
                     ship_name = voyage.get("ship_name")
                     if ship_name and ship_name != "Unknown":
                         specs = ship_service.enrich_ship(ship_name)
@@ -1843,6 +1966,9 @@ class GenealogyTextPipeline:
                             mates = [m for m in ship_manifest[ship_name] if m["id"] != p["id"]]
                             if mates:
                                 voyage["shipmates"] = mates
+
+                    # 3. Generate Historical Context (Visionary Layer)
+                    voyage["context"] = self._generate_voyage_context(voyage, p)
 
             # Fetch Image
             born_year = p["vital_stats"].get("born_year_int")
