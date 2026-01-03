@@ -198,6 +198,62 @@ class GenealogyTextPipeline:
         self.image_cache = self.load_cache()
         self.cache_updated = False
 
+    def _extract_voyages(self, text):
+        voyages = []
+        if not text: return voyages, text
+
+        # Pattern 1: Explicit Tag
+        # [Ship: Name | Type: X | Year: Y | Departure: A | Arrival: B]
+        tag_pattern = r'\[Ship:\s*([^\]]+)\]'
+
+        def replace_tag(match):
+            content = match.group(1)
+            parts = [p.strip() for p in content.split('|')]
+
+            voyage = {
+                "ship_name": parts[0],
+                "type": "Unknown",
+                "year": "Unknown",
+                "departure": "Unknown",
+                "arrival": "Unknown",
+                "class": "Passenger"
+            }
+
+            for part in parts[1:]:
+                if ":" in part:
+                    k, v = part.split(":", 1)
+                    k = k.strip().lower()
+                    v = v.strip()
+                    if k == "type": voyage["type"] = v
+                    elif k == "year": voyage["year"] = v
+                    elif k == "departure": voyage["departure"] = v
+                    elif k == "arrival": voyage["arrival"] = v
+                    elif k == "class": voyage["class"] = v
+
+            voyages.append(voyage)
+            return "" # Remove tag
+
+        new_text = re.sub(tag_pattern, replace_tag, text, flags=re.IGNORECASE)
+
+        # Pattern 2: Natural Language
+        nl_pattern = r'(?:arrived|sailed|came) on the ([A-Z][a-z]+(?: [A-Z][a-z]+)*)'
+        matches = re.finditer(nl_pattern, new_text)
+        for m in matches:
+            ship_name = m.group(1)
+            if not any(v['ship_name'] == ship_name for v in voyages):
+                 voyages.append({
+                    "ship_name": ship_name,
+                    "type": "Unknown",
+                    "year": "Unknown",
+                    "departure": "Unknown",
+                    "arrival": "Unknown",
+                    "class": "Passenger"
+                })
+
+        # Cleanup extra spaces
+        new_text = re.sub(r'\s{2,}', ' ', new_text).strip()
+        return voyages, new_text
+
     def load_cache(self):
         cache_file = "./kinship-app/src/wikimedia_cache.json"
         if os.path.exists(cache_file):
@@ -771,6 +827,7 @@ class GenealogyTextPipeline:
                         },
                         "story": {
                             "notes": "",
+                            "voyages": [],
                             "life_events": []
                         },
                         "metadata": {
@@ -806,6 +863,7 @@ class GenealogyTextPipeline:
                                 },
                                 "story": {
                                     "notes": "",
+                                    "voyages": [],
                                     "life_events": []
                                 },
                                 "metadata": {
@@ -853,9 +911,11 @@ class GenealogyTextPipeline:
 
                     if n_match:
                         notes_text = n_match.group(1).strip()
-                        current_profile["story"]["notes"] = notes_text
-                        current_profile["story"]["life_events"] = self.extract_events_from_text(notes_text)
-                        current_profile["story"]["associates"] = self._extract_explicit_associates(notes_text)
+                        voyages, cleaned_notes = self._extract_voyages(notes_text)
+                        current_profile["story"]["notes"] = cleaned_notes
+                        current_profile["story"]["voyages"] = voyages
+                        current_profile["story"]["life_events"] = self.extract_events_from_text(cleaned_notes)
+                        current_profile["story"]["associates"] = self._extract_explicit_associates(cleaned_notes)
 
                     if c_match:
                         raw_children = c_match.group(1).strip()
@@ -1564,6 +1624,7 @@ class GenealogyTextPipeline:
                 "vital_stats": p["vital_stats"],
                 "story": {
                     "notes": p["story"]["notes"],
+                    "voyages": p["story"].get("voyages", []),
                     "life_events": p["story"].get("life_events", []),
                     "tags": tags,
                     "associates": p["story"].get("associates", [])
