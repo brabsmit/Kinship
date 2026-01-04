@@ -4,6 +4,7 @@ import os
 import requests
 import time
 import hashlib
+import datetime
 from docx import Document
 from collections import defaultdict
 import dateparser
@@ -1786,6 +1787,46 @@ class GenealogyTextPipeline:
         print("Top Mentioned People:")
         for name, freq in sorted_clusters[:5]:
             print(f"  - {name}: {freq} mentions")
+
+        self.update_ariadne_journal()
+
+    def update_ariadne_journal(self):
+        print("--- Ariadne: Updating Journal ---")
+        today = datetime.date.today().strftime("%Y-%m-%d")
+
+        # Prepare content
+        ambiguous_count = len(self.ariadne_log["ambiguous"])
+        ambiguous_examples = ", ".join(list(self.ariadne_log["ambiguous"].keys())[:3])
+
+        sorted_clusters = sorted(self.ariadne_log["clusters"].items(), key=lambda x: x[1], reverse=True)
+        cluster_examples = ", ".join([f"{name} ({freq})" for name, freq in sorted_clusters[:3]])
+
+        new_links_count = self.ariadne_log["new_links"]
+
+        if new_links_count == 0 and ambiguous_count == 0:
+            print("   Nothing significant to log.")
+            return
+
+        entry = f"\n## {today} - Automated Link Analysis\n"
+        entry += f"**Discovery:** Analyzed narrative text and found {new_links_count} potential connections.\n"
+
+        if ambiguous_count > 0:
+            entry += f"**Ambiguity Report:** {ambiguous_count} ambiguous references found (e.g., {ambiguous_examples}).\n"
+
+        if sorted_clusters:
+            entry += f"**Cluster Alert:** High frequency mentions detected for: {cluster_examples}.\n"
+
+        entry += f"**Action:** Systematic text scanning and cross-linking applied.\n"
+
+        log_path = ".jules/ariadne.md"
+        try:
+            # Check if file exists to maybe add a header if missing?
+            # But prompt says "create if missing", so 'a' mode handles creation.
+            with open(log_path, "a") as f:
+                f.write(entry)
+            print(f"   Journal updated: {log_path}")
+        except Exception as e:
+            print(f"   Error writing journal: {e}")
 
     def _get_country_from_location(self, location):
         if not location or location == "Unknown":
