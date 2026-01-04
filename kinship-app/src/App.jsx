@@ -1550,7 +1550,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 <div className="mb-3 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 inline-block animate-in fade-in zoom-in duration-500">
                                     <Sparkles size={12} className="text-amber-600" />
                                     <span className="font-medium">
-                                        Carrying the Lineage: This middle name honors his {item.story.naming_echo.relation}, <span className="font-bold">{item.story.naming_echo.ancestor_name}</span>.
+                                        Carrying the Lineage: This middle name honors their {item.story.naming_echo.relation}, <span className="font-bold">{item.story.naming_echo.ancestor_name}</span>.
                                     </span>
                                 </div>
                             )}
