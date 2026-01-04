@@ -20,3 +20,29 @@
 - `va_smith_1612`: Adventures of Captain John Smith in Virginia (1624)
 - `pa_holme_1687`: Thomas Holme's Map of Pennsylvania (1687)
 - `industrial_19th`: Bird's Eye View of Lowell, Massachusetts (1876)
+
+## 2024-05-31 - Colonial & Frontier Visual Pack
+**Theme:** Filling the gaps in Colonial New England and the Westward Expansion.
+**Objective:** Provide visual context for ancestors in NJ, RI, Northern New England, and the Midwest (OH, MI, IL).
+
+**Sources:**
+- All assets are sourced from Wikimedia Commons (Public Domain / Creative Commons).
+- Maps are primarily from the Library of Congress collection via Wikimedia.
+
+**New Assets:**
+1.  **New Jersey (1777):** *The Province of New Jersey, divided into East and West (Faden).*
+    -   *Logic:* Use for any NJ birth/death prior to 1850.
+2.  **Rhode Island (1814):** *Carey's Map of Rhode Island.*
+    -   *Logic:* Use for RI events.
+3.  **New Hampshire (1796):** *Greenleaf Map of New Hampshire.*
+    -   *Logic:* Use for NH and VT (Northern NE context).
+4.  **Ohio (1804):** *Map of Ohio (Early Statehood).*
+    -   *Logic:* Visual anchor for the "Westward Pioneers" thread in the Midwest.
+5.  **Michigan (1831):** *Burr Map of Michigan.*
+    -   *Logic:* For ancestors moving into the Michigan Territory.
+6.  **Illinois (1818):** *Melish Map of Illinois.*
+    -   *Logic:* For early Illinois settlers.
+
+**Visual Philosophy:**
+-   **Sepia Tone:** All maps are treated with `sepia(20%)` to maintain visual consistency with the existing "Antique Paper" theme.
+-   **Fallback:** Profiles in specific towns (e.g., "Englewood, NJ") will now gracefully degrade to the State Map instead of the generic texture.
