@@ -355,29 +355,6 @@ const TheFleet = ({ familyData, onSelectProfile }) => {
 
             <div className="max-w-6xl mx-auto px-6 -mt-10 relative z-20 space-y-8 pb-20">
 
-                {/* 1. Migration Wave (Timeline) */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                             <Users size={16} /> Migration Wave
-                        </h2>
-                        <div className="text-xs text-gray-400 italic">
-                            Arrivals per Year (1600 - 1920)
-                        </div>
-                    </div>
-                    <MigrationWave timelineData={timelineData} />
-                </div>
-
-                {/* 2. Route Map */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                             <MapPin size={16} /> Voyage Routes
-                        </h2>
-                    </div>
-                    <RouteMap voyages={shipGroups} />
-                </div>
-
                 {/* 3. Ship Inventory */}
                 <div>
                      <div className="flex items-center gap-4 mb-8">
