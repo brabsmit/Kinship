@@ -1489,8 +1489,38 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                         <div className="px-8 pb-8 pt-6 flex flex-col items-center text-center">
                             <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-2 leading-tight">
-                                {item.name}
+                                {item.story?.naming_echo ? (
+                                    <>
+                                        {item.name.split(' ').map((part, i) => {
+                                            // Normalize comparison
+                                            const cleanPart = part.replace(/[.,]/g, '');
+                                            const matchName = item.story.naming_echo.middle_name;
+
+                                            if (cleanPart === matchName) {
+                                                return (
+                                                    <span key={i} className="text-[#F59E0B] relative group cursor-help">
+                                                        {part}{' '}
+                                                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] bg-[#F59E0B] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                                            Echo of {item.story.naming_echo.surname}
+                                                        </span>
+                                                    </span>
+                                                );
+                                            }
+                                            return <span key={i}>{part} </span>;
+                                        })}
+                                    </>
+                                ) : (
+                                    item.name
+                                )}
                             </h1>
+                            {item.story?.naming_echo && (
+                                <div className="mb-3 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 inline-block animate-in fade-in zoom-in duration-500">
+                                    <Sparkles size={12} className="text-amber-600" />
+                                    <span className="font-medium">
+                                        Carrying the Lineage: This middle name honors his {item.story.naming_echo.relation}, <span className="font-bold">{item.story.naming_echo.ancestor_name}</span>.
+                                    </span>
+                                </div>
+                            )}
                             <div className="flex items-center gap-4 text-gray-500 font-mono text-sm uppercase tracking-widest mb-6">
                                 <span>{bornYear || '?'}</span>
                                 <span className="w-8 h-px bg-gray-300"></span>

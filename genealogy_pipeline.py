@@ -1341,6 +1341,100 @@ class GenealogyTextPipeline:
                 if spouse_candidate not in p['relations']['spouses']:
                     p['relations']['spouses'].append(spouse_candidate)
 
+    def _analyze_naming_patterns(self):
+        print("--- Analyzing Naming Patterns (The Echo) ---")
+        id_map = {p['id']: p for p in self.family_data}
+        count = 0
+
+        for p in self.family_data:
+            # 1. Parse Name
+            # Remove suffixes for clean splitting
+            clean_name = re.sub(r',?\s+(Jr\.?|Sr\.?|III|IV|Esq\.?)$', '', p['name'], flags=re.IGNORECASE)
+            parts = clean_name.split()
+
+            # Need at least 3 parts: First Middle Last
+            if len(parts) < 3:
+                continue
+
+            # Middle name is usually the second token
+            # If multiple middle names (e.g. William Earl Dodge), we check all "middle" tokens
+            # But usually sticking to the first middle token is safe for "Mother's Maiden Name" logic
+            # Let's check all middle tokens just in case
+            middle_tokens = parts[1:-1]
+            my_surname = parts[-1].lower()
+
+            match_found = None
+
+            for token in middle_tokens:
+                token_clean = token.strip(".,")
+                if len(token_clean) < 3: continue # Skip initials
+
+                # 2. Traverse Ancestors (BFS)
+                queue = [(pid, 1) for pid in p.get('relations', {}).get('parents', [])]
+                visited = set()
+
+                while queue:
+                    curr_id, steps = queue.pop(0)
+                    if curr_id in visited: continue
+                    visited.add(curr_id)
+
+                    if curr_id not in id_map: continue
+                    ancestor = id_map[curr_id]
+
+                    # Extract Ancestor Surnames
+                    # 1. Last Name
+                    anc_parts = re.sub(r',?\s+(Jr\.?|Sr\.?|III|IV|Esq\.?)$', '', ancestor['name'], flags=re.IGNORECASE).split()
+                    anc_surname = anc_parts[-1].strip(".,")
+
+                    # 2. Maiden Name in Parens: "Mary (Greene) Wainwright"
+                    maiden_match = re.search(r'\((.*?)\)', ancestor['name'])
+                    anc_maiden = maiden_match.group(1).strip() if maiden_match else ""
+
+                    # Check for Match
+                    is_match = False
+                    matched_surname = ""
+
+                    if token_clean.lower() == anc_surname.lower():
+                        is_match = True
+                        matched_surname = anc_surname
+                    elif anc_maiden and token_clean.lower() == anc_maiden.lower():
+                        is_match = True
+                        matched_surname = anc_maiden
+
+                    # Filter out matches that are just the profile's own surname (e.g. Father's surname)
+                    # We are looking for "Hidden Logic" - so usually a different name.
+                    if is_match and matched_surname.lower() != my_surname:
+
+                        # Determine Relation Label
+                        rel_label = "Ancestor"
+                        if steps == 1: rel_label = "Mother" # If surname is different from mine, it's likely mother
+                        elif steps == 2: rel_label = "Grandmother"
+                        elif steps == 3: rel_label = "Great-Grandmother"
+
+                        # Store it
+                        match_found = {
+                            "middle_name": token_clean,
+                            "ancestor_name": ancestor['name'],
+                            "ancestor_id": ancestor['id'],
+                            "relation": rel_label,
+                            "surname": matched_surname
+                        }
+                        break # Stop looking for this token (found nearest ancestor)
+
+                    # Continue traversal
+                    if steps < 5 and not match_found:
+                         for par_id in ancestor.get('relations', {}).get('parents', []):
+                             queue.append((par_id, steps + 1))
+
+                if match_found:
+                    break # Stop checking other middle tokens
+
+            if match_found:
+                p['story']['naming_echo'] = match_found
+                count += 1
+
+        print(f"Found {count} Naming Echo matches.")
+
     def _get_birth_year(self, profile):
         raw = profile.get("vital_stats", {}).get("born_date", "")
         match = re.search(r'\d{4}', raw)
@@ -1894,6 +1988,7 @@ class GenealogyTextPipeline:
         # self.family_data already unique by logic above.
 
         self.link_family_members()
+        self._analyze_naming_patterns()
         self._find_mentions()
 
         # Initialize Services
@@ -1988,7 +2083,8 @@ class GenealogyTextPipeline:
                     "voyages": p["story"].get("voyages", []),
                     "life_events": p["story"].get("life_events", []),
                     "tags": tags,
-                    "associates": p["story"].get("associates", [])
+                    "associates": p["story"].get("associates", []),
+                    "naming_echo": p["story"].get("naming_echo")
                 },
                 "hero_image": hero_image,
                 "relations": p.get("relations", {}),
