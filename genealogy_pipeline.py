@@ -590,6 +590,13 @@ class GenealogyTextPipeline:
             if date_candidate.strip().lower() in ["possibly", "unknown", "?", ""]:
                  date_candidate = "Unknown"
 
+            # Handle edge case where location has extra note: "6/9/1760, Eastwood, NY; not clear..."
+            # If the date candidate contains a semicolon or comma followed by a year, it might be messy.
+            # But "in" splitting is usually safe.
+            # However, if date_candidate is long and has semicolons, split it?
+            if ";" in date_candidate:
+                date_candidate = date_candidate.split(";")[0].strip()
+
             return date_candidate, loc_candidate
 
         # 2. Fallback: Use dateparser to handle messy formats
