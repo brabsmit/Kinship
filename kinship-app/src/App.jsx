@@ -29,7 +29,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity, Landmark } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -52,6 +52,7 @@ import TechnologyContext from './components/TechnologyContext';
 import SoloChapter from './components/SoloChapter';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
+import presidentsData from './utils/presidents.json';
 import { calculateDistance, detectRegion } from './utils/geo';
 
 // Fix for default Leaflet icons in Vite/Webpack
@@ -105,6 +106,38 @@ const NARRATIVE_THREADS = [
     { id: "victorian_era", title: "The Victorian Era", description: "Ancestors who lived during the reign of Queen Victoria (1837-1901).", keywords: [], dateRange: { start: 1837, end: 1901 }, color: "bg-fuchsia-800 text-white border-fuchsia-950", hex: "#86198F", icon: <Crown size={14} /> },
     { id: "pandemic_survivors", title: "The Pandemic Survivors", description: "Ancestors who lived through the 1918 Flu Pandemic or earlier plagues.", keywords: ["Spanish Flu", "Plague", "Yellow Fever", "Cholera", "Smallpox", "Pandemic"], dateRange: { start: 1918, end: 1919 }, color: "bg-stone-600 text-white border-stone-800", hex: "#57534E", icon: <Activity size={14} /> }
 ];
+
+const calculatePresidentialSpan = (bornYear, diedYear) => {
+    if (!bornYear || !diedYear || diedYear <= bornYear) return null;
+
+    // Filter presidents whose term overlaps with the lifespan
+    // Overlap: max(start, born) <= min(end, died)
+    // We use <= to include presidents who served within a single year (e.g., 1841)
+    // and to correctly capture transitions.
+    const witnessed = presidentsData.filter(p => {
+         return Math.max(p.start, bornYear) <= Math.min(p.end, diedYear);
+    });
+
+    if (witnessed.length === 0) return null;
+
+    witnessed.sort((a, b) => a.start - b.start);
+
+    const first = witnessed[0];
+    const last = witnessed[witnessed.length - 1];
+
+    // Determine "Born Under"
+    // Ideally, the president in office at birth year.
+    // If born before 1789, this logic might return the first president (Washington) if they lived past 1789.
+    // But if born < 1789, they weren't "Born under Washington".
+    const bornUnder = (bornYear >= 1789) ? first.name : "Before US Presidency";
+    const diedUnder = last.name;
+
+    return {
+        count: witnessed.length,
+        bornUnder,
+        diedUnder
+    };
+};
 
 const detectThreads = (person) => {
     const notes = (person.story?.notes || "").toLowerCase();
@@ -1520,6 +1553,24 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                         Part of {thread.title} Epic
                                     </button>
                                 ))}
+
+                                {/* Presidential Span Badge */}
+                                {(() => {
+                                    const span = calculatePresidentialSpan(bornYear, diedYear);
+                                    if (span && span.count > 0) {
+                                        return (
+                                            <div
+                                                key="presidential-span"
+                                                className="flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border-slate-200 cursor-help"
+                                                title={`Born under ${span.bornUnder}; died under ${span.diedUnder}`}
+                                            >
+                                                <Landmark size={12} />
+                                                Witnessed {span.count} Presidencies
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })()}
                             </div>
 
                             {/* STATS BAR */}
