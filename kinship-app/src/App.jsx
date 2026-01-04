@@ -49,6 +49,7 @@ import CircleOfFriends from './components/CircleOfFriends';
 import VoyageCard from './components/VoyageCard';
 import TheFleet from './components/TheFleet';
 import TechnologyContext from './components/TechnologyContext';
+import SoloChapter from './components/SoloChapter';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
 import { calculateDistance, detectRegion } from './utils/geo';
@@ -1530,6 +1531,8 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
                         </div>
                     </div>
+
+                    <SoloChapter person={item} familyData={familyData} />
 
                     {/* STORY / BIO */}
                     {item.story?.notes && (
