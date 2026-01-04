@@ -8,3 +8,15 @@
 **Assets Added:**
 - `norfolk_map_1610`: A Mapp of ye County of Norfolk (John Speed/Wenceslaus Hollar)
 - `long_island_1686`: Map of Long Island (1686)
+
+## 2024-05-30 - Virginia, Pennsylvania & Industrial Pack
+**Source:** Wikimedia Commons (Public Domain)
+**Logic:**
+- **Virginia (17th Century):** Mapped to *Adventures of Captain John Smith in Virginia (1624)*. Essential for the Jamestown/Virginia settlers.
+- **Pennsylvania (Colonial):** Mapped to *Thomas Holme's Map of Pennsylvania (1687)*. Perfect for Quaker ancestors and early PA settlers, showing original land grants.
+- **Industrial Era (Mill Towns):** Mapped to *Bird's Eye View of Lowell, MA (1876)*. Applied to profiles born 1820-1920 in key industrial cities (Lowell, Lawrence, Pittsburgh, etc.) to replace generic antique backgrounds with period-appropriate industrialization imagery.
+
+**Assets Added:**
+- `va_smith_1612`: Adventures of Captain John Smith in Virginia (1624)
+- `pa_holme_1687`: Thomas Holme's Map of Pennsylvania (1687)
+- `industrial_19th`: Bird's Eye View of Lowell, Massachusetts (1876)

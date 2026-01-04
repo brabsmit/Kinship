@@ -89,6 +89,30 @@ export const ASSETS = {
         style: { filter: "sepia(20%) contrast(110%)" }
     },
 
+    // Virginia / Jamestown
+    va_smith_1612: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Adventures_of_Captain_John_Smith_in_Virginia_1624.jpg/1024px-Adventures_of_Captain_John_Smith_in_Virginia_1624.jpg",
+        alt: "Captain John Smith's Map of Virginia (1624)",
+        caption: "The Virginia Colony",
+        style: { filter: "sepia(25%) contrast(110%)" }
+    },
+
+    // Pennsylvania
+    pa_holme_1687: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Fac-simile_of_Holmes-map_of_the_province_of_Pennsylvania_-_with_the_names_of_the_original_purchasers_from_William_Penn%2C_begun_in_1681._LOC_88695890.jpg/1024px-Fac-simile_of_Holmes-map_of_the_province_of_Pennsylvania_-_with_the_names_of_the_original_purchasers_from_William_Penn%2C_begun_in_1681._LOC_88695890.jpg",
+        alt: "Thomas Holme's Map of Pennsylvania (1687)",
+        caption: "William Penn's Province (1687)",
+        style: { filter: "sepia(15%) contrast(105%)" }
+    },
+
+    // Industrial Era (Lowell, MA)
+    industrial_19th: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/1876_bird%27s_eye_view_of_Lowell%2C_Massachusetts%3B_colored.jpg/1024px-1876_bird%27s_eye_view_of_Lowell%2C_Massachusetts%3B_colored.jpg",
+        alt: "Bird's Eye View of Lowell, Massachusetts (1876)",
+        caption: "The Industrial Revolution",
+        style: { filter: "sepia(20%) contrast(100%)" }
+    },
+
     // Fallback
     generic_antique: {
         src: paperTexture,
@@ -112,14 +136,31 @@ export const getHeroImage = (location, year) => {
 
     // 1. Special Overrides (Muse Logic for known cache gaps or quality issues)
 
+    // Industrial Era Cities (1840-1920)
+    // Specific Mill Towns or broad Industrial keywords
+    const industrialCities = ["lowell", "lawrence", "manchester, nh", "pittsburgh", "fall river", "holyoke"];
+    if (industrialCities.some(city => loc.includes(city)) && y >= 1820 && y < 1920) {
+        return ASSETS.industrial_19th;
+    }
+    // Broad "Mass" or "PA" logic for 19th century industrial vibe?
+    // Maybe stick to specific cities to avoid over-generalizing rural PA.
+
+    // Pennsylvania (Colonial / Quaker)
+    if ((loc.includes("pennsylvania") || loc.includes(" pa") || loc.includes("philadelphia")) && y < 1800) {
+        return ASSETS.pa_holme_1687;
+    }
+
+    // Virginia (Colonial)
+    if ((loc.includes("virginia") || loc.includes(" va") || loc.includes("jamestown")) && y < 1750) {
+        return ASSETS.va_smith_1612;
+    }
+
     // Connecticut Colonial (1700-1800)
     // Map "Norwich" < 1800 specifically to CT Colony if not New Haven
     if ((loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford")) && y >= 1700 && y < 1800) {
         return ASSETS.ct_1700;
     }
     // Norwich Logic:
-    // If Norwich, CT -> 1700-1800 use CT map.
-    // If Norwich, CT -> 1600-1700 use Puritan Life or CT map. Let's use Puritan Life for early settlement vibe.
     if (loc.includes("norwich") && loc.includes("ct")) {
         if (y >= 1700) return ASSETS.ct_1700;
         return ASSETS.puritan_life; // Early settlers
@@ -136,8 +177,6 @@ export const getHeroImage = (location, year) => {
     }
 
     // East Anglia (Norfolk, Suffolk, Essex, Norwich England)
-    // Note: Must distinguish Norwich England from Norwich CT (handled above if 'ct' present)
-    // But 'norwich' alone could be ambiguous? Usually data has 'Norwich, Norfolk, England'.
     if ((loc.includes("norfolk") || loc.includes("suffolk") || loc.includes("essex") || (loc.includes("norwich") && !loc.includes("ct"))) && loc.includes("england")) {
         // Use East Anglia map for 1600s/1700s
         if (y < 1750) return ASSETS.norfolk_map_1610;
