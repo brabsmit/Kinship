@@ -10,10 +10,20 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/publication/470/us-revolutionary-war-service-records-1775-1783",
         description: "Compiled service records of soldiers who served in the American Army during the Revolutionary War, 1775-1783"
     },
+    "Revolutionary": {
+        label: "Rev. War Service",
+        url: "https://www.familysearch.org/search/collection/1849623",
+        description: "Revolutionary War Service Records (1775-1783)"
+    },
     "Civil War": {
         label: "Fold3 Civil War Collection",
         url: "https://www.fold3.com/browse/251/civil-war-collection",
         description: "Service records, pensions, and photos from the US Civil War"
+    },
+    "Civil War Soldiers": {
+        label: "Civil War Soldiers (FamilySearch)",
+        url: "https://www.familysearch.org/search/collection/1919699",
+        description: "US Civil War Soldiers Index (1861-1865)"
     },
     "Civil War NPS": {
         label: "NPS Soldiers and Sailors",
@@ -35,10 +45,20 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/2124476",
         description: "Draft cards for men born 1877-1897 (The 'Old Man's Draft')"
     },
+    "WWII Enlistment": {
+        label: "WWII Enlistment",
+        url: "https://www.familysearch.org/search/collection/1880599",
+        description: "US Army Enlistment Records (1938-1946)"
+    },
     "DAR": {
         label: "DAR Genealogical Research System",
         url: "https://services.dar.org/public/dar_research/search/",
         description: "Revolutionary War Patriots and descendants"
+    },
+    "Fold3": {
+        label: "Fold3 Search",
+        url: "https://www.fold3.com/search",
+        description: "Search Military Records on Fold3 (Paid)"
     },
 
     // --- CENSUS (US) ---
@@ -193,6 +213,16 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/list?keywords=birth",
         description: "Search for birth and christening records"
     },
+    "Birth": {
+        label: "FamilySearch Birth Records",
+        url: "https://www.familysearch.org/search/collection/list?keywords=birth",
+        description: "Search for birth and christening records"
+    },
+    "Christening": {
+        label: "FamilySearch Birth Records",
+        url: "https://www.familysearch.org/search/collection/list?keywords=birth",
+        description: "Search for birth and christening records"
+    },
     "Marriage Records": {
         label: "FamilySearch Marriage Records",
         url: "https://www.familysearch.org/search/collection/list?keywords=marriage",
@@ -203,7 +233,17 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/list?keywords=death",
         description: "Search for death and burial records"
     },
+    "Death": {
+        label: "FamilySearch Death Records",
+        url: "https://www.familysearch.org/search/collection/list?keywords=death",
+        description: "Search for death and burial records"
+    },
     "FindAGrave": {
+        label: "Find A Grave",
+        url: "https://www.findagrave.com/memorial/search",
+        description: "Burial and cemetery records"
+    },
+    "Grave": {
         label: "Find A Grave",
         url: "https://www.findagrave.com/memorial/search",
         description: "Burial and cemetery records"
@@ -215,8 +255,23 @@ export const RESEARCH_SOURCES = {
     },
     "CT Vital": {
         label: "Connecticut Vital Records (Barbour)",
-        url: "https://www.ancestry.com/search/collections/1062/",
+        url: "https://www.familysearch.org/search/collection/2843390",
         description: "The Barbour Collection of Connecticut Town Vital Records"
+    },
+    "Connecticut": {
+        label: "Connecticut Vital Records (Barbour)",
+        url: "https://www.familysearch.org/search/collection/2843390",
+        description: "The Barbour Collection of Connecticut Town Vital Records"
+    },
+    "Barbour": {
+        label: "Connecticut Vital Records (Barbour)",
+        url: "https://www.familysearch.org/search/collection/2843390",
+        description: "The Barbour Collection of Connecticut Town Vital Records"
+    },
+    "Massachusetts": {
+        label: "MA Town Clerk Records",
+        url: "https://www.familysearch.org/search/collection/2061550",
+        description: "Vital and town records from local town clerks (1626-2001)"
     },
     "MA Vital": {
         label: "Massachusetts Town Clerk Records",
@@ -262,6 +317,11 @@ export const RESEARCH_SOURCES = {
         url: "https://glorecords.blm.gov/search/default.aspx",
         description: "Federal land patents and homestead records"
     },
+    "Land Records": {
+        label: "Bureau of Land Management (GLO)",
+        url: "https://glorecords.blm.gov/search/default.aspx",
+        description: "Federal land patents and homestead records"
+    },
     "Probate": {
         label: "FamilySearch Wills & Probate",
         url: "https://www.familysearch.org/search/collection/list?keywords=probate",
@@ -284,6 +344,11 @@ export const RESEARCH_SOURCES = {
         url: "https://heritage.statueofliberty.org/",
         description: "Passenger arrival records"
     },
+    "Ellis Island": {
+        label: "Ellis Island Search",
+        url: "https://heritage.statueofliberty.org/passenger",
+        description: "Search 65 million passenger records (Free)"
+    },
     "Freedman's Bureau": {
         label: "Freedman's Bureau Records",
         url: "https://www.familysearch.org/search/collection/2721171",
@@ -297,6 +362,11 @@ export const RESEARCH_SOURCES = {
 
     // --- BOOKS & NEWSPAPERS ---
     "Obituary": {
+        label: "Newspapers.com",
+        url: "https://www.newspapers.com/",
+        description: "Historical newspapers search"
+    },
+    "Obituaries": {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
         description: "Historical newspapers search"
@@ -353,6 +423,7 @@ export function findSources(text) {
 
     // Filter out keys that are substrings of other matched keys
     // e.g. if "1790 Census" is found, drop "Census"
+    // Also deduplicate if "1850" and "1850 Census" are both found (key overlap)
     const finalKeys = matchedKeys.filter(key => {
         return !matchedKeys.some(otherKey =>
             otherKey !== key && otherKey.toLowerCase().includes(key.toLowerCase())
