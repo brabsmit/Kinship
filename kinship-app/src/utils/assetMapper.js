@@ -75,6 +75,30 @@ export const ASSETS = {
         style: { filter: "contrast(105%)" }
     },
 
+    // New Jersey
+    nj_1777: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/The_province_of_New_Jersey%2C_divided_into_East_and_West%2C_commonly_called_the_Jerseys_LOC_74692505.jpg/1024px-The_province_of_New_Jersey%2C_divided_into_East_and_West%2C_commonly_called_the_Jerseys_LOC_74692505.jpg",
+        alt: "The Province of New Jersey (Faden, 1777)",
+        caption: "The Province of New Jersey (1777)",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+
+    // Rhode Island
+    ri_1814: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/1814_Carey_Map_of_Rhode_Island_-_Geographicus_-_RhodeIsland-carey-1814.jpg/1024px-1814_Carey_Map_of_Rhode_Island_-_Geographicus_-_RhodeIsland-carey-1814.jpg",
+        alt: "Carey's Map of Rhode Island (1814)",
+        caption: "Rhode Island (19th Century)",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+
+    // Northern New England (NH, VT)
+    nh_1796: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/1796_Greenleaf_Map_of_New_Hampshire_-_Geographicus_-_NewHampshire-greenleaf-1796.jpg/1024px-1796_Greenleaf_Map_of_New_Hampshire_-_Geographicus_-_NewHampshire-greenleaf-1796.jpg",
+        alt: "Greenleaf Map of New Hampshire (1796)",
+        caption: "Northern New England (1796)",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+
     // New York / NYC
     ny_1800: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bird%27s_Eye_Panorama_of_Manhattan_%26_New_York_City_1873.jpg/1024px-Bird%27s_Eye_Panorama_of_Manhattan_%26_New_York_City_1873.jpg",
@@ -103,6 +127,26 @@ export const ASSETS = {
         alt: "Thomas Holme's Map of Pennsylvania (1687)",
         caption: "William Penn's Province (1687)",
         style: { filter: "sepia(15%) contrast(105%)" }
+    },
+
+    // Midwest / Westward Pioneer
+    ohio_1804: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Map_of_Ohio_1804.jpg/1024px-Map_of_Ohio_1804.jpg",
+        alt: "Map of Ohio (1804)",
+        caption: "The Ohio Frontier (1804)",
+        style: { filter: "sepia(25%) contrast(105%)" }
+    },
+    michigan_1831: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/1831_Burr_Map_of_Michigan_-_Geographicus_-_Michigan-burr-1831.jpg/1024px-1831_Burr_Map_of_Michigan_-_Geographicus_-_Michigan-burr-1831.jpg",
+        alt: "Burr Map of Michigan (1831)",
+        caption: "The Michigan Territory (1831)",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+    illinois_1818: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/1818_Melish_Map_of_Illinois_-_Geographicus_-_Illinois-melish-1818.jpg/1024px-1818_Melish_Map_of_Illinois_-_Geographicus_-_Illinois-melish-1818.jpg",
+        alt: "Melish Map of Illinois (1818)",
+        caption: "Early Illinois (1818)",
+        style: { filter: "sepia(20%) contrast(105%)" }
     },
 
     // Industrial Era (Lowell, MA)
@@ -150,6 +194,11 @@ export const getHeroImage = (location, year) => {
         return ASSETS.pa_holme_1687;
     }
 
+    // New Jersey (Colonial / Early Statehood)
+    if ((loc.includes("new jersey") || loc.includes(" nj") || loc.includes("englewood") || loc.includes("newark")) && y < 1850) {
+        return ASSETS.nj_1777;
+    }
+
     // Virginia (Colonial)
     if ((loc.includes("virginia") || loc.includes(" va") || loc.includes("jamestown")) && y < 1750) {
         return ASSETS.va_smith_1612;
@@ -171,9 +220,31 @@ export const getHeroImage = (location, year) => {
         return ASSETS.new_haven_1641;
     }
 
+    // Rhode Island (General)
+    if ((loc.includes("rhode island") || loc.includes(" ri") || loc.includes("providence")) && y < 1900) {
+        return ASSETS.ri_1814;
+    }
+
+    // Northern New England (NH, VT, ME)
+    if ((loc.includes("new hampshire") || loc.includes(" nh") || loc.includes("vermont") || loc.includes(" vt") || loc.includes("maine") || loc.includes(" me"))) {
+         // Use NH map as representative for Northern NE before 1850
+         if (y < 1850) return ASSETS.nh_1796;
+    }
+
     // Long Island / Oyster Bay Colonial (< 1800)
     if ((loc.includes("oyster bay") || loc.includes("long island") || loc.includes("hempstead") || loc.includes("jamaica") || loc.includes("southold")) && y < 1800) {
         return ASSETS.long_island_1686;
+    }
+
+    // Midwest / Westward Expansion
+    if ((loc.includes("ohio") || loc.includes(" oh")) && y < 1850) {
+        return ASSETS.ohio_1804;
+    }
+    if ((loc.includes("michigan") || loc.includes(" mi")) && y < 1850) {
+        return ASSETS.michigan_1831;
+    }
+    if ((loc.includes("illinois") || loc.includes(" il")) && y < 1850) {
+        return ASSETS.illinois_1818;
     }
 
     // East Anglia (Norfolk, Suffolk, Essex, Norwich England)
