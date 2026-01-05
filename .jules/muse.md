@@ -46,3 +46,17 @@
 **Visual Philosophy:**
 -   **Sepia Tone:** All maps are treated with `sepia(20%)` to maintain visual consistency with the existing "Antique Paper" theme.
 -   **Fallback:** Profiles in specific towns (e.g., "Englewood, NJ") will now gracefully degrade to the State Map instead of the generic texture.
+
+## 2024-06-01 - Muse's Visual Context Pack
+**Theme:** "The Empty State" Solution
+**Objective:** Eliminate text-only profiles by enforcing period-accurate visual fallbacks for every major region and era in the dataset.
+
+**Logic & Refinements:**
+1.  **New England (1600-1700):** refined logic to distinguish between "Settlers" (Engraving) and "Geography" (Map).
+    -   *Plymouth / Early Settlers:* Now prioritizes *Pilgrims Going to Church* (Boughton) to emphasize the human element of the Great Migration.
+    -   *Boston / Mass Bay:* Falls back to *Southern New England in 1634* or *Bonner's Map of Boston (1722)*.
+2.  **Connecticut (1700-1800):** Enforced *Map of the Colony of Connecticut (1766)* for all CT towns (including Norwich) to ensure a consistent colonial aesthetic.
+3.  **New York (19th Century):** Standardized on *Bird's Eye View of NYC (1873)* for the 1800s urban explosion.
+4.  **Pre-1650 England:** Solidified the use of *English Countryside (Hollar)* for rural locations (Devon, Somerset) and *Visscher's London* for the capital.
+
+**Philosophy:** "A profile without an image is a book without a cover."
