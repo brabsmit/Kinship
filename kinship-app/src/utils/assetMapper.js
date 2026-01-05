@@ -48,12 +48,6 @@ export const ASSETS = {
         caption: "Life in the Early Colonies",
         style: { filter: "sepia(15%) contrast(100%)" }
     },
-    new_england_pilgrims: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
-        alt: "Pilgrims Going to Church (Boughton)",
-        caption: "The Pilgrim Experience",
-        style: { filter: "sepia(15%)" }
-    },
     boston_old: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Bonner_Map_of_Boston_1722.jpg/1024px-Bonner_Map_of_Boston_1722.jpg",
         alt: "Bonner Map of Boston (1722)",
@@ -186,8 +180,6 @@ export const getHeroImage = (location, year) => {
     if (industrialCities.some(city => loc.includes(city)) && y >= 1820 && y < 1920) {
         return ASSETS.industrial_19th;
     }
-    // Broad "Mass" or "PA" logic for 19th century industrial vibe?
-    // Maybe stick to specific cities to avoid over-generalizing rural PA.
 
     // Pennsylvania (Colonial / Quaker)
     if ((loc.includes("pennsylvania") || loc.includes(" pa") || loc.includes("philadelphia")) && y < 1800) {
@@ -209,7 +201,7 @@ export const getHeroImage = (location, year) => {
     if ((loc.includes("ct") || loc.includes("connecticut") || loc.includes("hartford")) && y >= 1700 && y < 1800) {
         return ASSETS.ct_1700;
     }
-    // Norwich Logic:
+    // Norwich Logic (Pre-1700 Settlement)
     if (loc.includes("norwich") && loc.includes("ct")) {
         if (y >= 1700) return ASSETS.ct_1700;
         return ASSETS.puritan_life; // Early settlers
@@ -264,13 +256,17 @@ export const getHeroImage = (location, year) => {
     }
 
     // Massachusetts / CT Early Settlers (1620-1660)
-    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
-    if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
+    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester", "plymouth"];
+    if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1670) {
         return ASSETS.puritan_life;
     }
 
-    // New England Pilgrim Era (General)
+    // New England Pilgrim Era (General) - Prioritize Engraving for "Plymouth" or broadly 1620-1700
     if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts") || loc.includes("ma")) && y >= 1620 && y < 1700) {
+        // Use Pilgrim engraving for early period if generic or Plymouth
+        if (loc.includes("plymouth") || y < 1650) {
+             return ASSETS.puritan_life;
+        }
         return ASSETS.ne_map_1634;
     }
 
