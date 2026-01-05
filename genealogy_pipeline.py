@@ -1450,6 +1450,30 @@ class GenealogyTextPipeline:
             return int(match.group(0))
         return None
 
+    def _clean_titles(self, name):
+        """
+        Strips common honorifics/titles from a name to extract the core name.
+        e.g., "Deacon William Peck" -> "William Peck"
+        """
+        titles = [
+            "Deacon", "Rev.", "Reverend", "Captain", "Capt.", "Col.", "Colonel", "Gen.", "General",
+            "Dr.", "Doctor", "Hon.", "Honorable", "Mr.", "Mrs.", "Miss", "Lt.", "Lieut.", "Lieutenant",
+            "Sgt.", "Sergeant", "Ens.", "Ensign", "Gov.", "Governor", "Pres.", "President", "Major"
+        ]
+        # Regex to match title at start of string
+        # \b ensures word boundary.
+        pattern = r'^(?:' + '|'.join([re.escape(t) for t in titles]) + r')\s+'
+        return re.sub(pattern, '', name, flags=re.IGNORECASE).strip()
+
+    def _is_famous_historical_figure(self, name):
+        """Checks if the name is a recognized historical figure not expected to be in the database."""
+        famous_names = {
+            "George Washington", "Abraham Lincoln", "Thomas Jefferson", "Benjamin Franklin",
+            "John Adams", "King George", "Queen Victoria", "Napoleon", "Lafayette",
+            "Oliver Cromwell", "King Charles", "King James", "Cotton Mather", "Increase Mather"
+        }
+        return name in famous_names
+
     def _build_name_index(self):
         """
         Builds a comprehensive index of names to profile IDs, handling
@@ -1469,35 +1493,35 @@ class GenealogyTextPipeline:
             # 1. Full Name
             name_index[clean_name].append(pid)
 
-            # 2. Base Name (remove suffix)
+            # 2. Title-Stripped Name (e.g. "Deacon William Peck" -> "William Peck")
+            # This allows finding "William Peck" in text even if DB has "Deacon William Peck"
+            # Wait, no. If DB has "Deacon...", we index "William Peck" so that text "William Peck" matches.
+            # ALSO: If text has "Deacon William Peck", candidate is "Deacon William Peck".
+            # We want that to match too.
+            stripped_name = self._clean_titles(clean_name)
+            if stripped_name != clean_name:
+                name_index[stripped_name].append(pid)
+
+            # 3. Base Name (remove suffix from clean_name AND stripped_name)
             # Handle "Jr", "Sr", "III", "IV", "Esq."
             # Using regex to remove suffix at the end
             base_name = re.sub(r',?\s+(Jr\.?|Sr\.?|III|IV|Esq\.?)$', '', clean_name, flags=re.IGNORECASE)
             if base_name != clean_name:
                 name_index[base_name].append(pid)
 
-            # 3. Variations on Base Name
-            # "William Earl Dodge" -> "William Dodge"
-            # "William E. Dodge" -> "William Dodge"
-            # "William E. Dodge" -> "William E. Dodge" (Already covered by base_name if no suffix)
+            stripped_base = re.sub(r',?\s+(Jr\.?|Sr\.?|III|IV|Esq\.?)$', '', stripped_name, flags=re.IGNORECASE)
+            if stripped_base != stripped_name:
+                name_index[stripped_base].append(pid)
 
-            parts = base_name.split()
+            # 4. Variations on Base Name (Short Name, Middle Initial)
+            # Use stripped_base as the source for these variations to be most generic
+            parts = stripped_base.split()
 
             # If name has middle parts (more than 2 words)
             if len(parts) > 2:
                 # First Last
                 short_name = f"{parts[0]} {parts[-1]}"
                 name_index[short_name].append(pid)
-
-                # If middle initial is used in text "William E. Dodge", we want that to match
-                # "William Earl Dodge" from database.
-                # So if DB has "William Earl Dodge", we can index "William E. Dodge" too?
-                # No, we index the full name. We rely on text scanning to pick up "William E. Dodge"
-                # and then we need to match it.
-                # If DB is "William Earl Dodge", and text says "William E. Dodge",
-                # valid_candidates will have "William E. Dodge".
-                # We need "William E. Dodge" in known_names to trigger a match?
-                # Yes.
 
                 # Generate Middle Initial Variant
                 # "William Earl Dodge" -> "William E. Dodge"
@@ -1517,10 +1541,9 @@ class GenealogyTextPipeline:
             return []
 
         links = []
-        # known_names = set(name_index.keys())
 
         # Keywords for relationship types
-        # Added: Uncle, Aunt, Nephew, Niece, Executor, Witness
+        # Ariadne's expanded vocabulary
         keywords = {
             "partner": "Business Partner",
             "business": "Business Partner",
@@ -1531,6 +1554,10 @@ class GenealogyTextPipeline:
             "husband": "Spouse",
             "spouse": "Spouse",
             "wed": "Spouse",
+            "widow": "Widow",
+            "widower": "Widower",
+            "consort": "Spouse",
+            "relict": "Spouse",
             "cousin": "Cousin",
             "friend": "Friend",
             "neighbor": "Neighbor",
@@ -1540,12 +1567,18 @@ class GenealogyTextPipeline:
             "student": "Student",
             "enemy": "Rival",
             "rival": "Rival",
-            "uncle": "Relative",
-            "aunt": "Relative",
-            "nephew": "Relative",
-            "niece": "Relative",
-            "executor": "Legal Associate",
-            "witness": "Legal Associate",
+            "uncle": "Uncle",
+            "aunt": "Aunt",
+            "nephew": "Nephew",
+            "niece": "Niece",
+            "grandfather": "Grandfather",
+            "grandmother": "Grandmother",
+            "grandson": "Grandson",
+            "granddaughter": "Granddaughter",
+            "executor": "Executor",
+            "administrator": "Administrator",
+            "witness": "Witness",
+            "pallbearer": "Pallbearer",
             "legacy": "Relative",
             "mother-in-law": "In-Law",
             "father-in-law": "In-Law",
@@ -1564,19 +1597,30 @@ class GenealogyTextPipeline:
             "apprentice": "Professional",
             "godfather": "Godparent",
             "godmother": "Godparent",
-            "godson": "Godparent",
-            "goddaughter": "Godparent"
+            "godson": "Godchild",
+            "goddaughter": "Godchild"
         }
 
         # Improved Candidate Extraction
         # Pattern: Capitalized Words sequence
-        # \b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b
         name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
-        candidates = set(re.findall(name_pattern, text))
+        raw_candidates = set(re.findall(name_pattern, text))
+
+        candidates = set()
+        # Expand candidates by stripping titles (so "Deacon William Peck" in text matches "William Peck" index)
+        for rc in raw_candidates:
+            candidates.add(rc)
+            cleaned = self._clean_titles(rc)
+            if cleaned != rc:
+                candidates.add(cleaned)
 
         # Filter candidates that are known names
-        # Use name_index.keys() which contains all variations
         valid_candidates = candidates.intersection(set(name_index.keys()))
+
+        # Ariadne Check: Historical Figures
+        for c in candidates:
+            if c not in valid_candidates and self._is_famous_historical_figure(c):
+                self.ariadne_log["clusters"][f"History: {c}"] += 1
 
         if not valid_candidates:
             return []
@@ -1595,6 +1639,11 @@ class GenealogyTextPipeline:
                 if name not in clause: continue # Fast string check
 
                 # Exact word boundary check
+                # Note: 'name' might be the cleaned version (William Peck), but clause has "Deacon William Peck".
+                # re.escape(name) ensures we match what we found in valid_candidates.
+                # If valid_candidates has "William Peck", and text has "William Peck", it matches.
+                # If text has "Deacon William Peck", and we matched via cleaned candidate "William Peck",
+                # then "William Peck" IS in the clause. So this check passes.
                 if not re.search(r'\b' + re.escape(name) + r'\b', clause):
                     continue
 
@@ -1612,43 +1661,58 @@ class GenealogyTextPipeline:
                 target_id = None
 
                 if len(potential_ids) == 1:
-                    # Unambiguous (only 1 candidate) - Accept it regardless of date (could be ancestor)
+                    # Unambiguous (only 1 candidate)
                     target_id = potential_ids[0]
                 else:
-                    # Ambiguous (multiple candidates) - Apply Strict Date Filter
+                    # Ambiguous (multiple candidates)
                     candidates_in_range = []
+
+                    # 3a. Proximity Heuristic (Ariadne's Thread)
+                    # If an ambiguous name is a direct relative, prefer them.
+                    proximate_candidates = []
+                    source_rels = source_profile.get('relations', {})
+                    all_close_rels = set(source_rels.get('parents', []) + source_rels.get('children', []) + source_rels.get('spouses', []))
+
                     for pid in potential_ids:
-                        target_p = id_map.get(pid)
-                        if not target_p: continue
+                        if pid in all_close_rels:
+                            proximate_candidates.append(pid)
 
-                        target_born = self._get_birth_year(target_p)
+                    if len(proximate_candidates) == 1:
+                        # Found exactly one close relative with this name - assume it's them!
+                        target_id = proximate_candidates[0]
 
-                        # Strict check for disambiguation (must be within 60 years)
-                        if source_born and target_born:
-                            diff = abs(source_born - target_born)
-                            if diff <= 60:
-                                candidates_in_range.append(pid)
-                        else:
-                            # If dates unknown, we can't safely disambiguate by date
-                            # Treat as ambiguous unless it's the only one?
-                            # Safe bet: skip if date unknown and ambiguous
-                            pass
+                    # 3b. Date Filter (if proximity failed)
+                    if not target_id:
+                        for pid in potential_ids:
+                            target_p = id_map.get(pid)
+                            if not target_p: continue
 
-                    if len(candidates_in_range) == 1:
-                        target_id = candidates_in_range[0]
-                    else:
-                         # Priority: Real Profile over Child Entry
-                        real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
-                        if len(real_candidates) == 1:
-                             target_id = real_candidates[0]
-                        else:
-                            # Still ambiguous
-                            self.ariadne_log["ambiguous"][name].update(potential_ids)
-                            continue
+                            target_born = self._get_birth_year(target_p)
 
-                if target_id in found_ids: continue
+                            # Strict check for disambiguation (must be within 60 years)
+                            if source_born and target_born:
+                                diff = abs(source_born - target_born)
+                                if diff <= 60:
+                                    candidates_in_range.append(pid)
+                            else:
+                                pass
 
-                found_ids.add(target_id)
+                        if len(candidates_in_range) == 1:
+                            target_id = candidates_in_range[0]
+                        elif len(candidates_in_range) > 1:
+                             # Priority: Real Profile over Child Entry
+                            real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
+                            if len(real_candidates) == 1:
+                                 target_id = real_candidates[0]
+                            else:
+                                # Still ambiguous
+                                self.ariadne_log["ambiguous"][name].update(potential_ids)
+                                continue
+
+                if target_id and target_id not in found_ids:
+                    found_ids.add(target_id)
+                else:
+                    continue
 
                 # 4. Contemporary Check for Relation Type (Loose Check)
                 # Now that we have the target, we check if they are "contemporary" for the purpose
@@ -1800,6 +1864,18 @@ class GenealogyTextPipeline:
     def update_ariadne_journal(self):
         print("--- Ariadne: Updating Journal ---")
         today = datetime.date.today().strftime("%Y-%m-%d")
+        log_path = ".jules/ariadne.md"
+
+        # Check if today's entry already exists to avoid duplication
+        try:
+            if os.path.exists(log_path):
+                with open(log_path, "r") as f:
+                    content = f.read()
+                    if f"## {today} - Automated Link Analysis" in content:
+                        print("   Journal already updated for today. Skipping.")
+                        return
+        except Exception:
+            pass
 
         # Prepare content
         ambiguous_count = len(self.ariadne_log["ambiguous"])
@@ -1823,12 +1899,14 @@ class GenealogyTextPipeline:
         if sorted_clusters:
             entry += f"**Cluster Alert:** High frequency mentions detected for: {cluster_examples}.\n"
 
+            # Highlight historical figures
+            history_mentions = [k for k in self.ariadne_log["clusters"].keys() if k.startswith("History:")]
+            if history_mentions:
+                 entry += f"**Historical Context:** Detected mentions of {', '.join(history_mentions)}.\n"
+
         entry += f"**Action:** Systematic text scanning and cross-linking applied.\n"
 
-        log_path = ".jules/ariadne.md"
         try:
-            # Check if file exists to maybe add a header if missing?
-            # But prompt says "create if missing", so 'a' mode handles creation.
             with open(log_path, "a") as f:
                 f.write(entry)
             print(f"   Journal updated: {log_path}")
