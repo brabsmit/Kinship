@@ -480,25 +480,35 @@ class GenealogyTextPipeline:
     def _normalize_date(self, raw_date_string):
         """
         Parses a raw date string and returns a best-guess integer year.
-        Returns None if no valid year is found.
+        Normalized by Chronos ⏳ to ensure clean, consistent timelines.
+
+        Logic Rules:
+        - "c. 1774" -> 1774
+        - "1774/5" -> 1774 (Start year)
+        - "aft 1750" -> 1751 (Year + 1)
+        - "bef 1800" -> 1799 (Year - 1)
+        - "between 1770 and 1780" -> 1770 (Start year)
+
+        Returns None if no valid year is found or logic dictates 'Unknown'.
         """
         if not raw_date_string:
             return None
 
         # Clean up the string
         s = raw_date_string.strip().lower()
+
+        # Explicitly handle known "garbage" or unresolvable strings
         if s in ["unknown", "?", "uncertain", "possibly", ""]:
             return None
 
-        # Extract the first 4-digit year candidate to work with
-        # (1000-2999).
-        # We capture the group to ensure we get the year digits.
+        # Extract the first 4-digit year candidate (1000-2999).
+        # regex `\b(1[0-9]{3}|20[0-2][0-9])` ensures we match 4-digit years starting with 1 or 20.
+        # It purposefully stops at the first match to handle "1774/5" (captures 1774) or "1774-1778" (captures 1774).
         year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
 
         # 0. Handle "century" logic if no specific year found
         if not year_match:
-            # "18th century" -> 1700
-            # "17th century" -> 1600
+            # "18th century" -> 1700 (Start of century)
             century_match = re.search(r'\b(\d{2})(?:th|nd|st|rd)\s+century\b', s)
             if century_match:
                 try:
@@ -517,39 +527,32 @@ class GenealogyTextPipeline:
         pre_text = s[:start_index]
 
         # 1. Handle "before" / "bef" / "by"
-        # Logic: if "bef", "before", or "by" appears in the text preceding the year, return year - 1
-        # e.g., "bef 1800" -> 1799
+        # Logic: return year - 1
         if re.search(r'\b(bef\.?|before|by)\b', pre_text):
             return year_val - 1
 
         # 2. Handle "after" / "aft"
-        # Logic: if "aft" or "after" appears, return year + 1
-        # e.g., "aft 1750" -> 1751
+        # Logic: return year + 1
         if re.search(r'\b(aft\.?|after)\b', pre_text):
             return year_val + 1
 
         # 3. Handle "between"
-        # Logic: "between 1770 and 1780" -> 1770 (Start date).
-        # This falls through to the default return of year_val because regex found the first year.
-        # But we verify no "bef" / "aft" modifiers confuse it.
-        # "between" in pre_text -> simply return year_val.
-        if re.search(r'\bbetween\b', pre_text):
+        # Logic: "between 1770 and 1780" -> 1770.
+        # Added "bet." abbreviation check.
+        if re.search(r'\b(between|bet\.?)\b', pre_text):
             return year_val
 
-        # 4. Handle dual dating like "1774/5" or ranges "1774-1778"
-        # The regex picks the first year found, which is standard genealogical practice for sorting (start date).
-        # For "1774/5", it extracts "1774".
-
-        # 5. Handle "living in" or "fl."
-        # If "living in 1774", we return 1774 as the best anchor.
+        # 4. Handle "living in" / "fl."
+        # Logic: return year (best guess for anchor)
         if re.search(r'\b(living in|fl\.?)\b', pre_text):
             return year_val
 
-        # 6. Handle "circa" / "c." / "about" / "abt"
-        # If "c. 1774", we extract 1774.
+        # 5. Handle "circa" / "c." / "about" / "abt"
+        # Logic: return year
         if re.search(r'\b(c\.?|ca\.?|circa|about|abt\.?)\b', pre_text):
             return year_val
 
+        # Default: Return the extracted year (handles standard dates, "1774/5", etc.)
         return year_val
 
     def _normalize_date_fallback(self, raw_date_string):
