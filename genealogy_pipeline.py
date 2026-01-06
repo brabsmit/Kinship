@@ -291,6 +291,15 @@ class GenealogyTextPipeline:
         self.family_data = []
         self.image_cache = self.load_cache()
         self.cache_updated = False
+        self.FAMOUS_FIGURES = [
+            "George Washington", "Abraham Lincoln", "Thomas Jefferson", "Benjamin Franklin",
+            "John Adams", "Alexander Hamilton", "King George", "Queen Victoria", "Napoleon",
+            "Mark Twain", "Charles Dickens", "William Shakespeare", "John Milton",
+            "Governor Winthrop", "Cotton Mather", "Oliver Cromwell", "King Charles",
+            "King James", "Queen Elizabeth", "General Grant", "General Lee", "Tecumseh",
+            "Sitting Bull", "Red Cloud", "Geronimo", "Pocahontas", "Massasoit", "Metacomet",
+            "King Philip", "Miles Standish", "John Smith", "William Bradford"
+        ]
 
     def _extract_voyages(self, text):
         voyages = []
@@ -1508,6 +1517,31 @@ class GenealogyTextPipeline:
 
         return name_index
 
+    def _calculate_id_distance(self, id1, id2):
+        """
+        Calculates a distance score between two IDs based on shared lineage.
+        Lower is closer.
+        """
+        if not id1 or not id2: return 100
+        # IDs are like "1.2.1"
+        # Shared prefix length
+        p1 = id1.split('.')
+        p2 = id2.split('.')
+
+        # Determine shared length
+        common_len = 0
+        for i in range(min(len(p1), len(p2))):
+            if p1[i] == p2[i]:
+                common_len += 1
+            else:
+                break
+
+        # Simple distance: steps up to LCA + steps down to target
+        # Steps up = len(p1) - common_len
+        # Steps down = len(p2) - common_len
+        dist = (len(p1) - common_len) + (len(p2) - common_len)
+        return dist
+
     def _scan_text_for_mentions(self, text, name_index, source_profile):
         """
         Scans a text block for mentions of names in the index.
@@ -1586,6 +1620,9 @@ class GenealogyTextPipeline:
         source_born = self._get_birth_year(source_profile)
         found_ids = set()
 
+        # Track names found in this text block for Cluster Detection
+        names_found_in_text = set()
+
         id_map = {p['id']: p for p in self.family_data}
 
         for clause in clauses:
@@ -1615,7 +1652,8 @@ class GenealogyTextPipeline:
                     # Unambiguous (only 1 candidate) - Accept it regardless of date (could be ancestor)
                     target_id = potential_ids[0]
                 else:
-                    # Ambiguous (multiple candidates) - Apply Strict Date Filter
+                    # Ambiguous (multiple candidates) - Apply Filtering Strategy
+                    # 1. Date Filter (Strict 60 year window)
                     candidates_in_range = []
                     for pid in potential_ids:
                         target_p = id_map.get(pid)
@@ -1623,32 +1661,54 @@ class GenealogyTextPipeline:
 
                         target_born = self._get_birth_year(target_p)
 
-                        # Strict check for disambiguation (must be within 60 years)
                         if source_born and target_born:
                             diff = abs(source_born - target_born)
                             if diff <= 60:
                                 candidates_in_range.append(pid)
                         else:
-                            # If dates unknown, we can't safely disambiguate by date
-                            # Treat as ambiguous unless it's the only one?
-                            # Safe bet: skip if date unknown and ambiguous
+                            # If dates unknown, skip for safety unless it's the only logic path remaining
                             pass
 
+                    # If date filtering left us with nothing, maybe fallback to all?
+                    # No, safer to stay ambiguous if dates don't match.
+
+                    # 2. Preference for "Real" Profiles over "Child" entries
+                    # If we have multiple candidates in range, filter for real ones first
+                    if len(candidates_in_range) > 1:
+                        real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
+                        if real_candidates:
+                            candidates_in_range = real_candidates
+
+                    # 3. Proximity Heuristic (ID Distance)
                     if len(candidates_in_range) == 1:
                         target_id = candidates_in_range[0]
+                    elif len(candidates_in_range) > 1:
+                        # Sort by distance to source_profile ID
+                        # Closer relatives (shorter distance) are more likely to be mentioned
+                        candidates_in_range.sort(key=lambda pid: self._calculate_id_distance(source_profile['id'], pid))
+                        # Pick the closest one
+                        target_id = candidates_in_range[0]
                     else:
-                         # Priority: Real Profile over Child Entry
-                        real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
+                        # No candidates in range, or date unknown for all.
+                        # Could try checking if any 'Real' profiles exist among original potential_ids?
+                        # Fallback: Check original set for Real Profiles if no date match
+                        real_candidates = [pid for pid in potential_ids if "_c" not in pid]
+
                         if len(real_candidates) == 1:
                              target_id = real_candidates[0]
+                        elif len(real_candidates) > 1:
+                             # Use proximity on real candidates
+                             real_candidates.sort(key=lambda pid: self._calculate_id_distance(source_profile['id'], pid))
+                             target_id = real_candidates[0]
                         else:
-                            # Still ambiguous
+                            # Still ambiguous or no valid targets
                             self.ariadne_log["ambiguous"][name].update(potential_ids)
                             continue
 
                 if target_id in found_ids: continue
 
                 found_ids.add(target_id)
+                names_found_in_text.add(name)
 
                 # 4. Contemporary Check for Relation Type (Loose Check)
                 # Now that we have the target, we check if they are "contemporary" for the purpose
@@ -1690,6 +1750,14 @@ class GenealogyTextPipeline:
                 self.ariadne_log["new_links"] += 1
                 self.ariadne_log["clusters"][name] += 1
 
+        # --- NEW: Event Cluster Detection ---
+        if len(names_found_in_text) >= 3:
+             # Found 3+ people in the same note block -> likely an event or gathering
+             self.ariadne_log["event_clusters"].append({
+                 "source": source_profile["name"],
+                 "found": list(names_found_in_text)
+             })
+
         return links
 
     def _find_mentions(self):
@@ -1702,7 +1770,9 @@ class GenealogyTextPipeline:
         self.ariadne_log = {
             "ambiguous": defaultdict(set),
             "clusters": defaultdict(int),
-            "new_links": 0
+            "new_links": 0,
+            "famous_figures": [],
+            "event_clusters": []
         }
 
         count = 0
@@ -1716,6 +1786,17 @@ class GenealogyTextPipeline:
             links = self._scan_text_for_mentions(notes, name_index, p)
             p['related_links'].extend(links)
             count += len(links)
+
+            # Scan for Famous Figures
+            for figure in self.FAMOUS_FIGURES:
+                if figure in notes:
+                     # Check if not already logged for this person
+                     if not any(f['figure'] == figure and f['source'] == p['name'] for f in self.ariadne_log["famous_figures"]):
+                         self.ariadne_log["famous_figures"].append({
+                             "figure": figure,
+                             "source": p['name'],
+                             "context": notes[:100] + "..." # Snippet
+                         })
 
         print(f"Ariadne found {count} text-based connections.")
 
@@ -1795,6 +1876,10 @@ class GenealogyTextPipeline:
         for name, freq in sorted_clusters[:5]:
             print(f"  - {name}: {freq} mentions")
 
+        print(f"Famous Figures Found: {len(self.ariadne_log['famous_figures'])}")
+        for f in self.ariadne_log['famous_figures']:
+             print(f"  - {f['figure']} mentioned by {f['source']}")
+
         self.update_ariadne_journal()
 
     def update_ariadne_journal(self):
@@ -1810,7 +1895,10 @@ class GenealogyTextPipeline:
 
         new_links_count = self.ariadne_log["new_links"]
 
-        if new_links_count == 0 and ambiguous_count == 0:
+        famous_count = len(self.ariadne_log["famous_figures"])
+        event_clusters_count = len(self.ariadne_log["event_clusters"])
+
+        if new_links_count == 0 and ambiguous_count == 0 and famous_count == 0:
             print("   Nothing significant to log.")
             return
 
@@ -1818,12 +1906,22 @@ class GenealogyTextPipeline:
         entry += f"**Discovery:** Analyzed narrative text and found {new_links_count} potential connections.\n"
 
         if ambiguous_count > 0:
-            entry += f"**Ambiguity Report:** {ambiguous_count} ambiguous references found (e.g., {ambiguous_examples}).\n"
+            entry += f"**Ambiguity Report:** {ambiguous_count} ambiguous references remaining (e.g., {ambiguous_examples}).\n"
 
         if sorted_clusters:
-            entry += f"**Cluster Alert:** High frequency mentions detected for: {cluster_examples}.\n"
+            entry += f"**Top Mentions:** High frequency mentions detected for: {cluster_examples}.\n"
 
-        entry += f"**Action:** Systematic text scanning and cross-linking applied.\n"
+        if famous_count > 0:
+             entry += f"**Historical Context:** Found {famous_count} mentions of historical figures:\n"
+             for f in self.ariadne_log['famous_figures'][:5]:
+                 entry += f"- {f['figure']} (mentioned by {f['source']})\n"
+
+        if event_clusters_count > 0:
+             entry += f"**Event Clusters:** Identified {event_clusters_count} potential gatherings or shared events:\n"
+             for c in self.ariadne_log['event_clusters'][:3]:
+                 entry += f"- In {c['source']}'s notes: Found group {', '.join(c['found'])}\n"
+
+        entry += f"**Action:** Systematic text scanning, proximity heuristic for disambiguation, and cluster detection applied.\n"
 
         log_path = ".jules/ariadne.md"
         try:
