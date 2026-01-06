@@ -187,7 +187,7 @@ export const RESEARCH_SOURCES = {
         description: "Free Canadian Census records (1825-1921)"
     },
 
-    // --- VITAL RECORDS ---
+    // --- VITAL RECORDS & STATE ARCHIVES ---
     "Birth Records": {
         label: "FamilySearch Birth Records",
         url: "https://www.familysearch.org/search/collection/list?keywords=birth",
@@ -232,6 +232,21 @@ export const RESEARCH_SOURCES = {
         label: "NYC Historical Vital Records",
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
+    },
+    "Missouri Death": {
+        label: "Missouri Death Certificates (1910-1971)",
+        url: "https://s1.sos.mo.gov/records/Archives/ArchivesMvc/DeathCertificates",
+        description: "Free digital death certificates from the MO State Archives"
+    },
+    "Virginia Chancery": {
+        label: "Virginia Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Digital index of chancery court cases (wills, disputes)"
+    },
+    "Illinois Death": {
+        label: "Illinois Death Index (Pre-1950)",
+        url: "https://www.ilsos.gov/departments/archives/databases/idphdeathindex.html",
+        description: "Statewide death index from the IL State Archives"
     },
     "SSDI": {
         label: "Social Security Death Index",
@@ -284,6 +299,11 @@ export const RESEARCH_SOURCES = {
         url: "https://heritage.statueofliberty.org/",
         description: "Passenger arrival records"
     },
+    "Steve Morse": {
+        label: "Steve Morse (Ellis Island Gold)",
+        url: "https://stevemorse.org/ellis2/ellisgold.html",
+        description: "Advanced 'Gold Form' search for Ellis Island passengers"
+    },
     "Freedman's Bureau": {
         label: "Freedman's Bureau Records",
         url: "https://www.familysearch.org/search/collection/2721171",
@@ -306,6 +326,16 @@ export const RESEARCH_SOURCES = {
         url: "https://chroniclingamerica.loc.gov/",
         description: "Free historical American newspapers"
     },
+    "Fulton History": {
+        label: "Old Fulton NY Post Cards",
+        url: "https://fultonhistory.com/",
+        description: "Massive collection of digitized NY newspapers"
+    },
+    "California Newspapers": {
+        label: "California Digital Newspaper Collection",
+        url: "https://cdnc.ucr.edu/",
+        description: "Free historical California newspapers"
+    },
     "Google Books": {
         label: "Google Books",
         url: "https://books.google.com/",
@@ -320,6 +350,16 @@ export const RESEARCH_SOURCES = {
         label: "HathiTrust Digital Library",
         url: "https://www.hathitrust.org/",
         description: "Searchable digital library of books and journals"
+    },
+    "ArchiveGrid": {
+        label: "ArchiveGrid",
+        url: "https://researchworks.oclc.org/archivegrid/",
+        description: "Catalog of archival collections and finding aids"
+    },
+    "WorldCat": {
+        label: "WorldCat",
+        url: "https://www.worldcat.org/",
+        description: "Global catalog of library books and materials"
     },
     "WikiTree": {
         label: "WikiTree",
