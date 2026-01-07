@@ -106,6 +106,12 @@ export const ASSETS = {
         caption: "The Bustling Metropolis of the 19th Century",
         style: { filter: "sepia(10%)" }
     },
+    ny_state_1827: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/1827_Finley_Map_of_New_York_-_Geographicus_-_NY-finley-1827.jpg/1024px-1827_Finley_Map_of_New_York_-_Geographicus_-_NY-finley-1827.jpg",
+        alt: "Finley Map of New York State (1827)",
+        caption: "New York State (Canal Era)",
+        style: { filter: "sepia(15%) contrast(105%)" }
+    },
     long_island_1686: {
         src: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Long_Island_1686.jpg",
         alt: "Map of Long Island (1686)",
@@ -264,7 +270,11 @@ export const getHeroImage = (location, year) => {
     }
 
     // Massachusetts / CT Early Settlers (1620-1660)
-    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
+    const settlementTowns = [
+        "watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield",
+        "roxbury", "dorchester", "plymouth", "salem", "duxbury", "scituate",
+        "dedham", "hingham", "weymouth"
+    ];
     if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
         return ASSETS.puritan_life;
     }
@@ -296,10 +306,17 @@ export const getHeroImage = (location, year) => {
 
     // 3. Fallback Logic (If not in cache)
 
-    // New York / NYC (1800-1900)
-    if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {
-        if (y >= 1800) return ASSETS.ny_1800;
-        return ASSETS.ne_map_1634; // Fallback to regional map
+    // New York State vs NYC
+    if (loc.includes("ny") || loc.includes("new york")) {
+        // NYC Detection
+        if (loc.includes("manhattan") || loc.includes("brooklyn") || loc.includes("bronx") || loc.includes("queens") || loc.includes("staten island") || loc.includes("nyc") || loc.includes("new york city")) {
+            if (y >= 1800) return ASSETS.ny_1800;
+        }
+        // Upstate / General NY State
+        if (y >= 1750 && y < 1900) return ASSETS.ny_state_1827;
+
+        // Fallback to NE Map for very early NY/Dutch context or generic
+        return ASSETS.ne_map_1634;
     }
 
     // Connecticut

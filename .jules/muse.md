@@ -46,3 +46,18 @@
 **Visual Philosophy:**
 -   **Sepia Tone:** All maps are treated with `sepia(20%)` to maintain visual consistency with the existing "Antique Paper" theme.
 -   **Fallback:** Profiles in specific towns (e.g., "Englewood, NJ") will now gracefully degrade to the State Map instead of the generic texture.
+
+## 2024-06-01 - New York State & Puritan Life Pack
+**Theme:** Distinguishing Upstate New York from NYC and deepening the Pilgrim context.
+**Source:** Wikimedia Commons (Public Domain).
+
+**Logic:**
+- **New York State (Upstate/Canal Era):** Mapped to *Finley Map of New York (1827)*.
+  - *Why:* Previously, ancestors in Buffalo or Rochester (1850s) were falling back to a "Bird's Eye View of Manhattan", which is contextually incorrect. This provides a relevant map for the Erie Canal migration route.
+  - *Logic:* Applied to "NY" locations that are NOT NYC boroughs, between 1750-1900.
+- **Pilgrim Towns:** Expanded the *Puritan Life* (Boughton) engraving trigger.
+  - *Why:* Profiles in Plymouth, Salem, Duxbury, and Scituate are better represented by the "Pilgrims Going to Church" scene than a generic map, enhancing the emotional connection to the Mayflower story.
+  - *Logic:* added `["plymouth", "salem", "duxbury", "scituate", "dedham", "hingham", "weymouth"]` to the settlement list.
+
+**Assets Added:**
+- `ny_state_1827`: Finley Map of New York State (1827)
