@@ -11,19 +11,19 @@ export const ASSETS = {
         style: { filter: "sepia(30%) contrast(110%)" }
     },
     england_countryside: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Wenceslaus_Hollar_-_Albury_House%2C_Surrey_%28State_1%29.jpg/1280px-Wenceslaus_Hollar_-_Albury_House%2C_Surrey_%28State_1%29.jpg",
-        alt: "Engraving of English Countryside (Wenceslaus Hollar, 1645)",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Albury_with_tree-stump_in_foreground_MET_DP823344.jpg/1024px-Albury_with_tree-stump_in_foreground_MET_DP823344.jpg",
+        alt: "Albury with tree-stump (Wenceslaus Hollar, 1640s)",
         caption: "The English Countryside (17th Century)",
         style: { filter: "sepia(40%) contrast(95%)" }
     },
     london_visscher: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Panorama_of_London_by_Claes_Van_Visscher%2C_1616.jpg/1280px-Panorama_of_London_by_Claes_Van_Visscher%2C_1616.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Panorama_of_London_by_Claes_Van_Visscher%2C_1616.jpg/1024px-Panorama_of_London_by_Claes_Van_Visscher%2C_1616.jpg",
         alt: "Visscher's Panorama of London (1616)",
         caption: "London Before the Great Fire (1616)",
         style: { filter: "sepia(20%) contrast(105%)" }
     },
     norfolk_map_1610: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_Mapp_of_ye_County_of_Norfolk_with_its_Hundreds_%28BM_1864%2C1114.38%29.jpg/1280px-A_Mapp_of_ye_County_of_Norfolk_with_its_Hundreds_%28BM_1864%2C1114.38%29.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_Mapp_of_ye_County_of_Norfolk_with_its_Hundreds_%28BM_1864%2C1114.38%29.jpg/1024px-A_Mapp_of_ye_County_of_Norfolk_with_its_Hundreds_%28BM_1864%2C1114.38%29.jpg",
         alt: "A Mapp of ye County of Norfolk (John Speed/Wenceslaus Hollar, 1670)",
         caption: "The County of Norfolk & East Anglia (17th Century)",
         style: { filter: "sepia(25%) contrast(100%)" }
@@ -37,22 +37,16 @@ export const ASSETS = {
         style: { filter: "sepia(20%)" }
     },
     ne_map_1634: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Southern_New_England_in_1634.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Southern_New_England_in_1634.jpg",
         alt: "William Wood's Map of New England (1634)",
         caption: "The Southern Part of New England (1634)",
         style: { filter: "sepia(25%) contrast(110%)" }
     },
     puritan_life: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1024px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
         alt: "Pilgrims Going to Church by George Henry Boughton",
         caption: "Life in the Early Colonies",
         style: { filter: "sepia(15%) contrast(100%)" }
-    },
-    new_england_pilgrims: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
-        alt: "Pilgrims Going to Church (Boughton)",
-        caption: "The Pilgrim Experience",
-        style: { filter: "sepia(15%)" }
     },
     boston_old: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Bonner_Map_of_Boston_1722.jpg/1024px-Bonner_Map_of_Boston_1722.jpg",
@@ -71,7 +65,7 @@ export const ASSETS = {
     ct_1700: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Plan_of_the_Colony_of_Connecticut,_Moses_Park,_1766.jpg/1024px-Plan_of_the_Colony_of_Connecticut,_Moses_Park,_1766.jpg",
         alt: "Map of the Colony of Connecticut (1766)",
-        caption: "The Connecticut Colony Era",
+        caption: "The Connecticut Colony (1766)",
         style: { filter: "contrast(105%)" }
     },
 
@@ -107,7 +101,7 @@ export const ASSETS = {
         style: { filter: "sepia(10%)" }
     },
     long_island_1686: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Long_Island_1686.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Long_Island_1686.jpg/1024px-Long_Island_1686.jpg",
         alt: "Map of Long Island (1686)",
         caption: "Colonial Long Island & Oyster Bay",
         style: { filter: "sepia(20%) contrast(110%)" }
@@ -186,8 +180,6 @@ export const getHeroImage = (location, year) => {
     if (industrialCities.some(city => loc.includes(city)) && y >= 1820 && y < 1920) {
         return ASSETS.industrial_19th;
     }
-    // Broad "Mass" or "PA" logic for 19th century industrial vibe?
-    // Maybe stick to specific cities to avoid over-generalizing rural PA.
 
     // Pennsylvania (Colonial / Quaker)
     if ((loc.includes("pennsylvania") || loc.includes(" pa") || loc.includes("philadelphia")) && y < 1800) {
