@@ -540,9 +540,10 @@ class GenealogyTextPipeline:
         # The regex picks the first year found, which is standard genealogical practice for sorting (start date).
         # For "1774/5", it extracts "1774".
 
-        # 5. Handle "living in" or "fl."
-        # If "living in 1774", we return 1774 as the best anchor.
-        if re.search(r'\b(living in|fl\.?)\b', pre_text):
+        # 5. Handle "living" / "living in" or "fl." (Floruit)
+        # If "living 1774" or "fl. 1774", we return 1774 as the best anchor.
+        # This signifies the person was alive/active in that year.
+        if re.search(r'\b(living(?:\s+in)?|fl\.?)\b', pre_text):
             return year_val
 
         # 6. Handle "circa" / "c." / "about" / "abt"
@@ -555,10 +556,31 @@ class GenealogyTextPipeline:
     def _normalize_date_fallback(self, raw_date_string):
         """
         Uses dateparser to attempt to find a year if regex failed.
+        Includes a guard against guessing the current year for strings without explicit years.
         """
         try:
+            # Check if the string actually contains digits that could look like a year
+            # If no digits, dateparser defaults to current year (bad for history).
+            if not any(char.isdigit() for char in raw_date_string):
+                return None
+
+            # Avoid cases like "May 1" returning 2024 (current year)
+            # We strictly require finding a 4-digit sequence in the source string
+            # OR trusting dateparser if it finds a year far in the past?
+            # Safer strategy: If dateparser finds a year, verify that year (or its last 2 digits)
+            # appears in the string.
+            # But "May '80" -> 1980 is valid for dateparser but maybe not for us (1880 vs 1980).
+            # Given the context is 17th-19th century, we are wary of 20th/21st century defaults.
+
             dt = dateparser.parse(raw_date_string)
             if dt:
+                # If the year is the current year (e.g. 2024/2025) and the string doesn't explicitly contain it,
+                # it's likely a guess.
+                current_year = datetime.datetime.now().year
+                if dt.year == current_year:
+                    if str(current_year) not in raw_date_string:
+                        return None
+
                 return dt.year
         except:
             pass
