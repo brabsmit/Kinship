@@ -20,6 +20,16 @@ export const RESEARCH_SOURCES = {
         url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
         description: "Free database of Civil War servicemen (Union & Confederate)"
     },
+    "Civil War Pension": {
+        label: "Civil War Pension Index",
+        url: "https://www.familysearch.org/search/collection/1919699",
+        description: "General Index to Pension Files (1861-1934)"
+    },
+    "1890 Veterans": {
+        label: "1890 Veterans Schedule",
+        url: "https://www.familysearch.org/search/collection/1877095",
+        description: "Surviving census of Union veterans and widows"
+    },
     "War of 1812": {
         label: "Fold3 War of 1812",
         url: "https://www.fold3.com/publication/761/war-of-1812-pension-files",
@@ -187,7 +197,7 @@ export const RESEARCH_SOURCES = {
         description: "Free Canadian Census records (1825-1921)"
     },
 
-    // --- VITAL RECORDS ---
+    // --- VITAL RECORDS & STATE ARCHIVES ---
     "Birth Records": {
         label: "FamilySearch Birth Records",
         url: "https://www.familysearch.org/search/collection/list?keywords=birth",
@@ -213,6 +223,7 @@ export const RESEARCH_SOURCES = {
         url: "https://billiongraves.com/search",
         description: "GPS-tagged cemetery records"
     },
+    // State Specific
     "CT Vital": {
         label: "Connecticut Vital Records (Barbour)",
         url: "https://www.ancestry.com/search/collections/1062/",
@@ -232,6 +243,41 @@ export const RESEARCH_SOURCES = {
         label: "NYC Historical Vital Records",
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
+    },
+    "Missouri Death": {
+        label: "Missouri Death Certificates",
+        url: "https://s1.sos.mo.gov/records/archives/archivesmvc/deathcertificates",
+        description: "Free digital death certificates (1910-1974)"
+    },
+    "Illinois Death": {
+        label: "Illinois Death Index",
+        url: "https://www.ilsos.gov/departments/archives/databases/idph_death.html",
+        description: "Statewide death index (1916-1950)"
+    },
+    "Ohio Death": {
+        label: "Ohio Death Records",
+        url: "https://www.familysearch.org/search/collection/1307272",
+        description: "Statewide death certificates (1908-1953)"
+    },
+    "Kentucky Death": {
+        label: "Kentucky Death Records",
+        url: "https://www.familysearch.org/search/collection/1417491",
+        description: "Statewide death records (1911-1965)"
+    },
+    "Pennsylvania Death": {
+        label: "Pennsylvania Death Certificates",
+        url: "https://www.ancestry.com/search/collections/5164/",
+        description: "Death certificates (1906-1968) - Free for PA residents"
+    },
+    "Minnesota": {
+        label: "MNHS People Search",
+        url: "https://www.mnhs.org/search/people",
+        description: "Birth, death, census, and veteran records"
+    },
+    "Virginia": {
+        label: "Virginia Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Equity court records including wills and land disputes"
     },
     "SSDI": {
         label: "Social Security Death Index",
@@ -273,7 +319,7 @@ export const RESEARCH_SOURCES = {
         description: "Wills, guardianships, and estate files"
     },
 
-    // --- IMMIGRATION & MINORITY ---
+    // --- IMMIGRATION, MINORITY & NATIVE AMERICAN ---
     "Great Migration": {
         label: "Great Migration Project",
         url: "https://www.familysearch.org/en/search/catalog/2550739",
@@ -289,22 +335,52 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/2721171",
         description: "Records of Freedmen, Refugees, and Abandoned Lands (1865-1872)"
     },
+    "Freedman's Bank": {
+        label: "Freedman's Bank Records",
+        url: "https://www.familysearch.org/search/collection/1417695",
+        description: "Records of the Freedman's Savings and Trust Company (1865-1874)"
+    },
+    "Dawes Rolls": {
+        label: "Dawes Rolls (Native American)",
+        url: "https://www.familysearch.org/search/collection/1390387",
+        description: "Applications for enrollment in the Five Civilized Tribes"
+    },
     "Naturalization": {
         label: "FamilySearch Naturalization",
         url: "https://www.familysearch.org/search/collection/list?keywords=naturalization",
         description: "Search US Naturalization and Citizenship records"
     },
 
-    // --- BOOKS & NEWSPAPERS ---
+    // --- BOOKS, NEWSPAPERS & TOOLS ---
     "Obituary": {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
         description: "Historical newspapers search"
     },
+    "Fulton History": {
+        label: "Old Fulton NY Post Cards",
+        url: "https://fultonhistory.com/",
+        description: "Massive free collection of digitized NY newspapers"
+    },
+    "California Newspaper": {
+        label: "CDNC",
+        url: "https://cdnc.ucr.edu/",
+        description: "California Digital Newspaper Collection"
+    },
     "Chronicling America": {
         label: "Chronicling America (LOC)",
         url: "https://chroniclingamerica.loc.gov/",
         description: "Free historical American newspapers"
+    },
+    "Steve Morse": {
+        label: "Steve Morse One-Step",
+        url: "https://stevemorse.org/",
+        description: "Tools for finding immigration, census, and vital records"
+    },
+    "ArchiveGrid": {
+        label: "ArchiveGrid",
+        url: "https://researchworks.oclc.org/archivegrid/",
+        description: "Catalog of archival collections worldwide"
     },
     "Google Books": {
         label: "Google Books",
