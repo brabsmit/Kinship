@@ -15,10 +15,20 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/browse/251/civil-war-collection",
         description: "Service records, pensions, and photos from the US Civil War"
     },
+    "Civil War Pensions": {
+        label: "Civil War Pension Index",
+        url: "https://www.familysearch.org/search/collection/1471019",
+        description: "Index to pension applications of veterans who served 1861-1917"
+    },
     "Civil War NPS": {
         label: "NPS Soldiers and Sailors",
         url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
         description: "Free database of Civil War servicemen (Union & Confederate)"
+    },
+    "1890 Veterans": {
+        label: "1890 Veterans Census",
+        url: "https://www.familysearch.org/search/collection/1877095",
+        description: "Special census of Union veterans and widows"
     },
     "War of 1812": {
         label: "Fold3 War of 1812",
@@ -187,7 +197,7 @@ export const RESEARCH_SOURCES = {
         description: "Free Canadian Census records (1825-1921)"
     },
 
-    // --- VITAL RECORDS ---
+    // --- VITAL RECORDS (General) ---
     "Birth Records": {
         label: "FamilySearch Birth Records",
         url: "https://www.familysearch.org/search/collection/list?keywords=birth",
@@ -213,6 +223,18 @@ export const RESEARCH_SOURCES = {
         url: "https://billiongraves.com/search",
         description: "GPS-tagged cemetery records"
     },
+    "SSDI": {
+        label: "Social Security Death Index",
+        url: "https://www.familysearch.org/search/collection/1202535",
+        description: "Death records for US residents (1962-2014)"
+    },
+    "FreeBMD": {
+        label: "FreeBMD (UK)",
+        url: "https://www.freebmd.org.uk/cgi/search.pl",
+        description: "Civil Registration index of births, marriages, and deaths for England & Wales"
+    },
+
+    // --- STATE RESOURCES (Vital) ---
     "CT Vital": {
         label: "Connecticut Vital Records (Barbour)",
         url: "https://www.ancestry.com/search/collections/1062/",
@@ -233,15 +255,40 @@ export const RESEARCH_SOURCES = {
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
     },
-    "SSDI": {
-        label: "Social Security Death Index",
-        url: "https://www.familysearch.org/search/collection/1202535",
-        description: "Death records for US residents (1962-2014)"
+    "MO Death": {
+        label: "Missouri Death Certificates",
+        url: "https://s1.sos.mo.gov/records/archives/archivesmvc/deathcertificates",
+        description: "Free digital death certificates (1910-1974)"
     },
-    "FreeBMD": {
-        label: "FreeBMD (UK)",
-        url: "https://www.freebmd.org.uk/cgi/search.pl",
-        description: "Civil Registration index of births, marriages, and deaths for England & Wales"
+    "IL Death": {
+        label: "Illinois Death Index",
+        url: "https://www.cyberdriveillinois.com/departments/archives/databases/idph_death.html",
+        description: "Statewide Death Index (1916-1950)"
+    },
+    "OH Death": {
+        label: "Ohio Death Records",
+        url: "https://www.familysearch.org/search/collection/1307272",
+        description: "Ohio Death Records (1908-1953)"
+    },
+    "KY Death": {
+        label: "Kentucky Death Records",
+        url: "https://www.familysearch.org/search/collection/1417491",
+        description: "Kentucky Deaths (1911-1965)"
+    },
+    "PA Death": {
+        label: "Pennsylvania Death Indices",
+        url: "https://www.phmc.pa.gov/Archives/Research-Online/Pages/Death-Indices.aspx",
+        description: "Indices for death certificates (1906-1973)"
+    },
+    "MN Vital": {
+        label: "Minnesota People Records",
+        url: "https://www.mnhs.org/search/people",
+        description: "Birth (1900-1934) and Death (1904-2001) records"
+    },
+    "VA Chancery": {
+        label: "Virginia Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Index to chancery court cases and digital images"
     },
 
     // --- MAPS ---
@@ -289,6 +336,16 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/search/collection/2721171",
         description: "Records of Freedmen, Refugees, and Abandoned Lands (1865-1872)"
     },
+    "Freedman's Bank": {
+        label: "Freedman's Bank Records",
+        url: "https://www.familysearch.org/search/collection/1417695",
+        description: "Registers of Signatures of Depositors (1865-1874)"
+    },
+    "Dawes": {
+        label: "Dawes Rolls (Five Civilized Tribes)",
+        url: "https://www.archives.gov/research/native-americans/dawes",
+        description: "Census cards and enrollment applications (1898-1914)"
+    },
     "Naturalization": {
         label: "FamilySearch Naturalization",
         url: "https://www.familysearch.org/search/collection/list?keywords=naturalization",
@@ -305,6 +362,16 @@ export const RESEARCH_SOURCES = {
         label: "Chronicling America (LOC)",
         url: "https://chroniclingamerica.loc.gov/",
         description: "Free historical American newspapers"
+    },
+    "Fulton History": {
+        label: "FultonHistory.com",
+        url: "https://fultonhistory.com/",
+        description: "Old Fulton NY Post Cards (New York & General Newspapers)"
+    },
+    "CDNC": {
+        label: "California Digital Newspapers",
+        url: "https://cdnc.ucr.edu/",
+        description: "Freely accessible repository of digitized California newspapers"
     },
     "Google Books": {
         label: "Google Books",
@@ -330,6 +397,18 @@ export const RESEARCH_SOURCES = {
         label: "USGenWeb Project",
         url: "https://www.usgenweb.org/",
         description: "Free genealogy websites for every county in the US"
+    },
+
+    // --- TOOLS ---
+    "Steve Morse": {
+        label: "Steve Morse One-Step",
+        url: "https://stevemorse.org/",
+        description: "One-Step Webpages for finding immigration, census, and vital records"
+    },
+    "ArchiveGrid": {
+        label: "ArchiveGrid",
+        url: "https://researchworks.oclc.org/archivegrid/",
+        description: "Collection of over 5 million archival material descriptions"
     }
 };
 
