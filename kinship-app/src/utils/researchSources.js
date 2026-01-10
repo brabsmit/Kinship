@@ -244,6 +244,53 @@ export const RESEARCH_SOURCES = {
         description: "Civil Registration index of births, marriages, and deaths for England & Wales"
     },
 
+    // --- STATE SPECIFIC ---
+    "Missouri Death": {
+        label: "Missouri Death Certificates",
+        url: "https://s1.sos.mo.gov/records/archives/archivesmvc/deathcertificates",
+        description: "Free digital death certificates (1910-1974)"
+    },
+    "Ohio Death": {
+        label: "Ohio Death Records",
+        url: "https://www.familysearch.org/search/collection/1307272",
+        description: "Statewide death certificates (1908-1953)"
+    },
+    "Illinois Death": {
+        label: "Illinois Death Index",
+        url: "https://www.ilsos.gov/departments/archives/databases/idphdeathindex.html",
+        description: "Statewide death index (1916-1950)"
+    },
+    "Michigan Death": {
+        label: "Michiganology Death Records",
+        url: "https://michiganology.org/vital-records/",
+        description: "Official state death records (1897-1952)"
+    },
+    "Pennsylvania Death": {
+        label: "Pennsylvania Death Indices",
+        url: "https://www.phmc.pa.gov/Archives/Research-Online/Pages/Death-Indices.aspx",
+        description: "State archives death indices (1906-1973)"
+    },
+    "Virginia Chancery": {
+        label: "Virginia Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Wills, land disputes, and family history in court records"
+    },
+    "Connecticut Vital": {
+        label: "Connecticut Vital Records (Barbour)",
+        url: "https://www.familysearch.org/search/collection/2843390",
+        description: "The Barbour Collection (Prior to 1850)"
+    },
+    "National Archives": {
+        label: "National Archives Genealogy",
+        url: "https://www.archives.gov/research/genealogy",
+        description: "Federal records guide (Census, Military, Immigration)"
+    },
+    "California Newspapers": {
+        label: "California Digital Newspapers",
+        url: "https://cdnc.ucr.edu/",
+        description: "Free historical California newspapers (1846-present)"
+    },
+
     // --- MAPS ---
     "Sanborn Maps": {
         label: "Sanborn Fire Insurance Maps",
