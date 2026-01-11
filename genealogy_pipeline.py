@@ -568,6 +568,34 @@ class GenealogyTextPipeline:
         if not text or text.lower() == "unknown":
             return "Unknown", "Unknown"
 
+        # 0. Handle Comma-Separated Dates (Common format that dateparser often misses or over-consumes)
+        # e.g., "1/23/1686/7, New Haven, CT" -> Date: 1/23/1686/7, Loc: New Haven, CT
+        # e.g., "c. 1750, London" -> Date: c. 1750, Loc: London
+        # e.g., "1651?" -> Date: 1651?, Loc: Unknown (handled later)
+        if "," in text:
+            # Split on first comma
+            parts = text.split(",", 1)
+            candidate_date = parts[0].strip()
+            candidate_loc = parts[1].strip()
+
+            # Validation: Does the first part look like a date?
+            # Must contain digits
+            if any(c.isdigit() for c in candidate_date):
+                # If the candidate date is extremely long, it might be narrative text
+                if len(candidate_date) < 25:
+                    # If it's a Dual Date "1686/7" or "1686/87", treat as date
+                    if "/" in candidate_date:
+                        return candidate_date, candidate_loc
+
+                    # If it starts with typical modifiers
+                    if re.match(r'^(c\.|ca\.|circa|abt|bef|aft|born|died)', candidate_date, re.IGNORECASE):
+                        return candidate_date, candidate_loc
+
+                    # If it looks like "Month Day, Year" or "Day Month Year", dateparser handles it.
+                    # But "1750, London" needs this.
+                    if re.match(r'^\d{4}$', candidate_date):
+                        return candidate_date, candidate_loc
+
         # 1. " in " separator (Strongest)
         # Handles: "May 1, 1850 in Hartford" -> "May 1, 1850", "Hartford"
         in_sep = re.search(r"\s+in\s+", text, re.IGNORECASE)

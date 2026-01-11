@@ -5940,5 +5940,143 @@
         "style": {
             "filter": "sepia(20%) contrast(110%)"
         }
+    },
+    "MA|19th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/4/42/1635_map_Cambridge_MA_byLuciusPaige.png",
+        "alt": "Historical image of MA",
+        "caption": "map of Cambridge, Massachusetts, as it would have appeared in 1635...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "NY|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Vernacular_-_18th_Century_-_Hartsdale%2C_NY_-_109_Ridge_Road_%282%29.jpg/1280px-Vernacular_-_18th_Century_-_Hartsdale%2C_NY_-_109_Ridge_Road_%282%29.jpg",
+        "alt": "Historical image of NY",
+        "caption": "Built c. 1760....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Plymouth, MA|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/A_Map_of_the_County_of_Devon%2C_with_the_City_%26_County_of_Exeter_-_Delineated_from_an_actual_Survey%2C_by_Benjamin_Donn_%3B_Engraved_by_Tho%28ma%29s_Jefferys%2C_Geographer_to_his_Majesty_%3B_To_John_Baring_of..._-_btv1b53056953n_%2809_of_12%29.jpg/1280px-thumbnail.jpg",
+        "alt": "Historical image of Plymouth, MA",
+        "caption": "Sujet\u00a0: Armoiries\nCartouches (ornement)\nDevon, Comt\u00e9 du\nLundy (\u00eele)\nPlymouth\nExeter\nRoses des vents\n\u00c9chelle(s)\u00a0: [1:63 000 env.], 8 Statute Miles 69 \u00bd...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "CT|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/S%28ain%29ct_Iean_de_Luz_-_btv1b53156731f_%283_of_3%29.jpg/1280px-S%28ain%29ct_Iean_de_Luz_-_btv1b53156731f_%283_of_3%29.jpg",
+        "alt": "Historical image of CT",
+        "caption": "Sujet\u00a0: Saint-Jean-de-Luz, Baie de\nSaint-Jean-de-Luz\nCiboure\n\u00c9chelle(s)\u00a0: [Ca 1:4 100], 100 thoises [= 4,8 cm]\nCouverture\u00a0: France \u2013 Nouvelle-Aquitain...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Rhode Island|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Rhode_Island_1691_to_1703-05.png",
+        "alt": "Historical image of Rhode Island",
+        "caption": "The Colony of Rhode Island and Providence Plantations, as it was from October 7, 1691, when Plymouth Colony was incorporated into the Province of Mass...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "NY|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/0/06/Ny-Kj%C3%B8benhavn_1699.jpg",
+        "alt": "Historical image of NY",
+        "caption": "Revised plan for the street layout in Ny-Kj\u00f8benhavn in Copenhagen, Denmark. The street lay-out ended up somewhat different from the plan....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "possibly in Southold, Long Island|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Historical_sketch_of_Southold_town_%28N.Y.%29_read_July_4th%2C_1876%2C_at_the_celebration_in_Greenport%2C_L.I._%28IA_historicalsketch00case%29.pdf/page1-1024px-Historical_sketch_of_Southold_town_%28N.Y.%29_read_July_4th%2C_1876%2C_at_the_celebration_in_Greenport%2C_L.I._%28IA_historicalsketch00case%29.pdf.jpg",
+        "alt": "Historical image of possibly in Southold, Long Island",
+        "caption": "\nSubjects: Southold, N.Y. -- History. [from old catalog]...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "New Netherlands|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/5/54/Map_of_the_Habsburg_Netherlands_by_Alexis-Marie_Gochet.png",
+        "alt": "Historical image of New Netherlands",
+        "caption": "Map of the Habsburg Netherlands....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "West Midlands, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/3/3e/17th_century_dovecote_-_geograph.org.uk_-_512506.jpg",
+        "alt": "Historical image of West Midlands, England",
+        "caption": "17th century dovecote In England in the 16th and 17th century having a dovecote became a status symbol. Octagon shaped ones like this one became very ...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Hampton in Arden, Warwickshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
+        "alt": "Historical image of Hampton in Arden, Warwickshire, England",
+        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Whitchurch, Shropshire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Brick_Kiln_Farm_-_geograph.org.uk_-_398677.jpg",
+        "alt": "Historical image of Whitchurch, Shropshire, England",
+        "caption": "Brick Kiln Farm SJ 5552 4304 @ 150\u00b0 - Brick Kiln Farm, Whitchurch - 17th century farmhouse has long been derelict but is now being redeveloped....",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Gloucestershire, England|17th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/17th_Century_map_of_Gloucestershire.JPG/1280px-17th_Century_map_of_Gloucestershire.JPG",
+        "alt": "Historical image of Gloucestershire, England",
+        "caption": "Map from the 1627 \"Miniature Speed Atlas\" of England Sotland Ireland and Wales, with maps by Pieter van den Keere Photograph taken mby me, the atlas o...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Hampton in Arden, Warwickshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf/page1-1024px-A_handbook_of_Warwickshire_.._%28IA_handbookofwarwic00john%29.pdf.jpg",
+        "alt": "Historical image of Hampton in Arden, Warwickshire, England",
+        "caption": "\nTitle vignette\nPreface signed: H.M.C\nSubjects:...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "NY|19th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Ny_Plan_af_Stockholm%2C_1892.jpg/1280px-Ny_Plan_af_Stockholm%2C_1892.jpg",
+        "alt": "Historical image of NY",
+        "caption": "New map of Stockholm, 1892, published by Albert Bonniers f\u00f6rlag...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Totnes, Devonshire, England|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Magna_Britannia%3B_being_a_Concise_Topographical_Account_of_the_Several_Counties_of_Great_Britain%2C_Vol._VI-_containing_Devonshire_%28IA_dli.granth.75055%29.pdf/page1-1024px-Magna_Britannia%3B_being_a_Concise_Topographical_Account_of_the_Several_Counties_of_Great_Britain%2C_Vol._VI-_containing_Devonshire_%28IA_dli.granth.75055%29.pdf.jpg",
+        "alt": "Historical image of Totnes, Devonshire, England",
+        "caption": "\nSource: Asiatic Society of MumbaiIdentifier: BK_00085187Digitization Sponsor: Government of Maharashtra\nOriginal Source: &lt;a href=\"https://granthsa...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Spencer, MA; Brookfield, MA Vital Records cite a Church Record showing that he was baptized in Brookfield on 8/16/1772); Brookfield is adjacent to Spencer|18th century": null,
+    "Brookfield, MA; copy of birth certificate in Brookfield Vital Records|18th century": null,
+    "probably in Dorchester, SC|18th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_history_of_South-Carolina%2C_from_its_first_settlement_in_1670%2C_to_the_year_1808-_in_two_volumes_%3B_vol._I%28-II_%28Volume_2%29_%28IA_2568008RX2.nlm.nih.gov%29.pdf/page1-1024px-The_history_of_South-Carolina%2C_from_its_first_settlement_in_1670%2C_to_the_year_1808-_in_two_volumes_%3B_vol._I%28-II_%28Volume_2%29_%28IA_2568008RX2.nlm.nih.gov%29.pdf.jpg",
+        "alt": "Historical image of probably in Dorchester, SC",
+        "caption": "\nIn two separate volumes, each with a dated title page and separate pagination and registers\n\"Engraved by James Akin\"--Recto of map, vol. 1\nSignatures...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
+    },
+    "Somersetshire, England|16th century": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Proceedings_of_the_Somersetshire_Archaeological_and_Natural_History_Society_%28IA_proceedingsofsom51some%29.pdf/page1-1024px-Proceedings_of_the_Somersetshire_Archaeological_and_Natural_History_Society_%28IA_proceedingsofsom51some%29.pdf.jpg",
+        "alt": "Historical image of Somersetshire, England",
+        "caption": "\nTitle varies slightly\nVols. for 1875-94 called n. s. vols. 1-20; 1895-1914, 3d ser. vols. 1-20; 1915-1934, 4th ser. vols. 1-20\nVols. 1-20, 1849/1850-...",
+        "style": {
+            "filter": "sepia(20%) contrast(110%)"
+        }
     }
 }
