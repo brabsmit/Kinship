@@ -1574,9 +1574,32 @@ class GenealogyTextPipeline:
         name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
         candidates = set(re.findall(name_pattern, text))
 
+        # ARIADNE ENHANCEMENT: Strip Honorifics
+        # If text contains "Capt. William Dodge", we want to match "William Dodge"
+        honorifics = [
+            "Capt.", "Captain", "Rev.", "Reverend", "Deacon", "Dr.", "Doctor",
+            "Gen.", "General", "Col.", "Colonel", "Maj.", "Major",
+            "Lt.", "Lieutenant", "Ens.", "Ensign", "Sgt.", "Sergeant",
+            "Pvt.", "Private", "Mrs.", "Mr.", "Miss", "Sir", "Hon."
+        ]
+
+        enhanced_candidates = set(candidates)
+        for c in candidates:
+            # Check if starts with honorific
+            for h in honorifics:
+                if c.startswith(h + " ") or c.startswith(h): # Handle "Rev.Name" vs "Rev. Name"
+                    # Create stripped version
+                    # "Rev. William Dodge" -> "William Dodge"
+                    # Split by space and rejoin, skipping first part?
+                    # Be careful about "Rev. Name" vs "Reverend Name"
+                    # Regex might be safer
+                    clean = re.sub(r'^' + re.escape(h) + r'\s*', '', c)
+                    if clean and len(clean.split()) >= 2:
+                        enhanced_candidates.add(clean)
+
         # Filter candidates that are known names
         # Use name_index.keys() which contains all variations
-        valid_candidates = candidates.intersection(set(name_index.keys()))
+        valid_candidates = enhanced_candidates.intersection(set(name_index.keys()))
 
         if not valid_candidates:
             return []
@@ -1637,14 +1660,48 @@ class GenealogyTextPipeline:
                     if len(candidates_in_range) == 1:
                         target_id = candidates_in_range[0]
                     else:
-                         # Priority: Real Profile over Child Entry
+                         # Priority 1: Real Profile over Child Entry
                         real_candidates = [pid for pid in candidates_in_range if "_c" not in pid]
                         if len(real_candidates) == 1:
                              target_id = real_candidates[0]
-                        else:
-                            # Still ambiguous
-                            self.ariadne_log["ambiguous"][name].update(potential_ids)
-                            continue
+                        elif len(real_candidates) > 1:
+                            # Use real candidates for next step
+                            candidates_in_range = real_candidates
+
+                        # Priority 2: Shortest ID Distance (Structural Proximity)
+                        if not target_id:
+                            best_candidate = None
+                            min_dist = float('inf')
+
+                            source_parts = source_profile['id'].split('.')
+
+                            for pid in candidates_in_range:
+                                target_parts = pid.split('.')
+                                # Calculate Distance: (LenA + LenB) - 2 * CommonPrefixLen
+                                # Or simpler: steps to walk tree.
+
+                                # Find common prefix length
+                                common = 0
+                                for i in range(min(len(source_parts), len(target_parts))):
+                                    if source_parts[i] == target_parts[i]:
+                                        common += 1
+                                    else:
+                                        break
+
+                                dist = (len(source_parts) - common) + (len(target_parts) - common)
+
+                                if dist < min_dist:
+                                    min_dist = dist
+                                    best_candidate = pid
+                                elif dist == min_dist:
+                                    best_candidate = None # Tie means still ambiguous
+
+                            if best_candidate:
+                                target_id = best_candidate
+                            else:
+                                # Still ambiguous
+                                self.ariadne_log["ambiguous"][name].update(potential_ids)
+                                continue
 
                 if target_id in found_ids: continue
 
