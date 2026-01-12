@@ -15,6 +15,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/browse/251/civil-war-collection",
         description: "Service records, pensions, and photos from the US Civil War"
     },
+    "Civil War Pension Index": {
+        label: "Civil War Pension Index",
+        url: "https://www.familysearch.org/search/collection/1919699",
+        description: "General Index to Pension Files (1861-1934)"
+    },
     "Civil War NPS": {
         label: "NPS Soldiers and Sailors",
         url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
@@ -213,6 +218,8 @@ export const RESEARCH_SOURCES = {
         url: "https://billiongraves.com/search",
         description: "GPS-tagged cemetery records"
     },
+
+    // --- STATE SPECIFIC ---
     "CT Vital": {
         label: "Connecticut Vital Records (Barbour)",
         url: "https://www.ancestry.com/search/collections/1062/",
@@ -233,6 +240,37 @@ export const RESEARCH_SOURCES = {
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
     },
+    "Missouri Death": {
+        label: "Missouri Death Certificates",
+        url: "https://s1.sos.mo.gov/records/Archives/ArchivesMvc/DeathCertificates",
+        description: "Free digital death certificates (1910-1970)"
+    },
+    "Illinois Vital": {
+        label: "Illinois State Archives",
+        url: "https://www.ilsos.gov/departments/archives/databases/home.html",
+        description: "Death, marriage, and veteran databases"
+    },
+    "Michigan Death": {
+        label: "Michiganology Vital Records",
+        url: "https://michiganology.org/vital-records/",
+        description: "Free Michigan death records (1897-1952)"
+    },
+    "Ohio Death": {
+        label: "Ohio Death Records",
+        url: "https://www.familysearch.org/search/collection/1307272",
+        description: "Death certificates (1908-1953)"
+    },
+    "Pennsylvania Death": {
+        label: "PA State Archives Indices",
+        url: "https://www.pa.gov/agencies/phmc/pa-state-archives/research-online/vital-statistics-records",
+        description: "Indexes for birth (1906-1915) and death (1906-1970)"
+    },
+    "Fulton History": {
+        label: "Old Fulton NY Post Cards",
+        url: "https://fultonhistory.com/Fulton.html",
+        description: "Massive collection of digitized NY newspapers"
+    },
+
     "SSDI": {
         label: "Social Security Death Index",
         url: "https://www.familysearch.org/search/collection/1202535",
@@ -278,6 +316,11 @@ export const RESEARCH_SOURCES = {
         label: "Great Migration Project",
         url: "https://www.familysearch.org/en/search/catalog/2550739",
         description: "Authoritative accounts of immigrants to New England (1620-1640)"
+    },
+    "Mayflower": {
+        label: "Mayflower Society",
+        url: "https://www.themayflowersociety.org/passenger-profiles",
+        description: "Passenger profiles and lineage resources"
     },
     "Passenger List": {
         label: "Ellis Island & Castle Garden",
