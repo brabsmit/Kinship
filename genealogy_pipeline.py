@@ -493,7 +493,8 @@ class GenealogyTextPipeline:
         # Extract the first 4-digit year candidate to work with
         # (1000-2999).
         # We capture the group to ensure we get the year digits.
-        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
+        # Added trailing \b to avoid matching 5-digit numbers
+        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])\b', s)
 
         # 0. Handle "century" logic if no specific year found
         if not year_match:
@@ -607,38 +608,81 @@ class GenealogyTextPipeline:
             dates = None
 
         if dates:
-            # Found one or more dates.
-            # We want to identify the span of the date substring(s) and treat the rest as location.
+            # dates is a list of (date_string, date_object) tuples
+            # We need to determine the contiguous span of text that constitutes the "date field".
 
-            # Start of the first date match
+            # Start with the first found date
             first_date_str = dates[0][0]
             start_idx = text.find(first_date_str)
 
-            # End of the last date match
-            last_date_str = dates[-1][0]
-            # Use rfind to be safe in case of repeated strings, but restrict search after start_idx?
-            # Actually, standard find for last_date_str is fine if we assume chronological parsing order,
-            # but safer to find last occurrence if dateparser returns them in order found in text.
-            # dateparser search_dates returns list in order of appearance.
-            end_idx = text.rfind(last_date_str) + len(last_date_str)
-
-            # Expand left to capture modifiers that dateparser might miss (c., Before, etc.)
+            # Expand left to capture modifiers (c., Before, etc.)
             pre_text = text[:start_idx]
             mod_pattern = r'(?i)\b(?:c\.?|ca\.?|circa|about|abt\.?|before|bef\.?|by|after|aft\.?|bet\.?|between|living\s+in|fl\.?)\s*$'
             mod_match = re.search(mod_pattern, pre_text)
-
             if mod_match:
                 start_idx = mod_match.start()
 
-            date_part = text[start_idx:end_idx].strip()
+            # Determine end index by checking gaps between multiple dates
+            # We assume the first date is valid. We check if subsequent dates are part of the same range/expression.
+            valid_end_idx = text.find(dates[0][0], start_idx) + len(dates[0][0])
+
+            # Allowed words between dates (e.g. "1850 or 1851", "between 1850 and 1860")
+            allowed_gap_words = ["or", "and", "&", "to", "between", "bet", "bet.", "from"]
+
+            for i in range(len(dates) - 1):
+                curr_date_str = dates[i][0]
+                next_date_str = dates[i+1][0]
+
+                # Find positions
+                curr_end = text.find(curr_date_str, start_idx) + len(curr_date_str)
+                next_start = text.find(next_date_str, curr_end)
+
+                # If next date not found after current (out of order?), break
+                if next_start == -1: break
+
+                gap_text = text[curr_end:next_start]
+
+                # Analyze Gap to decide if we stop
+                # 1. Check for semicolon (strong separator)
+                if ";" in gap_text:
+                    break
+
+                # 2. Check for words in the gap
+                # Strip punctuation and whitespace
+                clean_gap = re.sub(r'[^\w\s]', ' ', gap_text).strip().lower()
+                gap_words = clean_gap.split()
+
+                # Check if all words in gap are allowed
+                is_connected = True
+                if gap_words:
+                    for w in gap_words:
+                        if w not in allowed_gap_words:
+                            is_connected = False
+                            break
+
+                if is_connected:
+                    valid_end_idx = next_start + len(next_date_str)
+                    # Update start_idx for next iteration search context?
+                    # Actually valid_end_idx is the running end.
+                else:
+                    break
+
+            # Handle edge case: "1654/5" where dateparser might miss "/5" or see it as garbage.
+            # Check immediately after valid_end_idx for "/\d" or "-\d"
+            remaining = text[valid_end_idx:]
+            slash_suffix = re.match(r'^\s*([/-]\s*\d+)', remaining)
+            if slash_suffix:
+                valid_end_idx += len(slash_suffix.group(0))
+
+            date_part = text[start_idx:valid_end_idx].strip()
 
             # Clean "in" / "at" from end of date_part if dateparser captured it
-            # e.g. "April 12, 1880 in"
             date_part = re.sub(r'\s+(in|at|on)$', '', date_part, flags=re.IGNORECASE)
 
             # Extract Location (everything else)
+            # Prefix is unlikely if we started at 0 or near modifiers
             prefix = text[:start_idx].strip()
-            suffix = text[end_idx:].strip()
+            suffix = text[valid_end_idx:].strip()
 
             # Clean up suffix
             suffix = re.sub(r'^(in|at|on)\b\s*', '', suffix, flags=re.IGNORECASE)
