@@ -1450,6 +1450,29 @@ class GenealogyTextPipeline:
             return int(match.group(0))
         return None
 
+    def _strip_honorifics(self, name):
+        honorifics = [
+            "Mr", "Mrs", "Miss", "Ms", "Dr", "Rev", "Capt", "Col", "Gen", "Maj", "Lt", "Sgt", "Hon", "Gov", "Pres",
+            "Captain", "Colonel", "General", "Major", "Lieutenant", "Sergeant", "Ensign",
+            "Reverend", "Deacon", "Doctor", "Honorable", "Governor", "President",
+            "Brother", "Sister", "Uncle", "Aunt", "Cousin", "Mother", "Father"
+        ]
+        # Sort by length descending to match "Lieutenant" before "Lt"
+        honorifics.sort(key=len, reverse=True)
+
+        # Create pattern: ^(Honorific)\.?\s+
+        # We handle optional dot in regex
+        pattern = r'^(?:' + '|'.join(re.escape(h) for h in honorifics) + r')\.?\s+'
+
+        # Loop to strip multiple honorifics (e.g. "Major General")
+        current_name = name
+        for _ in range(3):
+            new_name = re.sub(pattern, '', current_name, flags=re.IGNORECASE).strip()
+            if new_name == current_name:
+                break
+            current_name = new_name
+        return current_name
+
     def _build_name_index(self):
         """
         Builds a comprehensive index of names to profile IDs, handling
@@ -1476,7 +1499,12 @@ class GenealogyTextPipeline:
             if base_name != clean_name:
                 name_index[base_name].append(pid)
 
-            # 3. Variations on Base Name
+            # 3. Stripped Honorifics (New)
+            stripped = self._strip_honorifics(clean_name)
+            if stripped != clean_name and len(stripped) > 3:
+                name_index[stripped].append(pid)
+
+            # 4. Variations on Base Name
             # "William Earl Dodge" -> "William Dodge"
             # "William E. Dodge" -> "William Dodge"
             # "William E. Dodge" -> "William E. Dodge" (Already covered by base_name if no suffix)
@@ -1573,6 +1601,15 @@ class GenealogyTextPipeline:
         # \b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b
         name_pattern = r'\b(?:[A-Z]\.?|[A-Z][a-z]+)(?:\s+(?:[A-Z]\.?|[A-Z][a-z]+))+\b'
         candidates = set(re.findall(name_pattern, text))
+
+        # Expand candidates by stripping honorifics
+        expanded_candidates = set(candidates)
+        for c in candidates:
+            stripped = self._strip_honorifics(c)
+            if stripped and len(stripped.split()) >= 2: # Ensure it's still a name (First Last)
+                 expanded_candidates.add(stripped)
+
+        candidates = expanded_candidates
 
         # Filter candidates that are known names
         # Use name_index.keys() which contains all variations
