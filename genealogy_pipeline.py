@@ -1565,7 +1565,9 @@ class GenealogyTextPipeline:
             "godfather": "Godparent",
             "godmother": "Godparent",
             "godson": "Godparent",
-            "goddaughter": "Godparent"
+            "goddaughter": "Godparent",
+            "brother": "Sibling",
+            "sister": "Sibling"
         }
 
         # Improved Candidate Extraction
@@ -1582,7 +1584,9 @@ class GenealogyTextPipeline:
             return []
 
         # Verification and Context
-        clauses = re.split(r'[.;,]', text)
+        # Changed from splitting by [.;,] to just [.;] to preserve comma-separated context
+        # e.g., "William Dodge, his partner" should be one clause.
+        clauses = re.split(r'[.;]', text)
         source_born = self._get_birth_year(source_profile)
         found_ids = set()
 
@@ -1800,6 +1804,15 @@ class GenealogyTextPipeline:
     def update_ariadne_journal(self):
         print("--- Ariadne: Updating Journal ---")
         today = datetime.date.today().strftime("%Y-%m-%d")
+        log_path = ".jules/ariadne.md"
+
+        # Check for duplicate entry
+        if os.path.exists(log_path):
+            with open(log_path, "r") as f:
+                content = f.read()
+                if f"## {today}" in content:
+                    print(f"   Journal already updated for {today}. Skipping.")
+                    return
 
         # Prepare content
         ambiguous_count = len(self.ariadne_log["ambiguous"])
