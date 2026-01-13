@@ -46,3 +46,15 @@
 **Visual Philosophy:**
 -   **Sepia Tone:** All maps are treated with `sepia(20%)` to maintain visual consistency with the existing "Antique Paper" theme.
 -   **Fallback:** Profiles in specific towns (e.g., "Englewood, NJ") will now gracefully degrade to the State Map instead of the generic texture.
+
+## 2026-01-13 - New England & East Anglia Refinement
+**Theme:** Filling gaps in the Puritan Migration era and ensuring robust fallbacks.
+**Source:** Wikimedia Commons (Public Domain).
+**Logic:**
+- **Expanded Settlement Towns:** Added Salem, Boston, Duxbury, Scituate, Dedham, Hingham, Weymouth, Cambridge, and Charlestown to the 'Puritan Life' logic.
+- **Era Extension:** Extended the 'Puritan Life' visual context to 1700 (previously 1660) to better capture the aesthetic of the 17th century New England experience (including Salem Witch Trials era).
+- **East Anglia:** Broadened the East Anglia map logic to explicitly catch 'Suffolk' and 'Essex' mentions, and accept 'UK' as a country match.
+- **Boston Fallback:** 'Boston' specifically falls back to 'Boston Old Map' (1722) only *after* the Puritan Era check (1620-1700), ensuring early settlers get the Puritan imagery while 18th-century Bostonians get the urban map.
+
+**Maintenance:**
+- **Fixed Broken Links:** Updated URLs for *Pilgrims Going to Church* and *Southern New England in 1634* which were returning 404s.

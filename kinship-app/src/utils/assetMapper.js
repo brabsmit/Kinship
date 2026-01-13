@@ -37,19 +37,19 @@ export const ASSETS = {
         style: { filter: "sepia(20%)" }
     },
     ne_map_1634: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Southern_New_England_in_1634.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Southern_New_England_in_1634.jpg",
         alt: "William Wood's Map of New England (1634)",
         caption: "The Southern Part of New England (1634)",
         style: { filter: "sepia(25%) contrast(110%)" }
     },
     puritan_life: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
         alt: "Pilgrims Going to Church by George Henry Boughton",
         caption: "Life in the Early Colonies",
         style: { filter: "sepia(15%) contrast(100%)" }
     },
     new_england_pilgrims: {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/George-Henry-Boughton-Pilgrims-Going-To-Church.jpg/1280px-George-Henry-Boughton-Pilgrims-Going-To-Church.jpg",
         alt: "Pilgrims Going to Church (Boughton)",
         caption: "The Pilgrim Experience",
         style: { filter: "sepia(15%)" }
@@ -248,9 +248,16 @@ export const getHeroImage = (location, year) => {
     }
 
     // East Anglia (Norfolk, Suffolk, Essex, Norwich England)
-    if ((loc.includes("norfolk") || loc.includes("suffolk") || loc.includes("essex") || (loc.includes("norwich") && !loc.includes("ct"))) && loc.includes("england")) {
+    if ((loc.includes("norfolk") || loc.includes("suffolk") || loc.includes("essex") || (loc.includes("norwich") && !loc.includes("ct"))) && (loc.includes("england") || loc.includes("uk"))) {
         // Use East Anglia map for 1600s/1700s
         if (y < 1750) return ASSETS.norfolk_map_1610;
+    }
+
+    // Massachusetts / CT Early Settlers (1620-1700)
+    // Priority: This captures the "Puritan Life" vibe for key towns before falling back to maps.
+    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester", "salem", "duxbury", "scituate", "dedham", "hingham", "weymouth", "cambridge", "charlestown", "boston"];
+    if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1700) {
+        return ASSETS.puritan_life;
     }
 
     // London Pre-Fire (< 1666)
@@ -258,15 +265,9 @@ export const getHeroImage = (location, year) => {
         return ASSETS.london_visscher;
     }
 
-    // Boston < 1750
+    // Boston < 1750 (Fallback for Boston if outside Puritan range, e.g. 1700-1750)
     if (loc.includes("boston") && y < 1750 && y > 1630) {
         return ASSETS.boston_old;
-    }
-
-    // Massachusetts / CT Early Settlers (1620-1660)
-    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
-    if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
-        return ASSETS.puritan_life;
     }
 
     // New England Pilgrim Era (General)
