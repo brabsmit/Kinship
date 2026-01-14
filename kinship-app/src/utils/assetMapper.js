@@ -29,6 +29,26 @@ export const ASSETS = {
         style: { filter: "sepia(25%) contrast(100%)" }
     },
 
+    // Ireland & Scotland (British Isles Pack)
+    ireland_1871: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/f/f2/GODKIN&WALKER(1871)_MAP_OF_IRELAND.jpg",
+        alt: "Godkin & Walker Map of Ireland (1871)",
+        caption: "Ireland in the 19th Century",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+    scotland_1809: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/c/cd/PINKERTON'S_MODERN_ATLAS,_SCOTLAND_SOUTHERN_PART.jpg",
+        alt: "Pinkerton's Map of Southern Scotland (1812)",
+        caption: "Southern Scotland (19th Century)",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+    edinburgh_1818: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/3/30/(1818)_Map_of_Edinburgh.jpg",
+        alt: "Map of Edinburgh (1818)",
+        caption: "Edinburgh (1818)",
+        style: { filter: "sepia(25%) contrast(110%)" }
+    },
+
     // New England
     new_england_1600: {
         src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Map_of_New_England_by_Captain_John_Smith_%281616%29.jpg/1024px-Map_of_New_England_by_Captain_John_Smith_%281616%29.jpg",
@@ -148,6 +168,25 @@ export const ASSETS = {
         caption: "Early Illinois (1818)",
         style: { filter: "sepia(20%) contrast(105%)" }
     },
+    // West Coast / Gold Rush
+    west_map_1850: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/2/2e/1850_California,_Oregon,_Utah,_New_Mexico_Map.jpg",
+        alt: "Map of California, Oregon, Utah, and New Mexico (1850)",
+        caption: "The Westward Expansion (1850)",
+        style: { filter: "sepia(25%) contrast(105%)" }
+    },
+    gold_rush_scene: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/a/a8/California_Gold_Diggers_1.jpg",
+        alt: "California Gold Diggers (Lithograph)",
+        caption: "Gold Rush Mining Operations (1850s)",
+        style: { filter: "sepia(20%) contrast(110%)" }
+    },
+    sf_1848: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/1/1a/CF1850_SAN_FRANCISCO_IN_NOVEMBER_1848.jpg",
+        alt: "San Francisco in November 1848",
+        caption: "San Francisco (1848)",
+        style: { filter: "sepia(15%) contrast(110%)" }
+    },
 
     // Industrial Era (Lowell, MA)
     industrial_19th: {
@@ -186,8 +225,42 @@ export const getHeroImage = (location, year) => {
     if (industrialCities.some(city => loc.includes(city)) && y >= 1820 && y < 1920) {
         return ASSETS.industrial_19th;
     }
-    // Broad "Mass" or "PA" logic for 19th century industrial vibe?
-    // Maybe stick to specific cities to avoid over-generalizing rural PA.
+
+    // West Coast & Gold Rush (1840-1880)
+    // Helper to check for state boundary
+    const isState = (text, states) => {
+        const regex = new RegExp(`\\b(${states.join("|")})\\b`, "i");
+        return regex.test(text);
+    };
+
+    // San Francisco Early Days
+    if ((loc.includes("san francisco") || loc.includes("yerba buena")) && y < 1860) {
+        return ASSETS.sf_1848;
+    }
+    // Gold Rush Context
+    // Check for "California" or "CA" with word boundary
+    if (isState(loc, ["california", "ca", "calif"]) && y >= 1848 && y < 1855) {
+        return ASSETS.gold_rush_scene;
+    }
+    // General West
+    // Check for states: CA, OR, UT, WA (exclude DC)
+    const isWest = isState(loc, ["california", "ca", "calif", "oregon", "or", "utah", "ut", "utah territory", "oregon territory"]);
+    const isWashingtonState = isState(loc, ["washington", "wa"]) && !loc.includes("d.c.") && !loc.includes("dc");
+
+    if ((isWest || isWashingtonState) && y >= 1840 && y < 1880) {
+        return ASSETS.west_map_1850;
+    }
+
+    // Ireland (General)
+    if (loc.includes("ireland") || loc.includes("eire") || loc.includes("dublin") || loc.includes("cork") || loc.includes("galway")) {
+         return ASSETS.ireland_1871;
+    }
+
+    // Scotland
+    if (loc.includes("scotland") || loc.includes("glasgow") || loc.includes("edinburgh")) {
+        if (loc.includes("edinburgh")) return ASSETS.edinburgh_1818;
+        return ASSETS.scotland_1809;
+    }
 
     // Pennsylvania (Colonial / Quaker)
     if ((loc.includes("pennsylvania") || loc.includes(" pa") || loc.includes("philadelphia")) && y < 1800) {
@@ -264,7 +337,7 @@ export const getHeroImage = (location, year) => {
     }
 
     // Massachusetts / CT Early Settlers (1620-1660)
-    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester"];
+    const settlementTowns = ["watertown", "sudbury", "ipswich", "windsor", "hartford", "wethersfield", "roxbury", "dorchester", "plymouth", "salem", "duxbury", "scituate", "dedham", "hingham", "weymouth", "cambridge", "charlestown"];
     if (settlementTowns.some(town => loc.includes(town)) && y >= 1620 && y < 1660) {
         return ASSETS.puritan_life;
     }
