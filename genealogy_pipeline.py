@@ -291,6 +291,12 @@ class GenealogyTextPipeline:
         self.family_data = []
         self.image_cache = self.load_cache()
         self.cache_updated = False
+        self.FAMOUS_FIGURES = [
+            "George Washington", "Abraham Lincoln", "Thomas Jefferson", "Benjamin Franklin",
+            "Queen Victoria", "King George", "Napoleon", "Ulysses S. Grant", "Robert E. Lee",
+            "Mark Twain", "Charles Dickens", "Theodore Roosevelt", "Franklin D. Roosevelt",
+            "Winston Churchill", "John Adams", "Alexander Hamilton", "General Grant", "General Washington"
+        ]
 
     def _extract_voyages(self, text):
         voyages = []
@@ -1692,6 +1698,53 @@ class GenealogyTextPipeline:
 
         return links
 
+    def _analyze_event_clusters(self, name_index):
+        print("--- Ariadne: Analyzing Event Clusters ---")
+        phrase_counts = defaultdict(set) # phrase -> set of profile_ids
+
+        # Regex for Capitalized Phrases (2+ words)
+        # e.g. "Panama Railroad", "Yale College"
+        pattern = r'\b([A-Z][a-z]+(?:\s+(?:of|the|and|&)\s+|[\s-]+)[A-Z][a-z]+(?:[\s-]+[A-Z][a-z]+)*)\b'
+
+        ignored = set(["United States", "New York", "New England", "Great Britain", "North America", "South America",
+                       "Rhode Island", "New Jersey", "New Hampshire", "South Carolina", "North Carolina",
+                       "High School", "College", "University", "The", "A", "An", "In", "On", "At", "To", "From",
+                       "Born", "Died", "Married", "Buried", "Unknown", "General", "Captain", "Major", "Colonel",
+                       "Notes", "Children", "Family", "History", "Genealogy", "Ancestry", "Record", "Records"
+                       ])
+
+        # Flatten name index keys for exclusion (lowercase for robust checking)
+        known_names = set(k.lower() for k in name_index.keys())
+
+        for p in self.family_data:
+            notes = p['story']['notes']
+            if not notes: continue
+
+            # Also scan for Famous Figures here
+            for fig in self.FAMOUS_FIGURES:
+                if fig in notes:
+                     if fig not in self.ariadne_log["famous_figures"]:
+                         self.ariadne_log["famous_figures"][fig] = []
+                     self.ariadne_log["famous_figures"][fig].append(p['name'])
+
+            matches = re.findall(pattern, notes)
+            for m in matches:
+                clean = m.strip()
+                if clean in ignored: continue
+                if len(clean) < 4: continue
+
+                # Check if it's a person (or part of a person's name)
+                if clean.lower() in known_names: continue
+
+                phrase_counts[clean].add(p['id'])
+
+        # Filter for clusters > 2 people
+        clusters = {k: v for k, v in phrase_counts.items() if len(v) >= 3}
+
+        # Store in log
+        self.ariadne_log["event_clusters"] = clusters
+        print(f"Found {len(clusters)} potential event clusters.")
+
     def _find_mentions(self):
         print("--- Ariadne: Weaving Connections ---")
 
@@ -1702,8 +1755,13 @@ class GenealogyTextPipeline:
         self.ariadne_log = {
             "ambiguous": defaultdict(set),
             "clusters": defaultdict(int),
-            "new_links": 0
+            "new_links": 0,
+            "event_clusters": {},
+            "famous_figures": {}
         }
+
+        # Analyze Event Clusters (and Famous Figures)
+        self._analyze_event_clusters(name_index)
 
         count = 0
 
@@ -1810,7 +1868,10 @@ class GenealogyTextPipeline:
 
         new_links_count = self.ariadne_log["new_links"]
 
-        if new_links_count == 0 and ambiguous_count == 0:
+        event_clusters = self.ariadne_log.get("event_clusters", {})
+        famous_figures = self.ariadne_log.get("famous_figures", {})
+
+        if new_links_count == 0 and ambiguous_count == 0 and not event_clusters and not famous_figures:
             print("   Nothing significant to log.")
             return
 
@@ -1821,7 +1882,17 @@ class GenealogyTextPipeline:
             entry += f"**Ambiguity Report:** {ambiguous_count} ambiguous references found (e.g., {ambiguous_examples}).\n"
 
         if sorted_clusters:
-            entry += f"**Cluster Alert:** High frequency mentions detected for: {cluster_examples}.\n"
+            entry += f"**People Clusters:** High frequency mentions detected for: {cluster_examples}.\n"
+
+        if event_clusters:
+            # Sort by size
+            sorted_events = sorted(event_clusters.items(), key=lambda x: len(x[1]), reverse=True)
+            top_events = ", ".join([f"'{k}' ({len(v)} people)" for k,v in sorted_events[:3]])
+            entry += f"**Event Clusters:** Detected shared historical contexts: {top_events}.\n"
+
+        if famous_figures:
+            figs = ", ".join([f"{k} (mentioned by {len(v)})" for k,v in famous_figures.items()])
+            entry += f"**Historical Figures:** Surprising mentions of: {figs}.\n"
 
         entry += f"**Action:** Systematic text scanning and cross-linking applied.\n"
 

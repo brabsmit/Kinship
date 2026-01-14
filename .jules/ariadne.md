@@ -12,3 +12,11 @@
 **Ambiguity Report:** 58 ambiguous references found (e.g., Thomas Powell, Reverend Timothy Woodbridge, John Post).
 **Cluster Alert:** High frequency mentions detected for: Reverend Samuel Blatchford (14), Solomon Bliss (13), Reverend John Blatchford (12).
 **Action:** Systematic text scanning and cross-linking applied.
+
+## 2026-01-14 - Automated Link Analysis
+**Discovery:** Analyzed narrative text and found 420 potential connections.
+**Ambiguity Report:** 58 ambiguous references found (e.g., Thomas Powell, Reverend Timothy Woodbridge, John Post).
+**People Clusters:** High frequency mentions detected for: Reverend Samuel Blatchford (14), Solomon Bliss (13), Reverend John Blatchford (12).
+**Event Clusters:** Detected shared historical contexts: 'New Haven' (56 people), 'King Philip' (21 people), 'Original Proprietor' (16 people).
+**Historical Figures:** Surprising mentions of: Benjamin Franklin (mentioned by 1).
+**Action:** Systematic text scanning and cross-linking applied.
