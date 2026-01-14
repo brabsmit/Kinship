@@ -46,3 +46,23 @@
 **Visual Philosophy:**
 -   **Sepia Tone:** All maps are treated with `sepia(20%)` to maintain visual consistency with the existing "Antique Paper" theme.
 -   **Fallback:** Profiles in specific towns (e.g., "Englewood, NJ") will now gracefully degrade to the State Map instead of the generic texture.
+
+## 2024-06-01 - West Coast & British Isles Pack
+**Source:** Wikimedia Commons (Public Domain)
+**Logic:**
+- **Westward Expansion (1840-1880):**
+    - **Gold Rush (CA):** Mapped to *California Gold Diggers* (Lithograph). Applied to profiles with "California" + 1848-1855 dates.
+    - **San Francisco (Early):** Mapped to *San Francisco in November 1848* for pre-1860 SF profiles.
+    - **General West:** Mapped to *Map of California, Oregon, Utah (1850)*. Covers CA, OR, WA, UT for the pioneer era.
+- **British Isles (Roots):**
+    - **Ireland:** Mapped to *Godkin & Walker Map of Ireland (1871)*. Provides a visual identity for Irish ancestors previously using generic UK maps.
+    - **Scotland:** Mapped to *Pinkerton's Map of Southern Scotland (1809)*.
+    - **Edinburgh:** Mapped to *Map of Edinburgh (1818)*.
+
+**Assets Added:**
+- `west_map_1850`: Map of California, Oregon, Utah (1850)
+- `gold_rush_scene`: California Gold Diggers (Lithograph)
+- `sf_1848`: San Francisco in November 1848
+- `ireland_1871`: Map of Ireland (1871)
+- `scotland_1809`: Pinkerton's Map of Scotland (1809)
+- `edinburgh_1818`: Map of Edinburgh (1818)
