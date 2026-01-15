@@ -50,6 +50,7 @@ import VoyageCard from './components/VoyageCard';
 import TheFleet from './components/TheFleet';
 import TechnologyContext from './components/TechnologyContext';
 import SoloChapter from './components/SoloChapter';
+import AboutPage from './components/AboutPage';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
 import presidentsData from './utils/presidents.json';
@@ -1911,6 +1912,20 @@ export default function App() {
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedLineage, setSelectedLineage] = useState('Paternal');
+  const [showAboutPage, setShowAboutPage] = useState(false);
+
+  // URL sync for shareable links
+  const { getShareUrl, copyShareUrl } = useUrlSync({
+    selectedAncestor,
+    setSelectedAncestor,
+    viewMode,
+    setViewMode,
+    selectedThreadId,
+    setSelectedThreadId,
+    selectedBranchId,
+    setSelectedBranchId,
+    familyData
+  });
 
   // URL sync for shareable links
   const { getShareUrl, copyShareUrl } = useUrlSync({
@@ -2087,6 +2102,14 @@ export default function App() {
                   </div>
 
                   <button
+                        onClick={() => setShowAboutPage(true)}
+                        className="p-1.5 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
+                        title="About This Project"
+                    >
+                        <Info size={16} />
+                    </button>
+
+                  <button
                         onClick={() => {
                             setUserRelation(null);
                             localStorage.removeItem('userRelation');
@@ -2242,6 +2265,9 @@ export default function App() {
              )
           )}
       </div>
+
+      {/* About Page Modal */}
+      {showAboutPage && <AboutPage onClose={() => setShowAboutPage(false)} />}
 
     </div>
   );
