@@ -529,11 +529,11 @@ class GenealogyTextPipeline:
             return year_val + 1
 
         # 3. Handle "between"
-        # Logic: "between 1770 and 1780" -> 1770 (Start date).
+        # Chronos Logic: "between 1770 and 1780" -> 1770 (Start date).
         # This falls through to the default return of year_val because regex found the first year.
         # But we verify no "bef" / "aft" modifiers confuse it.
-        # "between" in pre_text -> simply return year_val.
-        if re.search(r'\bbetween\b', pre_text):
+        # "between" or "bet." in pre_text -> simply return year_val.
+        if re.search(r'\b(between|bet\.?)\b', pre_text):
             return year_val
 
         # 4. Handle dual dating like "1774/5" or ranges "1774-1778"
@@ -559,7 +559,24 @@ class GenealogyTextPipeline:
         try:
             dt = dateparser.parse(raw_date_string)
             if dt:
-                return dt.year
+                # Chronos Safety Check:
+                # Ensure the year found by dateparser actually exists in the string.
+                # This prevents "May 1" -> Current Year (e.g. 2024).
+                found_year = dt.year
+                year_str = str(found_year)
+
+                # Check for full year "1980"
+                if year_str in raw_date_string:
+                    return found_year
+
+                # Check for short year format (e.g. "'80")
+                # We require the apostrophe to avoid matching "80" in "180 days"
+                short_year = year_str[-2:]
+                if f"'{short_year}" in raw_date_string:
+                    return found_year
+
+                # If completely absent, reject as a likely default value
+                return None
         except:
             pass
         return None
@@ -1300,7 +1317,7 @@ class GenealogyTextPipeline:
         if is_in_region(born_loc, east_coast) and is_in_region(died_loc, westward_states):
             tags.append("Westward Pioneer")
 
-        return list(set(tags))
+        return sorted(list(set(tags)))
 
     def link_family_members(self):
         print("--- Linking Family Members ---")
