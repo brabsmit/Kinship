@@ -42,10 +42,10 @@ export default function AboutPage({ onClose }) {
                             </div>
                             <div>
                                 <h2 className="text-2xl font-display font-bold text-gray-900 mb-2">
-                                    Dedicated to [Researcher Name]
+                                    Dedicated to Mark Rutherford
                                 </h2>
                                 <p className="text-gray-700 leading-relaxed">
-                                    This project is built upon the tireless work of <strong>[Researcher Name]</strong>,
+                                    This project is built upon the tireless work of <strong>Mark Rutherford</strong>,
                                     who spent [X years] meticulously researching, documenting, and preserving our family's
                                     history. Their dedication to uncovering the stories of our ancestors has created
                                     a treasure trove of knowledge that connects us across generations.
@@ -158,7 +158,7 @@ export default function AboutPage({ onClose }) {
                         </div>
                         <div className="text-sm text-gray-600 space-y-2">
                             <p>
-                                <strong>Research:</strong> [Researcher Name] — Original genealogy research and documentation
+                                <strong>Research:</strong> Mark Rutherford — Original genealogy research and documentation
                             </p>
                             <p>
                                 <strong>Development:</strong> Built with React, Vite, Tailwind CSS, React Flow, and Leaflet
