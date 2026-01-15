@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { findSources } from '../utils/researchSources';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -7,7 +8,7 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
  * Uses Google Gemini API if available, otherwise falls back to deterministic logic.
  *
  * @param {Object} profileData - The ancestor profile object from family_data.json
- * @returns {Promise<Array<string>>} - A list of research suggestions strings.
+ * @returns {Promise<Array<Object>>} - A list of research suggestion objects {text, links}.
  */
 export async function fetchResearchSuggestions(profileData) {
     if (!profileData || !profileData.id) {
@@ -24,6 +25,15 @@ export async function fetchResearchSuggestions(profileData) {
             // For now, infinite cache is fine to "cut down on usage"
             if (data.suggestions && Array.isArray(data.suggestions)) {
                 console.log(`[AI Cache] Hit for ${profileData.name}`);
+
+                // Backwards compatibility: Handle legacy string array cache
+                if (data.suggestions.length > 0 && typeof data.suggestions[0] === 'string') {
+                    return data.suggestions.map(s => ({
+                        text: s,
+                        links: findSources(s)
+                    }));
+                }
+
                 return data.suggestions;
             }
         } catch (e) {
@@ -44,19 +54,30 @@ ${JSON.stringify(profileData, null, 2)}
 Identify missing vital stats and ambiguities in the notes (e.g., 'conflicting dates', 'family tradition').
 Provide 3 specific, actionable research steps (e.g., 'Search 1850 US Census in Ohio').
 Return the response strictly as a JSON object with a single key "suggestions" which is an array of strings.
-Do not include any markdown formatting or explanations outside the JSON.
+Do not include any markdown formatting or explanations outside the JSON. The source of the provided data
+is a word document put together by a family member. If you see references to 'Paragraph #1960', that is the source
+of the data you are looking at.
 `;
 
     try {
-        const ai = new GoogleGenAI({ apiKey: API_KEY });
+        // Use a proxy URL if we are running in the browser to avoid CORS/Origin issues
+        // with the API key when accessing from a non-localhost origin.
+        const isBrowser = typeof window !== 'undefined';
+        const baseUrl = isBrowser
+            ? `${window.location.origin}/google-ai`
+            : undefined; // Default for server-side/other
+
+        const ai = new GoogleGenAI({
+            apiKey: API_KEY,
+            baseURL: baseUrl,
+        });
         const response = await ai.models.generateContent({
             model: "gemini-3-pro-preview",
             contents: prompt,
         });
 
-        // The user sample suggests response.text is directly available.
-        // We will assume it contains the text content.
-        const candidate = response.text();
+        // Handle response.text whether it is a function (standard SDK) or a property (observed behavior)
+        const candidate = typeof response.text === 'function' ? response.text() : response.text;
 
         if (!candidate) {
             throw new Error("No content returned from Gemini");
@@ -68,17 +89,23 @@ Do not include any markdown formatting or explanations outside the JSON.
         const parsed = JSON.parse(jsonString);
 
         if (parsed.suggestions && Array.isArray(parsed.suggestions)) {
+            // Process suggestions to attach links
+            const processedSuggestions = parsed.suggestions.map(s => ({
+                text: s,
+                links: findSources(s)
+            }));
+
             // Save to Cache
             try {
                 localStorage.setItem(cacheKey, JSON.stringify({
                     timestamp: Date.now(),
-                    suggestions: parsed.suggestions
+                    suggestions: processedSuggestions
                 }));
             } catch (e) {
                 console.warn("Failed to save to localStorage", e);
             }
 
-            return parsed.suggestions;
+            return processedSuggestions;
         } else {
             throw new Error("Invalid JSON structure from Gemini");
         }
@@ -139,5 +166,8 @@ function getDeterministicSuggestions(profile) {
         suggestions.push("Look for obituaries in local newspapers.");
     }
 
-    return suggestions.slice(0, 3);
+    return suggestions.slice(0, 3).map(s => ({
+        text: s,
+        links: findSources(s)
+    }));
 }

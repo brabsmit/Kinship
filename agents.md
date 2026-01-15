@@ -77,7 +77,7 @@ Location Awareness: Filter historical events by location. (e.g., Don't show "Cal
 
 5. File Structure Reference
 
-genealogy_pipeline_v6.py: Main Data Generator. Run this to update JSON.
+genealogy_pipeline.py: Main Data Generator. Run this to update JSON.
 
 src/App.jsx: Main Application Code. Contains all UI logic.
 
