@@ -491,9 +491,11 @@ class GenealogyTextPipeline:
             return None
 
         # Extract the first 4-digit year candidate to work with
-        # (1000-2999).
+        # (1000-2029).
         # We capture the group to ensure we get the year digits.
-        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])', s)
+        # UPDATE: Added word boundary \b at the end to prevent matching 5-digit numbers (e.g. "12345" -> "1234")
+        # Matches: "1774", "1990s", "1750's", "1774/5"
+        year_match = re.search(r'\b(1[0-9]{3}|20[0-2][0-9])(?:s|\'s)?\b', s)
 
         # 0. Handle "century" logic if no specific year found
         if not year_match:
