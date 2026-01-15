@@ -1120,18 +1120,18 @@ const TimelineEvent = ({ event, age, onVisible }) => {
     }, [event, onVisible]);
 
     return (
-        <div ref={ref} className="timeline-event group flex gap-6 relative">
+        <div ref={ref} className="timeline-event group flex gap-3 sm:gap-4 md:gap-6 relative">
              {/* Line */}
-             <div className="absolute left-[3.25rem] top-0 bottom-0 w-px bg-gray-200 group-last:bottom-auto group-last:h-6"></div>
+             <div className="absolute left-[2.5rem] sm:left-[2.75rem] md:left-[3.25rem] top-0 bottom-0 w-px bg-gray-200 group-last:bottom-auto group-last:h-6"></div>
 
              {/* Year */}
-             <div className="w-16 pt-1 text-right font-mono text-sm text-gray-400 group-hover:text-gray-600 transition-colors">
+             <div className="w-12 sm:w-14 md:w-16 pt-1 text-right font-mono text-xs sm:text-sm text-gray-400 group-hover:text-gray-600 transition-colors shrink-0">
                  {event.year}
              </div>
 
              {/* Dot */}
              <div className={`
-                relative z-10 w-4 h-4 mt-2 rounded-full border-2 transition-all
+                relative z-10 w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mt-1.5 sm:mt-2 rounded-full border-2 transition-all shrink-0
                 ${isPersonal
                     ? 'bg-[#E67E22] border-[#F9F5F0] scale-110 shadow-sm group-hover:scale-125'
                     : 'bg-gray-300 border-[#F9F5F0] group-hover:bg-gray-400'
@@ -1139,9 +1139,9 @@ const TimelineEvent = ({ event, age, onVisible }) => {
              `}></div>
 
              {/* Content */}
-             <div className="flex-1 pb-8">
+             <div className="flex-1 pb-6 sm:pb-8">
                  <div className={`
-                    text-sm transition-colors
+                    text-xs sm:text-sm transition-colors
                     ${isPersonal ? 'font-bold text-gray-900' : 'text-gray-500'}
                  `}>
                      {event.label}
@@ -1228,10 +1228,10 @@ const HeroImage = ({ location, year, heroImage }) => {
 };
 
 const StatItem = ({ label, value, icon }) => (
-    <div className="flex flex-col items-center justify-center text-center px-4">
-        <div className="text-gray-400 mb-2">{icon}</div>
-        <div className="text-sm font-bold text-gray-800 font-display">{value}</div>
-        <div className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">{label}</div>
+    <div className="flex flex-col items-center justify-center text-center px-2 sm:px-3 md:px-4">
+        <div className="text-gray-400 mb-1.5 sm:mb-2">{React.cloneElement(icon, { size: 16, className: "sm:w-[18px] sm:h-[18px]" })}</div>
+        <div className="text-xs sm:text-sm font-bold text-gray-800 font-display truncate max-w-full">{value}</div>
+        <div className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest mt-0.5 sm:mt-1">{label}</div>
     </div>
 );
 
@@ -1523,36 +1523,43 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
             <div className="max-w-4xl mx-auto bg-white min-h-screen shadow-2xl relative flex flex-col">
 
-                {/* Sticky Header */}
-                 <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md p-4 border-b border-gray-100 flex justify-between items-center shadow-sm">
+                {/* Sticky Header - Mobile Optimized */}
+                 <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md p-2 sm:p-4 border-b border-gray-100 flex justify-between items-center shadow-sm">
                      <div className="flex items-center gap-2">
-                         <div className="bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 flex items-center gap-2">
-                            <Anchor size={12} className="text-[#E67E22]" strokeWidth={1.5} />
-                            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{relationship}</span>
+                         <button
+                            onClick={onClose}
+                            className="lg:hidden p-1.5 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all"
+                            title="Back to List"
+                         >
+                            <ChevronLeft size={20} strokeWidth={2} />
+                         </button>
+                         <div className="bg-gray-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-200 flex items-center gap-1.5 sm:gap-2">
+                            <Anchor size={10} className="text-[#E67E22] sm:w-3 sm:h-3" strokeWidth={1.5} />
+                            <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 font-bold truncate max-w-[120px] sm:max-w-none">{relationship}</span>
                          </div>
                      </div>
-                     <div className="flex items-center gap-2">
-                         <ShareIconButton url={getPersonUrl(item)} size={18} />
+                     <div className="flex items-center gap-1 sm:gap-2">
+                         <ShareIconButton url={getPersonUrl(item)} size={16} />
                          <button
                             onClick={handlePrint}
-                            className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200"
+                            className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200"
                             title="Print Biography"
                          >
-                            <Printer size={18} strokeWidth={1.5} />
+                            <Printer size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={1.5} />
                          </button>
-                         <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200">
+                         <button onClick={onClose} className="hidden lg:block p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200">
                             <X size={20} strokeWidth={1.5} />
                         </button>
                      </div>
                 </div>
 
-                <div className="p-8 space-y-8 pb-24">
+                <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 pb-16 sm:pb-24">
                      {/* PROFILE CARD - Simplified for white background */}
                      <div className="rounded-xl overflow-hidden border border-gray-100 bg-white">
                         <HeroImage location={bornLoc} year={bornYear} heroImage={item.hero_image} />
 
-                        <div className="px-8 pb-8 pt-6 flex flex-col items-center text-center">
-                            <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-2 leading-tight">
+                        <div className="px-4 sm:px-6 md:px-8 pb-6 sm:pb-8 pt-4 sm:pt-6 flex flex-col items-center text-center">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-gray-900 mb-2 leading-tight">
                                 {item.story?.naming_echo ? (
                                     <>
                                         {item.name.split(' ').map((part, i) => {
@@ -1585,20 +1592,20 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                     </span>
                                 </div>
                             )}
-                            <div className="flex items-center gap-4 text-gray-500 font-mono text-sm uppercase tracking-widest mb-6">
+                            <div className="flex items-center gap-3 sm:gap-4 text-gray-500 font-mono text-xs sm:text-sm uppercase tracking-widest mb-4 sm:mb-6">
                                 <span>{bornYear || '?'}</span>
-                                <span className="w-8 h-px bg-gray-300"></span>
+                                <span className="w-6 sm:w-8 h-px bg-gray-300"></span>
                                 <span>{diedYear || '?'}</span>
                             </div>
 
                             {/* TAGS & THREADS */}
-                            <div className="flex flex-wrap justify-center gap-2 mb-6">
+                            <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                                 {item.story.tags && item.story.tags.map(tag => {
                                     const conf = TAG_CONFIG[tag] || TAG_CONFIG.default;
                                     return (
-                                        <div key={tag} className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${conf.color}`}>
-                                            {conf.icon}
-                                            {tag}
+                                        <div key={tag} className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider ${conf.color}`}>
+                                            {React.cloneElement(conf.icon, { size: 10, className: "sm:w-3 sm:h-3" })}
+                                            <span className="whitespace-nowrap">{tag}</span>
                                         </div>
                                     );
                                 })}
@@ -1607,11 +1614,11 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                     <button
                                         key={thread.id}
                                         onClick={() => onSelectThread && onSelectThread(thread.id)}
-                                        className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
+                                        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-105 transition-transform ${thread.color}`}
                                         title={`View "${thread.title}" Epic`}
                                     >
-                                        {thread.icon}
-                                        Part of {thread.title} Epic
+                                        {React.cloneElement(thread.icon, { size: 10, className: "sm:w-3 sm:h-3" })}
+                                        <span className="whitespace-nowrap hidden xs:inline">Part of </span>{thread.title}<span className="hidden xs:inline"> Epic</span>
                                     </button>
                                 ))}
 
@@ -1622,11 +1629,11 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                         return (
                                             <div
                                                 key="presidential-span"
-                                                className="flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border-slate-200 cursor-help"
+                                                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border-slate-200 cursor-help"
                                                 title={`Born under ${span.bornUnder}; died under ${span.diedUnder}`}
                                             >
-                                                <Landmark size={12} />
-                                                Witnessed {span.count} Presidencies
+                                                <Landmark size={10} className="sm:w-3 sm:h-3" />
+                                                <span className="whitespace-nowrap">{span.count} Presidencies</span>
                                             </div>
                                         );
                                     }
@@ -1635,7 +1642,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             </div>
 
                             {/* STATS BAR */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 w-full border-t border-gray-100">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 py-3 sm:py-4 w-full border-t border-gray-100">
                                 <StatItem label="Born" value={bornLoc} icon={<User size={18} strokeWidth={1.5} />} />
                                 <StatItem label="Died" value={diedLoc} icon={<Heart size={18} strokeWidth={1.5} />} />
                                 <StatItem label="Spouse" value={spousesCount > 0 ? spousesCount : "—"} icon={<Users size={18} strokeWidth={1.5} />} />
@@ -1649,14 +1656,14 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     {/* STORY / BIO */}
                     {item.story?.notes && (
                         <div className="bg-white rounded-xl p-0">
-                             <div className="flex items-center gap-4 mb-6">
+                             <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
                                 <div className="h-px bg-gray-200 flex-1"></div>
-                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                    <BookOpen size={14} strokeWidth={1.5} /> Biography
+                                <h2 className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+                                    <BookOpen size={12} className="sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} /> Biography
                                 </h2>
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
-                            <p className="text-lg md:text-xl font-body-serif text-gray-800 leading-loose first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-3 first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
+                            <p className="text-base sm:text-lg md:text-xl font-body-serif text-gray-800 leading-relaxed sm:leading-loose first-letter:text-4xl sm:first-letter:text-5xl md:first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-2 sm:first-letter:mr-3 first-letter:mt-[-0.25rem] sm:first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
                                 {renderNoteWithCurrency(item.story.notes)}
                             </p>
                         </div>
@@ -1665,10 +1672,10 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     {/* VOYAGES */}
                     {item.story.voyages && item.story.voyages.length > 0 && (
                         <div>
-                             <div className="flex items-center gap-4 mb-4">
+                             <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
                                 <div className="h-px bg-gray-200 flex-1"></div>
-                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                    <Ship size={14} strokeWidth={1.5} /> Voyages
+                                <h2 className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+                                    <Ship size={12} className="sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} /> Voyages
                                 </h2>
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
@@ -1687,15 +1694,15 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     {/* UNIFIED TIMELINE */}
                     {bornYear > 0 && (
                         <div className="bg-white rounded-xl p-0">
-                            <div className="flex items-center gap-4 mb-8">
+                            <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
                                 <div className="h-px bg-gray-200 flex-1"></div>
-                                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                    <Clock size={14} strokeWidth={1.5} /> Life & Times
+                                <h2 className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+                                    <Clock size={12} className="sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} /> Life & Times
                                 </h2>
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
 
-                            <div className="pl-4 md:pl-8 border-l border-gray-100 ml-4">
+                            <div className="pl-3 sm:pl-4 md:pl-8 border-l border-gray-100 ml-2 sm:ml-4">
                                 <TimelineEvent
                                     event={{
                                         year: bornYear,
@@ -1730,10 +1737,10 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                     {/* KEY LOCATIONS MAP (Static) */}
                     <div className="bg-white rounded-xl p-0">
-                         <div className="flex items-center gap-4 mb-8">
+                         <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
                             <div className="h-px bg-gray-200 flex-1"></div>
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                <MapPin size={14} strokeWidth={1.5} /> Key Locations
+                            <h2 className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+                                <MapPin size={12} className="sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} /> Key Locations
                             </h2>
                             <div className="h-px bg-gray-200 flex-1"></div>
                         </div>
@@ -1747,16 +1754,16 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             bornCoords={bornCoords}
                             diedCoords={diedCoords}
                             focus={mapFocus}
-                            className="h-[400px] w-full rounded-xl shadow-inner bg-gray-50 border border-gray-200"
+                            className="h-[300px] sm:h-[350px] md:h-[400px] w-full rounded-xl shadow-inner bg-gray-50 border border-gray-200"
                         />
                     </div>
 
                     {/* FAMILY CONNECTIONS */}
                     <div className="bg-white rounded-xl p-0">
-                         <div className="flex items-center gap-4 mb-8">
+                         <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
                             <div className="h-px bg-gray-200 flex-1"></div>
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                <Network size={14} strokeWidth={1.5} /> Connections
+                            <h2 className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+                                <Network size={12} className="sm:w-[14px] sm:h-[14px]" strokeWidth={1.5} /> Connections
                             </h2>
                             <div className="h-px bg-gray-200 flex-1"></div>
                         </div>
@@ -1957,8 +1964,15 @@ export default function App() {
     familyData
   });
 
-  // Sidebar Resizing State
-  const [sidebarWidth, setSidebarWidth] = useState(450);
+  // Sidebar Resizing State - Responsive default width
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth < 640) return 300; // Mobile
+      if (window.innerWidth < 1024) return 350; // Tablet
+      return 450; // Desktop
+    }
+    return 450;
+  });
   const [isResizing, setIsResizing] = useState(false);
 
   const startResizing = useCallback((e) => {
@@ -2064,66 +2078,21 @@ export default function App() {
             title="Drag to resize sidebar"
         />
         {/* Header with Title and Controls */}
-        <div className="p-4 border-b border-gray-100 bg-white z-20 space-y-4">
-            {/* Top Row: Title + View Toggles + Logout */}
-            <div className="flex justify-between items-center">
-              <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
-                <User size={24} className="text-[#E67E22]" /> Kinship
+        <div className="p-3 sm:p-4 border-b border-gray-100 bg-white z-20 space-y-3 sm:space-y-4">
+            {/* Top Row: Title + Action Buttons */}
+            <div className="flex justify-between items-center gap-2">
+              <h1 className="text-lg sm:text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
+                <User size={20} className="text-[#E67E22] sm:w-6 sm:h-6" />
+                <span className="hidden xs:inline">Kinship</span>
               </h1>
 
-              <div className="flex items-center gap-3">
-                  {/* View Mode Segmented Control (Subtle) */}
-                  <div className="flex bg-gray-100 p-0.5 rounded-lg">
-                     <button
-                        onClick={() => setViewMode('list')}
-                        className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                        title="List View"
-                     >
-                        <ListIcon size={16} />
-                     </button>
-                     <button
-                        onClick={() => setViewMode('graph')}
-                        className={`p-1.5 rounded-md transition-all ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                        title="Graph View"
-                     >
-                        <Network size={16} />
-                     </button>
-                     <button
-                        onClick={() => setViewMode('fleet')}
-                        className={`p-1.5 rounded-md transition-all ${viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                        title="The Fleet"
-                     >
-                        <Ship size={16} />
-                     </button>
-                     <button
-                        onClick={() => setViewMode('threads')}
-                        className={`p-1.5 rounded-md transition-all ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                        title="Epics"
-                     >
-                        <BookOpen size={16} />
-                     </button>
-                     <button
-                        onClick={() => setViewMode('hitlist')}
-                        className={`p-1.5 rounded-md transition-all ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                        title="Hitlist"
-                     >
-                        <AlertTriangle size={16} />
-                     </button>
-                     <button
-                        onClick={() => setViewMode('outliers')}
-                        className={`p-1.5 rounded-md transition-all ${viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
-                        title="Outliers"
-                     >
-                        <Trophy size={16} />
-                     </button>
-                  </div>
-
+              <div className="flex items-center gap-1.5 sm:gap-3">
                   <button
                         onClick={() => setShowAboutPage(true)}
-                        className="p-1.5 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
+                        className="p-1.5 sm:p-2 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
                         title="About This Project"
                     >
-                        <Info size={16} />
+                        <Info size={16} className="sm:w-5 sm:h-5" />
                     </button>
 
                   <button
@@ -2131,11 +2100,65 @@ export default function App() {
                             setUserRelation(null);
                             localStorage.removeItem('userRelation');
                         }}
-                        className="p-1.5 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-gray-600 transition-all"
+                        className="p-1.5 sm:p-2 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-gray-600 transition-all"
                         title="Reset Identity / Log Out"
                     >
-                        <LogOut size={16} />
+                        <LogOut size={16} className="sm:w-5 sm:h-5" />
                     </button>
+              </div>
+            </div>
+
+            {/* View Mode Toggle - Scrollable on Mobile */}
+            <div className="overflow-x-auto scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0">
+              <div className="flex bg-gray-100 p-0.5 rounded-lg min-w-max">
+                 <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    title="List View"
+                 >
+                    <ListIcon size={16} />
+                    <span className="hidden sm:inline">List</span>
+                 </button>
+                 <button
+                    onClick={() => setViewMode('graph')}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    title="Graph View"
+                 >
+                    <Network size={16} />
+                    <span className="hidden sm:inline">Graph</span>
+                 </button>
+                 <button
+                    onClick={() => setViewMode('fleet')}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    title="The Fleet"
+                 >
+                    <Ship size={16} />
+                    <span className="hidden sm:inline">Fleet</span>
+                 </button>
+                 <button
+                    onClick={() => setViewMode('threads')}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    title="Epics"
+                 >
+                    <BookOpen size={16} />
+                    <span className="hidden sm:inline">Epics</span>
+                 </button>
+                 <button
+                    onClick={() => setViewMode('hitlist')}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    title="Hitlist"
+                 >
+                    <AlertTriangle size={16} />
+                    <span className="hidden sm:inline">Hitlist</span>
+                 </button>
+                 <button
+                    onClick={() => setViewMode('outliers')}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    title="Outliers"
+                 >
+                    <Trophy size={16} />
+                    <span className="hidden sm:inline">Outliers</span>
+                 </button>
               </div>
             </div>
 
