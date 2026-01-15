@@ -29,7 +29,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity, Landmark } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity, Landmark, Printer } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -51,6 +51,7 @@ import TheFleet from './components/TheFleet';
 import TechnologyContext from './components/TechnologyContext';
 import SoloChapter from './components/SoloChapter';
 import AboutPage from './components/AboutPage';
+import PrintBiography from './components/PrintBiography';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
 import presidentsData from './utils/presidents.json';
@@ -1348,11 +1349,22 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const [showLoginModal, setShowLoginModal] = useState(false);
     const { isAuthenticated } = useAuth();
     const [mapFocus, setMapFocus] = useState(null);
+    const [showPrintView, setShowPrintView] = useState(false);
 
     React.useEffect(() => {
         setResearchSuggestions(null);
         setIsAnalyzing(false);
     }, [item]);
+
+    const handlePrint = () => {
+        setShowPrintView(true);
+        // Wait for the print view to render, then trigger print dialog
+        setTimeout(() => {
+            window.print();
+            // Hide print view after printing
+            setTimeout(() => setShowPrintView(false), 100);
+        }, 100);
+    };
 
     const handleAnalyzeProfile = async () => {
         if (!isAuthenticated) {
@@ -1521,6 +1533,13 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                      </div>
                      <div className="flex items-center gap-2">
                          <ShareIconButton url={getPersonUrl(item)} size={18} />
+                         <button
+                            onClick={handlePrint}
+                            className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200"
+                            title="Print Biography"
+                         >
+                            <Printer size={18} strokeWidth={1.5} />
+                         </button>
                          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200">
                             <X size={20} strokeWidth={1.5} />
                         </button>
@@ -1898,6 +1917,17 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                 </div>
             </div>
+
+            {/* Print View - Hidden from screen, shown only when printing */}
+            {showPrintView && (
+                <div className="print-only">
+                    <PrintBiography
+                        person={item}
+                        familyData={familyData}
+                        relationship={relationship}
+                    />
+                </div>
+            )}
 
         </div>
     );

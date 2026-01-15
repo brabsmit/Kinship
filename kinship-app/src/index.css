@@ -24,3 +24,32 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* Print Styles */
+.print-only {
+    display: none;
+}
+
+@media print {
+    /* Hide print-only elements on screen, show only when printing */
+    .print-only {
+        display: block !important;
+    }
+
+    /* Hide all non-print elements when printing */
+    body > :not(.print-biography),
+    body > div:not(:has(.print-biography)) {
+        display: none !important;
+    }
+
+    /* Reset page margins for printing */
+    @page {
+        margin: 0.5in;
+    }
+
+    /* Ensure print content takes full page */
+    html, body {
+        height: auto;
+        overflow: visible;
+    }
+}
