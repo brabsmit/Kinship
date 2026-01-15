@@ -54,6 +54,8 @@ import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLoca
 import historyData from './history_data.json';
 import presidentsData from './utils/presidents.json';
 import { calculateDistance, detectRegion } from './utils/geo';
+import { useUrlSync, getPersonUrl, getThreadUrl, getViewUrl } from './utils/urlSync';
+import { ShareIconButton } from './components/ShareButton';
 
 // Fix for default Leaflet icons in Vite/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -867,8 +869,11 @@ const GenerationGroup = ({ generation, items, selectedAncestor, onSelect, userRe
                                             {item.name}
                                         </h3>
                                     </div>
-                                    <div className={`text-xs font-mono shrink-0 ${isSelected ? 'text-gray-500' : 'text-gray-400'}`}>
-                                        {born} – {died}
+                                    <div className="flex items-center gap-2">
+                                        <div className={`text-xs font-mono shrink-0 ${isSelected ? 'text-gray-500' : 'text-gray-400'}`}>
+                                            {born} – {died}
+                                        </div>
+                                        <ShareIconButton url={getPersonUrl(item)} size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </div>
                                 </div>
 
@@ -1273,12 +1278,15 @@ const ThreadTimeline = ({ thread, members, onBack, onSelectMember }) => {
         <div className="flex flex-col h-full bg-white">
             {/* Header */}
             <div className={`p-4 ${thread.color.replace('text-white', 'bg-opacity-10')} border-b border-gray-100`}>
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-800 mb-3"
-                >
-                    <ChevronLeft size={12} /> Back to Epics
-                </button>
+                <div className="flex justify-between items-start mb-3">
+                    <button
+                        onClick={onBack}
+                        className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-800"
+                    >
+                        <ChevronLeft size={12} /> Back to Epics
+                    </button>
+                    <ShareIconButton url={getThreadUrl(thread.id)} size={14} />
+                </div>
 
                 <div className="flex items-center gap-3 mb-2">
                     <div className={`p-2 rounded-full ${thread.color}`}>
@@ -1510,9 +1518,12 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{relationship}</span>
                          </div>
                      </div>
-                     <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200">
-                        <X size={20} strokeWidth={1.5} />
-                    </button>
+                     <div className="flex items-center gap-2">
+                         <ShareIconButton url={getPersonUrl(item)} size={18} />
+                         <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-800 transition-all border border-transparent hover:border-gray-200">
+                            <X size={20} strokeWidth={1.5} />
+                        </button>
+                     </div>
                 </div>
 
                 <div className="p-8 space-y-8 pb-24">
@@ -1892,56 +1903,27 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 };
 
 export default function App() {
-  const [selectedAncestor, setSelectedAncestor] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    if (id) {
-       return familyData.find(p => String(p.id) === id) || null;
-    }
-    return null;
-  });
-
-  // Sync state to URL
-  React.useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const currentId = params.get('id');
-    const stateId = selectedAncestor ? String(selectedAncestor.id) : null;
-
-    if (currentId !== stateId) {
-        const url = new URL(window.location);
-        if (stateId) {
-            url.searchParams.set('id', stateId);
-        } else {
-            url.searchParams.delete('id');
-        }
-        window.history.pushState({ id: stateId }, '', url.toString());
-    }
-  }, [selectedAncestor]);
-
-  // Handle Back/Forward
-  React.useEffect(() => {
-    const handlePopState = (event) => {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-        if (id) {
-            const person = familyData.find(p => String(p.id) === id);
-            setSelectedAncestor(person || null);
-        } else {
-            setSelectedAncestor(null);
-        }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
+  const [selectedAncestor, setSelectedAncestor] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist'
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist', 'fleet', 'threads', 'outliers'
   const [storyMode, setStoryMode] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState('1');
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [selectedLineage, setSelectedLineage] = useState('Paternal');
+
+  // URL sync for shareable links
+  const { getShareUrl, copyShareUrl } = useUrlSync({
+    selectedAncestor,
+    setSelectedAncestor,
+    viewMode,
+    setViewMode,
+    selectedThreadId,
+    setSelectedThreadId,
+    selectedBranchId,
+    setSelectedBranchId,
+    familyData
+  });
 
   // Sidebar Resizing State
   const [sidebarWidth, setSidebarWidth] = useState(450);
