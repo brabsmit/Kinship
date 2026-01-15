@@ -60,6 +60,12 @@ export const ASSETS = {
         caption: "Colonial Boston",
         style: { filter: "sepia(25%) contrast(105%)" }
     },
+    ma_1850: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/1850_Cowperthwait_-_Mitchell_Map_of_Massachusetts_and_Rhode_Island_-_Geographicus_-_MA-m-50.jpg/1024px-1850_Cowperthwait_-_Mitchell_Map_of_Massachusetts_and_Rhode_Island_-_Geographicus_-_MA-m-50.jpg",
+        alt: "Mitchell Map of Massachusetts (1850)",
+        caption: "Massachusetts in the 19th Century",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
 
     // Connecticut
     new_haven_1641: {
@@ -105,6 +111,12 @@ export const ASSETS = {
         alt: "Bird's Eye View of New York City (1873)",
         caption: "The Bustling Metropolis of the 19th Century",
         style: { filter: "sepia(10%)" }
+    },
+    ny_state_1827: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/1827_Finley_Map_of_New_York_State_-_Geographicus_-_NewYork-finley-1827.jpg/1024px-1827_Finley_Map_of_New_York_State_-_Geographicus_-_NewYork-finley-1827.jpg",
+        alt: "Finley Map of New York State (1827)",
+        caption: "New York State (19th Century)",
+        style: { filter: "sepia(20%) contrast(105%)" }
     },
     long_island_1686: {
         src: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Long_Island_1686.jpg",
@@ -271,7 +283,8 @@ export const getHeroImage = (location, year) => {
 
     // New England Pilgrim Era (General)
     if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts") || loc.includes("ma")) && y >= 1620 && y < 1700) {
-        return ASSETS.ne_map_1634;
+        // Use Puritan Life for early settlement vibe unless specific Boston map
+        return ASSETS.puritan_life;
     }
 
     // England Pre-1650 (General Countryside)
@@ -296,10 +309,17 @@ export const getHeroImage = (location, year) => {
 
     // 3. Fallback Logic (If not in cache)
 
-    // New York / NYC (1800-1900)
-    if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {
+    // New York: Separate NYC from Upstate/State
+    const nycKeywords = ['manhattan', 'brooklyn', 'bronx', 'queens', 'staten island', 'new york city', 'nyc'];
+    if (nycKeywords.some(k => loc.includes(k))) {
         if (y >= 1800) return ASSETS.ny_1800;
-        return ASSETS.ne_map_1634; // Fallback to regional map
+    }
+    // New York State Fallback
+    if (loc.includes("ny") || loc.includes("new york")) {
+        if (y >= 1800) return ASSETS.ny_state_1827; // Use State map for Upstate/Generic NY
+        if (y < 1800) return ASSETS.long_island_1686; // Assuming many early ones are Long Island, but maybe unsafe?
+        // Better: fallback to NE map if very early
+        return ASSETS.ne_map_1634;
     }
 
     // Connecticut
@@ -310,7 +330,8 @@ export const getHeroImage = (location, year) => {
 
     // Massachusetts / New England (Broader catch)
     if (loc.includes("ma") || loc.includes("massachusetts") || loc.includes("boston") || loc.includes("new england") || loc.includes("rhode island") || loc.includes("ri")) {
-        if (y < 1700 && y > 1620) return ASSETS.ne_map_1634;
+        if (y >= 1800 && (loc.includes("ma") || loc.includes("massachusetts"))) return ASSETS.ma_1850;
+        if (y < 1700 && y > 1620) return ASSETS.puritan_life; // Broad fallback for early NE
         return ASSETS.ne_map_1634; // Default regional
     }
 
