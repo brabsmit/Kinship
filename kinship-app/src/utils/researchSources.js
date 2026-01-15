@@ -20,6 +20,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
         description: "Free database of Civil War servicemen (Union & Confederate)"
     },
+    "1890 Veterans": {
+        label: "1890 Veterans Schedule",
+        url: "https://www.familysearch.org/search/collection/1877095",
+        description: "Census of Union Veterans and Widows of the Civil War"
+    },
     "War of 1812": {
         label: "Fold3 War of 1812",
         url: "https://www.fold3.com/publication/761/war-of-1812-pension-files",
@@ -233,6 +238,31 @@ export const RESEARCH_SOURCES = {
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
     },
+    "PA Vital": {
+        label: "PA State Archives (ARIAS)",
+        url: "http://www.digitalarchives.state.pa.us/",
+        description: "Free military and vital record indices for Pennsylvania"
+    },
+    "Ohio Death": {
+        label: "Ohio Death Certificates (1908-1953)",
+        url: "https://www.familysearch.org/search/collection/1681000",
+        description: "Free index and images of death certificates"
+    },
+    "Missouri Death": {
+        label: "Missouri Digital Heritage",
+        url: "https://s1.sos.mo.gov/records/Archives/ArchivesMvc/DeathCertificates",
+        description: "Free digitized death certificates (1910-1971)"
+    },
+    "Virginia Chancery": {
+        label: "Virginia Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Index and images of court cases (wills, disputes) from the Library of Virginia"
+    },
+    "Illinois Death": {
+        label: "Illinois Death Index",
+        url: "https://www.familysearch.org/search/collection/1633338",
+        description: "Illinois Deaths and Stillbirths (1916-1947)"
+    },
     "SSDI": {
         label: "Social Security Death Index",
         url: "https://www.familysearch.org/search/collection/1202535",
@@ -284,6 +314,11 @@ export const RESEARCH_SOURCES = {
         url: "https://heritage.statueofliberty.org/",
         description: "Passenger arrival records"
     },
+    "Steve Morse": {
+        label: "Steve Morse One-Step",
+        url: "https://stevemorse.org/",
+        description: "Advanced search tools for immigration, census, and vital records"
+    },
     "Freedman's Bureau": {
         label: "Freedman's Bureau Records",
         url: "https://www.familysearch.org/search/collection/2721171",
@@ -300,6 +335,11 @@ export const RESEARCH_SOURCES = {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
         description: "Historical newspapers search"
+    },
+    "California Newspapers": {
+        label: "California Digital Newspaper Collection",
+        url: "https://cdnc.ucr.edu/",
+        description: "Free access to California newspapers (1846-Present)"
     },
     "Chronicling America": {
         label: "Chronicling America (LOC)",
@@ -320,6 +360,16 @@ export const RESEARCH_SOURCES = {
         label: "HathiTrust Digital Library",
         url: "https://www.hathitrust.org/",
         description: "Searchable digital library of books and journals"
+    },
+    "WorldCat": {
+        label: "WorldCat",
+        url: "https://www.worldcat.org/",
+        description: "Search the collections of thousands of libraries worldwide"
+    },
+    "Google Patents": {
+        label: "Google Patents",
+        url: "https://patents.google.com/",
+        description: "Search for ancestral inventions and patents"
     },
     "WikiTree": {
         label: "WikiTree",
