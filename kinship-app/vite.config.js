@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // GitHub Pages uses /repo-name/ as base path
+  base: process.env.VITE_BASE_PATH || '/',
   server: {
     // 1. HOST: true exposes the app to your local network (and internet via port forwarding)
     host: true, 
