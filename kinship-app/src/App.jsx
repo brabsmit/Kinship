@@ -1927,19 +1927,6 @@ export default function App() {
     familyData
   });
 
-  // URL sync for shareable links
-  const { getShareUrl, copyShareUrl } = useUrlSync({
-    selectedAncestor,
-    setSelectedAncestor,
-    viewMode,
-    setViewMode,
-    selectedThreadId,
-    setSelectedThreadId,
-    selectedBranchId,
-    setSelectedBranchId,
-    familyData
-  });
-
   // Sidebar Resizing State
   const [sidebarWidth, setSidebarWidth] = useState(450);
   const [isResizing, setIsResizing] = useState(false);
