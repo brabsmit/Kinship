@@ -29,7 +29,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity, Landmark, Printer } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Trophy, Compass, Ship, Crown, Activity, Landmark, Printer, Menu, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -1951,6 +1951,18 @@ export default function App() {
   const [selectedLineage, setSelectedLineage] = useState('Paternal');
   const [showAboutPage, setShowAboutPage] = useState(false);
 
+  // Sidebar collapse state
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Auto-collapse sidebar in Graph and Fleet views
+  React.useEffect(() => {
+    if (viewMode === 'graph' || viewMode === 'fleet') {
+      setIsSidebarCollapsed(true);
+    } else {
+      setIsSidebarCollapsed(false);
+    }
+  }, [viewMode]);
+
   // URL sync for shareable links
   const { getShareUrl, copyShareUrl } = useUrlSync({
     selectedAncestor,
@@ -2055,114 +2067,214 @@ export default function App() {
   }, [searchText, storyMode, filteredListData, selectedThreadId]);
 
   return (
-    <div className="flex h-screen bg-white font-sans overflow-hidden">
-      
+    <div className="flex flex-col h-screen bg-white font-sans overflow-hidden">
+
       {/* Relationship Modal */}
       {!userRelation && (
           <RelationshipSelector data={familyData} onComplete={handleRelationComplete} />
       )}
 
-      {/* --- LEFT NAVIGATION (Persistent Sidebar) --- */}
+      {/* --- TOP NAVIGATION BAR --- */}
+      <nav className="hidden lg:flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white z-30 shrink-0">
+        {/* Left: Logo */}
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
+            <User size={24} className="text-[#E67E22]" />
+            <span>Kinship</span>
+          </h1>
+        </div>
+
+        {/* Center: View Mode Navigation */}
+        <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+          <button
+            onClick={() => setViewMode('list')}
+            className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
+              viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+            }`}
+            title="List View"
+          >
+            <ListIcon size={18} />
+            <span>List</span>
+          </button>
+          <button
+            onClick={() => setViewMode('graph')}
+            className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
+              viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+            }`}
+            title="Graph View"
+          >
+            <Network size={18} />
+            <span>Graph</span>
+          </button>
+          <button
+            onClick={() => setViewMode('fleet')}
+            className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
+              viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+            }`}
+            title="The Fleet"
+          >
+            <Ship size={18} />
+            <span>Fleet</span>
+          </button>
+          <button
+            onClick={() => setViewMode('threads')}
+            className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
+              viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+            }`}
+            title="Epics"
+          >
+            <BookOpen size={18} />
+            <span>Epics</span>
+          </button>
+          <button
+            onClick={() => setViewMode('hitlist')}
+            className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
+              viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+            }`}
+            title="Hitlist"
+          >
+            <AlertTriangle size={18} />
+            <span>Hitlist</span>
+          </button>
+          <button
+            onClick={() => setViewMode('outliers')}
+            className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
+              viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+            }`}
+            title="Outliers"
+          >
+            <Trophy size={18} />
+            <span>Outliers</span>
+          </button>
+        </div>
+
+        {/* Right: Action Buttons */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowAboutPage(true)}
+            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
+            title="About This Project"
+          >
+            <Info size={20} />
+          </button>
+          <button
+            onClick={() => {
+              setUserRelation(null);
+              localStorage.removeItem('userRelation');
+            }}
+            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all"
+            title="Reset Identity / Log Out"
+          >
+            <LogOut size={20} />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Top Bar with Hamburger - Only visible on mobile */}
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-30 shrink-0">
+        <h1 className="text-lg font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
+          <User size={20} className="text-[#E67E22]" />
+          <span>Kinship</span>
+        </h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAboutPage(true)}
+            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
+            title="About"
+          >
+            <Info size={18} />
+          </button>
+          <button
+            onClick={() => {
+              setUserRelation(null);
+              localStorage.removeItem('userRelation');
+            }}
+            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all"
+            title="Log Out"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* --- CONTENT AREA (Sidebar + Main Content) --- */}
+      <div className="flex flex-1 overflow-hidden">
+
+      {/* --- LEFT SIDEBAR (Collapsible) --- */}
       <div
         className={`
             relative flex flex-col border-r border-gray-200 bg-white h-full z-10 shrink-0
             ${!isResizing ? 'transition-all duration-300' : ''}
             ${selectedAncestor ? 'hidden lg:flex' : 'flex'}
+            ${isSidebarCollapsed ? 'w-0 border-r-0' : ''}
         `}
-        style={{ width: sidebarWidth }}
+        style={{ width: isSidebarCollapsed ? 0 : sidebarWidth }}
       >
-        {/* Resize Handle (Always Active) */}
-        <div
-            className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
-            onMouseDown={startResizing}
-            title="Drag to resize sidebar"
-        />
-        {/* Header with Title and Controls */}
-        <div className="p-3 sm:p-4 border-b border-gray-100 bg-white z-20 space-y-3 sm:space-y-4">
-            {/* Top Row: Title + Action Buttons */}
-            <div className="flex justify-between items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
-                <User size={20} className="text-[#E67E22] sm:w-6 sm:h-6" />
-                <span className="hidden xs:inline">Kinship</span>
-              </h1>
-
-              <div className="flex items-center gap-1.5 sm:gap-3">
-                  <button
-                        onClick={() => setShowAboutPage(true)}
-                        className="p-1.5 sm:p-2 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
-                        title="About This Project"
-                    >
-                        <Info size={16} className="sm:w-5 sm:h-5" />
-                    </button>
-
-                  <button
-                        onClick={() => {
-                            setUserRelation(null);
-                            localStorage.removeItem('userRelation');
-                        }}
-                        className="p-1.5 sm:p-2 rounded-lg text-gray-300 hover:bg-gray-50 hover:text-gray-600 transition-all"
-                        title="Reset Identity / Log Out"
-                    >
-                        <LogOut size={16} className="sm:w-5 sm:h-5" />
-                    </button>
-              </div>
-            </div>
-
-            {/* View Mode Toggle - Scrollable on Mobile */}
-            <div className="overflow-x-auto scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0">
+        {/* Resize Handle (Hidden when collapsed) */}
+        {!isSidebarCollapsed && (
+          <div
+              className="absolute top-0 bottom-0 right-0 w-1.5 cursor-col-resize z-50 hover:bg-blue-400/50 active:bg-blue-600 transition-colors"
+              onMouseDown={startResizing}
+              title="Drag to resize sidebar"
+          />
+        )}
+        {/* Sidebar Header - Simplified (Mobile View Mode Toggle) */}
+        <div className="p-3 sm:p-4 border-b border-gray-100 bg-white z-20 space-y-3">
+            {/* Mobile View Mode Toggle - Only visible on mobile */}
+            <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-3 px-3">
               <div className="flex bg-gray-100 p-0.5 rounded-lg min-w-max">
                  <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                     title="List View"
                  >
                     <ListIcon size={16} />
-                    <span className="hidden sm:inline">List</span>
+                    <span>List</span>
                  </button>
                  <button
                     onClick={() => setViewMode('graph')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Graph View"
                  >
                     <Network size={16} />
-                    <span className="hidden sm:inline">Graph</span>
+                    <span>Graph</span>
                  </button>
                  <button
                     onClick={() => setViewMode('fleet')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                     title="The Fleet"
                  >
                     <Ship size={16} />
-                    <span className="hidden sm:inline">Fleet</span>
+                    <span>Fleet</span>
                  </button>
                  <button
                     onClick={() => setViewMode('threads')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Epics"
                  >
                     <BookOpen size={16} />
-                    <span className="hidden sm:inline">Epics</span>
+                    <span>Epics</span>
                  </button>
                  <button
                     onClick={() => setViewMode('hitlist')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Hitlist"
                  >
                     <AlertTriangle size={16} />
-                    <span className="hidden sm:inline">Hitlist</span>
+                    <span>Hitlist</span>
                  </button>
                  <button
                     onClick={() => setViewMode('outliers')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs sm:text-sm flex items-center gap-1.5 ${viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Outliers"
                  >
                     <Trophy size={16} />
-                    <span className="hidden sm:inline">Outliers</span>
+                    <span>Outliers</span>
                  </button>
               </div>
             </div>
 
-            {/* Second Row: Search + Filter Menu (Consolidated) */}
+            {/* Search + Filter Menu */}
             <div className="flex gap-2">
                 <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
                     <Search size={16} className="text-gray-400" />
@@ -2259,6 +2371,15 @@ export default function App() {
       {/* --- RIGHT PANEL (Main Content) --- */}
       <div className="flex-1 relative bg-[#F9F5F0] h-full overflow-hidden">
 
+          {/* Sidebar Toggle Button - Only visible on desktop */}
+          <button
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            className="hidden lg:flex absolute top-4 left-4 z-20 p-2 rounded-lg bg-white shadow-md hover:shadow-lg text-gray-600 hover:text-[#E67E22] transition-all border border-gray-200"
+            title={isSidebarCollapsed ? "Show Sidebar" : "Hide Sidebar"}
+          >
+            {isSidebarCollapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
+          </button>
+
           {/* Graph View (Rendered in Main Content) */}
           {viewMode === 'graph' && (
              <div className="absolute inset-0 z-0">
@@ -2305,6 +2426,8 @@ export default function App() {
              )
           )}
       </div>
+
+      </div> {/* End Content Area (Sidebar + Main Content) */}
 
       {/* About Page Modal */}
       {showAboutPage && <AboutPage onClose={() => setShowAboutPage(false)} />}
