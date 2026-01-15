@@ -11,13 +11,14 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
-import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle } from 'lucide-react';
+import { BookOpen, Search, X, MapPin, User, Clock, Anchor, Info, Users, ChevronRight, ChevronDown, ChevronLeft, Network, List as ListIcon, Lightbulb, Sparkles, Heart, GraduationCap, Flame, Shield, Globe, Flag, Tag, LogOut, Link, Hammer, Scroll, Brain, Loader2, CheckSquare, AlertTriangle, Printer } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getHeroImage, ASSETS } from './utils/assetMapper';
 import RelationshipSelector from './RelationshipSelector';
 import HitlistPanel from './components/HitlistPanel';
+import PrintBiography from './components/PrintBiography';
 import { fetchResearchSuggestions } from './services/aiReasoning';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -1215,6 +1216,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
     const [researchSuggestions, setResearchSuggestions] = useState(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [showPrintView, setShowPrintView] = useState(false);
 
     React.useEffect(() => {
         setResearchSuggestions(null);
@@ -1231,6 +1233,16 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
         } finally {
             setIsAnalyzing(false);
         }
+    };
+
+    const handlePrint = () => {
+        setShowPrintView(true);
+        // Wait for the print view to render, then trigger print dialog
+        setTimeout(() => {
+            window.print();
+            // Hide print view after printing
+            setTimeout(() => setShowPrintView(false), 100);
+        }, 100);
     };
 
     const bornYear = parseInt(item.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
@@ -1267,9 +1279,18 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     <Anchor size={12} className="text-[#E67E22]" strokeWidth={1.5} />
                     <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{relationship}</span>
                  </div>
-                 <button onClick={onClose} className="pointer-events-auto p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full text-gray-400 hover:text-gray-800 shadow-sm border border-gray-100 transition-all">
-                    <X size={20} strokeWidth={1.5} />
-                </button>
+                 <div className="flex items-center gap-2 pointer-events-auto">
+                     <button
+                        onClick={handlePrint}
+                        className="p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full text-gray-400 hover:text-gray-800 shadow-sm border border-gray-100 transition-all"
+                        title="Print Biography"
+                     >
+                        <Printer size={18} strokeWidth={1.5} />
+                     </button>
+                     <button onClick={onClose} className="p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full text-gray-400 hover:text-gray-800 shadow-sm border border-gray-100 transition-all">
+                        <X size={20} strokeWidth={1.5} />
+                     </button>
+                 </div>
             </div>
 
             {/* Scrollable Content */}
@@ -1521,6 +1542,17 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                 </div>
             </div>
+
+            {/* Print View - Hidden from screen, shown only when printing */}
+            {showPrintView && (
+                <div className="print-only">
+                    <PrintBiography
+                        person={item}
+                        familyData={familyData}
+                        relationship={relationship}
+                    />
+                </div>
+            )}
         </div>
     );
 };
