@@ -32,28 +32,13 @@ The code `_normalize_date` checks for 4-digit year.
 If I have "6/9/1760", `year_match` finds 1760. `pre_text` is "6/9/".
 It correctly returns 1760.
 
-However, I did notice the Dual Date issue in the previous scan (before I filtered them out).
-`William Earl Dodge, Sr. - born: '9/4/1805'` -> 1805.
-This is treated as a dual date by my scanner because of `/`, but it's just a standard date.
+## 2025-05-25 - Dateparser Safety Fix
 
-Real issue to fix:
-I want to ensure "1774/5" becomes 1774.
-Current code:
-```python
-        # 4. Handle dual dating like "1774/5" or ranges "1774-1778"
-        # The regex picks the first year found...
-```
-This seems correct.
+**Observation:**
+Found that `dateparser` logic was overly aggressive, converting strings like "May 1" into the current year (e.g., "2024" or "2025"). This poses a significant risk for genealogical data where missing years should remain "Unknown" rather than defaulting to the present.
 
-But what about "aft. 1750"?
-If I have "Died: aft 1750".
-`year_match` finds 1750.
-`pre_text` is "died: aft ".
-Regex `r'\b(aft\.?|after)\b'` matches "aft".
-Returns 1751.
-
-I need to make sure I am finding *real* messy dates that are failing.
-My scanner is currently too aggressive or the data is actually cleaner than I thought.
-
-Let's look at the `family_data.json` content for a specific messy example to verify.
-I will read `kinship-app/src/family_data.json` and look for "Hannah Carman".
+**Action:**
+Modified `_normalize_date_fallback` in `genealogy_pipeline.py`.
+Added a "Chronos Safety Check" which verifies that the year returned by `dateparser` (e.g., 1980) actually exists as a substring in the original input (either as "1980" or "'80").
+If the digits are missing, the fallback returns `None`.
+Also updated `extract_tags` to return a sorted list, ensuring deterministic JSON output and reducing git diff noise.
