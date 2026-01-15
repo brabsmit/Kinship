@@ -9,11 +9,11 @@ import remarkGfm from 'remark-gfm';
 export default function PrintBiography({ person, familyData, relationship }) {
     if (!person) return null;
 
-    // Extract data
+    // Extract data - using correct field names
     const bornDate = person.vital_stats?.born_date || 'Unknown';
-    const bornPlace = person.vital_stats?.born_place || '';
+    const bornPlace = person.vital_stats?.born_location || '';
     const diedDate = person.vital_stats?.died_date || 'Unknown';
-    const diedPlace = person.vital_stats?.died_place || '';
+    const diedPlace = person.vital_stats?.died_location || '';
     const notes = person.story?.notes || '';
 
     // Get spouse names
@@ -152,172 +152,6 @@ export default function PrintBiography({ person, familyData, relationship }) {
             <footer className="print-footer">
                 <p>Generated from Kinship Chronicles • {new Date().toLocaleDateString()}</p>
             </footer>
-
-            {/* Print Styles */}
-            <style jsx>{`
-                @media print {
-                    /* Hide everything except print content */
-                    body * {
-                        visibility: hidden;
-                    }
-                    .print-biography,
-                    .print-biography * {
-                        visibility: visible;
-                    }
-                    .print-biography {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                    }
-                }
-
-                .print-biography {
-                    max-width: 8.5in;
-                    margin: 0 auto;
-                    padding: 0.5in;
-                    font-family: Georgia, serif;
-                    font-size: 11pt;
-                    line-height: 1.6;
-                    color: #000;
-                    background: white;
-                }
-
-                .print-header {
-                    text-align: center;
-                    margin-bottom: 1.5em;
-                    border-bottom: 2px solid #000;
-                    padding-bottom: 0.5em;
-                }
-
-                .print-header h1 {
-                    font-size: 24pt;
-                    font-weight: bold;
-                    margin: 0 0 0.25em 0;
-                    color: #000;
-                }
-
-                .print-relationship {
-                    font-size: 10pt;
-                    font-style: italic;
-                    color: #666;
-                    margin: 0.25em 0;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                }
-
-                .print-dates {
-                    font-size: 12pt;
-                    font-weight: bold;
-                    margin: 0.5em 0 0 0;
-                }
-
-                .print-section {
-                    margin: 1.5em 0;
-                    page-break-inside: avoid;
-                }
-
-                .print-section h2 {
-                    font-size: 14pt;
-                    font-weight: bold;
-                    margin: 0 0 0.5em 0;
-                    color: #000;
-                    border-bottom: 1px solid #ccc;
-                    padding-bottom: 0.25em;
-                }
-
-                .print-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-
-                .print-table td {
-                    padding: 0.25em 0.5em;
-                    vertical-align: top;
-                }
-
-                .print-label {
-                    font-weight: bold;
-                    width: 25%;
-                    color: #333;
-                }
-
-                .print-tags {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 0.5em;
-                }
-
-                .print-tag {
-                    display: inline-block;
-                    padding: 0.25em 0.75em;
-                    border: 1px solid #000;
-                    border-radius: 3px;
-                    font-size: 9pt;
-                    font-weight: bold;
-                }
-
-                .print-biography-text {
-                    page-break-before: auto;
-                }
-
-                .print-markdown {
-                    font-size: 11pt;
-                    line-height: 1.7;
-                }
-
-                .print-markdown p {
-                    margin: 0.75em 0;
-                }
-
-                .print-markdown strong {
-                    font-weight: bold;
-                }
-
-                .print-markdown em {
-                    font-style: italic;
-                }
-
-                .print-voyage {
-                    margin: 0.75em 0;
-                    padding-left: 1em;
-                }
-
-                .print-footer {
-                    margin-top: 2em;
-                    padding-top: 0.5em;
-                    border-top: 1px solid #ccc;
-                    font-size: 9pt;
-                    text-align: center;
-                    color: #666;
-                }
-
-                @media print {
-                    .print-biography {
-                        padding: 0;
-                        max-width: none;
-                    }
-
-                    .print-header {
-                        margin-bottom: 1em;
-                    }
-
-                    .print-section {
-                        margin: 1em 0;
-                    }
-
-                    /* Prevent page breaks inside sections */
-                    .print-section,
-                    .print-voyage {
-                        page-break-inside: avoid;
-                    }
-
-                    /* Allow page break before biography if needed */
-                    .print-biography-text {
-                        page-break-before: auto;
-                    }
-                }
-            `}</style>
         </div>
     );
 }
