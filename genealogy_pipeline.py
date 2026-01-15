@@ -292,6 +292,14 @@ class GenealogyTextPipeline:
         self.image_cache = self.load_cache()
         self.cache_updated = False
 
+        # Ariadne: Historical Figures to detect
+        self.FAMOUS_FIGURES = [
+            "George Washington", "Abraham Lincoln", "General Putnam", "Israel Putnam",
+            "General Ulysses S. Grant", "Mark Twain", "Benjamin Franklin",
+            "Queen Victoria", "King George", "Cotton Mather", "Jonathan Edwards",
+            "Reverend Jonathan Mayhew", "Governor Bradford", "William Bradford"
+        ]
+
     def _extract_voyages(self, text):
         voyages = []
         if not text: return voyages, text
@@ -1692,6 +1700,47 @@ class GenealogyTextPipeline:
 
         return links
 
+    def _scan_for_clusters_and_figures(self, text):
+        """
+        Scans text for:
+        1. Event Clusters (capitalized non-person phrases)
+        2. Famous Historical Figures
+        """
+        if not text: return
+
+        # 1. Historical Figures
+        for figure in self.FAMOUS_FIGURES:
+            if figure in text:
+                 self.ariadne_log["famous_figures"][figure] += 1
+
+        # 2. Event Clusters
+        # Extract capitalized phrases (2+ words)
+        # Regex: Capitalized word, space, Capitalized word (repeatable)
+        phrase_pattern = r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b'
+        phrases = re.findall(phrase_pattern, text)
+
+        ignored_phrases = [
+            "New York", "United States", "New England", "North America",
+            "South America", "Great Britain", "Rhode Island", "New Jersey",
+            "New Hampshire", "Nova Scotia", "Orange County", "Long Island",
+            "New Haven", "East Haddam", "West Hartford", "Falls Church",
+            "Simsbury Ct", "Hartford Ct", "Boston Ma", "Civil War", "Revolutionary War"
+        ]
+
+        for phrase in phrases:
+            # Skip if it's a known person name (roughly)
+            # This is hard without checking name_index, but we are inside the loop where we don't have it easily accessible?
+            # Actually we can just count them and filter later.
+
+            # Skip common geo
+            if phrase in ignored_phrases: continue
+
+            # Skip if it contains "County", "City", "Street", "River"
+            if any(x in phrase for x in ["County", "City", "Street", "River", "Ave", "Road"]):
+                continue
+
+            self.ariadne_log["potential_clusters"][phrase] += 1
+
     def _find_mentions(self):
         print("--- Ariadne: Weaving Connections ---")
 
@@ -1701,7 +1750,9 @@ class GenealogyTextPipeline:
         # Track discoveries for the journal
         self.ariadne_log = {
             "ambiguous": defaultdict(set),
-            "clusters": defaultdict(int),
+            "clusters": defaultdict(int), # People clusters
+            "potential_clusters": defaultdict(int), # Event/Entity clusters
+            "famous_figures": defaultdict(int),
             "new_links": 0
         }
 
@@ -1716,6 +1767,9 @@ class GenealogyTextPipeline:
             links = self._scan_text_for_mentions(notes, name_index, p)
             p['related_links'].extend(links)
             count += len(links)
+
+            # Scan for extra insights
+            self._scan_for_clusters_and_figures(notes)
 
         print(f"Ariadne found {count} text-based connections.")
 
@@ -1795,9 +1849,22 @@ class GenealogyTextPipeline:
         for name, freq in sorted_clusters[:5]:
             print(f"  - {name}: {freq} mentions")
 
-        self.update_ariadne_journal()
+        # Check for event clusters
+        # Filter: Must be mentioned > 1 time to be a cluster
+        # And filter out names from name_index to avoid duplication
+        real_event_clusters = {}
+        for phrase, freq in self.ariadne_log["potential_clusters"].items():
+            if freq > 1 and phrase not in name_index:
+                 real_event_clusters[phrase] = freq
 
-    def update_ariadne_journal(self):
+        sorted_events = sorted(real_event_clusters.items(), key=lambda x: x[1], reverse=True)
+        print("Top Event/Entity Clusters:")
+        for name, freq in sorted_events[:5]:
+             print(f"  - {name}: {freq} mentions")
+
+        self.update_ariadne_journal(sorted_events)
+
+    def update_ariadne_journal(self, event_clusters):
         print("--- Ariadne: Updating Journal ---")
         today = datetime.date.today().strftime("%Y-%m-%d")
 
@@ -1808,22 +1875,35 @@ class GenealogyTextPipeline:
         sorted_clusters = sorted(self.ariadne_log["clusters"].items(), key=lambda x: x[1], reverse=True)
         cluster_examples = ", ".join([f"{name} ({freq})" for name, freq in sorted_clusters[:3]])
 
+        # Event Clusters
+        event_examples = ", ".join([f"'{name}' ({freq})" for name, freq in event_clusters[:3]])
+
+        # Historical Figures
+        figures_found = [f"{k} ({v})" for k,v in self.ariadne_log["famous_figures"].items()]
+        figures_text = ", ".join(figures_found)
+
         new_links_count = self.ariadne_log["new_links"]
 
-        if new_links_count == 0 and ambiguous_count == 0:
+        if new_links_count == 0 and ambiguous_count == 0 and not event_clusters and not figures_found:
             print("   Nothing significant to log.")
             return
 
-        entry = f"\n## {today} - Automated Link Analysis\n"
+        entry = f"\n## {today} - Hidden Patterns Analysis\n"
         entry += f"**Discovery:** Analyzed narrative text and found {new_links_count} potential connections.\n"
 
         if ambiguous_count > 0:
             entry += f"**Ambiguity Report:** {ambiguous_count} ambiguous references found (e.g., {ambiguous_examples}).\n"
 
         if sorted_clusters:
-            entry += f"**Cluster Alert:** High frequency mentions detected for: {cluster_examples}.\n"
+            entry += f"**Social Cluster:** High frequency mentions detected for: {cluster_examples}.\n"
 
-        entry += f"**Action:** Systematic text scanning and cross-linking applied.\n"
+        if event_clusters:
+            entry += f"**Event/Entity Cluster:** Found shared references to: {event_examples}.\n"
+
+        if figures_found:
+            entry += f"**Historical Figure:** Sighted mentions of: {figures_text}.\n"
+
+        entry += f"**Action:** Systematic text scanning and cross-linking applied. Clusters identified for future exploration.\n"
 
         log_path = ".jules/ariadne.md"
         try:
