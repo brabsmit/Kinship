@@ -7,41 +7,41 @@ import { X, Heart, BookOpen, Users, Sparkles, Code } from 'lucide-react';
  */
 export default function AboutPage({ onClose }) {
     return (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
                 {/* Header */}
-                <div className="sticky top-0 bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white p-6 rounded-t-2xl">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-white/10 p-2 rounded-lg">
-                                <BookOpen size={24} />
+                <div className="sticky top-0 bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl">
+                    <div className="flex justify-between items-start mb-3 sm:mb-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="bg-white/10 p-1.5 sm:p-2 rounded-lg">
+                                <BookOpen size={20} className="sm:w-6 sm:h-6" />
                             </div>
-                            <h1 className="text-3xl font-display font-bold">About This Project</h1>
+                            <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold">About This Project</h1>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-white/10 rounded-full transition-all"
+                            className="p-1.5 sm:p-2 hover:bg-white/10 rounded-full transition-all shrink-0"
                             title="Close"
                         >
-                            <X size={24} />
+                            <X size={20} className="sm:w-6 sm:h-6" />
                         </button>
                     </div>
-                    <p className="text-white/80 text-sm italic">
+                    <p className="text-white/80 text-xs sm:text-sm italic">
                         Transforming genealogy into living history
                     </p>
                 </div>
 
                 {/* Content */}
-                <div className="p-8 space-y-8">
+                <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8">
 
                     {/* Dedication Section */}
-                    <section className="bg-gradient-to-br from-rose-50 to-amber-50 rounded-xl p-6 border border-rose-100">
-                        <div className="flex items-start gap-4 mb-4">
-                            <div className="bg-rose-100 p-3 rounded-full shrink-0">
-                                <Heart size={24} className="text-rose-600" />
+                    <section className="bg-gradient-to-br from-rose-50 to-amber-50 rounded-xl p-4 sm:p-6 border border-rose-100">
+                        <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div className="bg-rose-100 p-2 sm:p-3 rounded-full shrink-0">
+                                <Heart size={20} className="text-rose-600 sm:w-6 sm:h-6" />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-display font-bold text-gray-900 mb-2">
+                                <h2 className="text-lg sm:text-xl md:text-2xl font-display font-bold text-gray-900 mb-2">
                                     Dedicated to Mark Rutherford
                                 </h2>
                                 <p className="text-gray-700 leading-relaxed">
