@@ -189,6 +189,11 @@ export const getHeroImage = (location, year) => {
     // Broad "Mass" or "PA" logic for 19th century industrial vibe?
     // Maybe stick to specific cities to avoid over-generalizing rural PA.
 
+    // New York / NYC (1800-1900) - Muse Override
+    if ((loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) && y >= 1800 && y < 1900) {
+        return ASSETS.ny_1800;
+    }
+
     // Pennsylvania (Colonial / Quaker)
     if ((loc.includes("pennsylvania") || loc.includes(" pa") || loc.includes("philadelphia")) && y < 1800) {
         return ASSETS.pa_holme_1687;
@@ -270,12 +275,12 @@ export const getHeroImage = (location, year) => {
     }
 
     // New England Pilgrim Era (General)
-    if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts") || loc.includes("ma")) && y >= 1620 && y < 1700) {
+    if ((loc === "new england" || loc.includes("plymouth") || loc.includes("massachusetts") || loc.includes("ma")) && y >= 1600 && y < 1700) {
         return ASSETS.ne_map_1634;
     }
 
     // England Pre-1650 (General Countryside)
-    if ((loc === "england" || loc === "uk" || loc.includes("britain")) && y < 1650) {
+    if ((loc.includes("england") || loc.includes("uk") || loc.includes("britain")) && y < 1650) {
         return ASSETS.england_countryside;
     }
 
@@ -296,7 +301,7 @@ export const getHeroImage = (location, year) => {
 
     // 3. Fallback Logic (If not in cache)
 
-    // New York / NYC (1800-1900)
+    // New York / NYC (Broad fallback)
     if (loc.includes("ny") || loc.includes("new york") || loc.includes("manhattan") || loc.includes("brooklyn")) {
         if (y >= 1800) return ASSETS.ny_1800;
         return ASSETS.ne_map_1634; // Fallback to regional map
