@@ -1300,7 +1300,7 @@ class GenealogyTextPipeline:
         if is_in_region(born_loc, east_coast) and is_in_region(died_loc, westward_states):
             tags.append("Westward Pioneer")
 
-        return list(set(tags))
+        return sorted(list(set(tags)))
 
     def link_family_members(self):
         print("--- Linking Family Members ---")
@@ -1546,6 +1546,13 @@ class GenealogyTextPipeline:
             "niece": "Relative",
             "executor": "Legal Associate",
             "witness": "Legal Associate",
+            "pallbearer": "Pallbearer",
+            "grandmother": "Grandparent",
+            "grandfather": "Grandparent",
+            "grandparent": "Grandparent",
+            "grandson": "Grandchild",
+            "granddaughter": "Grandchild",
+            "grandchild": "Grandchild",
             "legacy": "Relative",
             "mother-in-law": "In-Law",
             "father-in-law": "In-Law",
@@ -1771,6 +1778,12 @@ class GenealogyTextPipeline:
                         rev_type = "Step-Parent"
                     elif rel_type == "Godparent":
                         rev_type = "Godchild"
+                    elif rel_type == "Grandparent":
+                        rev_type = "Grandchild"
+                    elif rel_type == "Grandchild":
+                        rev_type = "Grandparent"
+                    elif rel_type == "Pallbearer":
+                        rev_type = "Pallbearer for"
 
                     target_p['related_links'].append({
                         "target_id": source_id,
@@ -1800,6 +1813,13 @@ class GenealogyTextPipeline:
     def update_ariadne_journal(self):
         print("--- Ariadne: Updating Journal ---")
         today = datetime.date.today().strftime("%Y-%m-%d")
+
+        log_path = ".jules/ariadne.md"
+        if os.path.exists(log_path):
+            with open(log_path, "r") as f:
+                if f"## {today}" in f.read():
+                    print("   Journal already updated for today.")
+                    return
 
         # Prepare content
         ambiguous_count = len(self.ariadne_log["ambiguous"])
