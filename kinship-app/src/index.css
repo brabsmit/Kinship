@@ -25,7 +25,7 @@
     scrollbar-width: none;
 }
 
-/* Print Styles */
+/* Print Styles for Profile Export */
 .print-only {
     display: none;
 }
@@ -52,7 +52,7 @@
         overflow: visible;
     }
 
-    /* Additional print styles */
+    /* Print Biography Layout */
     .print-biography {
         max-width: 8.5in;
         margin: 0 auto;
@@ -159,9 +159,109 @@
         font-style: italic;
     }
 
+    .print-markdown ul,
+    .print-markdown ol {
+        margin: 0.5em 0;
+        padding-left: 2em;
+    }
+
+    .print-markdown li {
+        margin: 0.25em 0;
+    }
+
     .print-voyage {
         margin: 0.75em 0;
         padding-left: 1em;
+    }
+
+    .print-timeline {
+        margin: 0.5em 0;
+    }
+
+    .print-timeline-event {
+        display: flex;
+        margin: 0.75em 0;
+        padding: 0.5em;
+        border-left: 2px solid #000;
+        padding-left: 1em;
+    }
+
+    .print-timeline-year {
+        font-weight: bold;
+        min-width: 4em;
+        margin-right: 1em;
+        color: #333;
+    }
+
+    .print-timeline-details {
+        flex: 1;
+    }
+
+    .print-timeline-description {
+        margin-top: 0.25em;
+        font-size: 10pt;
+        color: #555;
+    }
+
+    .print-connections {
+        margin: 0.5em 0;
+    }
+
+    .print-connection {
+        margin: 0.75em 0;
+        padding: 0.5em;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    .print-connection-type {
+        font-size: 9pt;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 0.25em;
+    }
+
+    .print-connection-name {
+        font-weight: bold;
+        margin-bottom: 0.25em;
+    }
+
+    .print-connection-quote {
+        font-style: italic;
+        font-size: 10pt;
+        color: #555;
+        margin-top: 0.25em;
+    }
+
+    .print-recommendations {
+        margin: 0.5em 0;
+    }
+
+    .print-recommendation {
+        display: flex;
+        margin: 0.75em 0;
+        padding: 0.5em;
+        background: #f9f9f9;
+        border-left: 3px solid #333;
+        page-break-inside: avoid;
+    }
+
+    .print-recommendation-number {
+        font-weight: bold;
+        min-width: 2em;
+        margin-right: 0.5em;
+        color: #333;
+    }
+
+    .print-recommendation-text {
+        flex: 1;
+        font-size: 10pt;
+    }
+
+    .print-recommendation-text a {
+        color: #000;
+        text-decoration: underline;
     }
 
     .print-footer {
