@@ -599,6 +599,30 @@ class GenealogyTextPipeline:
 
             return date_candidate, loc_candidate
 
+        # 1.5 Comma Heuristic (Medium)
+        # Handles: "1/23/1686/7, New Haven, CT" -> "1/23/1686/7", "New Haven, CT"
+        # Logic: Look for the first comma that appears AFTER a 4-digit year.
+        # Guard: Ensure the text between Year and Comma does NOT contain words (to avoid capturing City).
+        # "1702 Rehoboth, MA" -> Year 1702, gap " Rehoboth". Contains letters -> Reject.
+        # "1/23/1686/7, New Haven" -> Year 1686, gap "/7". No letters -> Accept.
+        comma_match = re.search(r'^(.*?\d{4})([^,]*?),\s*(.*)$', text)
+        if comma_match:
+            base_date = comma_match.group(1).strip()
+            gap = comma_match.group(2)
+            loc_candidate = comma_match.group(3).strip()
+
+            # Guard: Gap should not contain alphabetic characters (except maybe standard date flags?)
+            # "1686/7" -> gap="/7". Fine.
+            # "1620-1627" -> gap="-1627". Fine.
+            # "1702 Rehoboth" -> gap=" Rehoboth". Bad.
+            if not re.search(r'[a-zA-Z]', gap):
+                date_candidate = (base_date + gap).strip()
+
+                # Clean up labels
+                date_candidate = re.sub(r'^(Born|Died|Buried|Baptized|Married):?\s*', '', date_candidate, flags=re.IGNORECASE)
+
+                return date_candidate, loc_candidate
+
         # 2. Fallback: Use dateparser to handle messy formats
         # e.g., "Springfield, 1880", "Born 1880", "1880 New York"
         try:
