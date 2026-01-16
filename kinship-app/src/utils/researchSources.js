@@ -15,6 +15,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/browse/251/civil-war-collection",
         description: "Service records, pensions, and photos from the US Civil War"
     },
+    "Civil War Pension Index": {
+        label: "Civil War Pension Index",
+        url: "https://www.familysearch.org/search/collection/1919699",
+        description: "General Index to Pension Files, 1861-1934"
+    },
     "Civil War NPS": {
         label: "NPS Soldiers and Sailors",
         url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
@@ -233,6 +238,41 @@ export const RESEARCH_SOURCES = {
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
     },
+    "Missouri Death": {
+        label: "Missouri Death Certificates (1910-1971)",
+        url: "https://s1.sos.mo.gov/records/archives/archivesdb/deathcertificates/",
+        description: "Free PDF downloads of death certificates"
+    },
+    "Illinois Death": {
+        label: "Illinois Death Index (pre-1916)",
+        url: "https://apps.ilsos.gov/isavital/deathsrch.asp",
+        description: "Statewide death index"
+    },
+    "Michigan Death": {
+        label: "Michigan Death Records (1897-1920)",
+        url: "https://michiganology.org/vital-records/",
+        description: "Free death certificate images"
+    },
+    "Ohio Death": {
+        label: "Ohio Death Index (1908-1953)",
+        url: "https://www.familysearch.org/search/collection/1572528",
+        description: "Index and images of death certificates"
+    },
+    "Pennsylvania Death": {
+        label: "Pennsylvania Death Indices",
+        url: "https://www.phmc.pa.gov/Archives/Research-Online/Pages/Death-Indices.aspx",
+        description: "State archives death indices (1906-1973)"
+    },
+    "Arizona Vital": {
+        label: "Arizona Genealogy Birth & Death",
+        url: "http://genealogy.az.gov/",
+        description: "Free birth (pre-1950) and death (pre-1975) certificates"
+    },
+    "West Virginia Vital": {
+        label: "West Virginia Vital Research",
+        url: "https://archive.wvculture.org/vrr/",
+        description: "Free birth, marriage, and death records"
+    },
     "SSDI": {
         label: "Social Security Death Index",
         url: "https://www.familysearch.org/search/collection/1202535",
@@ -279,6 +319,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.familysearch.org/en/search/catalog/2550739",
         description: "Authoritative accounts of immigrants to New England (1620-1640)"
     },
+    "Mayflower": {
+        label: "Mayflower Descendant",
+        url: "https://www.familysearch.org/search/catalog/216527",
+        description: "Quarterly magazine of Pilgrim genealogy and history"
+    },
     "Passenger List": {
         label: "Ellis Island & Castle Garden",
         url: "https://heritage.statueofliberty.org/",
@@ -300,6 +345,11 @@ export const RESEARCH_SOURCES = {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
         description: "Historical newspapers search"
+    },
+    "Fulton History": {
+        label: "Old Fulton NY Post Cards",
+        url: "https://fultonhistory.com/",
+        description: "Vast collection of digitized NY newspapers"
     },
     "Chronicling America": {
         label: "Chronicling America (LOC)",
