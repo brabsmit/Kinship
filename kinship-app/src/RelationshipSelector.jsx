@@ -12,17 +12,21 @@ export default function RelationshipSelector({ data, onComplete }) {
         return data
             .filter(p => p.vital_stats && p.vital_stats.born_year_int)
             .sort((a, b) => b.vital_stats.born_year_int - a.vital_stats.born_year_int)
-            .slice(0, 8); // Top 8 most recent
+            .slice(0, 10); // Top 10 most recent
     }, [data]);
 
     const RELATION_OPTIONS = [
-        { label: "I am this person", steps: 0 },
-        { label: "Child", steps: 1 },
-        { label: "Grandchild", steps: 2 },
-        { label: "Great-Grandchild", steps: 3 },
-        { label: "2nd Great-Grandchild", steps: 4 },
-        { label: "3rd Great-Grandchild", steps: 5 },
-        { label: "4th Great-Grandchild", steps: 6 },
+        { label: "This is Me", type: "self", steps: 0 },
+        { label: "This is my Father", type: "father", steps: 1 },
+        { label: "This is my Mother", type: "mother", steps: 1 },
+        { label: "This is my Uncle", type: "uncle", steps: 1 },
+        { label: "This is my Aunt", type: "aunt", steps: 1 },
+        { label: "This is my Grandfather", type: "grandfather", steps: 2 },
+        { label: "This is my Grandmother", type: "grandmother", steps: 2 },
+        { label: "This is my Great Uncle", type: "great-uncle", steps: 2 },
+        { label: "This is my Great Aunt", type: "great-aunt", steps: 2 },
+        { label: "This is my Great-Grandfather", type: "great-grandfather", steps: 3 },
+        { label: "This is my Great-Grandmother", type: "great-grandmother", steps: 3 },
     ];
 
     const handlePersonSelect = (person) => {
@@ -30,8 +34,12 @@ export default function RelationshipSelector({ data, onComplete }) {
         setStep(2);
     };
 
-    const handleRelationSelect = (steps) => {
-        onComplete({ anchorId: selectedPerson.id, stepsDown: steps });
+    const handleRelationSelect = (option) => {
+        onComplete({
+            anchorId: selectedPerson.id,
+            stepsDown: option.steps,
+            type: option.type
+        });
     };
 
     return (
@@ -89,16 +97,16 @@ export default function RelationshipSelector({ data, onComplete }) {
 
                     {step === 2 && (
                         <div className="space-y-2">
-                            {RELATION_OPTIONS.map(option => (
+                            {RELATION_OPTIONS.map((option, idx) => (
                                 <button
-                                    key={option.steps}
-                                    onClick={() => handleRelationSelect(option.steps)}
+                                    key={idx}
+                                    onClick={() => handleRelationSelect(option)}
                                     className="w-full text-left p-4 rounded-xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-all group flex items-center justify-between"
                                 >
                                     <span className="font-bold text-gray-700 group-hover:text-orange-900">
                                         {option.label}
                                     </span>
-                                    {option.steps === 0 && <span className="text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">It's me!</span>}
+                                    {option.type === 'self' && <span className="text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">It's me!</span>}
                                 </button>
                             ))}
                         </div>

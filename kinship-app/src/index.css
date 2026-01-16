@@ -26,6 +26,10 @@
 }
 
 /* Print Styles for Profile Export */
+.print-only {
+    display: none;
+}
+
 @media print {
     /* Show print-only elements when printing */
     .print-only {

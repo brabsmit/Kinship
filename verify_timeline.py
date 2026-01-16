@@ -9,9 +9,20 @@ def run():
         page.on("console", lambda msg: print(f"CONSOLE: {msg.text}"))
 
         try:
-            page.goto("http://localhost:5173")
+            page.goto("http://localhost:4000")
             # Wait for sidebar
-            page.wait_for_selector('text=Ancestry', timeout=5000)
+            page.wait_for_selector('text=Kinship', timeout=10000)
+
+            # Dismiss "Who are you related to?" modal if present
+            try:
+                # Look for the skip button
+                skip_button = page.locator("text=I'm not related / Skip for now")
+                if skip_button.is_visible(timeout=3000):
+                    print("Dismissing relationship modal...")
+                    skip_button.click()
+                    page.wait_for_timeout(1000)
+            except:
+                print("Relationship modal not found or already dismissed.")
 
             # Search for William Earl Dodge, Sr.
             print("Searching for ancestor...")

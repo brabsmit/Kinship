@@ -10,7 +10,7 @@ import remarkGfm from 'remark-gfm';
 export default function PrintBiography({ person, familyData, relationship }) {
     if (!person) return null;
 
-    // Extract vital statistics
+    // Extract vital statistics - using correct field names
     const bornDate = person.vital_stats?.born_date || 'Unknown';
     const bornPlace = person.vital_stats?.born_location || '';
     const diedDate = person.vital_stats?.died_date || 'Unknown';
@@ -228,22 +228,27 @@ export default function PrintBiography({ person, familyData, relationship }) {
                 <section className="print-section">
                     <h2>AI-Generated Research Recommendations</h2>
                     <div className="print-recommendations">
-                        {aiRecommendations.map((suggestion, idx) => (
-                            <div key={idx} className="print-recommendation">
-                                <div className="print-recommendation-number">{idx + 1}.</div>
-                                <div className="print-recommendation-text">
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            p: ({node, ...props}) => <span {...props} />,
-                                            a: ({node, ...props}) => <a {...props} />,
-                                        }}
-                                    >
-                                        {suggestion}
-                                    </ReactMarkdown>
+                        {aiRecommendations.map((suggestion, idx) => {
+                            // Handle both legacy string format and new {text, links} object format
+                            const suggestionText = typeof suggestion === 'string' ? suggestion : suggestion.text;
+
+                            return (
+                                <div key={idx} className="print-recommendation">
+                                    <div className="print-recommendation-number">{idx + 1}.</div>
+                                    <div className="print-recommendation-text">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                p: ({node, ...props}) => <span {...props} />,
+                                                a: ({node, ...props}) => <a {...props} />,
+                                            }}
+                                        >
+                                            {suggestionText}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </section>
             )}

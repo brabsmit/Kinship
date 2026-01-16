@@ -7,10 +7,20 @@ def verify_trivia():
 
         # Navigate to the app
         print("Navigating to app...")
-        page.goto("http://localhost:5173")
+        page.goto("http://localhost:4000")
 
         # Wait for data to load
-        page.wait_for_timeout(2000)
+        page.wait_for_selector('text=Kinship', timeout=10000)
+
+        # Dismiss "Who are you related to?" modal if present
+        try:
+            skip_button = page.locator("text=I'm not related / Skip for now")
+            if skip_button.is_visible(timeout=3000):
+                print("Dismissing relationship modal...")
+                skip_button.click()
+                page.wait_for_timeout(1000)
+        except:
+            pass
 
         # 1. Verify Global Widget hides in List View (Default)
         print("Checking List View...")
