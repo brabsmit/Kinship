@@ -516,16 +516,16 @@ class GenealogyTextPipeline:
         # Look at the text *before* the year for modifiers
         pre_text = s[:start_index]
 
-        # 1. Handle "before" / "bef" / "by"
+        # 1. Handle "before" / "bef" / "by" / "<"
         # Logic: if "bef", "before", or "by" appears in the text preceding the year, return year - 1
-        # e.g., "bef 1800" -> 1799
-        if re.search(r'\b(bef\.?|before|by)\b', pre_text):
+        # e.g., "bef 1800" -> 1799, "<1600" -> 1599
+        if re.search(r'\b(bef\.?|before|by)\b|<', pre_text):
             return year_val - 1
 
-        # 2. Handle "after" / "aft"
+        # 2. Handle "after" / "aft" / ">"
         # Logic: if "aft" or "after" appears, return year + 1
-        # e.g., "aft 1750" -> 1751
-        if re.search(r'\b(aft\.?|after)\b', pre_text):
+        # e.g., "aft 1750" -> 1751, ">1700" -> 1701
+        if re.search(r'\b(aft\.?|after)\b|>', pre_text):
             return year_val + 1
 
         # 3. Handle "between"
@@ -1300,7 +1300,7 @@ class GenealogyTextPipeline:
         if is_in_region(born_loc, east_coast) and is_in_region(died_loc, westward_states):
             tags.append("Westward Pioneer")
 
-        return list(set(tags))
+        return sorted(list(set(tags)))
 
     def link_family_members(self):
         print("--- Linking Family Members ---")
