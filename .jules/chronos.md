@@ -57,3 +57,14 @@ My scanner is currently too aggressive or the data is actually cleaner than I th
 
 Let's look at the `family_data.json` content for a specific messy example to verify.
 I will read `kinship-app/src/family_data.json` and look for "Hannah Carman".
+
+## 2026-01-17 - Symbolic Date Modifiers (<, >)
+
+**Observation:**
+Discovered a date format using mathematical symbols: `<11/18/1612`.
+The previous logic only looked for "bef", "before", "by".
+This caused `<1612` to be parsed as `1612` instead of `1611`.
+
+**Action:**
+Updated `_normalize_date` in `genealogy_pipeline.py` to recognize `<` as "before" (year-1) and `>` as "after" (year+1).
+Verified that `16.1.1.1.1.1.1.2` now resolves to 1611.
