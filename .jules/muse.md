@@ -46,3 +46,10 @@
 **Visual Philosophy:**
 -   **Sepia Tone:** All maps are treated with `sepia(20%)` to maintain visual consistency with the existing "Antique Paper" theme.
 -   **Fallback:** Profiles in specific towns (e.g., "Englewood, NJ") will now gracefully degrade to the State Map instead of the generic texture.
+
+## 2024-06-01 - West Coast & British Isles Visual Pack
+**Source:** Wikimedia Commons (Public Domain)
+**Logic:**
+- **California (1848-1860):** Mapped to *Panoramic View of San Francisco (1851)*. Visualizes the Gold Rush and Pioneer experience.
+- **Ireland:** Mapped to *Dangan Castle, Co Meath (1840)*. Provides a period-appropriate landscape for Irish heritage.
+- **Scotland:** Mapped to *Edinburgh from Calton Hill (1917)*. Captures the Scottish landscape.

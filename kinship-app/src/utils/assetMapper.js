@@ -157,6 +157,28 @@ export const ASSETS = {
         style: { filter: "sepia(20%) contrast(100%)" }
     },
 
+    // West Coast / Gold Rush
+    california_gold_rush: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/2/21/Sanfranciscohist01youn_0208_Panoramic_view_of_San_Francisco_in_1851.jpg",
+        alt: "Panoramic View of San Francisco (1851)",
+        caption: "The California Gold Rush Era",
+        style: { filter: "sepia(30%) contrast(110%)" }
+    },
+
+    // British Isles
+    ireland_landscape: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Dangan_Castle,_Co_Meath,_Ireland,_1840.jpg/1226px-Dangan_Castle,_Co_Meath,_Ireland,_1840.jpg",
+        alt: "Dangan Castle, Co Meath (1840)",
+        caption: "The Emerald Isle",
+        style: { filter: "sepia(20%) contrast(105%)" }
+    },
+    scotland_landscape: {
+        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/A_Literary_Pilgrim_in_England_-_EDINBURGH,_VIEW_FROM_CALTON_HILL.jpg/1024px-A_Literary_Pilgrim_in_England_-_EDINBURGH,_VIEW_FROM_CALTON_HILL.jpg",
+        alt: "Edinburgh from Calton Hill (1917)",
+        caption: "Scotland & The Highlands",
+        style: { filter: "sepia(15%) contrast(105%)" }
+    },
+
     // Fallback
     generic_antique: {
         src: paperTexture,
@@ -245,6 +267,22 @@ export const getHeroImage = (location, year) => {
     }
     if ((loc.includes("illinois") || loc.includes(" il")) && y < 1850) {
         return ASSETS.illinois_1818;
+    }
+
+    // California Gold Rush (1848-1860)
+    if ((loc.includes("california") || loc.includes(" ca") || loc.includes("san francisco")) && y >= 1848 && y <= 1860) {
+        return ASSETS.california_gold_rush;
+    }
+
+    // Ireland (General)
+    if (loc.includes("ireland") || loc.includes("dublin") || loc.includes("cork") || loc.includes("belfast")) {
+        // Broad catch for Irish ancestors
+        return ASSETS.ireland_landscape;
+    }
+
+    // Scotland (General)
+    if (loc.includes("scotland") || loc.includes("edinburgh") || loc.includes("glasgow") || loc.includes("highlands")) {
+        return ASSETS.scotland_landscape;
     }
 
     // East Anglia (Norfolk, Suffolk, Essex, Norwich England)
