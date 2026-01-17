@@ -1565,7 +1565,12 @@ class GenealogyTextPipeline:
             "godfather": "Godparent",
             "godmother": "Godparent",
             "godson": "Godparent",
-            "goddaughter": "Godparent"
+            "goddaughter": "Godparent",
+            "pallbearer": "Pallbearer",
+            "grandfather": "Grandparent",
+            "grandmother": "Grandparent",
+            "grandson": "Grandchild",
+            "granddaughter": "Grandchild"
         }
 
         # Improved Candidate Extraction
@@ -1582,7 +1587,8 @@ class GenealogyTextPipeline:
             return []
 
         # Verification and Context
-        clauses = re.split(r'[.;,]', text)
+        # Split by periods and semicolons only to preserve "Name, relationship" structure
+        clauses = re.split(r'[.;]', text)
         source_born = self._get_birth_year(source_profile)
         found_ids = set()
 
@@ -1692,6 +1698,43 @@ class GenealogyTextPipeline:
 
         return links
 
+    def _scan_for_events(self, text, name_index):
+        if not text: return []
+
+        # Multi-word capitalized phrases
+        # Exclude common months at start to avoid "January 12" if somehow matched (digits usually excluded by alpha check)
+        pattern = r'\b([A-Z][a-zA-Z]+(?:\s+(?:of|the|and|&)\s+|\s+)[A-Z][a-zA-Z]+(?:(?:\s+(?:of|the|and|&)\s+|\s+)[A-Z][a-zA-Z]+)*)\b'
+        matches = re.findall(pattern, text)
+
+        events = []
+        geo_ignored = {
+            "New York", "New York City", "New Jersey", "New Hampshire", "New Haven",
+            "New London", "Rhode Island", "North America", "South America",
+            "United States", "Great Britain", "West Hartford", "East Hartford",
+            "South Windsor", "East Windsor", "West Indies", "East Indies",
+            "Cape Cod", "Long Island", "Staten Island", "Los Angeles", "San Francisco",
+            "San Diego", "Santa Barbara", "New Orleans", "St. Louis", "Kansas City",
+            "Salt Lake City", "Falls Village", "Great Barrington", "West Haven",
+            "North Haven", "East Haven", "South Haven", "Grand Rapids",
+            "United Kingdom", "Saudi Arabia", "South Africa", "Soviet Union",
+            "Czech Republic", "Dominican Republic", "El Salvador", "Costa Rica",
+            "Sri Lanka", "New Mexico", "North Dakota", "South Dakota",
+            "West Virginia", "District of Columbia"
+        }
+
+        for m in matches:
+            # Check if it's a known person name
+            if m in name_index: continue
+
+            # Check if it's a known location
+            if m in geo_ignored: continue
+
+            # Check if it's just a Date-like string? (e.g. "May Day") - acceptable.
+
+            events.append(m)
+
+        return events
+
     def _find_mentions(self):
         print("--- Ariadne: Weaving Connections ---")
 
@@ -1702,6 +1745,7 @@ class GenealogyTextPipeline:
         self.ariadne_log = {
             "ambiguous": defaultdict(set),
             "clusters": defaultdict(int),
+            "events": defaultdict(int),
             "new_links": 0
         }
 
@@ -1716,6 +1760,11 @@ class GenealogyTextPipeline:
             links = self._scan_text_for_mentions(notes, name_index, p)
             p['related_links'].extend(links)
             count += len(links)
+
+            # Scan for Event Clusters
+            events = self._scan_for_events(notes, name_index)
+            for e in events:
+                self.ariadne_log["events"][e] += 1
 
         print(f"Ariadne found {count} text-based connections.")
 
@@ -1771,6 +1820,14 @@ class GenealogyTextPipeline:
                         rev_type = "Step-Parent"
                     elif rel_type == "Godparent":
                         rev_type = "Godchild"
+                    elif rel_type == "Godchild":
+                        rev_type = "Godparent"
+                    elif rel_type == "Grandparent":
+                        rev_type = "Grandchild"
+                    elif rel_type == "Grandchild":
+                        rev_type = "Grandparent"
+                    elif rel_type == "Pallbearer":
+                        rev_type = "Pallbearer for"
 
                     target_p['related_links'].append({
                         "target_id": source_id,
@@ -1795,6 +1852,12 @@ class GenealogyTextPipeline:
         for name, freq in sorted_clusters[:5]:
             print(f"  - {name}: {freq} mentions")
 
+        # Check for Event Clusters
+        print("Top Event Clusters:")
+        sorted_events = sorted(self.ariadne_log["events"].items(), key=lambda x: x[1], reverse=True)
+        for event, freq in sorted_events[:5]:
+            print(f"  - {event}: {freq} mentions")
+
         self.update_ariadne_journal()
 
     def update_ariadne_journal(self):
@@ -1808,9 +1871,14 @@ class GenealogyTextPipeline:
         sorted_clusters = sorted(self.ariadne_log["clusters"].items(), key=lambda x: x[1], reverse=True)
         cluster_examples = ", ".join([f"{name} ({freq})" for name, freq in sorted_clusters[:3]])
 
+        sorted_events = sorted(self.ariadne_log["events"].items(), key=lambda x: x[1], reverse=True)
+        # Filter for significant events (frequency > 1)
+        sorted_events = [(e, f) for e, f in sorted_events if f > 1]
+        event_examples = ", ".join([f"{evt} ({freq})" for evt, freq in sorted_events[:3]])
+
         new_links_count = self.ariadne_log["new_links"]
 
-        if new_links_count == 0 and ambiguous_count == 0:
+        if new_links_count == 0 and ambiguous_count == 0 and not sorted_events:
             print("   Nothing significant to log.")
             return
 
@@ -1822,6 +1890,9 @@ class GenealogyTextPipeline:
 
         if sorted_clusters:
             entry += f"**Cluster Alert:** High frequency mentions detected for: {cluster_examples}.\n"
+
+        if sorted_events:
+            entry += f"**Event Cluster Alert:** High frequency event/organization phrases: {event_examples}.\n"
 
         entry += f"**Action:** Systematic text scanning and cross-linking applied.\n"
 
