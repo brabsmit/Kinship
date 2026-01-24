@@ -187,6 +187,28 @@ export const RESEARCH_SOURCES = {
         description: "Free Canadian Census records (1825-1921)"
     },
 
+    // --- STATE ARCHIVES ---
+    "Missouri Death": {
+        label: "Missouri Death Certificates",
+        url: "https://s1.sos.mo.gov/records/archives/archivesmvc/deathcertificates",
+        description: "Free digitized death certificates (1910-1974)"
+    },
+    "Illinois Archives": {
+        label: "Illinois State Archives",
+        url: "https://www.ilsos.gov/departments/archives/databases/home.html",
+        description: "Databases for death, marriage, and military records"
+    },
+    "Virginia Chancery": {
+        label: "Virginia Memory: Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Index to chancery court cases (wills, land disputes)"
+    },
+    "Pennsylvania Archives": {
+        label: "Pennsylvania ARIAS",
+        url: "http://www.digitalarchives.state.pa.us/",
+        description: "Military and veteran records (Rev War to WWI)"
+    },
+
     // --- VITAL RECORDS ---
     "Birth Records": {
         label: "FamilySearch Birth Records",
@@ -296,6 +318,16 @@ export const RESEARCH_SOURCES = {
     },
 
     // --- BOOKS & NEWSPAPERS ---
+    "Fulton History": {
+        label: "Fulton History (Old NY Postcards)",
+        url: "https://fultonhistory.com/",
+        description: "Massive collection of NY state newspapers (quirky interface)"
+    },
+    "CDNC": {
+        label: "California Digital Newspaper Collection",
+        url: "https://cdnc.ucr.edu/",
+        description: "Freely available digitized California newspapers"
+    },
     "Obituary": {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
@@ -330,6 +362,28 @@ export const RESEARCH_SOURCES = {
         label: "USGenWeb Project",
         url: "https://www.usgenweb.org/",
         description: "Free genealogy websites for every county in the US"
+    },
+
+    // --- SPECIALIZED TOOLS ---
+    "Steve Morse": {
+        label: "Steve Morse One-Step",
+        url: "https://stevemorse.org/",
+        description: "Advanced search tools for Ellis Island, Census, and Vital Records"
+    },
+    "ArchiveGrid": {
+        label: "ArchiveGrid",
+        url: "https://researchworks.oclc.org/archivegrid/",
+        description: "Catalog of archival collections in libraries worldwide"
+    },
+    "City Directories": {
+        label: "US City Directories",
+        url: "https://www.familysearch.org/search/collection/3754697",
+        description: "US City and Business Directories (ca. 1749-1990)"
+    },
+    "Passport": {
+        label: "US Passport Applications",
+        url: "https://www.familysearch.org/search/collection/2185145",
+        description: "Passport applications (1795-1925)"
     }
 };
 
