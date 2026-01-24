@@ -7,10 +7,10 @@
 
 **Discovery:** Significant clustering around "Reverend Samuel Blatchford" (14 mentions) and "Solomon Bliss" (13 mentions), indicating they were central figures in the family narrative.
 
-## 2026-01-04 - Automated Link Analysis
-**Discovery:** Analyzed narrative text and found 420 potential connections.
-**Ambiguity Report:** 58 ambiguous references found (e.g., Thomas Powell, Reverend Timothy Woodbridge, John Post).
-**Cluster Alert:** High frequency mentions detected for: Reverend Samuel Blatchford (14), Solomon Bliss (13), Reverend John Blatchford (12).
+## 2026-01-11 - Automated Link Analysis
+**Discovery:** Analyzed narrative text and found 532 potential connections.
+**Ambiguity Report:** 23 ambiguous references found (e.g., Thomas Powell, Joseph Loomis, John Warham).
+**Cluster Alert:** High frequency mentions detected for: Samuel Blatchford (14), Reverend Samuel Blatchford (14), Solomon Bliss (13).
 **Action:** Systematic text scanning and cross-linking applied.
 
 ## 2026-01-15 - Automated Link Analysis
