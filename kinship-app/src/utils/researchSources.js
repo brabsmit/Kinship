@@ -15,6 +15,11 @@ export const RESEARCH_SOURCES = {
         url: "https://www.fold3.com/browse/251/civil-war-collection",
         description: "Service records, pensions, and photos from the US Civil War"
     },
+    "Civil War Pension Index": {
+        label: "Civil War Pension Index",
+        url: "https://www.familysearch.org/search/collection/1919699",
+        description: "General Index to Pension Files, 1861-1934 (NARA T288)"
+    },
     "Civil War NPS": {
         label: "NPS Soldiers and Sailors",
         url: "https://www.nps.gov/civilwar/soldiers-and-sailors-database.htm",
@@ -187,7 +192,7 @@ export const RESEARCH_SOURCES = {
         description: "Free Canadian Census records (1825-1921)"
     },
 
-    // --- VITAL RECORDS ---
+    // --- VITAL RECORDS & STATE ARCHIVES ---
     "Birth Records": {
         label: "FamilySearch Birth Records",
         url: "https://www.familysearch.org/search/collection/list?keywords=birth",
@@ -232,6 +237,41 @@ export const RESEARCH_SOURCES = {
         label: "NYC Historical Vital Records",
         url: "https://a860-historicalvitalrecords.nyc.gov/",
         description: "Free digitized birth, marriage, and death certificates (NYC)"
+    },
+    "Missouri Death Certificates": {
+        label: "Missouri Death Certificates",
+        url: "https://s1.sos.mo.gov/records/archives/archivesmvc/deathcertificates",
+        description: "Free downloadable death certificates (1910-1974)"
+    },
+    "Ohio Death Records": {
+        label: "Ohio Death Records",
+        url: "https://www.familysearch.org/search/collection/1307272",
+        description: "Ohio Death Certificates, 1908-1953"
+    },
+    "Texas Death Certificates": {
+        label: "Texas Death Certificates",
+        url: "https://www.familysearch.org/search/collection/1983324",
+        description: "Texas Deaths, 1890-1976"
+    },
+    "California Death Index": {
+        label: "California Death Index",
+        url: "https://www.familysearch.org/search/collection/2015582",
+        description: "California Death Index, 1940-1997"
+    },
+    "Illinois Death Index": {
+        label: "Illinois Death Index",
+        url: "https://www.ilsos.gov/departments/archives/databases/deathdat.html",
+        description: "Illinois Statewide Death Index (1916-1950)"
+    },
+    "Pennsylvania Death Indices": {
+        label: "Pennsylvania Death Indices",
+        url: "https://www.phmc.pa.gov/Archives/Research-Online/Pages/Death-Indices.aspx",
+        description: "Official Death Indices from PA State Archives"
+    },
+    "Virginia Chancery": {
+        label: "Virginia Chancery Records",
+        url: "https://www.lva.virginia.gov/chancery/",
+        description: "Digital collection of Chancery Causes (Wills, Disputes)"
     },
     "SSDI": {
         label: "Social Security Death Index",
@@ -296,6 +336,11 @@ export const RESEARCH_SOURCES = {
     },
 
     // --- BOOKS & NEWSPAPERS ---
+    "City Directories": {
+        label: "US City Directories",
+        url: "https://www.familysearch.org/search/collection/3754697",
+        description: "United States City and Business Directories (1749-1990)"
+    },
     "Obituary": {
         label: "Newspapers.com",
         url: "https://www.newspapers.com/",
@@ -305,6 +350,11 @@ export const RESEARCH_SOURCES = {
         label: "Chronicling America (LOC)",
         url: "https://chroniclingamerica.loc.gov/",
         description: "Free historical American newspapers"
+    },
+    "Old Fulton": {
+        label: "Old Fulton NY Post Cards",
+        url: "https://fultonhistory.com/",
+        description: "Vast collection of digitized NY newspapers"
     },
     "Google Books": {
         label: "Google Books",
@@ -330,6 +380,11 @@ export const RESEARCH_SOURCES = {
         label: "USGenWeb Project",
         url: "https://www.usgenweb.org/",
         description: "Free genealogy websites for every county in the US"
+    },
+    "DPLA": {
+        label: "Digital Public Library of America",
+        url: "https://dp.la/",
+        description: "Search millions of items from libraries, archives, and museums"
     }
 };
 
