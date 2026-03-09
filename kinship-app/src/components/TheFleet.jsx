@@ -71,7 +71,7 @@ const MigrationWave = ({ timelineData }) => {
                                     width={2}
                                     height={barHeight}
                                     fill="#2C3E50"
-                                    className="hover:fill-[#E67E22] transition-colors"
+                                    className="hover:fill-accent transition-colors"
                                 />
                                 <title>{d.year}: {d.count} Ancestors</title>
                              </g>
@@ -165,7 +165,7 @@ const RouteMap = ({ voyages }) => {
     });
 
     return (
-        <div className="relative w-full h-[400px] bg-[#eef2f5] rounded-xl overflow-hidden border border-gray-200">
+        <div className="relative w-full h-[400px] bg-parchment-cool rounded-xl overflow-hidden border border-gray-200">
              {/* Abstract World Map Background (CSS or SVG) */}
              <div className="absolute inset-0 opacity-20 pointer-events-none">
                  {/* Simple dots for continents could go here, for now just a gradient or static image placeholder */}
@@ -249,7 +249,7 @@ const ShipManifestCard = ({ shipData, profile }) => {
 
     return (
         <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-             <div className="p-0 bg-[#f4e4bc]/20">
+             <div className="p-0 bg-parchment-warm/20">
                  {/* We render the ticket style card */}
                  <div className="scale-90 origin-top">
                      <VoyageCard voyage={representativeVoyage} profile={profile} />
@@ -336,16 +336,16 @@ const TheFleet = ({ familyData, onSelectProfile }) => {
     }, [familyData]);
 
     return (
-        <div className="h-full overflow-y-auto bg-[#F9F5F0] custom-scrollbar">
+        <div className="h-full overflow-y-auto bg-parchment custom-scrollbar">
             {/* Header */}
-            <div className="bg-[#2C3E50] text-white p-8 pb-16 relative overflow-hidden">
+            <div className="bg-navy text-white p-8 pb-16 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                      <Anchor size={400} className="absolute -right-20 -bottom-20 rotate-12" />
                 </div>
 
                 <div className="relative z-10 max-w-5xl mx-auto">
                     <h1 className="text-4xl font-display font-bold mb-2 flex items-center gap-3">
-                        <Ship size={32} className="text-[#E67E22]" /> The Fleet
+                        <Ship size={32} className="text-accent" /> The Fleet
                     </h1>
                     <p className="text-blue-200 text-lg max-w-2xl font-serif">
                         A theater of history showcasing the vessels that carried your ancestors across the divide between the Old World and the New.
@@ -360,7 +360,7 @@ const TheFleet = ({ familyData, onSelectProfile }) => {
                      <div className="flex items-center gap-4 mb-8">
                         <div className="h-px bg-gray-300 flex-1"></div>
                         <h2 className="text-lg font-display font-bold text-gray-700 uppercase tracking-widest flex items-center gap-2">
-                            <Anchor size={20} className="text-[#E67E22]" /> The Inventory
+                            <Anchor size={20} className="text-accent" /> The Inventory
                         </h2>
                         <div className="h-px bg-gray-300 flex-1"></div>
                     </div>
