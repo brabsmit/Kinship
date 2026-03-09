@@ -39,7 +39,7 @@ const HandshakeCard = ({ person, relative }) => {
             <div className="flex justify-between items-start mb-4">
                 <div>
                     <div className="flex items-center gap-2">
-                         <span className="text-xs font-bold uppercase tracking-widest text-[#E67E22]">
+                         <span className="text-xs font-bold uppercase tracking-widest text-accent">
                             {relative.label}
                         </span>
                         <span className="text-xs text-gray-400 font-mono">
@@ -68,7 +68,7 @@ const HandshakeCard = ({ person, relative }) => {
 
                 {/* Relative Bar */}
                 <div
-                    className="absolute top-6 h-4 bg-[#E67E22] rounded-sm opacity-80"
+                    className="absolute top-6 h-4 bg-accent rounded-sm opacity-80"
                     style={{ left: `${getLeft(rBorn)}%`, width: `${getWidth(rBorn, rDied)}%` }}
                 ></div>
                  <div

@@ -10,7 +10,7 @@ export default function AboutPage({ onClose }) {
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
                 {/* Header */}
-                <div className="sticky top-0 bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl">
+                <div className="sticky top-0 bg-gradient-to-r from-navy to-navy-light text-white p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl">
                     <div className="flex justify-between items-start mb-3 sm:mb-4">
                         <div className="flex items-center gap-2 sm:gap-3">
                             <div className="bg-white/10 p-1.5 sm:p-2 rounded-lg">
@@ -179,14 +179,14 @@ export default function AboutPage({ onClose }) {
                     </section>
 
                     {/* Call to Action */}
-                    <section className="bg-gradient-to-r from-[#2C3E50] to-[#34495E] rounded-xl p-6 text-white text-center">
+                    <section className="bg-gradient-to-r from-navy to-navy-light rounded-xl p-6 text-white text-center">
                         <h2 className="text-2xl font-display font-bold mb-2">Explore Your Heritage</h2>
                         <p className="text-white/80 mb-4">
                             Dive into the stories, discover connections, and celebrate the lives that led to yours.
                         </p>
                         <button
                             onClick={onClose}
-                            className="bg-white text-[#2C3E50] px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+                            className="bg-white text-navy px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
                         >
                             Start Exploring
                         </button>

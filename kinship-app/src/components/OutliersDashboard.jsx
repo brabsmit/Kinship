@@ -81,7 +81,7 @@ const OutliersDashboard = ({ data, onSelectProfile }) => {
 
                 <header className="border-b border-stone-300 pb-4">
                     <h1 className="text-3xl font-display text-stone-800 mb-2 flex items-center gap-3">
-                        <Trophy className="text-[#E67E22]" size={32} />
+                        <Trophy className="text-accent" size={32} />
                         The Outliers
                     </h1>
                     <p className="text-stone-600 italic">

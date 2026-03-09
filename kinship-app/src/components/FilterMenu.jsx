@@ -48,7 +48,7 @@ const FilterMenu = ({
                 onClick={() => setIsOpen(!isOpen)}
                 className={`p-2.5 rounded-lg border transition-all flex items-center justify-center relative ${
                     isOpen || activeFilterCount > 0
-                        ? 'bg-[#FFF8E1] border-[#F59E0B] text-[#F59E0B] shadow-sm'
+                        ? 'bg-gold-light border-gold text-gold shadow-sm'
                         : 'bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100 hover:text-gray-600'
                 }`}
                 title="Filter Settings"
@@ -78,7 +78,7 @@ const FilterMenu = ({
                         {/* Story Mode Toggle */}
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
                             <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-md ${storyMode ? 'bg-[#FFF8E1] text-[#F59E0B]' : 'bg-white text-gray-400 border border-gray-200'}`}>
+                                <div className={`p-2 rounded-md ${storyMode ? 'bg-gold-light text-gold' : 'bg-white text-gray-400 border border-gray-200'}`}>
                                     <BookOpen size={18} />
                                 </div>
                                 <div>
@@ -89,7 +89,7 @@ const FilterMenu = ({
                             <button
                                 onClick={() => setStoryMode(!storyMode)}
                                 className={`w-12 h-6 rounded-full transition-colors relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${
-                                    storyMode ? 'bg-[#F59E0B]' : 'bg-gray-200'
+                                    storyMode ? 'bg-gold' : 'bg-gray-200'
                                 }`}
                             >
                                 <span className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${
@@ -133,7 +133,7 @@ const FilterMenu = ({
                                             onClick={() => setSelectedBranchId(id)}
                                             className={`px-3 py-2.5 rounded-lg text-xs font-bold text-left transition-all border flex items-center gap-2 ${
                                                 selectedBranchId === id
-                                                ? (selectedLineage === 'Paternal' ? 'bg-[#2C3E50] text-white border-[#2C3E50] shadow-sm' : 'bg-[#831843] text-white border-[#831843] shadow-sm')
+                                                ? (selectedLineage === 'Paternal' ? 'bg-navy text-white border-navy shadow-sm' : 'bg-maternal text-white border-maternal shadow-sm')
                                                 : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
                                             }`}
                                         >
