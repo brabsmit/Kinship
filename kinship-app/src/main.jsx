@@ -4,12 +4,15 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { HashRouter } from 'react-router-dom'
+import ErrorBoundary from './components/ErrorBoundary'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HashRouter>
       <AuthProvider>
-        <App />
+        <ErrorBoundary level="top">
+          <App />
+        </ErrorBoundary>
       </AuthProvider>
     </HashRouter>
   </StrictMode>,
