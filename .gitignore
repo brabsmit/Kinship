@@ -23,3 +23,9 @@ kinship-app/src/hitlist_data.json
 node_modules/
 dist/
 build/
+
+# Debug artifacts
+debug_home.png
+test_home.png
+epics_error.png
+pipeline_output.log
