@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Ship, Anchor, MapPin, Calendar, Wind, ExternalLink, Hammer, User, Ruler, Users, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { detectRegion } from '../utils/geo';
+import { COLORS } from '../utils/colors';
 import VoyageCard from './VoyageCard';
 
 // --- VISUALIZATION HELPERS ---
@@ -70,7 +71,7 @@ const MigrationWave = ({ timelineData }) => {
                                     y={height - padding - barHeight}
                                     width={2}
                                     height={barHeight}
-                                    fill="#2C3E50"
+                                    fill={COLORS.navy}
                                     className="hover:fill-accent transition-colors"
                                 />
                                 <title>{d.year}: {d.count} Ancestors</title>
@@ -197,14 +198,14 @@ const RouteMap = ({ voyages }) => {
                              <path
                                 d={`M${p1.x},${p1.y} Q${midX},${midY} ${p2.x},${p2.y}`}
                                 fill="none"
-                                stroke="#2C3E50"
+                                stroke={COLORS.navy}
                                 strokeWidth={strokeWidth}
                                 strokeOpacity="0.6"
                                 strokeLinecap="round"
                              >
                                  <animate attributeName="stroke-dasharray" from="0,1000" to="1000,0" dur="2s" fill="freeze" />
                              </path>
-                             <circle cx={p1.x} cy={p1.y} r={3} fill="#E67E22" />
+                             <circle cx={p1.x} cy={p1.y} r={3} fill={COLORS.accent} />
                              <circle cx={p2.x} cy={p2.y} r={3} fill="#27AE60" />
                          </g>
                      );

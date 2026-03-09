@@ -57,6 +57,7 @@ import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLoca
 import historyData from './history_data.json';
 import presidentsData from './utils/presidents.json';
 import { calculateDistance, detectRegion } from './utils/geo';
+import { COLORS } from './utils/colors';
 import { useUrlSync, getPersonUrl, getThreadUrl, getViewUrl } from './utils/urlSync';
 import { ShareIconButton } from './components/ShareButton';
 
@@ -630,7 +631,7 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false, selectedT
 
     // Highlighting logic (Story Mode)
     if (storyMode && hasStory) {
-        border = '2px solid #F59E0B'; // Gold
+        border = `2px solid ${COLORS.gold}`;
         boxShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
     }
 
@@ -706,9 +707,9 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false, selectedT
                 source: String(person.id),
                 target: String(child.id),
                 type: 'smoothstep',
-                markerEnd: { type: MarkerType.ArrowClosed, color: isThreadEdge ? threadColor : '#2C3E50' },
+                markerEnd: { type: MarkerType.ArrowClosed, color: isThreadEdge ? threadColor : COLORS.navy },
                 style: {
-                    stroke: isThreadEdge ? threadColor : '#2C3E50',
+                    stroke: isThreadEdge ? threadColor : COLORS.navy,
                     strokeWidth: isThreadEdge ? 3 : 1,
                     opacity: selectedThreadId && !isThreadEdge ? 0.2 : 1
                 },
@@ -728,7 +729,7 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false, selectedT
                 source: String(person.id),
                 target: String(spouse.id),
                 type: 'straight',
-                style: { strokeDasharray: '5,5', stroke: '#E67E22' },
+                style: { strokeDasharray: '5,5', stroke: COLORS.accent },
                 animated: false,
             });
             processedEdges.add(edgeId);
@@ -1096,7 +1097,7 @@ const KeyLocationsMap = ({ bornLoc, diedLoc, bornHierarchy, diedHierarchy, lifeE
                         </Popup>
                     </Marker>
                 ))}
-                {polyline && <Polyline positions={polyline} color="#2C3E50" dashArray="5, 10" />}
+                {polyline && <Polyline positions={polyline} color={COLORS.navy} dashArray="5, 10" />}
             </MapContainer>
         </div>
     );
