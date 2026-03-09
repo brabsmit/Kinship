@@ -147,10 +147,10 @@ const VoyageCard = ({ voyage, profile }) => {
   }
 
   return (
-    <div className="relative w-full max-w-md mx-auto my-6 bg-[#f4e4bc] text-[#3e3221] font-serif border-2 border-[#3e3221] shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
+    <div className="relative w-full max-w-md mx-auto my-6 bg-parchment-warm text-ink font-serif border-2 border-ink shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300">
       {/* Decorative corners or borders could go here */}
-      <div className="border border-[#3e3221] m-1 p-4 border-dashed">
-        <div className="text-center border-b-2 border-[#3e3221] pb-2 mb-4">
+      <div className="border border-ink m-1 p-4 border-dashed">
+        <div className="text-center border-b-2 border-ink pb-2 mb-4">
           <h3 className="uppercase tracking-widest text-xs font-bold mb-1 flex items-center justify-center gap-2">
             <Anchor size={12} /> Passage Ticket <Anchor size={12} />
           </h3>
@@ -159,7 +159,7 @@ const VoyageCard = ({ voyage, profile }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-             <div className="border-r border-[#3e3221] pr-2">
+             <div className="border-r border-ink pr-2">
                 <span className="block text-[10px] uppercase tracking-wide opacity-70 mb-0.5">Departure</span>
                 <span className="font-bold block leading-tight truncate" title={displayDeparture && displayDeparture.includes('*') ? "Inferred from Birth/Death Data" : ""}>
                     {displayDeparture || "Unknown"}
@@ -174,9 +174,9 @@ const VoyageCard = ({ voyage, profile }) => {
         </div>
 
         {context && (
-            <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed text-center">
+            <div className="mt-4 pt-2 border-t-2 border-ink border-dashed text-center">
                 <h4 className="text-[10px] uppercase font-bold opacity-60 mb-1 flex items-center justify-center gap-1">
-                     <Wind size={10} /> {context.context} {context.isEstimated && <Info size={10} className="text-[#3e3221]/50" title="Context inferred from ancestor's lifespan and migration pattern." />}
+                     <Wind size={10} /> {context.context} {context.isEstimated && <Info size={10} className="text-ink/50" title="Context inferred from ancestor's lifespan and migration pattern." />}
                 </h4>
                 <div className="text-xs mb-2">
                     <span className="font-bold">Avg. Duration:</span> {context.duration}
@@ -189,8 +189,8 @@ const VoyageCard = ({ voyage, profile }) => {
 
         {/* Shipmates Section */}
         {voyage.shipmates && voyage.shipmates.length > 0 && (
-             <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed text-center">
-                <div className="flex items-center justify-center gap-2 text-xs font-bold text-[#3e3221]" title={voyage.shipmates.map(m => m.name).join(", ")}>
+             <div className="mt-4 pt-2 border-t-2 border-ink border-dashed text-center">
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-ink" title={voyage.shipmates.map(m => m.name).join(", ")}>
                     <Users size={14} />
                     <span>
                         {voyage.shipmates.length} other ancestor{voyage.shipmates.length > 1 ? 's' : ''} also arrived on {voyage.ship_name}
@@ -201,7 +201,7 @@ const VoyageCard = ({ voyage, profile }) => {
 
         {/* Ship Specifications (Enriched Data) */}
         {voyage.specs && (
-             <div className="mt-4 pt-2 border-t-2 border-[#3e3221] border-dashed">
+             <div className="mt-4 pt-2 border-t-2 border-ink border-dashed">
                 <h4 className="text-[10px] uppercase font-bold opacity-60 mb-2 flex items-center justify-center gap-1">
                      <Ship size={10} /> Vessel Specifications
                 </h4>
@@ -234,7 +234,7 @@ const VoyageCard = ({ voyage, profile }) => {
                     )}
 
                     {voyage.specs.owner && voyage.specs.owner !== "Unknown" && (
-                        <div className="col-span-2 flex items-start gap-1.5 border-t border-[#3e3221]/20 pt-1 mt-0.5">
+                        <div className="col-span-2 flex items-start gap-1.5 border-t border-ink/20 pt-1 mt-0.5">
                             <User size={10} className="mt-0.5 opacity-60 shrink-0" />
                             <div className="flex-1">
                                 <span className="opacity-70 block text-[9px] uppercase">Owner</span>
@@ -245,7 +245,7 @@ const VoyageCard = ({ voyage, profile }) => {
 
                     {/* Technical Stats Row 1 */}
                     {(voyage.specs.gross_tonnage !== "Unknown" || voyage.specs.masts !== "Unknown") && (
-                        <div className="col-span-2 grid grid-cols-2 gap-3 border-t border-[#3e3221]/20 pt-1 mt-0.5">
+                        <div className="col-span-2 grid grid-cols-2 gap-3 border-t border-ink/20 pt-1 mt-0.5">
                              {voyage.specs.gross_tonnage !== "Unknown" && (
                                 <div className="flex items-center gap-1.5">
                                     <Anchor size={10} className="opacity-60 shrink-0" />
@@ -289,12 +289,12 @@ const VoyageCard = ({ voyage, profile }) => {
              </div>
         )}
 
-        <div className="flex justify-between items-center border-t-2 border-[#3e3221] pt-2 mt-4">
+        <div className="flex justify-between items-center border-t-2 border-ink pt-2 mt-4">
              <div className="flex items-center gap-2">
                 <Calendar size={14} />
                 <div className="text-lg font-bold">{voyage.year !== "Unknown" ? voyage.year : ""}</div>
              </div>
-             <div className="px-2 py-1 border border-[#3e3221] rounded text-xs font-bold uppercase tracking-widest bg-[#eaddcf]">
+             <div className="px-2 py-1 border border-ink rounded text-xs font-bold uppercase tracking-widest bg-parchment-tan">
                 {voyage.class || "Passenger"}
              </div>
         </div>
@@ -304,7 +304,7 @@ const VoyageCard = ({ voyage, profile }) => {
           <a href={`https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(voyage.ship_name + " ship")}`}
              target="_blank"
              rel="noopener noreferrer"
-             className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest border-b border-[#3e3221] border-opacity-50 hover:text-red-800 hover:border-red-800 transition-colors">
+             className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest border-b border-ink border-opacity-50 hover:text-red-800 hover:border-red-800 transition-colors">
              <Ship size={10} /> View Ship History <ExternalLink size={8} />
           </a>
       </div>
