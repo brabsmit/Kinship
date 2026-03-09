@@ -16,6 +16,9 @@ venv/
 kinship-app/src/family_data.json
 kinship-app/src/hitlist_data.json
 
+# Worktrees
+.worktrees/
+
 # Node modules and build artifacts (in case root commands create them)
 node_modules/
 dist/
