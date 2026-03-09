@@ -71,7 +71,7 @@ history_events = [
     {"year": 1945, "label": "Atomic Bomb / WWII Ends", "region": "Global", "type": "war", "lat": 34.3853, "lon": 132.4553, "global": True}
 ]
 
-output_path = 'kinship-app/src/history_data.json'
+output_path = 'kinship-app/public/data/history_data.json'
 with open(output_path, 'w') as f:
     json.dump(history_events, f, indent=4)
 

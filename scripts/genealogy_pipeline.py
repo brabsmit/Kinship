@@ -17,7 +17,7 @@ class ShipEnrichmentService:
     def __init__(self):
         print("Initializing GenAI API...")
         load_dotenv()
-        self.cache_file = "./kinship-app/src/ship_cache.json"
+        self.cache_file = "./kinship-app/public/data/ship_cache.json"
         self.cache = self.load_cache()
         self.cache_updated = False
         self.api_key = os.environ.get("VITE_GEMINI_API_KEY")
@@ -377,7 +377,7 @@ class GenealogyTextPipeline:
         return voyages, new_text
 
     def load_cache(self):
-        cache_file = "./kinship-app/src/wikimedia_cache.json"
+        cache_file = "./kinship-app/public/data/wikimedia_cache.json"
         if os.path.exists(cache_file):
             with open(cache_file, "r") as f:
                 try:
@@ -388,7 +388,7 @@ class GenealogyTextPipeline:
 
     def save_cache(self):
         if self.cache_updated:
-            with open("./kinship-app/src/wikimedia_cache.json", "w") as f:
+            with open("./kinship-app/public/data/wikimedia_cache.json", "w") as f:
                 json.dump(self.image_cache, f, indent=4)
             print("Wikimedia cache saved.")
 
@@ -2149,7 +2149,7 @@ class GenealogyTextPipeline:
         geocoder.save_cache()
         ship_service.save_cache()
 
-        output_filename = "kinship-app/src/family_data.json"
+        output_filename = "kinship-app/public/data/family_data.json"
         with open(output_filename, "w", encoding='utf-8') as f:
             json.dump(final_list, f, indent=4, ensure_ascii=True)
         

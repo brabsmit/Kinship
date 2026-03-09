@@ -2,7 +2,7 @@ import json
 import re
 
 def scan_anomalies():
-    with open("kinship-app/src/family_data.json", "r") as f:
+    with open("kinship-app/public/data/family_data.json", "r") as f:
         data = json.load(f)
 
     unique_dates = {}

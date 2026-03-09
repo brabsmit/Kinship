@@ -1,22 +1,4 @@
 
-import familyDataRaw from './family_data.json';
-import shipCacheRaw from './ship_cache.json'; // Optional import
-
-// Safe merge logic for ship cache (runtime integration fallback)
-// If the pipeline ran, familyData already has specs.
-// If pipeline didn't run with cache, this adds it at runtime.
-const familyData = familyDataRaw.map(p => {
-    if (p.story && p.story.voyages) {
-        const enrichedVoyages = p.story.voyages.map(v => {
-            if (!v.specs && v.ship_name && shipCacheRaw[v.ship_name]) {
-                return { ...v, specs: shipCacheRaw[v.ship_name] };
-            }
-            return v;
-        });
-        return { ...p, story: { ...p.story, voyages: enrichedVoyages } };
-    }
-    return p;
-});
 
 import React, { useState, useMemo, useCallback, useRef } from 'react';
 import ReactFlow, {
@@ -54,7 +36,6 @@ import AboutPage from './components/AboutPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import PrintBiography from './components/PrintBiography';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
-import historyData from './history_data.json';
 import presidentsData from './utils/presidents.json';
 import { calculateDistance, detectRegion } from './utils/geo';
 import { COLORS } from './utils/colors';
@@ -241,7 +222,7 @@ const createMarkerIcon = (color, tier) => {
 });
 };
 
-const generateTrivia = (data, branchName) => {
+const generateTrivia = (data, branchName, historyData) => {
     if (!data || data.length === 0) return [];
 
     const stats = [];
@@ -382,7 +363,7 @@ const generateTrivia = (data, branchName) => {
     return stats;
 };
 
-const generateProfileTrivia = (person, allData) => {
+const generateProfileTrivia = (person, allData, historyData) => {
     const facts = [];
     const born = parseInt(person.vital_stats.born_date?.match(/\d{4}/)?.[0] || 0);
     const died = parseInt(person.vital_stats.died_date?.match(/\d{4}/)?.[0] || 0);
@@ -442,7 +423,7 @@ const generateProfileTrivia = (person, allData) => {
     return facts;
 };
 
-const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc) => {
+const getLifeEvents = (bornDate, diedDate, bornLoc, diedLoc, historyData) => {
     const born = parseInt(bornDate?.match(/\d{4}/)?.[0] || 0);
     const died = parseInt(diedDate?.match(/\d{4}/)?.[0] || 0);
     if (!born || !died) return [];
@@ -790,8 +771,8 @@ const GraphView = ({ data, onNodeClick, searchText, storyMode, selectedThreadId 
     );
 };
 
-const ProfileTrivia = ({ person, familyData }) => {
-    const triviaItems = useMemo(() => generateProfileTrivia(person, familyData), [person, familyData]);
+const ProfileTrivia = ({ person, familyData, historyData }) => {
+    const triviaItems = useMemo(() => generateProfileTrivia(person, familyData, historyData), [person, familyData, historyData]);
 
     if (triviaItems.length === 0) return null;
 
@@ -911,8 +892,8 @@ const GenerationGroup = ({ generation, items, selectedAncestor, onSelect, userRe
     );
 };
 
-const TriviaWidget = ({ data, branchName }) => {
-    const triviaItems = useMemo(() => generateTrivia(data, branchName), [data, branchName]);
+const TriviaWidget = ({ data, branchName, historyData }) => {
+    const triviaItems = useMemo(() => generateTrivia(data, branchName, historyData), [data, branchName, historyData]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     // Effect to cycle random fact when branch changes (data changes)
@@ -1342,7 +1323,7 @@ const ThreadTimeline = ({ thread, members, onBack, onSelectMember }) => {
     );
 };
 
-const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation, onSelectThread }) => {
+const ImmersiveProfile = ({ item, familyData, historyData, onClose, onNavigate, userRelation, onSelectThread }) => {
     // Muse: Ensure the profile has a visual identity
     if (!item) return null;
 
@@ -1476,7 +1457,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     const diedLoc = item.vital_stats.died_location || "Unknown";
 
     // Pass locations to getLifeEvents for region filtering
-    const historyEvents = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date, bornLoc, diedLoc);
+    const historyEvents = getLifeEvents(item.vital_stats.born_date, item.vital_stats.died_date, bornLoc, diedLoc, historyData);
     const personalEvents = getPersonalLifeEvents(item.story.life_events, bornYear, diedYear);
 
     const bornHierarchy = item.vital_stats.born_hierarchy;
@@ -1688,7 +1669,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                     )}
 
                     {/* TRIVIA */}
-                    <ProfileTrivia person={item} familyData={familyData} />
+                    <ProfileTrivia person={item} familyData={familyData} historyData={historyData} />
 
                     {/* TECHNOLOGY CONTEXT */}
                     <TechnologyContext bornYear={bornYear} diedYear={diedYear} />
@@ -1942,7 +1923,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     );
 };
 
-export default function App() {
+export default function App({ familyData, historyData, hitlistData }) {
   const [selectedAncestor, setSelectedAncestor] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list', 'graph', 'hitlist', 'fleet', 'threads', 'outliers'
@@ -2310,7 +2291,7 @@ export default function App() {
 
         {/* TRIVIA WIDGET */}
         {viewMode === 'graph' && (
-            <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} />
+            <TriviaWidget data={filteredGraphData} branchName={BRANCHES[selectedBranchId]} historyData={historyData} />
         )}
 
         {/* LIST VIEW (Shows in 'list' AND 'graph' modes) */}
@@ -2355,7 +2336,7 @@ export default function App() {
         <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
         {viewMode === 'hitlist' && (
              <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
-                 <HitlistPanel onSelectProfile={(id) => {
+                 <HitlistPanel data={hitlistData} onSelectProfile={(id) => {
                      const person = familyData.find(p => String(p.id) === String(id));
                      if (person) setSelectedAncestor(person);
                  }} />
@@ -2421,6 +2402,7 @@ export default function App() {
              <ImmersiveProfile
                 item={selectedAncestor}
                 familyData={familyData}
+                historyData={historyData}
                 onClose={() => setSelectedAncestor(null)}
                 onNavigate={setSelectedAncestor}
                 userRelation={userRelation}

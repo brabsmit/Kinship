@@ -5,7 +5,7 @@ import os
 def verify_shipmates():
     print("--- Verifying Shipmates Data ---")
 
-    file_path = "kinship-app/src/family_data.json"
+    file_path = "kinship-app/public/data/family_data.json"
     if not os.path.exists(file_path):
         print(f"Error: {file_path} not found.")
         return

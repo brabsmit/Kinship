@@ -2,7 +2,7 @@ import json
 import random
 
 # Load data
-with open('kinship-app/src/family_data.json', 'r') as f:
+with open('kinship-app/public/data/family_data.json', 'r') as f:
     data = json.load(f)
 
 # Inject sample voyage
@@ -37,5 +37,5 @@ if not found:
     }]
     print(f"Injected voyage into random person {p['name']} ({p['id']})")
 
-with open('kinship-app/src/family_data.json', 'w') as f:
+with open('kinship-app/public/data/family_data.json', 'w') as f:
     json.dump(data, f, indent=4)

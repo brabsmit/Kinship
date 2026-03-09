@@ -18,17 +18,18 @@ A digital genealogy application that transforms Word document research into an i
 ```
 Kinship/
 ├── kinship-app/              # React application
+│   ├── public/data/            # Generated data (fetched at runtime, not bundled)
+│   │   ├── family_data.json    # All genealogy profiles (~5.2MB)
+│   │   ├── history_data.json   # Historical events for context
+│   │   ├── hitlist_data.json   # AI-flagged research gaps
+│   │   ├── ship_cache.json     # Cached ship specifications from Gemini
+│   │   └── wikimedia_cache.json # Cached Wikimedia Commons image URLs
 │   ├── src/
 │   │   ├── App.jsx           # Main component (monolith — all views, state, routing)
-│   │   ├── components/       # 14 feature components
+│   │   ├── components/       # 15 feature components (incl. DataLoader)
 │   │   ├── context/          # AuthContext (session-based auth)
 │   │   ├── services/         # aiReasoning.js (Gemini API integration)
-│   │   ├── utils/            # Helpers (urlSync, economics, geo, assetMapper)
-│   │   ├── family_data.json  # Generated — all genealogy profiles (~5.2MB)
-│   │   ├── history_data.json # Generated — historical events for context
-│   │   ├── hitlist_data.json # Generated — AI-flagged research gaps
-│   │   ├── ship_cache.json   # Cached ship specifications from Gemini
-│   │   └── wikimedia_cache.json # Cached Wikimedia Commons image URLs
+│   │   └── utils/            # Helpers (urlSync, economics, geo, assetMapper)
 │   └── vite.config.js        # Dev server, CORS proxy, security headers
 ├── scripts/                  # Pipeline and data generation
 │   ├── genealogy_pipeline.py # Main ETL: Word docs → JSON
@@ -86,7 +87,7 @@ VITE_BASE_PATH=/Kinship/   # Set for GitHub Pages deployment
 - **Styling:** Tailwind CSS utility classes. Vintage/parchment aesthetic with sepia tones
 - **Icons:** Always use lucide-react — no other icon libraries
 - **State:** useState + useContext (AuthContext). No Redux/Zustand. URL params synced via urlSync.js
-- **Data:** Static JSON imports — no REST API, no database
+- **Data:** JSON files fetched at runtime from `public/data/` via DataLoader — no REST API, no database
 - **Routing:** HashRouter with react-router-dom (required for GitHub Pages)
 - **Error handling:** Try-catch with graceful fallbacks; deterministic fallbacks when AI unavailable
 
@@ -104,7 +105,7 @@ The app has 6 view modes, all rendered in App.jsx:
 ## Key Architectural Notes
 
 - **App.jsx is monolithic (2,437 lines)** — contains all view rendering, 20+ useState calls, and business logic. Decomposition is tracked in issue #172.
-- **family_data.json (5.2MB)** is bundled in the JS — imported directly in App.jsx. Moving to public/ is tracked in issue #173.
+- **Data files** live in `public/data/` and are fetched at runtime by `DataLoader.jsx`, which renders App only after all data is loaded.
 - **Hierarchical IDs** — Person IDs like "1.2.3.1" reflect family tree structure (parent path)
 - **Wikimedia images** — 150+ historical locations mapped to Commons images via assetMapper.js
 - **Gemini CORS** — Vite dev server proxies `/google-ai` to the Gemini API endpoint

@@ -1,6 +1,9 @@
 // src/utils/assetMapper.js
-import wikimediaCache from '../wikimedia_cache.json' with { type: "json" };
 import paperTexture from '../assets/paper-texture.jpg';
+
+// Populated by DataLoader before App renders
+let wikimediaCache = {};
+export const setWikimediaCache = (cache) => { wikimediaCache = cache; };
 
 export const ASSETS = {
     // UK / England

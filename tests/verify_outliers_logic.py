@@ -5,7 +5,7 @@ import re
 # Simulate the frontend logic
 def verify_logic():
     try:
-        with open('kinship-app/src/family_data.json', 'r') as f:
+        with open('kinship-app/public/data/family_data.json', 'r') as f:
             data = json.load(f)
     except FileNotFoundError:
         print("family_data.json not found, cannot verify with real data.")

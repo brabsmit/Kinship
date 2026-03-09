@@ -119,7 +119,7 @@ def main():
     print(f"Processed {len(events)} events.")
 
     # Save to file
-    output_path = 'kinship-app/src/history_data.json'
+    output_path = 'kinship-app/public/data/history_data.json'
     with open(output_path, 'w') as f:
         json.dump(events, f, indent=4)
     print(f"Saved to {output_path}")
