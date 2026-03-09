@@ -668,7 +668,7 @@ const buildGenealogyGraph = (data, searchText = '', storyMode = false, selectedT
     nodes[nodes.length - 1].data.label = (
         <div className="relative">
             {hasStory && (
-                <div className="absolute -top-3 -right-3 bg-[#F59E0B] text-white p-1 rounded-full shadow-sm z-10" title="Has Story">
+                <div className="absolute -top-3 -right-3 bg-gold text-white p-1 rounded-full shadow-sm z-10" title="Has Story">
                     <BookOpen size={10} fill="white" />
                 </div>
             )}
@@ -858,7 +858,7 @@ const GenerationGroup = ({ generation, items, selectedAncestor, onSelect, userRe
                                 className={`
                                     group py-3 pr-4 cursor-pointer transition-all border-b border-gray-50 last:border-0 border-l-4
                                     ${isSelected
-                                        ? 'bg-blue-50 border-l-[#2C3E50] pl-3'
+                                        ? 'bg-blue-50 border-l-navy pl-3'
                                         : 'bg-white hover:bg-gray-50 border-l-transparent pl-3'
                                     }
                                 `}
@@ -866,7 +866,7 @@ const GenerationGroup = ({ generation, items, selectedAncestor, onSelect, userRe
                                 <div className="flex justify-between items-start mb-1">
                                     <div className="flex items-center gap-1.5 min-w-0">
                                         {item.story?.notes && (
-                                            <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-[#E67E22]" : "text-[#F59E0B]"}`} />
+                                            <BookOpen size={12} className={`shrink-0 ${isSelected ? "text-accent" : "text-gold"}`} />
                                         )}
                                         <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-gray-900' : 'text-gray-800'}`}>
                                             {item.name}
@@ -928,20 +928,20 @@ const TriviaWidget = ({ data, branchName }) => {
     const currentItem = triviaItems[currentIndex];
 
     return (
-        <div className="mx-4 mb-4 mt-2 bg-gradient-to-br from-[#FFF8E1] to-[#FFECB3] p-4 rounded-xl border border-[#F59E0B]/30 shadow-sm relative overflow-hidden group">
+        <div className="mx-4 mb-4 mt-2 bg-gradient-to-br from-gold-light to-gold-pale p-4 rounded-xl border border-gold/30 shadow-sm relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-2 opacity-10">
-                <Lightbulb size={48} className="text-[#F59E0B]" />
+                <Lightbulb size={48} className="text-gold" />
             </div>
 
             <div className="flex items-start gap-3 relative z-10">
-                <div className="bg-white/80 p-2 rounded-full text-[#F59E0B] shadow-sm">
+                <div className="bg-white/80 p-2 rounded-full text-gold shadow-sm">
                     {currentItem.icon || <Sparkles size={16} />}
                 </div>
                 <div>
-                    <div className="text-[10px] font-bold text-[#B45309] uppercase tracking-widest mb-1 flex items-center gap-1">
+                    <div className="text-[10px] font-bold text-gold-dark uppercase tracking-widest mb-1 flex items-center gap-1">
                         Did You Know?
                     </div>
-                    <p className="text-xs text-[#78350F] font-medium leading-relaxed">
+                    <p className="text-xs text-gold-darker font-medium leading-relaxed">
                         {currentItem.text}
                     </p>
                 </div>
@@ -1134,8 +1134,8 @@ const TimelineEvent = ({ event, age, onVisible }) => {
              <div className={`
                 relative z-10 w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mt-1.5 sm:mt-2 rounded-full border-2 transition-all shrink-0
                 ${isPersonal
-                    ? 'bg-[#E67E22] border-[#F9F5F0] scale-110 shadow-sm group-hover:scale-125'
-                    : 'bg-gray-300 border-[#F9F5F0] group-hover:bg-gray-400'
+                    ? 'bg-accent border-parchment scale-110 shadow-sm group-hover:scale-125'
+                    : 'bg-gray-300 border-parchment group-hover:bg-gray-400'
                 }
              `}></div>
 
@@ -1171,14 +1171,14 @@ const TimelineEvent = ({ event, age, onVisible }) => {
 const FamilyMemberLink = ({ member, role, onClick }) => (
     <div 
         onClick={() => onClick(member)}
-        className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group"
+        className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-accent hover:shadow-md transition-all group"
     >
         <div className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 font-serif font-bold group-hover:bg-orange-50 group-hover:text-orange-600 transition-colors">
             {member.name.charAt(0)}
         </div>
         <div>
             <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-0.5">{role}</div>
-            <div className="font-display font-bold text-gray-800 group-hover:text-[#E67E22] transition-colors">{member.name}</div>
+            <div className="font-display font-bold text-gray-800 group-hover:text-accent transition-colors">{member.name}</div>
         </div>
         <ChevronRight size={16} className="text-gray-300 ml-auto group-hover:translate-x-1 transition-transform" />
     </div>
@@ -1210,7 +1210,7 @@ const HeroImage = ({ location, year, heroImage }) => {
     return (
         <div className="relative w-full h-80 md:h-96 overflow-hidden rounded-b-xl shadow-md">
             {/* Gradient Overlay for Texture Blend */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#fdfbf7] via-transparent to-black/30 z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-parchment-light via-transparent to-black/30 z-10"></div>
 
             <img
                 src={imgSrc}
@@ -1243,7 +1243,7 @@ const EpicList = ({ threads, onSelect }) => {
                 <div
                     key={thread.id}
                     onClick={() => onSelect(thread.id)}
-                    className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group relative overflow-hidden"
+                    className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent hover:shadow-md transition-all group relative overflow-hidden"
                 >
                     <div className={`absolute top-0 right-0 p-2 opacity-5 ${thread.color.split(' ')[0]} bg-clip-text text-transparent`}>
                         {React.cloneElement(thread.icon, { size: 64 })}
@@ -1260,7 +1260,7 @@ const EpicList = ({ threads, onSelect }) => {
                             </p>
                         </div>
                     </div>
-                    <div className="mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#E67E22] group-hover:gap-2 transition-all">
+                    <div className="mt-3 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-accent group-hover:gap-2 transition-all">
                         Explore Epic <ChevronRight size={12} />
                     </div>
                 </div>
@@ -1321,10 +1321,10 @@ const ThreadTimeline = ({ thread, members, onBack, onSelectMember }) => {
 
                             <div
                                 onClick={() => onSelectMember(member)}
-                                className="bg-white border border-gray-100 rounded-lg p-3 cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all"
+                                className="bg-white border border-gray-100 rounded-lg p-3 cursor-pointer hover:border-accent hover:shadow-md transition-all"
                             >
                                 <div className="flex justify-between items-start mb-1">
-                                    <h3 className="font-bold text-sm text-gray-800 group-hover:text-[#E67E22] transition-colors">
+                                    <h3 className="font-bold text-sm text-gray-800 group-hover:text-accent transition-colors">
                                         {member.name}
                                     </h3>
                                     <span className="text-xs font-mono text-gray-400">{born}</span>
@@ -1512,7 +1512,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
     }, [item]);
 
     return (
-        <div className="absolute inset-0 z-30 bg-[#F9F5F0] animate-in slide-in-from-right duration-500 overflow-y-auto custom-scrollbar">
+        <div className="absolute inset-0 z-30 bg-parchment animate-in slide-in-from-right duration-500 overflow-y-auto custom-scrollbar">
 
             <LoginModal
                 isOpen={showLoginModal}
@@ -1535,7 +1535,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                             <ChevronLeft size={20} strokeWidth={2} />
                          </button>
                          <div className="bg-gray-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-200 flex items-center gap-1.5 sm:gap-2">
-                            <Anchor size={10} className="text-[#E67E22] sm:w-3 sm:h-3" strokeWidth={1.5} />
+                            <Anchor size={10} className="text-accent sm:w-3 sm:h-3" strokeWidth={1.5} />
                             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 font-bold truncate max-w-[120px] sm:max-w-none">{relationship}</span>
                          </div>
                      </div>
@@ -1570,9 +1570,9 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
 
                                             if (cleanPart === matchName) {
                                                 return (
-                                                    <span key={i} className="text-[#F59E0B] relative group cursor-help">
+                                                    <span key={i} className="text-gold relative group cursor-help">
                                                         {part}{' '}
-                                                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] bg-[#F59E0B] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] bg-gold text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
                                                             Echo of {item.story.naming_echo.surname}
                                                         </span>
                                                     </span>
@@ -1664,7 +1664,7 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                 </h2>
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
-                            <p className="text-base sm:text-lg md:text-xl font-body-serif text-gray-800 leading-relaxed sm:leading-loose first-letter:text-4xl sm:first-letter:text-5xl md:first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-2 sm:first-letter:mr-3 first-letter:mt-[-0.25rem] sm:first-letter:mt-[-0.5rem] first-letter:text-[#2C3E50]">
+                            <p className="text-base sm:text-lg md:text-xl font-body-serif text-gray-800 leading-relaxed sm:leading-loose first-letter:text-4xl sm:first-letter:text-5xl md:first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:float-left first-letter:mr-2 sm:first-letter:mr-3 first-letter:mt-[-0.25rem] sm:first-letter:mt-[-0.5rem] first-letter:text-navy">
                                 {renderNoteWithCurrency(item.story.notes)}
                             </p>
                         </div>
@@ -1801,14 +1801,14 @@ const ImmersiveProfile = ({ item, familyData, onClose, onNavigate, userRelation,
                                     <div
                                         key={idx}
                                         onClick={() => onNavigate(target)}
-                                        className="flex items-start gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-[#E67E22] hover:shadow-md transition-all group"
+                                        className="flex items-start gap-4 p-4 bg-white border border-gray-100 rounded-lg cursor-pointer hover:border-accent hover:shadow-md transition-all group"
                                     >
                                          <div className="w-10 h-10 shrink-0 rounded-full bg-orange-50/50 border border-orange-100 flex items-center justify-center text-orange-400 font-serif font-bold group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">
                                             <Link size={16} />
                                         </div>
                                         <div className="flex-1">
                                             <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-0.5">{link.relation_type}</div>
-                                            <div className="font-display font-bold text-gray-800 group-hover:text-[#E67E22] transition-colors mb-1">{target.name}</div>
+                                            <div className="font-display font-bold text-gray-800 group-hover:text-accent transition-colors mb-1">{target.name}</div>
                                             {link.source_text && (
                                                 <div className="text-xs text-gray-500 italic border-l-2 border-orange-100 pl-2 leading-relaxed">
                                                     "{link.source_text}"
@@ -2079,8 +2079,8 @@ export default function App() {
       <nav className="hidden lg:flex items-center justify-between px-6 py-3 border-b border-gray-200 bg-white z-30 shrink-0">
         {/* Left: Logo */}
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
-            <User size={24} className="text-[#E67E22]" />
+          <h1 className="text-xl font-bold text-navy tracking-tight font-serif flex items-center gap-2">
+            <User size={24} className="text-accent" />
             <span>Kinship</span>
           </h1>
         </div>
@@ -2090,7 +2090,7 @@ export default function App() {
           <button
             onClick={() => setViewMode('list')}
             className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
-              viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+              viewMode === 'list' ? 'bg-white shadow-sm text-accent' : 'text-gray-500 hover:text-gray-700'
             }`}
             title="List View"
           >
@@ -2100,7 +2100,7 @@ export default function App() {
           <button
             onClick={() => setViewMode('graph')}
             className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
-              viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+              viewMode === 'graph' ? 'bg-white shadow-sm text-accent' : 'text-gray-500 hover:text-gray-700'
             }`}
             title="Graph View"
           >
@@ -2110,7 +2110,7 @@ export default function App() {
           <button
             onClick={() => setViewMode('fleet')}
             className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
-              viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+              viewMode === 'fleet' ? 'bg-white shadow-sm text-accent' : 'text-gray-500 hover:text-gray-700'
             }`}
             title="The Fleet"
           >
@@ -2120,7 +2120,7 @@ export default function App() {
           <button
             onClick={() => setViewMode('threads')}
             className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
-              viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+              viewMode === 'threads' ? 'bg-white shadow-sm text-accent' : 'text-gray-500 hover:text-gray-700'
             }`}
             title="Epics"
           >
@@ -2130,7 +2130,7 @@ export default function App() {
           <button
             onClick={() => setViewMode('hitlist')}
             className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
-              viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+              viewMode === 'hitlist' ? 'bg-white shadow-sm text-accent' : 'text-gray-500 hover:text-gray-700'
             }`}
             title="Hitlist"
           >
@@ -2140,7 +2140,7 @@ export default function App() {
           <button
             onClick={() => setViewMode('outliers')}
             className={`px-4 py-2 rounded-md transition-all text-sm font-medium flex items-center gap-2 ${
-              viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-500 hover:text-gray-700'
+              viewMode === 'outliers' ? 'bg-white shadow-sm text-accent' : 'text-gray-500 hover:text-gray-700'
             }`}
             title="Outliers"
           >
@@ -2153,7 +2153,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowAboutPage(true)}
-            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
+            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-accent transition-all"
             title="About This Project"
           >
             <Info size={20} />
@@ -2173,14 +2173,14 @@ export default function App() {
 
       {/* Mobile Top Bar with Hamburger - Only visible on mobile */}
       <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-30 shrink-0">
-        <h1 className="text-lg font-bold text-[#2C3E50] tracking-tight font-serif flex items-center gap-2">
-          <User size={20} className="text-[#E67E22]" />
+        <h1 className="text-lg font-bold text-navy tracking-tight font-serif flex items-center gap-2">
+          <User size={20} className="text-accent" />
           <span>Kinship</span>
         </h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowAboutPage(true)}
-            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-[#E67E22] transition-all"
+            className="p-2 rounded-lg text-gray-400 hover:bg-gray-50 hover:text-accent transition-all"
             title="About"
           >
             <Info size={18} />
@@ -2226,7 +2226,7 @@ export default function App() {
               <div className="flex bg-gray-100 p-0.5 rounded-lg min-w-max">
                  <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm text-accent' : 'text-gray-400 hover:text-gray-600'}`}
                     title="List View"
                  >
                     <ListIcon size={16} />
@@ -2234,7 +2234,7 @@ export default function App() {
                  </button>
                  <button
                     onClick={() => setViewMode('graph')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'graph' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'graph' ? 'bg-white shadow-sm text-accent' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Graph View"
                  >
                     <Network size={16} />
@@ -2242,7 +2242,7 @@ export default function App() {
                  </button>
                  <button
                     onClick={() => setViewMode('fleet')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'fleet' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'fleet' ? 'bg-white shadow-sm text-accent' : 'text-gray-400 hover:text-gray-600'}`}
                     title="The Fleet"
                  >
                     <Ship size={16} />
@@ -2250,7 +2250,7 @@ export default function App() {
                  </button>
                  <button
                     onClick={() => setViewMode('threads')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'threads' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'threads' ? 'bg-white shadow-sm text-accent' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Epics"
                  >
                     <BookOpen size={16} />
@@ -2258,7 +2258,7 @@ export default function App() {
                  </button>
                  <button
                     onClick={() => setViewMode('hitlist')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'hitlist' ? 'bg-white shadow-sm text-accent' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Hitlist"
                  >
                     <AlertTriangle size={16} />
@@ -2266,7 +2266,7 @@ export default function App() {
                  </button>
                  <button
                     onClick={() => setViewMode('outliers')}
-                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'outliers' ? 'bg-white shadow-sm text-[#E67E22]' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`p-2 rounded-md transition-all whitespace-nowrap text-xs flex items-center gap-1.5 ${viewMode === 'outliers' ? 'bg-white shadow-sm text-accent' : 'text-gray-400 hover:text-gray-600'}`}
                     title="Outliers"
                  >
                     <Trophy size={16} />
@@ -2277,7 +2277,7 @@ export default function App() {
 
             {/* Search + Filter Menu */}
             <div className="flex gap-2">
-                <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-[#E67E22] transition-colors">
+                <div className="flex-1 flex items-center bg-gray-50 p-2.5 rounded-lg border border-gray-200 focus-within:border-accent transition-colors">
                     <Search size={16} className="text-gray-400" />
                     <input
                         type="text"
@@ -2333,7 +2333,7 @@ export default function App() {
 
         <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
         {viewMode === 'threads' && (
-             <div className="flex-1 overflow-hidden relative border-t border-gray-100 bg-[#FAFAF9]">
+             <div className="flex-1 overflow-hidden relative border-t border-gray-100 bg-parchment-muted">
                  {selectedThreadId ? (
                      <ThreadTimeline
                         thread={NARRATIVE_THREADS.find(t => t.id === selectedThreadId)}
@@ -2378,12 +2378,12 @@ export default function App() {
       </div>
 
       {/* --- RIGHT PANEL (Main Content) --- */}
-      <div className="flex-1 relative bg-[#F9F5F0] h-full overflow-hidden">
+      <div className="flex-1 relative bg-parchment h-full overflow-hidden">
 
           {/* Sidebar Toggle Button - Only visible on desktop */}
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="hidden lg:flex absolute top-4 left-4 z-20 p-2 rounded-lg bg-white shadow-md hover:shadow-lg text-gray-600 hover:text-[#E67E22] transition-all border border-gray-200"
+            className="hidden lg:flex absolute top-4 left-4 z-20 p-2 rounded-lg bg-white shadow-md hover:shadow-lg text-gray-600 hover:text-accent transition-all border border-gray-200"
             title={isSidebarCollapsed ? "Show Sidebar" : "Hide Sidebar"}
           >
             {isSidebarCollapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
@@ -2409,7 +2409,7 @@ export default function App() {
           {/* Fleet View */}
           <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
           {viewMode === 'fleet' && (
-              <div className="absolute inset-0 z-0 bg-[#F9F5F0]">
+              <div className="absolute inset-0 z-0 bg-parchment">
                   <TheFleet familyData={familyData} onSelectProfile={setSelectedAncestor} />
               </div>
           )}
