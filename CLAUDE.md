@@ -30,9 +30,11 @@ Kinship/
 │   │   ├── ship_cache.json   # Cached ship specifications from Gemini
 │   │   └── wikimedia_cache.json # Cached Wikimedia Commons image URLs
 │   └── vite.config.js        # Dev server, CORS proxy, security headers
-├── genealogy_pipeline.py     # Main ETL: Word docs → JSON (2172 lines)
-├── fetch_history.py          # Wikidata SPARQL → history_data.json
-├── generate_hitlist.py       # Data quality scoring → hitlist_data.json
+├── scripts/                  # Pipeline and data generation
+│   ├── genealogy_pipeline.py # Main ETL: Word docs → JSON
+│   ├── fetch_history.py      # Wikidata SPARQL → history_data.json
+│   └── generate_hitlist.py   # Data quality scoring → hitlist_data.json
+├── tests/                    # Verification and test scripts
 ├── docs/                     # Specifications and plans
 │   └── source_specification.md  # Word document schema reference
 └── *.md                      # User guide, deployment, mobile, print docs
@@ -42,7 +44,7 @@ Kinship/
 
 ```
 Word Documents (source of truth)
-  → genealogy_pipeline.py (parse, geocode, enrich, tag)
+  → scripts/genealogy_pipeline.py (parse, geocode, enrich, tag)
     → family_data.json + history_data.json + hitlist_data.json
       → React app (read-only viewer)
         → GitHub Pages (public deployment)
@@ -65,9 +67,9 @@ npm run build            # Output to dist/
 npm run build:gh-pages   # Sets VITE_BASE_PATH=/Kinship/
 
 # Data pipeline (from repo root)
-python genealogy_pipeline.py    # Regenerate family_data.json
-python fetch_history.py         # Regenerate history_data.json
-python generate_hitlist.py      # Regenerate hitlist_data.json
+python scripts/genealogy_pipeline.py    # Regenerate family_data.json
+python scripts/fetch_history.py         # Regenerate history_data.json
+python scripts/generate_hitlist.py      # Regenerate hitlist_data.json
 ```
 
 ## Environment Variables

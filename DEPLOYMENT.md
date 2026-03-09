@@ -56,10 +56,10 @@ Before deploying, make sure you have the latest family data:
 ```bash
 # Run the pipeline to generate family_data.json
 cd /home/user/Kinship
-python genealogy_pipeline.py
+python scripts/genealogy_pipeline.py
 
 # Optional: Generate hitlist
-python generate_hitlist.py
+python scripts/generate_hitlist.py
 ```
 
 The generated files are in `.gitignore`, so you'll need to temporarily commit them for the first deployment:
@@ -122,7 +122,7 @@ When the original researcher adds new information:
 2. Run the pipeline:
    ```bash
    cd /home/user/Kinship
-   python genealogy_pipeline.py
+   python scripts/genealogy_pipeline.py
    ```
 3. Commit the generated JSON files:
    ```bash

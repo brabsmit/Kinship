@@ -16,7 +16,7 @@ A. The Data Pipeline (Python)
 
 We do not use a traditional database. The "Source of Truth" is a structured Word Document (GENEALOGY DSD Paternal Ancestry.docx).
 
-Script: genealogy_pipeline.py
+Script: scripts/genealogy_pipeline.py
 
 Logic: 1.  Scans the doc for Generation Headers (e.g., "GENERATION I: PARENTS") to group ancestors.
 2.  Extracts entities based on the {ID} pattern (e.g., {1.1.2}).
@@ -77,7 +77,7 @@ Location Awareness: Filter historical events by location. (e.g., Don't show "Cal
 
 5. File Structure Reference
 
-genealogy_pipeline.py: Main Data Generator. Run this to update JSON.
+scripts/genealogy_pipeline.py: Main Data Generator. Run this to update JSON.
 
 src/App.jsx: Main Application Code. Contains all UI logic.
 
