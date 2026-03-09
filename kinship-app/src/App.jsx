@@ -51,6 +51,7 @@ import TheFleet from './components/TheFleet';
 import TechnologyContext from './components/TechnologyContext';
 import SoloChapter from './components/SoloChapter';
 import AboutPage from './components/AboutPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import PrintBiography from './components/PrintBiography';
 import { HISTORICAL_LOCATIONS, REGION_COORDINATES } from './utils/historicalLocations';
 import historyData from './history_data.json';
@@ -2312,6 +2313,7 @@ export default function App() {
         )}
 
         {/* LIST VIEW (Shows in 'list' AND 'graph' modes) */}
+        <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
         {(viewMode === 'list' || viewMode === 'graph') && (
             <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {Object.entries(groupedData).map(([generation, items]) => (
@@ -2327,7 +2329,9 @@ export default function App() {
                 ))}
             </div>
         )}
+        </ErrorBoundary>
 
+        <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
         {viewMode === 'threads' && (
              <div className="flex-1 overflow-hidden relative border-t border-gray-100 bg-[#FAFAF9]">
                  {selectedThreadId ? (
@@ -2345,7 +2349,9 @@ export default function App() {
                  )}
              </div>
         )}
+        </ErrorBoundary>
 
+        <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
         {viewMode === 'hitlist' && (
              <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
                  <HitlistPanel onSelectProfile={(id) => {
@@ -2354,7 +2360,9 @@ export default function App() {
                  }} />
              </div>
         )}
+        </ErrorBoundary>
 
+        <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
         {viewMode === 'outliers' && (
              <div className="flex-1 overflow-y-auto relative border-t border-gray-100">
                  <OutliersDashboard
@@ -2366,6 +2374,7 @@ export default function App() {
                  />
              </div>
         )}
+        </ErrorBoundary>
       </div>
 
       {/* --- RIGHT PANEL (Main Content) --- */}
@@ -2381,6 +2390,7 @@ export default function App() {
           </button>
 
           {/* Graph View (Rendered in Main Content) */}
+          <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
           {viewMode === 'graph' && (
              <div className="absolute inset-0 z-0">
                 <GraphView
@@ -2394,19 +2404,23 @@ export default function App() {
                 />
              </div>
           )}
+          </ErrorBoundary>
 
           {/* Fleet View */}
+          <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
           {viewMode === 'fleet' && (
               <div className="absolute inset-0 z-0 bg-[#F9F5F0]">
                   <TheFleet familyData={familyData} onSelectProfile={setSelectedAncestor} />
               </div>
           )}
+          </ErrorBoundary>
 
+          <ErrorBoundary level="view" onReset={() => setViewMode('list')}>
           {selectedAncestor ? (
-             <ImmersiveProfile 
-                item={selectedAncestor} 
+             <ImmersiveProfile
+                item={selectedAncestor}
                 familyData={familyData}
-                onClose={() => setSelectedAncestor(null)} 
+                onClose={() => setSelectedAncestor(null)}
                 onNavigate={setSelectedAncestor}
                 userRelation={userRelation}
                 onSelectThread={(threadId) => {
@@ -2425,6 +2439,7 @@ export default function App() {
                  </div>
              )
           )}
+          </ErrorBoundary>
       </div>
 
       </div> {/* End Content Area (Sidebar + Main Content) */}
