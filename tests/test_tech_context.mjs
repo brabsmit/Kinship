@@ -1,4 +1,4 @@
-import { getTechnologyContext } from './kinship-app/src/utils/technologyContext.js';
+import { getTechnologyContext } from '../kinship-app/src/utils/technologyContext.js';
 
 console.log("Testing Technology Context Logic...");
 
